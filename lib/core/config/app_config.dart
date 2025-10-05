@@ -1,52 +1,88 @@
-// This file will manage application configurations, such as API base URLs,
-// loaded from environment variables or a non-versioned configuration file.
-// This adheres to the guideline of NO hardcoded keys or URLs.
-
 import 'package:flutter/foundation.dart';
+import '../utils/logger.dart';
+import '../storage/secure_storage.dart';
 
 class AppConfig {
-  // Example: Loading API Base URL from environment variable (passed via --dart-define)
-  static const String baseUrl = String.fromEnvironment(
-    'API_BASE_URL',
-    // Provide a default value for development or if the variable is not set,
-    // but ensure production builds ALWAYS have the correct environment variable set.
-    defaultValue: 'https://api.development.pkphub.com/v1',
-  );
+  static final AppConfig _instance = AppConfig._internal();
+  factory AppConfig() => _instance;
 
-  // Example: API Key (SHOULD NOT have a default value in production-like code here)
-  // In a real scenario, the absence of this key in a production build should ideally
-  // cause a build failure or a clear runtime error during app initialization.
-  static const String apiKey = String.fromEnvironment(
-    'API_KEY',
-    // defaultValue: 'YOUR_DEV_API_KEY' // Avoid default API keys in committed code
-  );
+  final _logger = Logger();
+  final _storage = SecureStorage();
 
-  // Example: Feature Flag
-  static const bool isNewFeatureEnabled = bool.fromEnvironment(
-    'ENABLE_NEW_FEATURE',
-    defaultValue: false,
-  );
+  bool _initialized = false;
+  final Map<String, dynamic> _config = {};
+  final Map<String, bool> _featureFlags = {};
 
-  // Add other configurations as needed (e.g., analytics keys, third-party service IDs)
-  // all loaded via String.fromEnvironment or similar mechanisms.
+  AppConfig._internal();
 
-  // It's good practice to validate critical configurations at app startup.
-  static void validateCriticalConfigs() {
-    if (baseUrl.isEmpty) {
-      // Log this error. In a production app, this might be a fatal error.
-      if (kDebugMode) {
-        print('ERROR: API_BASE_URL is not set.');
-      }
+  Future<void> init() async {
+    if (_initialized) return;
+
+    try {
+      await _loadConfig();
+      await _loadFeatureFlags();
+      _initialized = true;
+      _logger.i('App configuration initialized');
+    } catch (e) {
+      _logger.e('Failed to initialize app configuration', error: e);
+      rethrow;
     }
-    if (apiKey.isEmpty && !isNewFeatureEnabled) { // Example conditional check
-      // This check for apiKey being empty might be too lenient for production.
-      // Production builds should fail if required keys are missing.
-      if (kDebugMode) {
-        print('WARNING: API_KEY is not set. Some features might not work.');
-      }
+  }
+
+  Future<void> _loadConfig() async {
+    // Default configuration
+    _config.addAll({
+      'api_timeout': kDebugMode ? 30000 : 10000,
+      'cache_duration': const Duration(hours: 24).inMilliseconds,
+      'max_retry_attempts': 3,
+      'min_log_level': kDebugMode ? 'debug' : 'info',
+    });
+
+    // Load any persisted configuration
+    final storedConfig = await _storage.readMap('app_config');
+    if (storedConfig != null) {
+      _config.addAll(storedConfig);
     }
-    // Add more validation as necessary
+  }
+
+  Future<void> _loadFeatureFlags() async {
+    // Default feature flags
+    _featureFlags.addAll({
+      'enable_biometric': true,
+      'enable_push_notifications': true,
+      'enable_analytics': !kDebugMode,
+      'enable_crash_reporting': !kDebugMode,
+      'enable_offline_mode': true,
+    });
+
+    // Load any persisted feature flags
+    final storedFlags = await _storage.readMap('feature_flags');
+    if (storedFlags != null) {
+      storedFlags.forEach((key, value) {
+        if (value is bool) {
+          _featureFlags[key] = value;
+        }
+      });
+    }
+  }
+
+  T getValue<T>(String key, {required T defaultValue}) {
+    return _config[key] as T? ?? defaultValue;
+  }
+
+  bool isFeatureEnabled(String feature) {
+    return _featureFlags[feature] ?? false;
+  }
+
+  Future<void> setFeatureFlag(String feature, bool enabled) async {
+    _featureFlags[feature] = enabled;
+    await _storage.writeMap('feature_flags', _featureFlags);
+    _logger.i('Feature flag updated: $feature = $enabled');
+  }
+
+  Future<void> setValue(String key, dynamic value) async {
+    _config[key] = value;
+    await _storage.writeMap('app_config', _config);
+    _logger.i('Configuration updated: $key = $value');
   }
 }
-
-// In your main.dart, you might call AppConfig.validateCriticalConfigs() during initialization.
