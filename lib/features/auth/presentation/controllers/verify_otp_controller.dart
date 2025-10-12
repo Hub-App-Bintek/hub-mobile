@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/auth/auth_session.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -95,11 +96,12 @@ class VerifyOtpController extends BaseController {
     isRequesting.value = true;
     try {
       await handleAsync(
-        () => _verifyOtpUseCase(VerifyOtpRequest(email: email, otpCode: otpString)),
+        () => _verifyOtpUseCase(
+          VerifyOtpRequest(email: email, otpCode: otpString),
+        ),
         onSuccess: (loginResponse) async {
           await _authSession.saveToken(loginResponse.token ?? '');
-          // TODO: Redirect to verify profile screen and remove the stack except for the main screen
-          // navigateOffAll(AppRoutes.main);
+          navigateOffAll(AppRoutes.kyc);
         },
         onFailure: (Failure failure) {
           showError(failure);

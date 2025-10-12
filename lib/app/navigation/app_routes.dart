@@ -12,6 +12,7 @@ abstract class AppRoutes {
   static const material = _Paths.material;
   static const construction = _Paths.construction;
   static const monitoring = _Paths.monitoring;
+  static const kyc = _Paths.kyc;
 }
 
 abstract class _Paths {
@@ -24,4 +25,5 @@ abstract class _Paths {
   static const material = '/material';
   static const construction = '/construction';
   static const monitoring = '/monitoring';
+  static const kyc = '/kyc';
 }

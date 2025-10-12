@@ -5,6 +5,8 @@ import 'package:pkp_hub/features/auth/presentation/screens/login_screen.dart';
 import 'package:pkp_hub/features/auth/presentation/screens/register_screen.dart';
 import 'package:pkp_hub/features/auth/presentation/bindings/register_binding.dart';
 import 'package:pkp_hub/features/auth/presentation/screens/verify_otp_screen.dart';
+import 'package:pkp_hub/features/kyc/presentation/bindings/kyc_binding.dart';
+import 'package:pkp_hub/features/kyc/presentation/screens/kyc_screen.dart';
 import 'package:pkp_hub/features/main/presentation/screens/main_screen.dart';
 import 'package:pkp_hub/features/main/presentation/bindings/main_binding.dart';
 
@@ -35,6 +37,11 @@ class AppPages {
       name: _Paths.main,
       page: () => const MainScreen(),
       binding: MainBinding(),
+    ),
+    GetPage(
+      name: _Paths.kyc,
+      page: () => const KycScreen(),
+      binding: KycBinding(),
     ),
   ];
 }
