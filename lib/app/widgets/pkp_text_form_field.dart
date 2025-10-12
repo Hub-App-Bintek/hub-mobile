@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 /// An enum to define the behavior and appearance of the text form field.
-enum PkpTextFormFieldType { email, password, datetime, text }
+enum PkpTextFormFieldType { email, password, datetime, text, multiline }
 
 /// A reusable and configurable text form field widget for the app,
 /// which intelligently handles different input types.
@@ -35,6 +35,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
   Widget build(BuildContext context) {
     final isPassword = widget.type == PkpTextFormFieldType.password;
     final isDateTime = widget.type == PkpTextFormFieldType.datetime;
+    final isMultiline = widget.type == PkpTextFormFieldType.multiline;
     final keyboardType = _getKeyboardType();
     final obscureText = isPassword && !_isPasswordVisible;
 
@@ -46,23 +47,27 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     }
 
     return Column(
-      spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          widget.labelText ?? '',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold
+        if (widget.labelText != null) ...[
+          Text(
+            widget.labelText!,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold
+            ),
           ),
-        ),
+          const SizedBox(height: 8),
+        ],
         TextFormField(
           controller: widget.controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
           readOnly: isDateTime,
           onChanged: widget.onChanged,
+          // Allow multiple lines for multiline type, otherwise 1.
+          maxLines: isMultiline ? null : 1,
+          minLines: isMultiline ? 3 : 1,
           decoration: InputDecoration(
-            // labelText: widget.labelText,
             hintText: widget.hintText,
             suffixIcon: suffixIcon,
             border: const OutlineInputBorder(
@@ -82,10 +87,10 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.password => TextInputType.visiblePassword,
       PkpTextFormFieldType.datetime => TextInputType.none,
       PkpTextFormFieldType.text => TextInputType.text,
+      PkpTextFormFieldType.multiline => TextInputType.multiline,
     };
   }
 
-  // The icon color is now inherited from the theme.
   Widget _buildPasswordSuffixIcon() {
     return IconButton(
       icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
@@ -97,7 +102,6 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     );
   }
 
-  // The icon color is now inherited from the theme.
   Widget _buildCalendarSuffixIcon(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.calendar_today),
@@ -119,6 +123,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       setState(() {
         widget.controller?.text = formattedDate;
       });
+      widget.onChanged?.call(formattedDate);
     }
   }
 }

@@ -34,6 +34,20 @@ abstract class AppStrings {
   static const codeSentTo = 'Kode dikirim ke {email}';
   static const resendCode = 'Kirim ulang kode';
 
+  // KYC Screen
+  static const kycScreenTitle = 'Verifikasi Profil';
+  static const kycFullNameLabel = 'Nama Lengkap';
+  static const kycFullNameHint = 'Your Name';
+  static const kycPhoneNumberLabel = 'No. Handphone';
+  static const kycPhoneNumberHint = '081234567890';
+  static const kycAddressLabel = 'Alamat';
+  static const kycAddressHint = 'Your Address';
+  static const kycKtpNumberLabel = 'Nomer KTP';
+  static const kycKtpNumberHint = '1234567890';
+  static const kycUploadKtpLabel = 'Upload KTP';
+  static const kycUploadSelfieKtpLabel = 'Upload Selfie KTP';
+  static const kycContinueButton = 'Continue';
+
   // Validation messages (Bahasa Indonesia)
   // Template: use {field} where the field name will be inserted
   static const requiredFieldTemplate = '{field} wajib diisi';
