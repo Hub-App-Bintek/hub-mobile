@@ -7,6 +7,6 @@ class MainBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => MainController(Get.find<AuthSession>()));
-    Get.lazyPut(() => HomeController());
+    Get.lazyPut(() => HomeController(Get.find<AuthSession>()));
   }
 }

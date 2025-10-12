@@ -16,17 +16,16 @@ class HomeScreen extends GetView<HomeController> {
       appBar: PkpAppBar(
         showNavigation: false,
         actions: Icons.mail_rounded,
-        onActionPressed: () {
-          // TODO: Redirect to inbox screen
-        },
+        onActionPressed: controller.onNotificationTapped,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            spacing: 16,
             children: [
               _buildCarouselBanner(),
+              const SizedBox(height: 16),
               _buildBalanceCard(),
+              const SizedBox(height: 16),
               _buildMenuGrid(),
             ],
           ),
@@ -100,7 +99,7 @@ class HomeScreen extends GetView<HomeController> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.neutralDarkest.withValues(alpha: 0.05),
+            color: AppColors.neutralDarkest.withOpacity(0.05),
             spreadRadius: 0,
             blurRadius: 10,
             offset: const Offset(0, 2),
@@ -181,7 +180,7 @@ class HomeScreen extends GetView<HomeController> {
           return _buildMenuItem(
             title: menuItems[index].$1,
             imageUrl: menuItems[index].$2,
-            onTap: () => controller.onMenuItemTapped(menuItems[index].$1),
+            onTap: () => controller.onMenuItemTapped(context, menuItems[index].$1),
           );
         },
       ),
@@ -198,11 +197,11 @@ class HomeScreen extends GetView<HomeController> {
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.neutralDarkest.withValues(alpha: 0.05),
+              color: AppColors.neutralDarkest.withOpacity(0.05),
               spreadRadius: 0,
               blurRadius: 10,
               offset: const Offset(0, 2),

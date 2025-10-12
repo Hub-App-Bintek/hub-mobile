@@ -18,6 +18,7 @@ dependencies:
   get: ^4.6.6 # Pinned to the last stable v4 release to fix dispose() error.
   google_fonts: ^4.0.4
   intl: ^0.19.0
+  dotted_border: ^2.1.0 # Added for custom UI elements
 
   # Security
   flutter_secure_storage: ^9.0.0
