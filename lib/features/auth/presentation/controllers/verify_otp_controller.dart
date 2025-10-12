@@ -95,10 +95,10 @@ class VerifyOtpController extends BaseController {
     isRequesting.value = true;
     try {
       await handleAsync(
-        () => _verifyOtpUseCase(VerifyOtpRequest(email: email, otp: otpString)),
+        () => _verifyOtpUseCase(VerifyOtpRequest(email: email, otpCode: otpString)),
         onSuccess: (loginResponse) async {
           await _authSession.saveToken(loginResponse.token ?? '');
-          // TODO: Redirect to update profile screen and remove the stack except for the main screen
+          // TODO: Redirect to verify profile screen and remove the stack except for the main screen
           // navigateOffAll(AppRoutes.main);
         },
         onFailure: (Failure failure) {
