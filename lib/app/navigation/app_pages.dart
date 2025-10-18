@@ -11,6 +11,8 @@ import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
 import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
 import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
+import 'package:pkp_hub/features/consultant/bindings/consultant_list_binding.dart';
+import 'package:pkp_hub/features/consultant/screens/consultant_list_screen.dart';
 
 part 'app_routes.dart';
 
@@ -49,6 +51,12 @@ class AppPages {
       name: _Paths.createProject,
       page: () => const CreateProjectScreen(),
       binding: CreateProjectBinding(),
+    ),
+    // Consultants list screen
+    GetPage(
+      name: _Paths.consultation,
+      page: () => const ConsultantListScreen(),
+      binding: ConsultantListBinding(),
     ),
   ];
 }
