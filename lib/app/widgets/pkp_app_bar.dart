@@ -53,9 +53,10 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           ),
       ],
-      backgroundColor: backgroundColor ?? appBarTheme.backgroundColor,
+      backgroundColor: backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
       elevation: elevation ?? appBarTheme.elevation ?? 0,
       scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       centerTitle: true,
       iconTheme: (appBarTheme.iconTheme ?? const IconThemeData()).copyWith(
         color: AppColors.primaryDarkest,

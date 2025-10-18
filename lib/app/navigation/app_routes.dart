@@ -13,6 +13,7 @@ abstract class AppRoutes {
   static const construction = _Paths.construction;
   static const monitoring = _Paths.monitoring;
   static const kyc = _Paths.kyc;
+  static const createProject = _Paths.createProject;
 }
 
 abstract class _Paths {
@@ -26,4 +27,5 @@ abstract class _Paths {
   static const construction = '/construction';
   static const monitoring = '/monitoring';
   static const kyc = '/kyc';
+  static const createProject = '/create-project';
 }

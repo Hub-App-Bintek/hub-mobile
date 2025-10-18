@@ -30,6 +30,7 @@ abstract class AppStrings {
   // OTP / Confirmation
   static const otpConfirmPageTitle = 'Konfirmasi OTP';
   static const enterConfirmationCode = 'Masukkan kode konfirmasi';
+
   // use {email} as placeholder which callers should replace
   static const codeSentTo = 'Kode dikirim ke {email}';
   static const resendCode = 'Kirim ulang kode';
@@ -46,7 +47,29 @@ abstract class AppStrings {
   static const kycKtpNumberHint = '1234567890';
   static const kycUploadKtpLabel = 'Upload KTP';
   static const kycUploadSelfieKtpLabel = 'Upload Selfie KTP';
-  static const kycContinueButton = 'Continue';
+
+  // Create Project Screen
+  static const landLocationTitle = 'Lokasi Lahan';
+  static const projectNameLabel = 'Nama Proyek*';
+  static const projectNameHint = 'Nama';
+  static const locationDetailsLabel = 'Detail Lokasi*';
+  static const locationDetailsHint = 'Informasi Tambahan';
+  static const typeLabel = 'Tipe*';
+  static const typePrototype = 'Prototipe';
+  static const typeNonPrototype = 'Non-Prototipe';
+  static const landAreaLabel = 'Luas Lahan (m²)*';
+  static const landAreaHint = '100';
+  static const pinLocationError = 'Silakan pin lokasi di peta.';
+  static const incomeLabel = 'Pendapatan';
+  static const incomeHint = '123.456.789';
+
+  // Create Project Validation
+  static const projectNameRequired = 'Nama proyek wajib diisi';
+  static const locationDetailsRequired = 'Detail lokasi wajib diisi';
+  static const landAreaRequired = 'Luas lahan wajib diisi';
+  static const incomeRequired = 'Pendapatan wajib diisi';
+  static const projectTypeRequired = 'Tipe proyek wajib dipilih';
+  static const locationSelectedRequired = 'Lokasi harus dipilih';
 
   // Validation messages (Bahasa Indonesia)
   // Template: use {field} where the field name will be inserted
@@ -66,9 +89,12 @@ abstract class AppStrings {
 
   // Error Messages
   static const errorTitle = 'Terjadi Kesalahan';
-  static const loginFailedError = 'Gagal masuk. Silakan periksa kredensial Anda dan coba lagi.';
-  static const emptyCredentialsError = 'Email dan kata sandi tidak boleh kosong.';
-  static const serverError = 'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
+  static const loginFailedError =
+      'Gagal masuk. Silakan periksa kredensial Anda dan coba lagi.';
+  static const emptyCredentialsError =
+      'Email dan kata sandi tidak boleh kosong.';
+  static const serverError =
+      'Terjadi kesalahan pada server. Silakan coba lagi nanti.';
   static const registrationFailed = 'Registrasi gagal. Silakan coba lagi.';
   static const noInternetConnection = 'Tidak terhubung ke jaringan internet.';
 
@@ -78,4 +104,7 @@ abstract class AppStrings {
   static const menuMaterial = 'Material';
   static const menuConstruction = 'Konstruksi';
   static const menuMonitoring = 'Pengawasan';
+
+  // HomeScreen Bottom Sheet
+  static const chooseProjectTitle = 'Pilih Project';
 }

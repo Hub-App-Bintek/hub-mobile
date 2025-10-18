@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pkp_hub/app/theme/app_text_styles.dart';
 
 /// An enum to define the behavior and appearance of the text form field.
-enum PkpTextFormFieldType { email, password, datetime, text, multiline }
+enum PkpTextFormFieldType {
+  email,
+  password,
+  datetime,
+  text,
+  multiline,
+  number,
+  currency,
+}
 
 /// A reusable and configurable text form field widget for the app,
 /// which intelligently handles different input types.
@@ -31,11 +40,22 @@ class PkpTextFormField extends StatefulWidget {
 class _PkpTextFormFieldState extends State<PkpTextFormField> {
   bool _isPasswordVisible = false;
 
+  String _formatCurrency(String value) {
+    final cleaned = value.replaceAll(RegExp(r'[^0-9]'), '');
+    if (cleaned.isEmpty) return '';
+    final number = int.tryParse(cleaned);
+    if (number == null || number == 0) return '';
+    final formatter = NumberFormat.decimalPattern('id_ID');
+    return formatter.format(number);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPassword = widget.type == PkpTextFormFieldType.password;
     final isDateTime = widget.type == PkpTextFormFieldType.datetime;
     final isMultiline = widget.type == PkpTextFormFieldType.multiline;
+    final isNumber = widget.type == PkpTextFormFieldType.number;
+    final isCurrency = widget.type == PkpTextFormFieldType.currency;
     final keyboardType = _getKeyboardType();
     final obscureText = isPassword && !_isPasswordVisible;
 
@@ -52,9 +72,9 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
         if (widget.labelText != null) ...[
           Text(
             widget.labelText!,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
         ],
@@ -63,13 +83,35 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
           obscureText: obscureText,
           keyboardType: keyboardType,
           readOnly: isDateTime,
-          onChanged: widget.onChanged,
+          onChanged: (value) {
+            if (isNumber || isCurrency) {
+              final formatted = _formatCurrency(value);
+              widget.controller?.value = TextEditingValue(
+                text: formatted,
+                selection: TextSelection.collapsed(offset: formatted.length),
+              );
+              widget.onChanged?.call(formatted);
+            } else {
+              widget.onChanged?.call(value);
+            }
+          },
           // Allow multiple lines for multiline type, otherwise 1.
           maxLines: isMultiline ? null : 1,
           minLines: isMultiline ? 3 : 1,
           decoration: InputDecoration(
             hintText: widget.hintText,
             suffixIcon: suffixIcon,
+            prefixIcon: isCurrency
+                ? SizedBox(
+                    width: 40,
+                    child: Center(
+                      child: Text(
+                        'Rp',
+                        style: AppTextStyles.bodyL,
+                      ),
+                    ),
+                  )
+                : null,
             border: const OutlineInputBorder(
               borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
@@ -88,6 +130,12 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.datetime => TextInputType.none,
       PkpTextFormFieldType.text => TextInputType.text,
       PkpTextFormFieldType.multiline => TextInputType.multiline,
+      PkpTextFormFieldType.number => const TextInputType.numberWithOptions(
+        decimal: false,
+      ),
+      PkpTextFormFieldType.currency => const TextInputType.numberWithOptions(
+        decimal: false,
+      ),
     };
   }
 
