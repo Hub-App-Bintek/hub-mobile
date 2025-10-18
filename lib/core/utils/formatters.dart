@@ -43,4 +43,16 @@ class Formatters {
       return email;
     }
   }
+
+  /// Converts a string to title case (first letter upper case for each word) and removes underscores.
+  /// Example: 'in_progress' -> 'In Progress'
+  static String formatTitle(String input) {
+    if (input.isEmpty) return input;
+    final words = input.replaceAll('_', ' ').split(' ');
+    return words
+        .map((word) => word.isNotEmpty
+            ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+            : '')
+        .join(' ');
+  }
 }

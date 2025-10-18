@@ -8,9 +8,13 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/storage/auth_local_storage.dart';
 import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/data/models/request/get_projects_request.dart';
+import 'package:pkp_hub/data/models/response/get_projects_response.dart';
+import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 
 class HomeController extends BaseController {
   final AuthStorage _authSession;
+  final GetProjectListUseCase getProjectListUseCase;
   final RxDouble balance = 0.0.obs;
 
   final PageController carouselController = PageController();
@@ -28,7 +32,7 @@ class HomeController extends BaseController {
 
   String? _token;
 
-  HomeController(this._authSession);
+  HomeController(this._authSession, this.getProjectListUseCase);
 
   @override
   void onInit() {
@@ -77,55 +81,23 @@ class HomeController extends BaseController {
     return false;
   }
 
-  // TODO: Replace with real API call to fetch active projects
+  // Fetch active projects from API
   Future<void> fetchActiveProjects() async {
     isProjectLoading.value = true;
-    try {
-      await Future.delayed(const Duration(milliseconds: 800));
-      activeProjects.value = [
-        Project(
-          projectId: '1',
-          name: 'Project Alpha',
-          type: ProjectType.NON_PROTOTYPE,
-          status: ProjectStatus.ACTIVE,
-          location: const ProjectLocation(
-            lat: -6.200000,
-            long: 106.816666,
-            address: 'Jakarta, Indonesia',
-          ),
-          landArea: 1200.5,
-          createdAt: DateTime(2025, 10, 1, 10, 0, 0),
-        ),
-        Project(
-          projectId: '2',
-          name: 'Project Beta',
-          type: ProjectType.PROTOTYPE,
-          status: ProjectStatus.ACTIVE,
-          location: const ProjectLocation(
-            lat: -7.250445,
-            long: 112.768845,
-            address: 'Surabaya, Indonesia',
-          ),
-          landArea: 800.0,
-          createdAt: DateTime(2025, 9, 15, 14, 30, 0),
-        ),
-        Project(
-          projectId: '3',
-          name: 'Project Gamma',
-          type: ProjectType.NON_PROTOTYPE,
-          status: ProjectStatus.ACTIVE,
-          location: const ProjectLocation(
-            lat: -6.914744,
-            long: 107.609810,
-            address: 'Bandung, Indonesia',
-          ),
-          landArea: 1500.75,
-          createdAt: DateTime(2025, 8, 20, 9, 0, 0),
-        ),
-      ];
-    } finally {
-      isProjectLoading.value = false;
-    }
+    await handleAsync<GetProjectsResponse>(
+      () => getProjectListUseCase(
+        const GetProjectsRequest(page: 0, size: 100, status: 'ACTIVE'),
+      ),
+      onSuccess: (data) {
+        activeProjects.value = data.projects;
+        isProjectLoading.value = false;
+      },
+      onFailure: (failure) {
+        showError(failure);
+        activeProjects.clear();
+        isProjectLoading.value = false;
+      },
+    );
   }
 
   Future<bool> handleMenuTap(String menu) async {

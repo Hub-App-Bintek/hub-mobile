@@ -13,8 +13,8 @@ class Project with _$Project {
   const factory Project({
     required String projectId,
     required String name,
-    required ProjectType type,
-    required ProjectStatus status,
+    required String type,
+    required String status,
     required ProjectLocation location,
     required double landArea,
     required DateTime createdAt,
@@ -26,8 +26,8 @@ class Project with _$Project {
 @freezed
 class ProjectLocation with _$ProjectLocation {
   const factory ProjectLocation({
-    required double lat,
-    required double long,
+    required double latitude,
+    required double longitude,
     required String address,
   }) = _ProjectLocation;
 
