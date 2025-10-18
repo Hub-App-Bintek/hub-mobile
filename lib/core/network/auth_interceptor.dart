@@ -1,22 +1,21 @@
 import 'package:dio/dio.dart';
-import 'package:pkp_hub/core/auth/auth_session.dart';
+import 'package:pkp_hub/core/storage/auth_local_storage.dart';
 
-/// An interceptor that dynamically injects the authorization token into every request.
 class AuthInterceptor extends Interceptor {
-  final AuthSession _authSession;
+  final AuthStorage _authStorage;
 
-  AuthInterceptor(this._authSession);
+  AuthInterceptor(this._authStorage);
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Get the token from the session's fast in-memory cache.
-    final token = _authSession.token;
-
-    if (token != null && token.isNotEmpty) {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    final token = await _authStorage.getToken();
+    if (token.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $token';
     }
 
-    // Continue the request chain.
     super.onRequest(options, handler);
   }
 }

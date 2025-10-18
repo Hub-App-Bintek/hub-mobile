@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:pkp_hub/features/auth/domain/repositories/auth_repository.dart';
+import 'package:pkp_hub/domain/repositories/auth_repository.dart';
+import 'package:pkp_hub/domain/repositories/project_repository.dart';
 
 class RepositoryInjection {
   RepositoryInjection._();
@@ -8,6 +8,10 @@ class RepositoryInjection {
   static void init() {
     Get.lazyPut<AuthRepository>(
       () => AuthRepositoryImpl(Get.find()),
+      fenix: true,
+    );
+    Get.lazyPut<ProjectRepository>(
+      () => ProjectRepositoryImpl(Get.find()),
       fenix: true,
     );
   }

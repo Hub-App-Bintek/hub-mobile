@@ -1,14 +1,16 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/features/auth/presentation/bindings/login_binding.dart';
-import 'package:pkp_hub/features/auth/presentation/bindings/verify_otp_binding.dart';
-import 'package:pkp_hub/features/auth/presentation/screens/login_screen.dart';
-import 'package:pkp_hub/features/auth/presentation/screens/register_screen.dart';
-import 'package:pkp_hub/features/auth/presentation/bindings/register_binding.dart';
-import 'package:pkp_hub/features/auth/presentation/screens/verify_otp_screen.dart';
-import 'package:pkp_hub/features/kyc/presentation/bindings/kyc_binding.dart';
-import 'package:pkp_hub/features/kyc/presentation/screens/kyc_screen.dart';
-import 'package:pkp_hub/features/main/presentation/screens/main_screen.dart';
-import 'package:pkp_hub/features/main/presentation/bindings/main_binding.dart';
+import 'package:pkp_hub/features/auth/bindings/login_binding.dart';
+import 'package:pkp_hub/features/auth/bindings/register_binding.dart';
+import 'package:pkp_hub/features/auth/bindings/verify_otp_binding.dart';
+import 'package:pkp_hub/features/auth/screens/login_screen.dart';
+import 'package:pkp_hub/features/auth/screens/register_screen.dart';
+import 'package:pkp_hub/features/auth/screens/verify_otp_screen.dart';
+import 'package:pkp_hub/features/kyc/bindings/kyc_binding.dart';
+import 'package:pkp_hub/features/kyc/screens/kyc_screen.dart';
+import 'package:pkp_hub/features/main/bindings/main_binding.dart';
+import 'package:pkp_hub/features/main/screens/main_screen.dart';
+import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
+import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
 
 part 'app_routes.dart';
 
@@ -42,6 +44,11 @@ class AppPages {
       name: _Paths.kyc,
       page: () => const KycScreen(),
       binding: KycBinding(),
+    ),
+    GetPage(
+      name: _Paths.createProject,
+      page: () => const CreateProjectScreen(),
+      binding: CreateProjectBinding(),
     ),
   ];
 }

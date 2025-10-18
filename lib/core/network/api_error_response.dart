@@ -1,18 +1,17 @@
 import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-/// A model representing the structured error response from the API.
-class ApiErrorResponse {
-  final String errorCode;
-  final String message;
+part 'api_error_response.freezed.dart';
+part 'api_error_response.g.dart';
 
-  ApiErrorResponse({required this.errorCode, required this.message});
+@freezed
+class ApiErrorResponse with _$ApiErrorResponse {
+  const factory ApiErrorResponse({
+    required String errorCode,
+    required String message,
+  }) = _ApiErrorResponse;
 
-  factory ApiErrorResponse.fromJson(Map<String, dynamic> json) {
-    return ApiErrorResponse(
-      errorCode: json['errorCode'] as String,
-      message: json['message'] as String,
-    );
-  }
+  factory ApiErrorResponse.fromJson(Map<String, dynamic> json) => _$ApiErrorResponseFromJson(json);
 
   /// A helper to safely parse a response body.
   static ApiErrorResponse? tryParse(dynamic data) {

@@ -1,5 +1,7 @@
 import 'main.dart' as main_app;
 
 Future<void> main() async {
-  await main_app.startApp(flavor: 'staging');
+  await main_app.startApp(
+    flavor: const String.fromEnvironment('FLAVOR', defaultValue: 'development'),
+  );
 }
