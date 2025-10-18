@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -152,7 +153,15 @@ class CreateProjectController extends BaseController {
         ),
         onSuccess: (response) {
           debugPrint(response.projectId.toString());
-          // TODO: Redirect to consultant list page
+          // Redirect to consultant list page with query params
+          Get.offNamed(
+            AppRoutes.consultation,
+            arguments: {
+              'lat': selectedLocation.value?.latitude ?? 0.0,
+              'long': selectedLocation.value?.longitude ?? 0.0,
+              'type': selectedProjectType.value?.id ?? '',
+            },
+          );
         },
         onFailure: (Failure failure) {
           showError(failure);

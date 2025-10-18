@@ -11,6 +11,9 @@ abstract class ApiEndpoints {
   static const String resendOtp = '/api/auth/resend-otp';
   static const createProject = '/api/projects';
 
+  // --- User ---
+  static const String consultants = '/api/user/consultants';
+
   // Add other endpoints here as the app grows, for example:
   // static const String forgotPassword = '/api/auth/forgot-password';
 }

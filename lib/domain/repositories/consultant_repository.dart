@@ -1,0 +1,34 @@
+import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/data/datasources/consultant/consultant_network_data_source.dart';
+import 'package:pkp_hub/data/models/response/consultants_response.dart';
+
+abstract class ConsultantRepository {
+  Future<Result<ConsultantsResponse, Failure>> getConsultants({
+    required double lat,
+    required double long,
+    required int page,
+    required int size,
+  });
+}
+
+class ConsultantRepositoryImpl implements ConsultantRepository {
+  final ConsultantNetworkDataSource _dataSource;
+
+  ConsultantRepositoryImpl(this._dataSource);
+
+  @override
+  Future<Result<ConsultantsResponse, Failure>> getConsultants({
+    required double lat,
+    required double long,
+    required int page,
+    required int size,
+  }) {
+    return _dataSource.getConsultants(
+      lat: lat,
+      long: long,
+      page: page,
+      size: size,
+    );
+  }
+}
