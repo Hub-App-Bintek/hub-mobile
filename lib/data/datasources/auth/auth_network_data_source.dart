@@ -29,7 +29,7 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
   Future<Result<LoginResponse, Failure>> login(LoginRequest request) async {
     try {
       final response = await _authApi.login(request);
-      if (response.token.isEmpty == true) {
+      if (response.token?.isEmpty == true) {
         return const Error(
           ServerFailure(message: 'Invalid login response: token is empty'),
         );
@@ -64,7 +64,7 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
   ) async {
     try {
       final response = await _authApi.verifyOtp(request);
-      if (response.token.isEmpty == true) {
+      if (response.token?.isEmpty == true) {
         return const Error(
           ServerFailure(message: 'Invalid OTP response: token is empty'),
         );

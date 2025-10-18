@@ -10,10 +10,10 @@ _$LoginResponseImpl _$$LoginResponseImplFromJson(Map<String, dynamic> json) =>
     _$LoginResponseImpl(
       userId: (json['userId'] as num).toInt(),
       fullName: json['fullName'] as String?,
-      email: json['email'] as String,
-      token: json['token'] as String,
-      role: json['role'] as String,
-      status: json['status'] as String,
+      email: json['email'] as String?,
+      token: json['token'] as String?,
+      role: json['role'] as String?,
+      status: json['status'] as String?,
       expiresIn: (json['expiresIn'] as num?)?.toInt(),
     );
 

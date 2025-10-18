@@ -8,10 +8,10 @@ class LoginResponse with _$LoginResponse {
   const factory LoginResponse({
     required int userId,
     String? fullName,
-    required String email,
-    required String token,
-    required String role,
-    required String status,
+    String? email,
+    String? token,
+    String? role,
+    String? status,
     int? expiresIn,
   }) = _LoginResponse;
 

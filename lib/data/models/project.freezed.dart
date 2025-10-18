@@ -22,8 +22,8 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 mixin _$Project {
   String get projectId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  ProjectType get type => throw _privateConstructorUsedError;
-  ProjectStatus get status => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
   ProjectLocation get location => throw _privateConstructorUsedError;
   double get landArea => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
@@ -41,8 +41,8 @@ abstract class $ProjectCopyWith<$Res> {
   $Res call(
       {String projectId,
       String name,
-      ProjectType type,
-      ProjectStatus status,
+      String type,
+      String status,
       ProjectLocation location,
       double landArea,
       DateTime createdAt});
@@ -83,11 +83,11 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ProjectType,
+              as String,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as ProjectStatus,
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -122,8 +122,8 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   $Res call(
       {String projectId,
       String name,
-      ProjectType type,
-      ProjectStatus status,
+      String type,
+      String status,
       ProjectLocation location,
       double landArea,
       DateTime createdAt});
@@ -163,11 +163,11 @@ class __$$ProjectImplCopyWithImpl<$Res>
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
-              as ProjectType,
+              as String,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as ProjectStatus,
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
@@ -204,9 +204,9 @@ class _$ProjectImpl implements _Project {
   @override
   final String name;
   @override
-  final ProjectType type;
+  final String type;
   @override
-  final ProjectStatus status;
+  final String status;
   @override
   final ProjectLocation location;
   @override
@@ -260,8 +260,8 @@ abstract class _Project implements Project {
   const factory _Project(
       {required final String projectId,
       required final String name,
-      required final ProjectType type,
-      required final ProjectStatus status,
+      required final String type,
+      required final String status,
       required final ProjectLocation location,
       required final double landArea,
       required final DateTime createdAt}) = _$ProjectImpl;
@@ -273,9 +273,9 @@ abstract class _Project implements Project {
   @override
   String get name;
   @override
-  ProjectType get type;
+  String get type;
   @override
-  ProjectStatus get status;
+  String get status;
   @override
   ProjectLocation get location;
   @override
@@ -294,8 +294,8 @@ ProjectLocation _$ProjectLocationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProjectLocation {
-  double get lat => throw _privateConstructorUsedError;
-  double get long => throw _privateConstructorUsedError;
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
   String get address => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -310,7 +310,7 @@ abstract class $ProjectLocationCopyWith<$Res> {
           ProjectLocation value, $Res Function(ProjectLocation) then) =
       _$ProjectLocationCopyWithImpl<$Res, ProjectLocation>;
   @useResult
-  $Res call({double lat, double long, String address});
+  $Res call({double latitude, double longitude, String address});
 }
 
 /// @nodoc
@@ -326,18 +326,18 @@ class _$ProjectLocationCopyWithImpl<$Res, $Val extends ProjectLocation>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? lat = null,
-    Object? long = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? address = null,
   }) {
     return _then(_value.copyWith(
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
               as double,
-      long: null == long
-          ? _value.long
-          : long // ignore: cast_nullable_to_non_nullable
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
               as double,
       address: null == address
           ? _value.address
@@ -355,7 +355,7 @@ abstract class _$$ProjectLocationImplCopyWith<$Res>
       __$$ProjectLocationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double lat, double long, String address});
+  $Res call({double latitude, double longitude, String address});
 }
 
 /// @nodoc
@@ -369,18 +369,18 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? lat = null,
-    Object? long = null,
+    Object? latitude = null,
+    Object? longitude = null,
     Object? address = null,
   }) {
     return _then(_$ProjectLocationImpl(
-      lat: null == lat
-          ? _value.lat
-          : lat // ignore: cast_nullable_to_non_nullable
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
               as double,
-      long: null == long
-          ? _value.long
-          : long // ignore: cast_nullable_to_non_nullable
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
               as double,
       address: null == address
           ? _value.address
@@ -394,21 +394,21 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectLocationImpl implements _ProjectLocation {
   const _$ProjectLocationImpl(
-      {required this.lat, required this.long, required this.address});
+      {required this.latitude, required this.longitude, required this.address});
 
   factory _$ProjectLocationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectLocationImplFromJson(json);
 
   @override
-  final double lat;
+  final double latitude;
   @override
-  final double long;
+  final double longitude;
   @override
   final String address;
 
   @override
   String toString() {
-    return 'ProjectLocation(lat: $lat, long: $long, address: $address)';
+    return 'ProjectLocation(latitude: $latitude, longitude: $longitude, address: $address)';
   }
 
   @override
@@ -416,14 +416,16 @@ class _$ProjectLocationImpl implements _ProjectLocation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProjectLocationImpl &&
-            (identical(other.lat, lat) || other.lat == lat) &&
-            (identical(other.long, long) || other.long == long) &&
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
             (identical(other.address, address) || other.address == address));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, lat, long, address);
+  int get hashCode => Object.hash(runtimeType, latitude, longitude, address);
 
   @JsonKey(ignore: true)
   @override
@@ -442,17 +444,17 @@ class _$ProjectLocationImpl implements _ProjectLocation {
 
 abstract class _ProjectLocation implements ProjectLocation {
   const factory _ProjectLocation(
-      {required final double lat,
-      required final double long,
+      {required final double latitude,
+      required final double longitude,
       required final String address}) = _$ProjectLocationImpl;
 
   factory _ProjectLocation.fromJson(Map<String, dynamic> json) =
       _$ProjectLocationImpl.fromJson;
 
   @override
-  double get lat;
+  double get latitude;
   @override
-  double get long;
+  double get longitude;
   @override
   String get address;
   @override

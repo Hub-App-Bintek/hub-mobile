@@ -22,10 +22,10 @@ LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
 mixin _$LoginResponse {
   int get userId => throw _privateConstructorUsedError;
   String? get fullName => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
-  String get token => throw _privateConstructorUsedError;
-  String get role => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
+  String? get token => throw _privateConstructorUsedError;
+  String? get role => throw _privateConstructorUsedError;
+  String? get status => throw _privateConstructorUsedError;
   int? get expiresIn => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -43,10 +43,10 @@ abstract class $LoginResponseCopyWith<$Res> {
   $Res call(
       {int userId,
       String? fullName,
-      String email,
-      String token,
-      String role,
-      String status,
+      String? email,
+      String? token,
+      String? role,
+      String? status,
       int? expiresIn});
 }
 
@@ -65,10 +65,10 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
   $Res call({
     Object? userId = null,
     Object? fullName = freezed,
-    Object? email = null,
-    Object? token = null,
-    Object? role = null,
-    Object? status = null,
+    Object? email = freezed,
+    Object? token = freezed,
+    Object? role = freezed,
+    Object? status = freezed,
     Object? expiresIn = freezed,
   }) {
     return _then(_value.copyWith(
@@ -80,22 +80,22 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
               as String?,
-      email: null == email
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
+              as String?,
+      token: freezed == token
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
+              as String?,
+      role: freezed == role
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
+              as String?,
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       expiresIn: freezed == expiresIn
           ? _value.expiresIn
           : expiresIn // ignore: cast_nullable_to_non_nullable
@@ -115,10 +115,10 @@ abstract class _$$LoginResponseImplCopyWith<$Res>
   $Res call(
       {int userId,
       String? fullName,
-      String email,
-      String token,
-      String role,
-      String status,
+      String? email,
+      String? token,
+      String? role,
+      String? status,
       int? expiresIn});
 }
 
@@ -135,10 +135,10 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = null,
     Object? fullName = freezed,
-    Object? email = null,
-    Object? token = null,
-    Object? role = null,
-    Object? status = null,
+    Object? email = freezed,
+    Object? token = freezed,
+    Object? role = freezed,
+    Object? status = freezed,
     Object? expiresIn = freezed,
   }) {
     return _then(_$LoginResponseImpl(
@@ -150,22 +150,22 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
           ? _value.fullName
           : fullName // ignore: cast_nullable_to_non_nullable
               as String?,
-      email: null == email
+      email: freezed == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
+              as String?,
+      token: freezed == token
           ? _value.token
           : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      role: null == role
+              as String?,
+      role: freezed == role
           ? _value.role
           : role // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
+              as String?,
+      status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       expiresIn: freezed == expiresIn
           ? _value.expiresIn
           : expiresIn // ignore: cast_nullable_to_non_nullable
@@ -180,10 +180,10 @@ class _$LoginResponseImpl implements _LoginResponse {
   const _$LoginResponseImpl(
       {required this.userId,
       this.fullName,
-      required this.email,
-      required this.token,
-      required this.role,
-      required this.status,
+      this.email,
+      this.token,
+      this.role,
+      this.status,
       this.expiresIn});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -194,13 +194,13 @@ class _$LoginResponseImpl implements _LoginResponse {
   @override
   final String? fullName;
   @override
-  final String email;
+  final String? email;
   @override
-  final String token;
+  final String? token;
   @override
-  final String role;
+  final String? role;
   @override
-  final String status;
+  final String? status;
   @override
   final int? expiresIn;
 
@@ -248,10 +248,10 @@ abstract class _LoginResponse implements LoginResponse {
   const factory _LoginResponse(
       {required final int userId,
       final String? fullName,
-      required final String email,
-      required final String token,
-      required final String role,
-      required final String status,
+      final String? email,
+      final String? token,
+      final String? role,
+      final String? status,
       final int? expiresIn}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
@@ -262,13 +262,13 @@ abstract class _LoginResponse implements LoginResponse {
   @override
   String? get fullName;
   @override
-  String get email;
+  String? get email;
   @override
-  String get token;
+  String? get token;
   @override
-  String get role;
+  String? get role;
   @override
-  String get status;
+  String? get status;
   @override
   int? get expiresIn;
   @override
