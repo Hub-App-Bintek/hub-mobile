@@ -21,13 +21,13 @@ RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RegisterResponse {
-  int get userId => throw _privateConstructorUsedError;
+  int? get userId => throw _privateConstructorUsedError;
   String? get fullName => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
+  String? get email => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
-  String get role => throw _privateConstructorUsedError;
-  String get status => throw _privateConstructorUsedError;
+  String? get role => throw _privateConstructorUsedError;
+  String? get status => throw _privateConstructorUsedError;
   String? get ktpUrl => throw _privateConstructorUsedError;
   String? get selfieUrl => throw _privateConstructorUsedError;
 
@@ -45,13 +45,13 @@ abstract class $RegisterResponseCopyWith<$Res> {
   ) = _$RegisterResponseCopyWithImpl<$Res, RegisterResponse>;
   @useResult
   $Res call({
-    int userId,
+    int? userId,
     String? fullName,
-    String email,
+    String? email,
     String? phone,
     String? username,
-    String role,
-    String status,
+    String? role,
+    String? status,
     String? ktpUrl,
     String? selfieUrl,
   });
@@ -70,30 +70,30 @@ class _$RegisterResponseCopyWithImpl<$Res, $Val extends RegisterResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? userId = freezed,
     Object? fullName = freezed,
-    Object? email = null,
+    Object? email = freezed,
     Object? phone = freezed,
     Object? username = freezed,
-    Object? role = null,
-    Object? status = null,
+    Object? role = freezed,
+    Object? status = freezed,
     Object? ktpUrl = freezed,
     Object? selfieUrl = freezed,
   }) {
     return _then(
       _value.copyWith(
-            userId: null == userId
+            userId: freezed == userId
                 ? _value.userId
                 : userId // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             fullName: freezed == fullName
                 ? _value.fullName
                 : fullName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            email: null == email
+            email: freezed == email
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             phone: freezed == phone
                 ? _value.phone
                 : phone // ignore: cast_nullable_to_non_nullable
@@ -102,14 +102,14 @@ class _$RegisterResponseCopyWithImpl<$Res, $Val extends RegisterResponse>
                 ? _value.username
                 : username // ignore: cast_nullable_to_non_nullable
                       as String?,
-            role: null == role
+            role: freezed == role
                 ? _value.role
                 : role // ignore: cast_nullable_to_non_nullable
-                      as String,
-            status: null == status
+                      as String?,
+            status: freezed == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
             ktpUrl: freezed == ktpUrl
                 ? _value.ktpUrl
                 : ktpUrl // ignore: cast_nullable_to_non_nullable
@@ -134,13 +134,13 @@ abstract class _$$RegisterResponseImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    int userId,
+    int? userId,
     String? fullName,
-    String email,
+    String? email,
     String? phone,
     String? username,
-    String role,
-    String status,
+    String? role,
+    String? status,
     String? ktpUrl,
     String? selfieUrl,
   });
@@ -158,30 +158,30 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = null,
+    Object? userId = freezed,
     Object? fullName = freezed,
-    Object? email = null,
+    Object? email = freezed,
     Object? phone = freezed,
     Object? username = freezed,
-    Object? role = null,
-    Object? status = null,
+    Object? role = freezed,
+    Object? status = freezed,
     Object? ktpUrl = freezed,
     Object? selfieUrl = freezed,
   }) {
     return _then(
       _$RegisterResponseImpl(
-        userId: null == userId
+        userId: freezed == userId
             ? _value.userId
             : userId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         fullName: freezed == fullName
             ? _value.fullName
             : fullName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        email: null == email
+        email: freezed == email
             ? _value.email
             : email // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         phone: freezed == phone
             ? _value.phone
             : phone // ignore: cast_nullable_to_non_nullable
@@ -190,14 +190,14 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
             ? _value.username
             : username // ignore: cast_nullable_to_non_nullable
                   as String?,
-        role: null == role
+        role: freezed == role
             ? _value.role
             : role // ignore: cast_nullable_to_non_nullable
-                  as String,
-        status: null == status
+                  as String?,
+        status: freezed == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
         ktpUrl: freezed == ktpUrl
             ? _value.ktpUrl
             : ktpUrl // ignore: cast_nullable_to_non_nullable
@@ -215,13 +215,13 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RegisterResponseImpl implements _RegisterResponse {
   const _$RegisterResponseImpl({
-    required this.userId,
+    this.userId,
     this.fullName,
-    required this.email,
+    this.email,
     this.phone,
     this.username,
-    required this.role,
-    required this.status,
+    this.role,
+    this.status,
     this.ktpUrl,
     this.selfieUrl,
   });
@@ -230,19 +230,19 @@ class _$RegisterResponseImpl implements _RegisterResponse {
       _$$RegisterResponseImplFromJson(json);
 
   @override
-  final int userId;
+  final int? userId;
   @override
   final String? fullName;
   @override
-  final String email;
+  final String? email;
   @override
   final String? phone;
   @override
   final String? username;
   @override
-  final String role;
+  final String? role;
   @override
-  final String status;
+  final String? status;
   @override
   final String? ktpUrl;
   @override
@@ -304,13 +304,13 @@ class _$RegisterResponseImpl implements _RegisterResponse {
 
 abstract class _RegisterResponse implements RegisterResponse {
   const factory _RegisterResponse({
-    required final int userId,
+    final int? userId,
     final String? fullName,
-    required final String email,
+    final String? email,
     final String? phone,
     final String? username,
-    required final String role,
-    required final String status,
+    final String? role,
+    final String? status,
     final String? ktpUrl,
     final String? selfieUrl,
   }) = _$RegisterResponseImpl;
@@ -319,19 +319,19 @@ abstract class _RegisterResponse implements RegisterResponse {
       _$RegisterResponseImpl.fromJson;
 
   @override
-  int get userId;
+  int? get userId;
   @override
   String? get fullName;
   @override
-  String get email;
+  String? get email;
   @override
   String? get phone;
   @override
   String? get username;
   @override
-  String get role;
+  String? get role;
   @override
-  String get status;
+  String? get status;
   @override
   String? get ktpUrl;
   @override

@@ -6,13 +6,13 @@ part 'register_response.g.dart';
 @freezed
 class RegisterResponse with _$RegisterResponse {
   const factory RegisterResponse({
-    required int userId,
+    int? userId,
     String? fullName,
-    required String email,
+    String? email,
     String? phone,
     String? username,
-    required String role,
-    required String status,
+    String? role,
+    String? status,
     String? ktpUrl,
     String? selfieUrl,
   }) = _RegisterResponse;

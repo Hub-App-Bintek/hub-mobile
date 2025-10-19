@@ -13,6 +13,8 @@ abstract class ApiEndpoints {
 
   // --- User ---
   static const String consultants = '/api/user/consultants';
+  static const String consultantPortfolio =
+      '/api/users/consultants/{consultantId}/portfolio';
 
   // Add other endpoints here as the app grows, for example:
   // static const String forgotPassword = '/api/auth/forgot-password';

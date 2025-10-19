@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/features/consultant/controllers/consultant_list_controller.dart';
-import 'package:pkp_hub/data/models/consultant.dart' as dto;
 
 class ConsultantListScreen extends GetView<ConsultantListController> {
   const ConsultantListScreen({super.key});
@@ -12,6 +13,7 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: const PkpAppBar(title: 'Consultants'),
       body: RefreshIndicator(
         onRefresh: controller.refreshList,
@@ -31,9 +33,9 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
                     childAspectRatio: 0.92,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final c = controller.items[index];
+                    final c = controller.consultants[index];
                     return ConsultantCard(consultant: c);
-                  }, childCount: controller.items.length),
+                  }, childCount: controller.consultants.length),
                 ),
               ),
               SliverToBoxAdapter(
@@ -56,60 +58,62 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
 class ConsultantCard extends StatelessWidget {
   const ConsultantCard({super.key, required this.consultant});
 
-  final dto.Consultant consultant;
+  final Consultant consultant;
 
   @override
   Widget build(BuildContext context) {
-    final subtitle = consultant.specialization?.trim().isNotEmpty == true
-        ? consultant.specialization!
-        : (consultant.email?.trim().isNotEmpty == true
-              ? consultant.email!
-              : (consultant.phone?.trim().isNotEmpty == true
-                    ? consultant.phone!
-                    : '-'));
-
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.primaryLightest,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 4),
-              _Avatar(avatarUrl: consultant.avatarUrl),
-              const Spacer(),
-              Text(
-                consultant.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodyM.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.neutralDarkest,
-                ),
+    return GestureDetector(
+      onTap: () {
+        final controller = Get.find<ConsultantListController>();
+        controller.goToPortfolio(consultant.consultantId ?? '');
+      },
+      child: SizedBox(
+        width: double.infinity,
+        child: Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.primaryLightest,
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.bodyS.copyWith(
-                  color: AppColors.neutralDarkest.withValues(alpha: 0.6),
-                ),
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 4),
+                  _Avatar(avatarUrl: consultant.avatarUrl),
+                  const Spacer(),
+                  Text(
+                    consultant.fullName ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyM.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.neutralDarkest,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    Formatters.currency(consultant.packageCost ?? 0),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.bodyS.copyWith(
+                      color: AppColors.neutralDarkest.withValues(alpha: 0.6),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            if (consultant.rating != null)
+              Positioned(
+                top: 10,
+                right: 10,
+                child: _RatingBadge(rating: consultant.rating!),
+              ),
+          ],
         ),
-        if (consultant.rating != null)
-          Positioned(
-            top: 10,
-            right: 10,
-            child: _RatingBadge(rating: consultant.rating!),
-          ),
-      ],
+      ),
     );
   }
 }
@@ -123,7 +127,7 @@ class _Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasImage = avatarUrl != null && avatarUrl!.trim().isNotEmpty;
     return CircleAvatar(
-      radius: 24,
+      radius: 48,
       backgroundColor: AppColors.primaryLight,
       backgroundImage: hasImage ? NetworkImage(avatarUrl!) : null,
       child: hasImage
@@ -140,26 +144,20 @@ class _RatingBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool strong = rating >= 4.5;
-    final Color bg = strong
-        ? AppColors.primaryDarkest
-        : AppColors.primaryLightest;
-    final Color fg = strong ? AppColors.white : AppColors.primaryDarkest;
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: bg,
+        color: AppColors.primaryDarkest,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.star, size: 14, color: fg),
+          const Icon(Icons.star, size: 14, color: AppColors.white),
           const SizedBox(width: 4),
           Text(
             rating.toStringAsFixed(1),
-            style: AppTextStyles.actionS.copyWith(color: fg),
+            style: AppTextStyles.actionS.copyWith(color: AppColors.white),
           ),
         ],
       ),

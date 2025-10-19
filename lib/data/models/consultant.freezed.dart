@@ -21,13 +21,19 @@ Consultant _$ConsultantFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consultant {
-  int get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String? get email => throw _privateConstructorUsedError;
-  String? get phone => throw _privateConstructorUsedError;
-  String? get avatarUrl => throw _privateConstructorUsedError;
-  String? get specialization => throw _privateConstructorUsedError;
+  String? get consultantId => throw _privateConstructorUsedError;
+  String? get fullName => throw _privateConstructorUsedError;
+  String? get specialty => throw _privateConstructorUsedError;
   double? get rating => throw _privateConstructorUsedError;
+  double? get distanceKm => throw _privateConstructorUsedError;
+  String? get avatarUrl => throw _privateConstructorUsedError;
+  String? get location => throw _privateConstructorUsedError;
+  String? get type => throw _privateConstructorUsedError;
+  String? get experienceLevel => throw _privateConstructorUsedError;
+  String? get availabilityStatus => throw _privateConstructorUsedError;
+  String? get contactInfo => throw _privateConstructorUsedError;
+  double? get hourlyRate => throw _privateConstructorUsedError;
+  double? get packageCost => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,13 +49,19 @@ abstract class $ConsultantCopyWith<$Res> {
   ) = _$ConsultantCopyWithImpl<$Res, Consultant>;
   @useResult
   $Res call({
-    int id,
-    String name,
-    String? email,
-    String? phone,
-    String? avatarUrl,
-    String? specialization,
+    String? consultantId,
+    String? fullName,
+    String? specialty,
     double? rating,
+    double? distanceKm,
+    String? avatarUrl,
+    String? location,
+    String? type,
+    String? experienceLevel,
+    String? availabilityStatus,
+    String? contactInfo,
+    double? hourlyRate,
+    double? packageCost,
   });
 }
 
@@ -66,43 +78,73 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? email = freezed,
-    Object? phone = freezed,
-    Object? avatarUrl = freezed,
-    Object? specialization = freezed,
+    Object? consultantId = freezed,
+    Object? fullName = freezed,
+    Object? specialty = freezed,
     Object? rating = freezed,
+    Object? distanceKm = freezed,
+    Object? avatarUrl = freezed,
+    Object? location = freezed,
+    Object? type = freezed,
+    Object? experienceLevel = freezed,
+    Object? availabilityStatus = freezed,
+    Object? contactInfo = freezed,
+    Object? hourlyRate = freezed,
+    Object? packageCost = freezed,
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            email: freezed == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
+            consultantId: freezed == consultantId
+                ? _value.consultantId
+                : consultantId // ignore: cast_nullable_to_non_nullable
                       as String?,
-            phone: freezed == phone
-                ? _value.phone
-                : phone // ignore: cast_nullable_to_non_nullable
+            fullName: freezed == fullName
+                ? _value.fullName
+                : fullName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            avatarUrl: freezed == avatarUrl
-                ? _value.avatarUrl
-                : avatarUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            specialization: freezed == specialization
-                ? _value.specialization
-                : specialization // ignore: cast_nullable_to_non_nullable
+            specialty: freezed == specialty
+                ? _value.specialty
+                : specialty // ignore: cast_nullable_to_non_nullable
                       as String?,
             rating: freezed == rating
                 ? _value.rating
                 : rating // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            distanceKm: freezed == distanceKm
+                ? _value.distanceKm
+                : distanceKm // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            avatarUrl: freezed == avatarUrl
+                ? _value.avatarUrl
+                : avatarUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            location: freezed == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            experienceLevel: freezed == experienceLevel
+                ? _value.experienceLevel
+                : experienceLevel // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            availabilityStatus: freezed == availabilityStatus
+                ? _value.availabilityStatus
+                : availabilityStatus // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            contactInfo: freezed == contactInfo
+                ? _value.contactInfo
+                : contactInfo // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            hourlyRate: freezed == hourlyRate
+                ? _value.hourlyRate
+                : hourlyRate // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            packageCost: freezed == packageCost
+                ? _value.packageCost
+                : packageCost // ignore: cast_nullable_to_non_nullable
                       as double?,
           )
           as $Val,
@@ -120,13 +162,19 @@ abstract class _$$ConsultantImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    int id,
-    String name,
-    String? email,
-    String? phone,
-    String? avatarUrl,
-    String? specialization,
+    String? consultantId,
+    String? fullName,
+    String? specialty,
     double? rating,
+    double? distanceKm,
+    String? avatarUrl,
+    String? location,
+    String? type,
+    String? experienceLevel,
+    String? availabilityStatus,
+    String? contactInfo,
+    double? hourlyRate,
+    double? packageCost,
   });
 }
 
@@ -142,43 +190,73 @@ class __$$ConsultantImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? name = null,
-    Object? email = freezed,
-    Object? phone = freezed,
-    Object? avatarUrl = freezed,
-    Object? specialization = freezed,
+    Object? consultantId = freezed,
+    Object? fullName = freezed,
+    Object? specialty = freezed,
     Object? rating = freezed,
+    Object? distanceKm = freezed,
+    Object? avatarUrl = freezed,
+    Object? location = freezed,
+    Object? type = freezed,
+    Object? experienceLevel = freezed,
+    Object? availabilityStatus = freezed,
+    Object? contactInfo = freezed,
+    Object? hourlyRate = freezed,
+    Object? packageCost = freezed,
   }) {
     return _then(
       _$ConsultantImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        email: freezed == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
+        consultantId: freezed == consultantId
+            ? _value.consultantId
+            : consultantId // ignore: cast_nullable_to_non_nullable
                   as String?,
-        phone: freezed == phone
-            ? _value.phone
-            : phone // ignore: cast_nullable_to_non_nullable
+        fullName: freezed == fullName
+            ? _value.fullName
+            : fullName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        avatarUrl: freezed == avatarUrl
-            ? _value.avatarUrl
-            : avatarUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        specialization: freezed == specialization
-            ? _value.specialization
-            : specialization // ignore: cast_nullable_to_non_nullable
+        specialty: freezed == specialty
+            ? _value.specialty
+            : specialty // ignore: cast_nullable_to_non_nullable
                   as String?,
         rating: freezed == rating
             ? _value.rating
             : rating // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        distanceKm: freezed == distanceKm
+            ? _value.distanceKm
+            : distanceKm // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        avatarUrl: freezed == avatarUrl
+            ? _value.avatarUrl
+            : avatarUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        location: freezed == location
+            ? _value.location
+            : location // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        experienceLevel: freezed == experienceLevel
+            ? _value.experienceLevel
+            : experienceLevel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        availabilityStatus: freezed == availabilityStatus
+            ? _value.availabilityStatus
+            : availabilityStatus // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        contactInfo: freezed == contactInfo
+            ? _value.contactInfo
+            : contactInfo // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        hourlyRate: freezed == hourlyRate
+            ? _value.hourlyRate
+            : hourlyRate // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        packageCost: freezed == packageCost
+            ? _value.packageCost
+            : packageCost // ignore: cast_nullable_to_non_nullable
                   as double?,
       ),
     );
@@ -189,36 +267,54 @@ class __$$ConsultantImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsultantImpl implements _Consultant {
   const _$ConsultantImpl({
-    required this.id,
-    required this.name,
-    this.email,
-    this.phone,
-    this.avatarUrl,
-    this.specialization,
+    this.consultantId,
+    this.fullName,
+    this.specialty,
     this.rating,
+    this.distanceKm,
+    this.avatarUrl,
+    this.location,
+    this.type,
+    this.experienceLevel,
+    this.availabilityStatus,
+    this.contactInfo,
+    this.hourlyRate,
+    this.packageCost,
   });
 
   factory _$ConsultantImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultantImplFromJson(json);
 
   @override
-  final int id;
+  final String? consultantId;
   @override
-  final String name;
+  final String? fullName;
   @override
-  final String? email;
+  final String? specialty;
   @override
-  final String? phone;
+  final double? rating;
+  @override
+  final double? distanceKm;
   @override
   final String? avatarUrl;
   @override
-  final String? specialization;
+  final String? location;
   @override
-  final double? rating;
+  final String? type;
+  @override
+  final String? experienceLevel;
+  @override
+  final String? availabilityStatus;
+  @override
+  final String? contactInfo;
+  @override
+  final double? hourlyRate;
+  @override
+  final double? packageCost;
 
   @override
   String toString() {
-    return 'Consultant(id: $id, name: $name, email: $email, phone: $phone, avatarUrl: $avatarUrl, specialization: $specialization, rating: $rating)';
+    return 'Consultant(consultantId: $consultantId, fullName: $fullName, specialty: $specialty, rating: $rating, distanceKm: $distanceKm, avatarUrl: $avatarUrl, location: $location, type: $type, experienceLevel: $experienceLevel, availabilityStatus: $availabilityStatus, contactInfo: $contactInfo, hourlyRate: $hourlyRate, packageCost: $packageCost)';
   }
 
   @override
@@ -226,28 +322,49 @@ class _$ConsultantImpl implements _Consultant {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsultantImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.phone, phone) || other.phone == phone) &&
+            (identical(other.consultantId, consultantId) ||
+                other.consultantId == consultantId) &&
+            (identical(other.fullName, fullName) ||
+                other.fullName == fullName) &&
+            (identical(other.specialty, specialty) ||
+                other.specialty == specialty) &&
+            (identical(other.rating, rating) || other.rating == rating) &&
+            (identical(other.distanceKm, distanceKm) ||
+                other.distanceKm == distanceKm) &&
             (identical(other.avatarUrl, avatarUrl) ||
                 other.avatarUrl == avatarUrl) &&
-            (identical(other.specialization, specialization) ||
-                other.specialization == specialization) &&
-            (identical(other.rating, rating) || other.rating == rating));
+            (identical(other.location, location) ||
+                other.location == location) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.experienceLevel, experienceLevel) ||
+                other.experienceLevel == experienceLevel) &&
+            (identical(other.availabilityStatus, availabilityStatus) ||
+                other.availabilityStatus == availabilityStatus) &&
+            (identical(other.contactInfo, contactInfo) ||
+                other.contactInfo == contactInfo) &&
+            (identical(other.hourlyRate, hourlyRate) ||
+                other.hourlyRate == hourlyRate) &&
+            (identical(other.packageCost, packageCost) ||
+                other.packageCost == packageCost));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    id,
-    name,
-    email,
-    phone,
-    avatarUrl,
-    specialization,
+    consultantId,
+    fullName,
+    specialty,
     rating,
+    distanceKm,
+    avatarUrl,
+    location,
+    type,
+    experienceLevel,
+    availabilityStatus,
+    contactInfo,
+    hourlyRate,
+    packageCost,
   );
 
   @JsonKey(ignore: true)
@@ -264,32 +381,50 @@ class _$ConsultantImpl implements _Consultant {
 
 abstract class _Consultant implements Consultant {
   const factory _Consultant({
-    required final int id,
-    required final String name,
-    final String? email,
-    final String? phone,
-    final String? avatarUrl,
-    final String? specialization,
+    final String? consultantId,
+    final String? fullName,
+    final String? specialty,
     final double? rating,
+    final double? distanceKm,
+    final String? avatarUrl,
+    final String? location,
+    final String? type,
+    final String? experienceLevel,
+    final String? availabilityStatus,
+    final String? contactInfo,
+    final double? hourlyRate,
+    final double? packageCost,
   }) = _$ConsultantImpl;
 
   factory _Consultant.fromJson(Map<String, dynamic> json) =
       _$ConsultantImpl.fromJson;
 
   @override
-  int get id;
+  String? get consultantId;
   @override
-  String get name;
+  String? get fullName;
   @override
-  String? get email;
+  String? get specialty;
   @override
-  String? get phone;
+  double? get rating;
+  @override
+  double? get distanceKm;
   @override
   String? get avatarUrl;
   @override
-  String? get specialization;
+  String? get location;
   @override
-  double? get rating;
+  String? get type;
+  @override
+  String? get experienceLevel;
+  @override
+  String? get availabilityStatus;
+  @override
+  String? get contactInfo;
+  @override
+  double? get hourlyRate;
+  @override
+  double? get packageCost;
   @override
   @JsonKey(ignore: true)
   _$$ConsultantImplCopyWith<_$ConsultantImpl> get copyWith =>

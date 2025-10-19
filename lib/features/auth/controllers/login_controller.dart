@@ -13,6 +13,9 @@ class LoginController extends BaseController {
   final LoginUseCase _loginUseCase;
   final AuthStorage _authLocalStorage;
 
+  // Constructor
+  LoginController(this._loginUseCase, this._authLocalStorage);
+
   // Text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -24,13 +27,6 @@ class LoginController extends BaseController {
 
   // Observable request state
   final isRequesting = false.obs;
-
-  // Constructor
-  LoginController({
-    required LoginUseCase loginUseCase,
-    required AuthStorage authLocalStorage,
-  }) : _loginUseCase = loginUseCase,
-       _authLocalStorage = authLocalStorage;
 
   @override
   void onInit() {
@@ -84,7 +80,7 @@ class LoginController extends BaseController {
           // You now have full control over the failure logic.
           switch (failure) {
             case ApiFailure(error: final apiError):
-              if (apiError.errorCode == 'USER_UNVERIFIED') {
+              if (apiError.errorCode == 'ACCOUNT_INACTIVE') {
                 // Specific case: Navigate and do NOT show a snackbar.
                 navigateTo(
                   AppRoutes.verifyOtp,

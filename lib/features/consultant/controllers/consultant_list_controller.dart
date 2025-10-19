@@ -2,24 +2,28 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pkp_hub/data/models/consultant.dart' as dto;
-import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
-import 'package:pkp_hub/core/network/result.dart';
-import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
+import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 
-class ConsultantListController extends GetxController {
-  ConsultantListController(this._getConsultants);
+class ConsultantListController extends BaseController {
+  final GetConsultantsUseCase _getConsultantsUseCase;
+  final double _lat;
+  final double _long;
+  final String _type;
 
-  final GetConsultantsUseCase _getConsultants;
+  ConsultantListController(
+    this._getConsultantsUseCase,
+    this._lat,
+    this._long,
+    this._type,
+  );
 
-  final RxList<dto.Consultant> items = <dto.Consultant>[].obs;
+  final RxList<Consultant> consultants = <Consultant>[].obs;
   final RxBool isLoading = false.obs;
   final ScrollController scrollController = ScrollController();
-
-  late double _lat;
-  late double _long;
-  late String _type;
 
   int _page = 0;
   static const int _pageSize = 10;
@@ -28,13 +32,8 @@ class ConsultantListController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments as Map<String, dynamic>?;
-    _lat = (args?['lat'] as num?)?.toDouble() ?? 0.0;
-    _long = (args?['long'] as num?)?.toDouble() ?? 0.0;
-    _type = (args?['type'] as String?) ?? '';
-
     scrollController.addListener(_onScroll);
-    fetchMore();
+    fetchConsultants();
   }
 
   void _onScroll() {
@@ -42,41 +41,49 @@ class ConsultantListController extends GetxController {
     final position = scrollController.position;
     if (!position.hasPixels || !position.hasContentDimensions) return;
     if (position.pixels >= position.maxScrollExtent - 300) {
-      fetchMore();
+      fetchConsultants();
     }
   }
 
   Future<void> refreshList() async {
-    items.clear();
+    consultants.clear();
     _page = 0;
     _done = false;
-    await fetchMore();
+    await fetchConsultants();
   }
 
-  Future<void> fetchMore() async {
+  Future<void> fetchConsultants() async {
     if (isLoading.value || _done) return;
     isLoading.value = true;
-
-    final result = await _getConsultants(
-      lat: _lat,
-      long: _long,
-      page: _page,
-      size: _pageSize,
-    );
-    if (result is Success<ConsultantsResponse, Failure>) {
-      final newItems = result.value.consultants;
-      if (newItems.isEmpty) {
+    await handleAsync<ConsultantsResponse>(
+      () => _getConsultantsUseCase(
+        lat: _lat,
+        long: _long,
+        page: _page,
+        size: _pageSize,
+      ),
+      onSuccess: (response) {
+        final result = response.consultants;
+        if (result.isEmpty) {
+          _done = true;
+        } else {
+          consultants.addAll(result);
+          _page += 1;
+        }
+      },
+      onFailure: (failure) {
         _done = true;
-      } else {
-        items.addAll(newItems);
-        _page += 1;
-      }
-    } else if (result is Error<ConsultantsResponse, Failure>) {
-      // Optional: show error to user via snackbar/toast
-      _done = true; // stop trying to load more on error for now
-    }
-
+        showError(failure);
+      },
+    );
     isLoading.value = false;
+  }
+
+  void goToPortfolio(String consultantId) {
+    navigateTo(
+      AppRoutes.consultantPortfolio,
+      arguments: {'consultantId': consultantId},
+    );
   }
 
   @override
