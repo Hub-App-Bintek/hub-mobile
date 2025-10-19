@@ -3,17 +3,14 @@ import '../utils/logger.dart';
 import '../storage/secure_storage.dart';
 
 class AppConfig {
-  static final AppConfig _instance = AppConfig._internal();
-  factory AppConfig() => _instance;
-
-  final _logger = Logger();
-  final _storage = SecureStorage();
+  final Logger _logger;
+  final SecureStorage _storage;
 
   bool _initialized = false;
   final Map<String, dynamic> _config = {};
   final Map<String, bool> _featureFlags = {};
 
-  AppConfig._internal();
+  AppConfig(this._logger, this._storage);
 
   Future<void> init() async {
     if (_initialized) return;

@@ -3,13 +3,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../utils/logger.dart';
 
 class SecureStorage {
-  static final SecureStorage _instance = SecureStorage._internal();
-  factory SecureStorage() => _instance;
+  final FlutterSecureStorage _storage;
+  final Logger _logger;
 
-  final _storage = const FlutterSecureStorage();
-  final _logger = Logger();
-
-  SecureStorage._internal();
+  SecureStorage(this._logger, this._storage);
 
   Future<void> write(String key, String value) async {
     try {
