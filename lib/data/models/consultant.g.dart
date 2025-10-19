@@ -8,22 +8,34 @@ part of 'consultant.dart';
 
 _$ConsultantImpl _$$ConsultantImplFromJson(Map<String, dynamic> json) =>
     _$ConsultantImpl(
-      id: (json['id'] as num).toInt(),
-      name: json['name'] as String,
-      email: json['email'] as String?,
-      phone: json['phone'] as String?,
-      avatarUrl: json['avatarUrl'] as String?,
-      specialization: json['specialization'] as String?,
+      consultantId: json['consultantId'] as String?,
+      fullName: json['fullName'] as String?,
+      specialty: json['specialty'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
+      distanceKm: (json['distanceKm'] as num?)?.toDouble(),
+      avatarUrl: json['avatarUrl'] as String?,
+      location: json['location'] as String?,
+      type: json['type'] as String?,
+      experienceLevel: json['experienceLevel'] as String?,
+      availabilityStatus: json['availabilityStatus'] as String?,
+      contactInfo: json['contactInfo'] as String?,
+      hourlyRate: (json['hourlyRate'] as num?)?.toDouble(),
+      packageCost: (json['packageCost'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$ConsultantImplToJson(_$ConsultantImpl instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'email': instance.email,
-      'phone': instance.phone,
-      'avatarUrl': instance.avatarUrl,
-      'specialization': instance.specialization,
+      'consultantId': instance.consultantId,
+      'fullName': instance.fullName,
+      'specialty': instance.specialty,
       'rating': instance.rating,
+      'distanceKm': instance.distanceKm,
+      'avatarUrl': instance.avatarUrl,
+      'location': instance.location,
+      'type': instance.type,
+      'experienceLevel': instance.experienceLevel,
+      'availabilityStatus': instance.availabilityStatus,
+      'contactInfo': instance.contactInfo,
+      'hourlyRate': instance.hourlyRate,
+      'packageCost': instance.packageCost,
     };

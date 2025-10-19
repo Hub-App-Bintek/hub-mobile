@@ -8,6 +8,7 @@ abstract class AppRoutes {
   static const verifyOtp = _Paths.verifyOtp;
   static const main = _Paths.main;
   static const consultation = _Paths.consultation;
+  static const consultantPortfolio = _Paths.consultantPortfolio;
   static const licensing = _Paths.licensing;
   static const material = _Paths.material;
   static const construction = _Paths.construction;
@@ -22,6 +23,7 @@ abstract class _Paths {
   static const verifyOtp = '/verify-otp';
   static const main = '/main';
   static const consultation = '/consultation';
+  static const consultantPortfolio = '/consultant-portfolio';
   static const licensing = '/licensing';
   static const material = '/material';
   static const construction = '/construction';

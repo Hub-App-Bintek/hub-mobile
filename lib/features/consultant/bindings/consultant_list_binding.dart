@@ -11,8 +11,14 @@ class ConsultantListBinding extends Bindings {
       () => GetConsultantsUseCase(Get.find<ConsultantRepository>()),
     );
 
-    Get.lazyPut<ConsultantListController>(
-      () => ConsultantListController(Get.find<GetConsultantsUseCase>()),
-    );
+    Get.lazyPut<ConsultantListController>(() {
+      final args = Get.arguments as Map<String, dynamic>?;
+      return ConsultantListController(
+        Get.find<GetConsultantsUseCase>(),
+        (args?['lat'] as num?)?.toDouble() ?? 0.0,
+        (args?['long'] as num?)?.toDouble() ?? 0.0,
+        (args?['type'] as String?) ?? '',
+      );
+    });
   }
 }

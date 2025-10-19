@@ -9,13 +9,13 @@ part of 'register_response.dart';
 _$RegisterResponseImpl _$$RegisterResponseImplFromJson(
   Map<String, dynamic> json,
 ) => _$RegisterResponseImpl(
-  userId: (json['userId'] as num).toInt(),
+  userId: (json['userId'] as num?)?.toInt(),
   fullName: json['fullName'] as String?,
-  email: json['email'] as String,
+  email: json['email'] as String?,
   phone: json['phone'] as String?,
   username: json['username'] as String?,
-  role: json['role'] as String,
-  status: json['status'] as String,
+  role: json['role'] as String?,
+  status: json['status'] as String?,
   ktpUrl: json['ktpUrl'] as String?,
   selfieUrl: json['selfieUrl'] as String?,
 );

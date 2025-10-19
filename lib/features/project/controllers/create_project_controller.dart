@@ -152,9 +152,7 @@ class CreateProjectController extends BaseController {
           ),
         ),
         onSuccess: (response) {
-          debugPrint(response.projectId.toString());
-          // Redirect to consultant list page with query params
-          Get.offNamed(
+          navigateOff(
             AppRoutes.consultation,
             arguments: {
               'lat': selectedLocation.value?.latitude ?? 0.0,
