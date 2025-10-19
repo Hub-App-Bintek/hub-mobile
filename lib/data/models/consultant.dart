@@ -15,6 +15,6 @@ class Consultant with _$Consultant {
     double? rating,
   }) = _Consultant;
 
-  factory Consultant.fromJson(Map<String, dynamic> json) => _$ConsultantFromJson(json);
+  factory Consultant.fromJson(Map<String, dynamic> json) =>
+      _$ConsultantFromJson(json);
 }
-

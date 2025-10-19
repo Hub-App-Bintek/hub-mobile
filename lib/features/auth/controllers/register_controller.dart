@@ -73,7 +73,8 @@ class RegisterController extends BaseController {
   }
 
   void _updateFormValidity() {
-    _isFormValid.value = isEmailValid.value &&
+    _isFormValid.value =
+        isEmailValid.value &&
         isPasswordValid.value &&
         isConfirmPasswordValid.value &&
         acceptTerms.value;
@@ -102,14 +103,11 @@ class RegisterController extends BaseController {
           ),
         ),
         onSuccess: (registerResponse) async {
-          navigateTo(
-            AppRoutes.verifyOtp,
-            arguments: registerResponse.email,
-          );
+          navigateTo(AppRoutes.verifyOtp, arguments: registerResponse.email);
         },
         onFailure: (Failure failure) {
           // For registration, we currently show all errors.
-          // If a specific error code (e.g., EMAIL_ALREADY_EXISTS) needs custom 
+          // If a specific error code (e.g., EMAIL_ALREADY_EXISTS) needs custom
           // handling, a switch statement can be added here, just like in LoginController.
           showError(failure);
         },

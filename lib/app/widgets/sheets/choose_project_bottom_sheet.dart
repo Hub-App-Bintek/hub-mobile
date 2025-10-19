@@ -20,7 +20,8 @@ class ChooseProjectBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<ChooseProjectBottomSheet> createState() => _ChooseProjectBottomSheetState();
+  State<ChooseProjectBottomSheet> createState() =>
+      _ChooseProjectBottomSheetState();
 }
 
 class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
@@ -50,12 +51,16 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
                 onPressed: () {
                   if (_selectedIndex == widget.projects.length) {
                     // New Project selected
-                    if (widget.onNewProjectTap != null) widget.onNewProjectTap!();
+                    if (widget.onNewProjectTap != null)
+                      widget.onNewProjectTap!();
                   } else {
                     if (widget.onConfirm != null) {
-                      widget.onConfirm!(_selectedIndex != null && _selectedIndex! < widget.projects.length
-                          ? widget.projects[_selectedIndex!]
-                          : null);
+                      widget.onConfirm!(
+                        _selectedIndex != null &&
+                                _selectedIndex! < widget.projects.length
+                            ? widget.projects[_selectedIndex!]
+                            : null,
+                      );
                     }
                     Get.back();
                   }
@@ -80,7 +85,9 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
               padding: const EdgeInsets.symmetric(horizontal: 48.0),
               child: Text(
                 'Choose Project',
-                style: AppTextStyles.bodyM.copyWith(fontWeight: FontWeight.bold),
+                style: AppTextStyles.bodyM.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

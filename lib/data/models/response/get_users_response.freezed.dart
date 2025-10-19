@@ -12,7 +12,8 @@ part of 'get_users_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 GetUsersResponse _$GetUsersResponseFromJson(Map<String, dynamic> json) {
   return _GetUsersResponse.fromJson(json);
@@ -31,8 +32,9 @@ mixin _$GetUsersResponse {
 /// @nodoc
 abstract class $GetUsersResponseCopyWith<$Res> {
   factory $GetUsersResponseCopyWith(
-          GetUsersResponse value, $Res Function(GetUsersResponse) then) =
-      _$GetUsersResponseCopyWithImpl<$Res, GetUsersResponse>;
+    GetUsersResponse value,
+    $Res Function(GetUsersResponse) then,
+  ) = _$GetUsersResponseCopyWithImpl<$Res, GetUsersResponse>;
   @useResult
   $Res call({List<UserData> users});
 }
@@ -49,24 +51,26 @@ class _$GetUsersResponseCopyWithImpl<$Res, $Val extends GetUsersResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? users = null,
-  }) {
-    return _then(_value.copyWith(
-      users: null == users
-          ? _value.users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<UserData>,
-    ) as $Val);
+  $Res call({Object? users = null}) {
+    return _then(
+      _value.copyWith(
+            users: null == users
+                ? _value.users
+                : users // ignore: cast_nullable_to_non_nullable
+                      as List<UserData>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$GetUsersResponseImplCopyWith<$Res>
     implements $GetUsersResponseCopyWith<$Res> {
-  factory _$$GetUsersResponseImplCopyWith(_$GetUsersResponseImpl value,
-          $Res Function(_$GetUsersResponseImpl) then) =
-      __$$GetUsersResponseImplCopyWithImpl<$Res>;
+  factory _$$GetUsersResponseImplCopyWith(
+    _$GetUsersResponseImpl value,
+    $Res Function(_$GetUsersResponseImpl) then,
+  ) = __$$GetUsersResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<UserData> users});
@@ -76,21 +80,22 @@ abstract class _$$GetUsersResponseImplCopyWith<$Res>
 class __$$GetUsersResponseImplCopyWithImpl<$Res>
     extends _$GetUsersResponseCopyWithImpl<$Res, _$GetUsersResponseImpl>
     implements _$$GetUsersResponseImplCopyWith<$Res> {
-  __$$GetUsersResponseImplCopyWithImpl(_$GetUsersResponseImpl _value,
-      $Res Function(_$GetUsersResponseImpl) _then)
-      : super(_value, _then);
+  __$$GetUsersResponseImplCopyWithImpl(
+    _$GetUsersResponseImpl _value,
+    $Res Function(_$GetUsersResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? users = null,
-  }) {
-    return _then(_$GetUsersResponseImpl(
-      users: null == users
-          ? _value._users
-          : users // ignore: cast_nullable_to_non_nullable
-              as List<UserData>,
-    ));
+  $Res call({Object? users = null}) {
+    return _then(
+      _$GetUsersResponseImpl(
+        users: null == users
+            ? _value._users
+            : users // ignore: cast_nullable_to_non_nullable
+                  as List<UserData>,
+      ),
+    );
   }
 }
 
@@ -98,7 +103,7 @@ class __$$GetUsersResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GetUsersResponseImpl implements _GetUsersResponse {
   const _$GetUsersResponseImpl({required final List<UserData> users})
-      : _users = users;
+    : _users = users;
 
   factory _$GetUsersResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$GetUsersResponseImplFromJson(json);
@@ -134,13 +139,13 @@ class _$GetUsersResponseImpl implements _GetUsersResponse {
   @pragma('vm:prefer-inline')
   _$$GetUsersResponseImplCopyWith<_$GetUsersResponseImpl> get copyWith =>
       __$$GetUsersResponseImplCopyWithImpl<_$GetUsersResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GetUsersResponseImplToJson(
-      this,
-    );
+    return _$$GetUsersResponseImplToJson(this);
   }
 }
 
@@ -195,25 +200,24 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -221,8 +225,9 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 abstract class _$$UserDataImplCopyWith<$Res>
     implements $UserDataCopyWith<$Res> {
   factory _$$UserDataImplCopyWith(
-          _$UserDataImpl value, $Res Function(_$UserDataImpl) then) =
-      __$$UserDataImplCopyWithImpl<$Res>;
+    _$UserDataImpl value,
+    $Res Function(_$UserDataImpl) then,
+  ) = __$$UserDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String email, String? name});
@@ -233,30 +238,29 @@ class __$$UserDataImplCopyWithImpl<$Res>
     extends _$UserDataCopyWithImpl<$Res, _$UserDataImpl>
     implements _$$UserDataImplCopyWith<$Res> {
   __$$UserDataImplCopyWithImpl(
-      _$UserDataImpl _value, $Res Function(_$UserDataImpl) _then)
-      : super(_value, _then);
+    _$UserDataImpl _value,
+    $Res Function(_$UserDataImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_$UserDataImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _$UserDataImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
@@ -302,17 +306,16 @@ class _$UserDataImpl implements _UserData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserDataImplToJson(
-      this,
-    );
+    return _$$UserDataImplToJson(this);
   }
 }
 
 abstract class _UserData implements UserData {
-  const factory _UserData(
-      {required final int id,
-      required final String email,
-      final String? name}) = _$UserDataImpl;
+  const factory _UserData({
+    required final int id,
+    required final String email,
+    final String? name,
+  }) = _$UserDataImpl;
 
   factory _UserData.fromJson(Map<String, dynamic> json) =
       _$UserDataImpl.fromJson;

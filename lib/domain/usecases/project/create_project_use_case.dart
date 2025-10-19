@@ -9,7 +9,9 @@ class CreateProjectUseCase {
 
   CreateProjectUseCase(this.repository);
 
-  Future<Result<CreateProjectResponse, Failure>> call(CreateProjectRequest request) {
+  Future<Result<CreateProjectResponse, Failure>> call(
+    CreateProjectRequest request,
+  ) {
     return repository.createProject(request);
   }
 }

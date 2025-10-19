@@ -5,10 +5,9 @@ part 'verify_otp_response.g.dart';
 
 @freezed
 class VerifyOtpResponse with _$VerifyOtpResponse {
-  const factory VerifyOtpResponse({
-    required String message,
-  }) = _VerifyOtpResponse;
+  const factory VerifyOtpResponse({required String message}) =
+      _VerifyOtpResponse;
 
-  factory VerifyOtpResponse.fromJson(Map<String, dynamic> json) => _$VerifyOtpResponseFromJson(json);
+  factory VerifyOtpResponse.fromJson(Map<String, dynamic> json) =>
+      _$VerifyOtpResponseFromJson(json);
 }
-

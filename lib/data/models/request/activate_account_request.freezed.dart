@@ -12,10 +12,12 @@ part of 'activate_account_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ActivateAccountRequest _$ActivateAccountRequestFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ActivateAccountRequest.fromJson(json);
 }
 
@@ -34,17 +36,24 @@ mixin _$ActivateAccountRequest {
 
 /// @nodoc
 abstract class $ActivateAccountRequestCopyWith<$Res> {
-  factory $ActivateAccountRequestCopyWith(ActivateAccountRequest value,
-          $Res Function(ActivateAccountRequest) then) =
-      _$ActivateAccountRequestCopyWithImpl<$Res, ActivateAccountRequest>;
+  factory $ActivateAccountRequestCopyWith(
+    ActivateAccountRequest value,
+    $Res Function(ActivateAccountRequest) then,
+  ) = _$ActivateAccountRequestCopyWithImpl<$Res, ActivateAccountRequest>;
   @useResult
-  $Res call(
-      {String email, String token, String password, String confirmPassword});
+  $Res call({
+    String email,
+    String token,
+    String password,
+    String confirmPassword,
+  });
 }
 
 /// @nodoc
-class _$ActivateAccountRequestCopyWithImpl<$Res,
-        $Val extends ActivateAccountRequest>
+class _$ActivateAccountRequestCopyWithImpl<
+  $Res,
+  $Val extends ActivateAccountRequest
+>
     implements $ActivateAccountRequestCopyWith<$Res> {
   _$ActivateAccountRequestCopyWithImpl(this._value, this._then);
 
@@ -61,24 +70,27 @@ class _$ActivateAccountRequestCopyWithImpl<$Res,
     Object? password = null,
     Object? confirmPassword = null,
   }) {
-    return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      confirmPassword: null == confirmPassword
-          ? _value.confirmPassword
-          : confirmPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            token: null == token
+                ? _value.token
+                : token // ignore: cast_nullable_to_non_nullable
+                      as String,
+            password: null == password
+                ? _value.password
+                : password // ignore: cast_nullable_to_non_nullable
+                      as String,
+            confirmPassword: null == confirmPassword
+                ? _value.confirmPassword
+                : confirmPassword // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -86,24 +98,28 @@ class _$ActivateAccountRequestCopyWithImpl<$Res,
 abstract class _$$ActivateAccountRequestImplCopyWith<$Res>
     implements $ActivateAccountRequestCopyWith<$Res> {
   factory _$$ActivateAccountRequestImplCopyWith(
-          _$ActivateAccountRequestImpl value,
-          $Res Function(_$ActivateAccountRequestImpl) then) =
-      __$$ActivateAccountRequestImplCopyWithImpl<$Res>;
+    _$ActivateAccountRequestImpl value,
+    $Res Function(_$ActivateAccountRequestImpl) then,
+  ) = __$$ActivateAccountRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String email, String token, String password, String confirmPassword});
+  $Res call({
+    String email,
+    String token,
+    String password,
+    String confirmPassword,
+  });
 }
 
 /// @nodoc
 class __$$ActivateAccountRequestImplCopyWithImpl<$Res>
-    extends _$ActivateAccountRequestCopyWithImpl<$Res,
-        _$ActivateAccountRequestImpl>
+    extends
+        _$ActivateAccountRequestCopyWithImpl<$Res, _$ActivateAccountRequestImpl>
     implements _$$ActivateAccountRequestImplCopyWith<$Res> {
   __$$ActivateAccountRequestImplCopyWithImpl(
-      _$ActivateAccountRequestImpl _value,
-      $Res Function(_$ActivateAccountRequestImpl) _then)
-      : super(_value, _then);
+    _$ActivateAccountRequestImpl _value,
+    $Res Function(_$ActivateAccountRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -113,35 +129,38 @@ class __$$ActivateAccountRequestImplCopyWithImpl<$Res>
     Object? password = null,
     Object? confirmPassword = null,
   }) {
-    return _then(_$ActivateAccountRequestImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      token: null == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-      confirmPassword: null == confirmPassword
-          ? _value.confirmPassword
-          : confirmPassword // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$ActivateAccountRequestImpl(
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        token: null == token
+            ? _value.token
+            : token // ignore: cast_nullable_to_non_nullable
+                  as String,
+        password: null == password
+            ? _value.password
+            : password // ignore: cast_nullable_to_non_nullable
+                  as String,
+        confirmPassword: null == confirmPassword
+            ? _value.confirmPassword
+            : confirmPassword // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ActivateAccountRequestImpl implements _ActivateAccountRequest {
-  const _$ActivateAccountRequestImpl(
-      {required this.email,
-      required this.token,
-      required this.password,
-      required this.confirmPassword});
+  const _$ActivateAccountRequestImpl({
+    required this.email,
+    required this.token,
+    required this.password,
+    required this.confirmPassword,
+  });
 
   factory _$ActivateAccountRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$ActivateAccountRequestImplFromJson(json);
@@ -182,23 +201,25 @@ class _$ActivateAccountRequestImpl implements _ActivateAccountRequest {
   @override
   @pragma('vm:prefer-inline')
   _$$ActivateAccountRequestImplCopyWith<_$ActivateAccountRequestImpl>
-      get copyWith => __$$ActivateAccountRequestImplCopyWithImpl<
-          _$ActivateAccountRequestImpl>(this, _$identity);
+  get copyWith =>
+      __$$ActivateAccountRequestImplCopyWithImpl<_$ActivateAccountRequestImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ActivateAccountRequestImplToJson(
-      this,
-    );
+    return _$$ActivateAccountRequestImplToJson(this);
   }
 }
 
 abstract class _ActivateAccountRequest implements ActivateAccountRequest {
-  const factory _ActivateAccountRequest(
-      {required final String email,
-      required final String token,
-      required final String password,
-      required final String confirmPassword}) = _$ActivateAccountRequestImpl;
+  const factory _ActivateAccountRequest({
+    required final String email,
+    required final String token,
+    required final String password,
+    required final String confirmPassword,
+  }) = _$ActivateAccountRequestImpl;
 
   factory _ActivateAccountRequest.fromJson(Map<String, dynamic> json) =
       _$ActivateAccountRequestImpl.fromJson;
@@ -214,5 +235,5 @@ abstract class _ActivateAccountRequest implements ActivateAccountRequest {
   @override
   @JsonKey(ignore: true)
   _$$ActivateAccountRequestImplCopyWith<_$ActivateAccountRequestImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

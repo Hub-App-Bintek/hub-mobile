@@ -5,10 +5,9 @@ part 'activate_account_response.g.dart';
 
 @freezed
 class ActivateAccountResponse with _$ActivateAccountResponse {
-  const factory ActivateAccountResponse({
-    required String message,
-  }) = _ActivateAccountResponse;
+  const factory ActivateAccountResponse({required String message}) =
+      _ActivateAccountResponse;
 
-  factory ActivateAccountResponse.fromJson(Map<String, dynamic> json) => _$ActivateAccountResponseFromJson(json);
+  factory ActivateAccountResponse.fromJson(Map<String, dynamic> json) =>
+      _$ActivateAccountResponseFromJson(json);
 }
-

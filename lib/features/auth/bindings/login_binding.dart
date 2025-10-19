@@ -7,9 +7,7 @@ import 'package:pkp_hub/features/auth/controllers/login_controller.dart';
 class LoginBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<LoginUseCase>(
-      () => LoginUseCase(Get.find<AuthRepository>()),
-    );
+    Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
     Get.lazyPut<LoginController>(
       () => LoginController(
         loginUseCase: Get.find<LoginUseCase>(),

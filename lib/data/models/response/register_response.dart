@@ -17,5 +17,6 @@ class RegisterResponse with _$RegisterResponse {
     String? selfieUrl,
   }) = _RegisterResponse;
 
-  factory RegisterResponse.fromJson(Map<String, dynamic> json) => _$RegisterResponseFromJson(json);
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
+      _$RegisterResponseFromJson(json);
 }

@@ -12,6 +12,6 @@ class ActivateAccountRequest with _$ActivateAccountRequest {
     required String confirmPassword,
   }) = _ActivateAccountRequest;
 
-  factory ActivateAccountRequest.fromJson(Map<String, dynamic> json) => _$ActivateAccountRequestFromJson(json);
+  factory ActivateAccountRequest.fromJson(Map<String, dynamic> json) =>
+      _$ActivateAccountRequestFromJson(json);
 }
-

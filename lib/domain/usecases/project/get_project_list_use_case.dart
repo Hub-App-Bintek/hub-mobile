@@ -9,7 +9,9 @@ class GetProjectListUseCase {
 
   GetProjectListUseCase(this._repository);
 
-  Future<Result<GetProjectsResponse, Failure>> call(GetProjectsRequest request) {
+  Future<Result<GetProjectsResponse, Failure>> call(
+    GetProjectsRequest request,
+  ) {
     return _repository.getProjectList(request);
   }
 }

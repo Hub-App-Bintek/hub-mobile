@@ -30,13 +30,10 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
                     crossAxisSpacing: 16,
                     childAspectRatio: 0.92,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final c = controller.items[index];
-                      return ConsultantCard(consultant: c);
-                    },
-                    childCount: controller.items.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final c = controller.items[index];
+                    return ConsultantCard(consultant: c);
+                  }, childCount: controller.items.length),
                 ),
               ),
               SliverToBoxAdapter(
@@ -66,8 +63,10 @@ class ConsultantCard extends StatelessWidget {
     final subtitle = consultant.specialization?.trim().isNotEmpty == true
         ? consultant.specialization!
         : (consultant.email?.trim().isNotEmpty == true
-            ? consultant.email!
-            : (consultant.phone?.trim().isNotEmpty == true ? consultant.phone! : '-'));
+              ? consultant.email!
+              : (consultant.phone?.trim().isNotEmpty == true
+                    ? consultant.phone!
+                    : '-'));
 
     return Stack(
       children: [
@@ -129,10 +128,7 @@ class _Avatar extends StatelessWidget {
       backgroundImage: hasImage ? NetworkImage(avatarUrl!) : null,
       child: hasImage
           ? null
-          : const Icon(
-              Icons.person,
-              color: AppColors.primaryDarkest,
-            ),
+          : const Icon(Icons.person, color: AppColors.primaryDarkest),
     );
   }
 }
@@ -145,7 +141,9 @@ class _RatingBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool strong = rating >= 4.5;
-    final Color bg = strong ? AppColors.primaryDarkest : AppColors.primaryLightest;
+    final Color bg = strong
+        ? AppColors.primaryDarkest
+        : AppColors.primaryLightest;
     final Color fg = strong ? AppColors.white : AppColors.primaryDarkest;
 
     return Container(

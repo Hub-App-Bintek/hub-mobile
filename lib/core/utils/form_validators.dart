@@ -5,11 +5,16 @@ class FormValidators {
   FormValidators._(); // Private constructor to prevent instantiation
 
   /// Regular expression for email validation
-  static final RegExp _emailPattern = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}');
+  static final RegExp _emailPattern = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+  );
 
   static String? requiredField(String? value, String fieldName) {
     if (value == null || value.isEmpty) {
-      return AppStrings.requiredFieldTemplate.replaceFirst('{field}', fieldName);
+      return AppStrings.requiredFieldTemplate.replaceFirst(
+        '{field}',
+        fieldName,
+      );
     }
     return null;
   }

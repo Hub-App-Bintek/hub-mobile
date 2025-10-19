@@ -5,6 +5,7 @@ part 'project.g.dart';
 
 // ignore: constant_identifier_names
 enum ProjectType { PROTOTYPE, NON_PROTOTYPE }
+
 // ignore: constant_identifier_names
 enum ProjectStatus { ACTIVE, COMPLETED, CANCELLED }
 
@@ -20,7 +21,8 @@ class Project with _$Project {
     required DateTime createdAt,
   }) = _Project;
 
-  factory Project.fromJson(Map<String, dynamic> json) => _$ProjectFromJson(json);
+  factory Project.fromJson(Map<String, dynamic> json) =>
+      _$ProjectFromJson(json);
 }
 
 @freezed
@@ -31,5 +33,6 @@ class ProjectLocation with _$ProjectLocation {
     required String address,
   }) = _ProjectLocation;
 
-  factory ProjectLocation.fromJson(Map<String, dynamic> json) => _$ProjectLocationFromJson(json);
+  factory ProjectLocation.fromJson(Map<String, dynamic> json) =>
+      _$ProjectLocationFromJson(json);
 }

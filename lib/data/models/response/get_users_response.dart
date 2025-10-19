@@ -5,11 +5,11 @@ part 'get_users_response.g.dart';
 
 @freezed
 class GetUsersResponse with _$GetUsersResponse {
-  const factory GetUsersResponse({
-    required List<UserData> users,
-  }) = _GetUsersResponse;
+  const factory GetUsersResponse({required List<UserData> users}) =
+      _GetUsersResponse;
 
-  factory GetUsersResponse.fromJson(Map<String, dynamic> json) => _$GetUsersResponseFromJson(json);
+  factory GetUsersResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetUsersResponseFromJson(json);
 }
 
 @freezed
@@ -20,6 +20,6 @@ class UserData with _$UserData {
     String? name,
   }) = _UserData;
 
-  factory UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, dynamic> json) =>
+      _$UserDataFromJson(json);
 }
-

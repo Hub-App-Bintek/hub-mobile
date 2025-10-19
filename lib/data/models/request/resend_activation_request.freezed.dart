@@ -12,10 +12,12 @@ part of 'resend_activation_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ResendActivationRequest _$ResendActivationRequestFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ResendActivationRequest.fromJson(json);
 }
 
@@ -31,16 +33,19 @@ mixin _$ResendActivationRequest {
 
 /// @nodoc
 abstract class $ResendActivationRequestCopyWith<$Res> {
-  factory $ResendActivationRequestCopyWith(ResendActivationRequest value,
-          $Res Function(ResendActivationRequest) then) =
-      _$ResendActivationRequestCopyWithImpl<$Res, ResendActivationRequest>;
+  factory $ResendActivationRequestCopyWith(
+    ResendActivationRequest value,
+    $Res Function(ResendActivationRequest) then,
+  ) = _$ResendActivationRequestCopyWithImpl<$Res, ResendActivationRequest>;
   @useResult
   $Res call({String email});
 }
 
 /// @nodoc
-class _$ResendActivationRequestCopyWithImpl<$Res,
-        $Val extends ResendActivationRequest>
+class _$ResendActivationRequestCopyWithImpl<
+  $Res,
+  $Val extends ResendActivationRequest
+>
     implements $ResendActivationRequestCopyWith<$Res> {
   _$ResendActivationRequestCopyWithImpl(this._value, this._then);
 
@@ -51,15 +56,16 @@ class _$ResendActivationRequestCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? email = null,
-  }) {
-    return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? email = null}) {
+    return _then(
+      _value.copyWith(
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -67,9 +73,9 @@ class _$ResendActivationRequestCopyWithImpl<$Res,
 abstract class _$$ResendActivationRequestImplCopyWith<$Res>
     implements $ResendActivationRequestCopyWith<$Res> {
   factory _$$ResendActivationRequestImplCopyWith(
-          _$ResendActivationRequestImpl value,
-          $Res Function(_$ResendActivationRequestImpl) then) =
-      __$$ResendActivationRequestImplCopyWithImpl<$Res>;
+    _$ResendActivationRequestImpl value,
+    $Res Function(_$ResendActivationRequestImpl) then,
+  ) = __$$ResendActivationRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String email});
@@ -77,25 +83,28 @@ abstract class _$$ResendActivationRequestImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ResendActivationRequestImplCopyWithImpl<$Res>
-    extends _$ResendActivationRequestCopyWithImpl<$Res,
-        _$ResendActivationRequestImpl>
+    extends
+        _$ResendActivationRequestCopyWithImpl<
+          $Res,
+          _$ResendActivationRequestImpl
+        >
     implements _$$ResendActivationRequestImplCopyWith<$Res> {
   __$$ResendActivationRequestImplCopyWithImpl(
-      _$ResendActivationRequestImpl _value,
-      $Res Function(_$ResendActivationRequestImpl) _then)
-      : super(_value, _then);
+    _$ResendActivationRequestImpl _value,
+    $Res Function(_$ResendActivationRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? email = null,
-  }) {
-    return _then(_$ResendActivationRequestImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? email = null}) {
+    return _then(
+      _$ResendActivationRequestImpl(
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -131,14 +140,14 @@ class _$ResendActivationRequestImpl implements _ResendActivationRequest {
   @override
   @pragma('vm:prefer-inline')
   _$$ResendActivationRequestImplCopyWith<_$ResendActivationRequestImpl>
-      get copyWith => __$$ResendActivationRequestImplCopyWithImpl<
-          _$ResendActivationRequestImpl>(this, _$identity);
+  get copyWith =>
+      __$$ResendActivationRequestImplCopyWithImpl<
+        _$ResendActivationRequestImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ResendActivationRequestImplToJson(
-      this,
-    );
+    return _$$ResendActivationRequestImplToJson(this);
   }
 }
 
@@ -154,5 +163,5 @@ abstract class _ResendActivationRequest implements ResendActivationRequest {
   @override
   @JsonKey(ignore: true)
   _$$ResendActivationRequestImplCopyWith<_$ResendActivationRequestImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

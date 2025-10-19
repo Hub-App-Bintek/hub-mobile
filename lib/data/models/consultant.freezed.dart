@@ -12,7 +12,8 @@ part of 'consultant.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Consultant _$ConsultantFromJson(Map<String, dynamic> json) {
   return _Consultant.fromJson(json);
@@ -37,17 +38,19 @@ mixin _$Consultant {
 /// @nodoc
 abstract class $ConsultantCopyWith<$Res> {
   factory $ConsultantCopyWith(
-          Consultant value, $Res Function(Consultant) then) =
-      _$ConsultantCopyWithImpl<$Res, Consultant>;
+    Consultant value,
+    $Res Function(Consultant) then,
+  ) = _$ConsultantCopyWithImpl<$Res, Consultant>;
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String? email,
-      String? phone,
-      String? avatarUrl,
-      String? specialization,
-      double? rating});
+  $Res call({
+    int id,
+    String name,
+    String? email,
+    String? phone,
+    String? avatarUrl,
+    String? specialization,
+    double? rating,
+  });
 }
 
 /// @nodoc
@@ -71,36 +74,39 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
     Object? specialization = freezed,
     Object? rating = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phone: freezed == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      avatarUrl: freezed == avatarUrl
-          ? _value.avatarUrl
-          : avatarUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: freezed == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            email: freezed == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phone: freezed == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            avatarUrl: freezed == avatarUrl
+                ? _value.avatarUrl
+                : avatarUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            specialization: freezed == specialization
+                ? _value.specialization
+                : specialization // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            rating: freezed == rating
+                ? _value.rating
+                : rating // ignore: cast_nullable_to_non_nullable
+                      as double?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -108,18 +114,20 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
 abstract class _$$ConsultantImplCopyWith<$Res>
     implements $ConsultantCopyWith<$Res> {
   factory _$$ConsultantImplCopyWith(
-          _$ConsultantImpl value, $Res Function(_$ConsultantImpl) then) =
-      __$$ConsultantImplCopyWithImpl<$Res>;
+    _$ConsultantImpl value,
+    $Res Function(_$ConsultantImpl) then,
+  ) = __$$ConsultantImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String? email,
-      String? phone,
-      String? avatarUrl,
-      String? specialization,
-      double? rating});
+  $Res call({
+    int id,
+    String name,
+    String? email,
+    String? phone,
+    String? avatarUrl,
+    String? specialization,
+    double? rating,
+  });
 }
 
 /// @nodoc
@@ -127,8 +135,9 @@ class __$$ConsultantImplCopyWithImpl<$Res>
     extends _$ConsultantCopyWithImpl<$Res, _$ConsultantImpl>
     implements _$$ConsultantImplCopyWith<$Res> {
   __$$ConsultantImplCopyWithImpl(
-      _$ConsultantImpl _value, $Res Function(_$ConsultantImpl) _then)
-      : super(_value, _then);
+    _$ConsultantImpl _value,
+    $Res Function(_$ConsultantImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -141,50 +150,53 @@ class __$$ConsultantImplCopyWithImpl<$Res>
     Object? specialization = freezed,
     Object? rating = freezed,
   }) {
-    return _then(_$ConsultantImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phone: freezed == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      avatarUrl: freezed == avatarUrl
-          ? _value.avatarUrl
-          : avatarUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      rating: freezed == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
-              as double?,
-    ));
+    return _then(
+      _$ConsultantImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        email: freezed == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phone: freezed == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        avatarUrl: freezed == avatarUrl
+            ? _value.avatarUrl
+            : avatarUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        specialization: freezed == specialization
+            ? _value.specialization
+            : specialization // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        rating: freezed == rating
+            ? _value.rating
+            : rating // ignore: cast_nullable_to_non_nullable
+                  as double?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ConsultantImpl implements _Consultant {
-  const _$ConsultantImpl(
-      {required this.id,
-      required this.name,
-      this.email,
-      this.phone,
-      this.avatarUrl,
-      this.specialization,
-      this.rating});
+  const _$ConsultantImpl({
+    required this.id,
+    required this.name,
+    this.email,
+    this.phone,
+    this.avatarUrl,
+    this.specialization,
+    this.rating,
+  });
 
   factory _$ConsultantImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultantImplFromJson(json);
@@ -228,7 +240,15 @@ class _$ConsultantImpl implements _Consultant {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, name, email, phone, avatarUrl, specialization, rating);
+    runtimeType,
+    id,
+    name,
+    email,
+    phone,
+    avatarUrl,
+    specialization,
+    rating,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -238,21 +258,20 @@ class _$ConsultantImpl implements _Consultant {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsultantImplToJson(
-      this,
-    );
+    return _$$ConsultantImplToJson(this);
   }
 }
 
 abstract class _Consultant implements Consultant {
-  const factory _Consultant(
-      {required final int id,
-      required final String name,
-      final String? email,
-      final String? phone,
-      final String? avatarUrl,
-      final String? specialization,
-      final double? rating}) = _$ConsultantImpl;
+  const factory _Consultant({
+    required final int id,
+    required final String name,
+    final String? email,
+    final String? phone,
+    final String? avatarUrl,
+    final String? specialization,
+    final double? rating,
+  }) = _$ConsultantImpl;
 
   factory _Consultant.fromJson(Map<String, dynamic> json) =
       _$ConsultantImpl.fromJson;

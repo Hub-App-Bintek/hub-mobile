@@ -192,7 +192,8 @@ class HomeScreen extends GetView<HomeController> {
                   await showDialog(
                     context: context,
                     barrierDismissible: false,
-                    builder: (_) => const Center(child: CircularProgressIndicator()),
+                    builder: (_) =>
+                        const Center(child: CircularProgressIndicator()),
                   );
                   if (!context.mounted) return;
                 }

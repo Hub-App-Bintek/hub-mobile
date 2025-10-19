@@ -7,13 +7,9 @@ part of 'resend_activation_request.dart';
 // **************************************************************************
 
 _$ResendActivationRequestImpl _$$ResendActivationRequestImplFromJson(
-        Map<String, dynamic> json) =>
-    _$ResendActivationRequestImpl(
-      email: json['email'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$ResendActivationRequestImpl(email: json['email'] as String);
 
 Map<String, dynamic> _$$ResendActivationRequestImplToJson(
-        _$ResendActivationRequestImpl instance) =>
-    <String, dynamic>{
-      'email': instance.email,
-    };
+  _$ResendActivationRequestImpl instance,
+) => <String, dynamic>{'email': instance.email};

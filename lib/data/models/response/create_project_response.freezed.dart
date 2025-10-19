@@ -12,10 +12,12 @@ part of 'create_project_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 CreateProjectResponse _$CreateProjectResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _CreateProjectResponse.fromJson(json);
 }
 
@@ -34,16 +36,19 @@ mixin _$CreateProjectResponse {
 
 /// @nodoc
 abstract class $CreateProjectResponseCopyWith<$Res> {
-  factory $CreateProjectResponseCopyWith(CreateProjectResponse value,
-          $Res Function(CreateProjectResponse) then) =
-      _$CreateProjectResponseCopyWithImpl<$Res, CreateProjectResponse>;
+  factory $CreateProjectResponseCopyWith(
+    CreateProjectResponse value,
+    $Res Function(CreateProjectResponse) then,
+  ) = _$CreateProjectResponseCopyWithImpl<$Res, CreateProjectResponse>;
   @useResult
   $Res call({String projectId, String name, String type, String createdAt});
 }
 
 /// @nodoc
-class _$CreateProjectResponseCopyWithImpl<$Res,
-        $Val extends CreateProjectResponse>
+class _$CreateProjectResponseCopyWithImpl<
+  $Res,
+  $Val extends CreateProjectResponse
+>
     implements $CreateProjectResponseCopyWith<$Res> {
   _$CreateProjectResponseCopyWithImpl(this._value, this._then);
 
@@ -60,24 +65,27 @@ class _$CreateProjectResponseCopyWithImpl<$Res,
     Object? type = null,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            projectId: null == projectId
+                ? _value.projectId
+                : projectId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -85,9 +93,9 @@ class _$CreateProjectResponseCopyWithImpl<$Res,
 abstract class _$$CreateProjectResponseImplCopyWith<$Res>
     implements $CreateProjectResponseCopyWith<$Res> {
   factory _$$CreateProjectResponseImplCopyWith(
-          _$CreateProjectResponseImpl value,
-          $Res Function(_$CreateProjectResponseImpl) then) =
-      __$$CreateProjectResponseImplCopyWithImpl<$Res>;
+    _$CreateProjectResponseImpl value,
+    $Res Function(_$CreateProjectResponseImpl) then,
+  ) = __$$CreateProjectResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String projectId, String name, String type, String createdAt});
@@ -95,12 +103,13 @@ abstract class _$$CreateProjectResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$CreateProjectResponseImplCopyWithImpl<$Res>
-    extends _$CreateProjectResponseCopyWithImpl<$Res,
-        _$CreateProjectResponseImpl>
+    extends
+        _$CreateProjectResponseCopyWithImpl<$Res, _$CreateProjectResponseImpl>
     implements _$$CreateProjectResponseImplCopyWith<$Res> {
-  __$$CreateProjectResponseImplCopyWithImpl(_$CreateProjectResponseImpl _value,
-      $Res Function(_$CreateProjectResponseImpl) _then)
-      : super(_value, _then);
+  __$$CreateProjectResponseImplCopyWithImpl(
+    _$CreateProjectResponseImpl _value,
+    $Res Function(_$CreateProjectResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -110,35 +119,38 @@ class __$$CreateProjectResponseImplCopyWithImpl<$Res>
     Object? type = null,
     Object? createdAt = null,
   }) {
-    return _then(_$CreateProjectResponseImpl(
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$CreateProjectResponseImpl(
+        projectId: null == projectId
+            ? _value.projectId
+            : projectId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CreateProjectResponseImpl implements _CreateProjectResponse {
-  const _$CreateProjectResponseImpl(
-      {required this.projectId,
-      required this.name,
-      required this.type,
-      required this.createdAt});
+  const _$CreateProjectResponseImpl({
+    required this.projectId,
+    required this.name,
+    required this.type,
+    required this.createdAt,
+  });
 
   factory _$CreateProjectResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateProjectResponseImplFromJson(json);
@@ -179,23 +191,25 @@ class _$CreateProjectResponseImpl implements _CreateProjectResponse {
   @override
   @pragma('vm:prefer-inline')
   _$$CreateProjectResponseImplCopyWith<_$CreateProjectResponseImpl>
-      get copyWith => __$$CreateProjectResponseImplCopyWithImpl<
-          _$CreateProjectResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$CreateProjectResponseImplCopyWithImpl<_$CreateProjectResponseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateProjectResponseImplToJson(
-      this,
-    );
+    return _$$CreateProjectResponseImplToJson(this);
   }
 }
 
 abstract class _CreateProjectResponse implements CreateProjectResponse {
-  const factory _CreateProjectResponse(
-      {required final String projectId,
-      required final String name,
-      required final String type,
-      required final String createdAt}) = _$CreateProjectResponseImpl;
+  const factory _CreateProjectResponse({
+    required final String projectId,
+    required final String name,
+    required final String type,
+    required final String createdAt,
+  }) = _$CreateProjectResponseImpl;
 
   factory _CreateProjectResponse.fromJson(Map<String, dynamic> json) =
       _$CreateProjectResponseImpl.fromJson;
@@ -211,5 +225,5 @@ abstract class _CreateProjectResponse implements CreateProjectResponse {
   @override
   @JsonKey(ignore: true)
   _$$CreateProjectResponseImplCopyWith<_$CreateProjectResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

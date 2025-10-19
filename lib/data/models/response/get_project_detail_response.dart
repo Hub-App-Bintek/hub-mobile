@@ -6,10 +6,9 @@ part 'get_project_detail_response.g.dart';
 
 @freezed
 class GetProjectDetailResponse with _$GetProjectDetailResponse {
-  const factory GetProjectDetailResponse({
-    required Project project,
-  }) = _GetProjectDetailResponse;
+  const factory GetProjectDetailResponse({required Project project}) =
+      _GetProjectDetailResponse;
 
-  factory GetProjectDetailResponse.fromJson(Map<String, dynamic> json) => _$GetProjectDetailResponseFromJson(json);
+  factory GetProjectDetailResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetProjectDetailResponseFromJson(json);
 }
-

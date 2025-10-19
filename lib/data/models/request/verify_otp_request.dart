@@ -10,5 +10,6 @@ class VerifyOtpRequest with _$VerifyOtpRequest {
     required String otpCode,
   }) = _VerifyOtpRequest;
 
-  factory VerifyOtpRequest.fromJson(Map<String, dynamic> json) => _$VerifyOtpRequestFromJson(json);
+  factory VerifyOtpRequest.fromJson(Map<String, dynamic> json) =>
+      _$VerifyOtpRequestFromJson(json);
 }

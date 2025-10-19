@@ -15,6 +15,6 @@ class CreateProjectRequest with _$CreateProjectRequest {
     required double income,
   }) = _CreateProjectRequest;
 
-  factory CreateProjectRequest.fromJson(Map<String, dynamic> json) => _$CreateProjectRequestFromJson(json);
+  factory CreateProjectRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateProjectRequestFromJson(json);
 }
-

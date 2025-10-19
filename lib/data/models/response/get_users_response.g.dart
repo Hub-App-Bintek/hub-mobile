@@ -7,18 +7,16 @@ part of 'get_users_response.dart';
 // **************************************************************************
 
 _$GetUsersResponseImpl _$$GetUsersResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$GetUsersResponseImpl(
-      users: (json['users'] as List<dynamic>)
-          .map((e) => UserData.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+  Map<String, dynamic> json,
+) => _$GetUsersResponseImpl(
+  users: (json['users'] as List<dynamic>)
+      .map((e) => UserData.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
 Map<String, dynamic> _$$GetUsersResponseImplToJson(
-        _$GetUsersResponseImpl instance) =>
-    <String, dynamic>{
-      'users': instance.users,
-    };
+  _$GetUsersResponseImpl instance,
+) => <String, dynamic>{'users': instance.users};
 
 _$UserDataImpl _$$UserDataImplFromJson(Map<String, dynamic> json) =>
     _$UserDataImpl(

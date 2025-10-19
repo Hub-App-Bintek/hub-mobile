@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -80,7 +79,7 @@ class AppTextStyles {
   );
 
   // --- Caption --- //
-  
+
   static final TextStyle caption = GoogleFonts.inter(
     fontSize: 10,
     fontWeight: FontWeight.w600, // SemiBold

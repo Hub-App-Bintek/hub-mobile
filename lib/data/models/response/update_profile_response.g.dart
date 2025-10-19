@@ -7,13 +7,9 @@ part of 'update_profile_response.dart';
 // **************************************************************************
 
 _$UpdateProfileResponseImpl _$$UpdateProfileResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UpdateProfileResponseImpl(
-      message: json['message'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$UpdateProfileResponseImpl(message: json['message'] as String);
 
 Map<String, dynamic> _$$UpdateProfileResponseImplToJson(
-        _$UpdateProfileResponseImpl instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-    };
+  _$UpdateProfileResponseImpl instance,
+) => <String, dynamic>{'message': instance.message};

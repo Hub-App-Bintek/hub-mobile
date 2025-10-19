@@ -105,10 +105,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                 ? SizedBox(
                     width: 40,
                     child: Center(
-                      child: Text(
-                        'Rp',
-                        style: AppTextStyles.bodyL,
-                      ),
+                      child: Text('Rp', style: AppTextStyles.bodyL),
                     ),
                   )
                 : null,

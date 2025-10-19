@@ -12,10 +12,12 @@ part of 'update_profile_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UpdateProfileResponse _$UpdateProfileResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _UpdateProfileResponse.fromJson(json);
 }
 
@@ -31,16 +33,19 @@ mixin _$UpdateProfileResponse {
 
 /// @nodoc
 abstract class $UpdateProfileResponseCopyWith<$Res> {
-  factory $UpdateProfileResponseCopyWith(UpdateProfileResponse value,
-          $Res Function(UpdateProfileResponse) then) =
-      _$UpdateProfileResponseCopyWithImpl<$Res, UpdateProfileResponse>;
+  factory $UpdateProfileResponseCopyWith(
+    UpdateProfileResponse value,
+    $Res Function(UpdateProfileResponse) then,
+  ) = _$UpdateProfileResponseCopyWithImpl<$Res, UpdateProfileResponse>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class _$UpdateProfileResponseCopyWithImpl<$Res,
-        $Val extends UpdateProfileResponse>
+class _$UpdateProfileResponseCopyWithImpl<
+  $Res,
+  $Val extends UpdateProfileResponse
+>
     implements $UpdateProfileResponseCopyWith<$Res> {
   _$UpdateProfileResponseCopyWithImpl(this._value, this._then);
 
@@ -51,15 +56,16 @@ class _$UpdateProfileResponseCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_value.copyWith(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? message = null}) {
+    return _then(
+      _value.copyWith(
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -67,9 +73,9 @@ class _$UpdateProfileResponseCopyWithImpl<$Res,
 abstract class _$$UpdateProfileResponseImplCopyWith<$Res>
     implements $UpdateProfileResponseCopyWith<$Res> {
   factory _$$UpdateProfileResponseImplCopyWith(
-          _$UpdateProfileResponseImpl value,
-          $Res Function(_$UpdateProfileResponseImpl) then) =
-      __$$UpdateProfileResponseImplCopyWithImpl<$Res>;
+    _$UpdateProfileResponseImpl value,
+    $Res Function(_$UpdateProfileResponseImpl) then,
+  ) = __$$UpdateProfileResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String message});
@@ -77,24 +83,25 @@ abstract class _$$UpdateProfileResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$UpdateProfileResponseImplCopyWithImpl<$Res>
-    extends _$UpdateProfileResponseCopyWithImpl<$Res,
-        _$UpdateProfileResponseImpl>
+    extends
+        _$UpdateProfileResponseCopyWithImpl<$Res, _$UpdateProfileResponseImpl>
     implements _$$UpdateProfileResponseImplCopyWith<$Res> {
-  __$$UpdateProfileResponseImplCopyWithImpl(_$UpdateProfileResponseImpl _value,
-      $Res Function(_$UpdateProfileResponseImpl) _then)
-      : super(_value, _then);
+  __$$UpdateProfileResponseImplCopyWithImpl(
+    _$UpdateProfileResponseImpl _value,
+    $Res Function(_$UpdateProfileResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$UpdateProfileResponseImpl(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? message = null}) {
+    return _then(
+      _$UpdateProfileResponseImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -130,14 +137,15 @@ class _$UpdateProfileResponseImpl implements _UpdateProfileResponse {
   @override
   @pragma('vm:prefer-inline')
   _$$UpdateProfileResponseImplCopyWith<_$UpdateProfileResponseImpl>
-      get copyWith => __$$UpdateProfileResponseImplCopyWithImpl<
-          _$UpdateProfileResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$UpdateProfileResponseImplCopyWithImpl<_$UpdateProfileResponseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UpdateProfileResponseImplToJson(
-      this,
-    );
+    return _$$UpdateProfileResponseImplToJson(this);
   }
 }
 
@@ -153,5 +161,5 @@ abstract class _UpdateProfileResponse implements UpdateProfileResponse {
   @override
   @JsonKey(ignore: true)
   _$$UpdateProfileResponseImplCopyWith<_$UpdateProfileResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

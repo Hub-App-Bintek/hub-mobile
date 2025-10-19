@@ -25,5 +25,6 @@ class NetworkFailure extends Failure {
 /// (e.g., 500 Internal Server Error with an HTML page).
 class ServerFailure extends Failure {
   final int? statusCode;
-  const ServerFailure({required String message, this.statusCode}) : super(message);
+  const ServerFailure({required String message, this.statusCode})
+    : super(message);
 }

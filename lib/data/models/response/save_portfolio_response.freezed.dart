@@ -12,10 +12,12 @@ part of 'save_portfolio_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 SavePortfolioResponse _$SavePortfolioResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _SavePortfolioResponse.fromJson(json);
 }
 
@@ -40,28 +42,32 @@ mixin _$SavePortfolioResponse {
 
 /// @nodoc
 abstract class $SavePortfolioResponseCopyWith<$Res> {
-  factory $SavePortfolioResponseCopyWith(SavePortfolioResponse value,
-          $Res Function(SavePortfolioResponse) then) =
-      _$SavePortfolioResponseCopyWithImpl<$Res, SavePortfolioResponse>;
+  factory $SavePortfolioResponseCopyWith(
+    SavePortfolioResponse value,
+    $Res Function(SavePortfolioResponse) then,
+  ) = _$SavePortfolioResponseCopyWithImpl<$Res, SavePortfolioResponse>;
   @useResult
-  $Res call(
-      {int id,
-      UserData user,
-      String? bio,
-      String? specialization,
-      String? experience,
-      String? education,
-      String? certifications,
-      String? projectSamples,
-      String? linkedinUrl,
-      String? websiteUrl});
+  $Res call({
+    int id,
+    UserData user,
+    String? bio,
+    String? specialization,
+    String? experience,
+    String? education,
+    String? certifications,
+    String? projectSamples,
+    String? linkedinUrl,
+    String? websiteUrl,
+  });
 
   $UserDataCopyWith<$Res> get user;
 }
 
 /// @nodoc
-class _$SavePortfolioResponseCopyWithImpl<$Res,
-        $Val extends SavePortfolioResponse>
+class _$SavePortfolioResponseCopyWithImpl<
+  $Res,
+  $Val extends SavePortfolioResponse
+>
     implements $SavePortfolioResponseCopyWith<$Res> {
   _$SavePortfolioResponseCopyWithImpl(this._value, this._then);
 
@@ -84,48 +90,51 @@ class _$SavePortfolioResponseCopyWithImpl<$Res,
     Object? linkedinUrl = freezed,
     Object? websiteUrl = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserData,
-      bio: freezed == bio
-          ? _value.bio
-          : bio // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      experience: freezed == experience
-          ? _value.experience
-          : experience // ignore: cast_nullable_to_non_nullable
-              as String?,
-      education: freezed == education
-          ? _value.education
-          : education // ignore: cast_nullable_to_non_nullable
-              as String?,
-      certifications: freezed == certifications
-          ? _value.certifications
-          : certifications // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectSamples: freezed == projectSamples
-          ? _value.projectSamples
-          : projectSamples // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkedinUrl: freezed == linkedinUrl
-          ? _value.linkedinUrl
-          : linkedinUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      websiteUrl: freezed == websiteUrl
-          ? _value.websiteUrl
-          : websiteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            user: null == user
+                ? _value.user
+                : user // ignore: cast_nullable_to_non_nullable
+                      as UserData,
+            bio: freezed == bio
+                ? _value.bio
+                : bio // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            specialization: freezed == specialization
+                ? _value.specialization
+                : specialization // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            experience: freezed == experience
+                ? _value.experience
+                : experience // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            education: freezed == education
+                ? _value.education
+                : education // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            certifications: freezed == certifications
+                ? _value.certifications
+                : certifications // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            projectSamples: freezed == projectSamples
+                ? _value.projectSamples
+                : projectSamples // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            linkedinUrl: freezed == linkedinUrl
+                ? _value.linkedinUrl
+                : linkedinUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            websiteUrl: freezed == websiteUrl
+                ? _value.websiteUrl
+                : websiteUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -141,22 +150,23 @@ class _$SavePortfolioResponseCopyWithImpl<$Res,
 abstract class _$$SavePortfolioResponseImplCopyWith<$Res>
     implements $SavePortfolioResponseCopyWith<$Res> {
   factory _$$SavePortfolioResponseImplCopyWith(
-          _$SavePortfolioResponseImpl value,
-          $Res Function(_$SavePortfolioResponseImpl) then) =
-      __$$SavePortfolioResponseImplCopyWithImpl<$Res>;
+    _$SavePortfolioResponseImpl value,
+    $Res Function(_$SavePortfolioResponseImpl) then,
+  ) = __$$SavePortfolioResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      UserData user,
-      String? bio,
-      String? specialization,
-      String? experience,
-      String? education,
-      String? certifications,
-      String? projectSamples,
-      String? linkedinUrl,
-      String? websiteUrl});
+  $Res call({
+    int id,
+    UserData user,
+    String? bio,
+    String? specialization,
+    String? experience,
+    String? education,
+    String? certifications,
+    String? projectSamples,
+    String? linkedinUrl,
+    String? websiteUrl,
+  });
 
   @override
   $UserDataCopyWith<$Res> get user;
@@ -164,12 +174,13 @@ abstract class _$$SavePortfolioResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$SavePortfolioResponseImplCopyWithImpl<$Res>
-    extends _$SavePortfolioResponseCopyWithImpl<$Res,
-        _$SavePortfolioResponseImpl>
+    extends
+        _$SavePortfolioResponseCopyWithImpl<$Res, _$SavePortfolioResponseImpl>
     implements _$$SavePortfolioResponseImplCopyWith<$Res> {
-  __$$SavePortfolioResponseImplCopyWithImpl(_$SavePortfolioResponseImpl _value,
-      $Res Function(_$SavePortfolioResponseImpl) _then)
-      : super(_value, _then);
+  __$$SavePortfolioResponseImplCopyWithImpl(
+    _$SavePortfolioResponseImpl _value,
+    $Res Function(_$SavePortfolioResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -185,65 +196,68 @@ class __$$SavePortfolioResponseImplCopyWithImpl<$Res>
     Object? linkedinUrl = freezed,
     Object? websiteUrl = freezed,
   }) {
-    return _then(_$SavePortfolioResponseImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserData,
-      bio: freezed == bio
-          ? _value.bio
-          : bio // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      experience: freezed == experience
-          ? _value.experience
-          : experience // ignore: cast_nullable_to_non_nullable
-              as String?,
-      education: freezed == education
-          ? _value.education
-          : education // ignore: cast_nullable_to_non_nullable
-              as String?,
-      certifications: freezed == certifications
-          ? _value.certifications
-          : certifications // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectSamples: freezed == projectSamples
-          ? _value.projectSamples
-          : projectSamples // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkedinUrl: freezed == linkedinUrl
-          ? _value.linkedinUrl
-          : linkedinUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      websiteUrl: freezed == websiteUrl
-          ? _value.websiteUrl
-          : websiteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$SavePortfolioResponseImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        user: null == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as UserData,
+        bio: freezed == bio
+            ? _value.bio
+            : bio // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        specialization: freezed == specialization
+            ? _value.specialization
+            : specialization // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        experience: freezed == experience
+            ? _value.experience
+            : experience // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        education: freezed == education
+            ? _value.education
+            : education // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        certifications: freezed == certifications
+            ? _value.certifications
+            : certifications // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        projectSamples: freezed == projectSamples
+            ? _value.projectSamples
+            : projectSamples // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        linkedinUrl: freezed == linkedinUrl
+            ? _value.linkedinUrl
+            : linkedinUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        websiteUrl: freezed == websiteUrl
+            ? _value.websiteUrl
+            : websiteUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SavePortfolioResponseImpl implements _SavePortfolioResponse {
-  const _$SavePortfolioResponseImpl(
-      {required this.id,
-      required this.user,
-      this.bio,
-      this.specialization,
-      this.experience,
-      this.education,
-      this.certifications,
-      this.projectSamples,
-      this.linkedinUrl,
-      this.websiteUrl});
+  const _$SavePortfolioResponseImpl({
+    required this.id,
+    required this.user,
+    this.bio,
+    this.specialization,
+    this.experience,
+    this.education,
+    this.certifications,
+    this.projectSamples,
+    this.linkedinUrl,
+    this.websiteUrl,
+  });
 
   factory _$SavePortfolioResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$SavePortfolioResponseImplFromJson(json);
@@ -301,45 +315,48 @@ class _$SavePortfolioResponseImpl implements _SavePortfolioResponse {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      user,
-      bio,
-      specialization,
-      experience,
-      education,
-      certifications,
-      projectSamples,
-      linkedinUrl,
-      websiteUrl);
+    runtimeType,
+    id,
+    user,
+    bio,
+    specialization,
+    experience,
+    education,
+    certifications,
+    projectSamples,
+    linkedinUrl,
+    websiteUrl,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SavePortfolioResponseImplCopyWith<_$SavePortfolioResponseImpl>
-      get copyWith => __$$SavePortfolioResponseImplCopyWithImpl<
-          _$SavePortfolioResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$SavePortfolioResponseImplCopyWithImpl<_$SavePortfolioResponseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SavePortfolioResponseImplToJson(
-      this,
-    );
+    return _$$SavePortfolioResponseImplToJson(this);
   }
 }
 
 abstract class _SavePortfolioResponse implements SavePortfolioResponse {
-  const factory _SavePortfolioResponse(
-      {required final int id,
-      required final UserData user,
-      final String? bio,
-      final String? specialization,
-      final String? experience,
-      final String? education,
-      final String? certifications,
-      final String? projectSamples,
-      final String? linkedinUrl,
-      final String? websiteUrl}) = _$SavePortfolioResponseImpl;
+  const factory _SavePortfolioResponse({
+    required final int id,
+    required final UserData user,
+    final String? bio,
+    final String? specialization,
+    final String? experience,
+    final String? education,
+    final String? certifications,
+    final String? projectSamples,
+    final String? linkedinUrl,
+    final String? websiteUrl,
+  }) = _$SavePortfolioResponseImpl;
 
   factory _SavePortfolioResponse.fromJson(Map<String, dynamic> json) =
       _$SavePortfolioResponseImpl.fromJson;
@@ -367,7 +384,7 @@ abstract class _SavePortfolioResponse implements SavePortfolioResponse {
   @override
   @JsonKey(ignore: true)
   _$$SavePortfolioResponseImplCopyWith<_$SavePortfolioResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) {
@@ -406,25 +423,24 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -432,8 +448,9 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 abstract class _$$UserDataImplCopyWith<$Res>
     implements $UserDataCopyWith<$Res> {
   factory _$$UserDataImplCopyWith(
-          _$UserDataImpl value, $Res Function(_$UserDataImpl) then) =
-      __$$UserDataImplCopyWithImpl<$Res>;
+    _$UserDataImpl value,
+    $Res Function(_$UserDataImpl) then,
+  ) = __$$UserDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String email, String? name});
@@ -444,30 +461,29 @@ class __$$UserDataImplCopyWithImpl<$Res>
     extends _$UserDataCopyWithImpl<$Res, _$UserDataImpl>
     implements _$$UserDataImplCopyWith<$Res> {
   __$$UserDataImplCopyWithImpl(
-      _$UserDataImpl _value, $Res Function(_$UserDataImpl) _then)
-      : super(_value, _then);
+    _$UserDataImpl _value,
+    $Res Function(_$UserDataImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_$UserDataImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _$UserDataImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
@@ -513,17 +529,16 @@ class _$UserDataImpl implements _UserData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserDataImplToJson(
-      this,
-    );
+    return _$$UserDataImplToJson(this);
   }
 }
 
 abstract class _UserData implements UserData {
-  const factory _UserData(
-      {required final int id,
-      required final String email,
-      final String? name}) = _$UserDataImpl;
+  const factory _UserData({
+    required final int id,
+    required final String email,
+    final String? name,
+  }) = _$UserDataImpl;
 
   factory _UserData.fromJson(Map<String, dynamic> json) =
       _$UserDataImpl.fromJson;

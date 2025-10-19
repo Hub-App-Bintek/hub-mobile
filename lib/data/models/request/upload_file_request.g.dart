@@ -7,15 +7,15 @@ part of 'upload_file_request.dart';
 // **************************************************************************
 
 _$UploadFileRequestImpl _$$UploadFileRequestImplFromJson(
-        Map<String, dynamic> json) =>
-    _$UploadFileRequestImpl(
-      filePath: json['filePath'] as String,
-      fileType: json['fileType'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$UploadFileRequestImpl(
+  filePath: json['filePath'] as String,
+  fileType: json['fileType'] as String,
+);
 
 Map<String, dynamic> _$$UploadFileRequestImplToJson(
-        _$UploadFileRequestImpl instance) =>
-    <String, dynamic>{
-      'filePath': instance.filePath,
-      'fileType': instance.fileType,
-    };
+  _$UploadFileRequestImpl instance,
+) => <String, dynamic>{
+  'filePath': instance.filePath,
+  'fileType': instance.fileType,
+};

@@ -7,7 +7,7 @@ abstract class AppStrings {
   // General
   static const appTitle = 'PKP Hub';
 
-  // Auth Screen
+  // Login Screen
   static const loginPageTitle = 'Masuk ke Akun Anda';
   static const emailAddressLabel = 'Alamat Email';
   static const emailAddressHint = 'nama@email.com';
@@ -38,11 +38,11 @@ abstract class AppStrings {
   // KYC Screen
   static const kycScreenTitle = 'Verifikasi Profil';
   static const kycFullNameLabel = 'Nama Lengkap';
-  static const kycFullNameHint = 'Your Name';
+  static const kycFullNameHint = 'Masukkan Nama Lengkap';
   static const kycPhoneNumberLabel = 'No. Handphone';
   static const kycPhoneNumberHint = '081234567890';
   static const kycAddressLabel = 'Alamat';
-  static const kycAddressHint = 'Your Address';
+  static const kycAddressHint = 'Masukkan Alamat Lengkap';
   static const kycKtpNumberLabel = 'Nomer KTP';
   static const kycKtpNumberHint = '1234567890';
   static const kycUploadKtpLabel = 'Upload KTP';
@@ -51,15 +51,14 @@ abstract class AppStrings {
   // Create Project Screen
   static const landLocationTitle = 'Lokasi Lahan';
   static const projectNameLabel = 'Nama Proyek*';
-  static const projectNameHint = 'Nama';
+  static const projectNameHint = 'Masukkan Nama Proyek';
   static const locationDetailsLabel = 'Detail Lokasi*';
-  static const locationDetailsHint = 'Informasi Tambahan';
+  static const locationDetailsHint = 'Masukkan Detail Lokasi';
   static const typeLabel = 'Tipe*';
   static const typePrototype = 'Prototipe';
   static const typeNonPrototype = 'Non-Prototipe';
   static const landAreaLabel = 'Luas Lahan (m²)*';
   static const landAreaHint = '100';
-  static const pinLocationError = 'Silakan pin lokasi di peta.';
   static const incomeLabel = 'Pendapatan';
   static const incomeHint = '123.456.789';
 
@@ -67,9 +66,6 @@ abstract class AppStrings {
   static const projectNameRequired = 'Nama proyek wajib diisi';
   static const locationDetailsRequired = 'Detail lokasi wajib diisi';
   static const landAreaRequired = 'Luas lahan wajib diisi';
-  static const incomeRequired = 'Pendapatan wajib diisi';
-  static const projectTypeRequired = 'Tipe proyek wajib dipilih';
-  static const locationSelectedRequired = 'Lokasi harus dipilih';
 
   // Validation messages (Bahasa Indonesia)
   // Template: use {field} where the field name will be inserted
@@ -90,7 +86,7 @@ abstract class AppStrings {
   // Error Messages
   static const errorTitle = 'Terjadi Kesalahan';
   static const loginFailedError =
-      'Gagal masuk. Silakan periksa kredensial Anda dan coba lagi.';
+      'Gagal masuk. Silakan periksa Email atau Kata Sandi anda dan coba lagi.';
   static const emptyCredentialsError =
       'Email dan kata sandi tidak boleh kosong.';
   static const serverError =
