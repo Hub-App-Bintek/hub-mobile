@@ -44,16 +44,13 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         if (actions != null)
           IconButton(
-            icon: Icon(
-              actions,
-              size: 24,
-              color: AppColors.primaryDarkest,
-            ),
+            icon: Icon(actions, size: 24, color: AppColors.primaryDarkest),
             onPressed: onActionPressed,
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           ),
       ],
-      backgroundColor: backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
+      backgroundColor:
+          backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
       elevation: elevation ?? appBarTheme.elevation ?? 0,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,

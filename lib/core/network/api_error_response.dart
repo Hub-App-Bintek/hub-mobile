@@ -11,7 +11,8 @@ class ApiErrorResponse with _$ApiErrorResponse {
     required String message,
   }) = _ApiErrorResponse;
 
-  factory ApiErrorResponse.fromJson(Map<String, dynamic> json) => _$ApiErrorResponseFromJson(json);
+  factory ApiErrorResponse.fromJson(Map<String, dynamic> json) =>
+      _$ApiErrorResponseFromJson(json);
 
   /// A helper to safely parse a response body.
   static ApiErrorResponse? tryParse(dynamic data) {

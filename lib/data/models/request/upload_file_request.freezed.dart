@@ -12,7 +12,8 @@ part of 'upload_file_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UploadFileRequest _$UploadFileRequestFromJson(Map<String, dynamic> json) {
   return _UploadFileRequest.fromJson(json);
@@ -33,8 +34,9 @@ mixin _$UploadFileRequest {
 /// @nodoc
 abstract class $UploadFileRequestCopyWith<$Res> {
   factory $UploadFileRequestCopyWith(
-          UploadFileRequest value, $Res Function(UploadFileRequest) then) =
-      _$UploadFileRequestCopyWithImpl<$Res, UploadFileRequest>;
+    UploadFileRequest value,
+    $Res Function(UploadFileRequest) then,
+  ) = _$UploadFileRequestCopyWithImpl<$Res, UploadFileRequest>;
   @useResult
   $Res call({String filePath, String fileType});
 }
@@ -51,29 +53,30 @@ class _$UploadFileRequestCopyWithImpl<$Res, $Val extends UploadFileRequest>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? filePath = null,
-    Object? fileType = null,
-  }) {
-    return _then(_value.copyWith(
-      filePath: null == filePath
-          ? _value.filePath
-          : filePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileType: null == fileType
-          ? _value.fileType
-          : fileType // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? filePath = null, Object? fileType = null}) {
+    return _then(
+      _value.copyWith(
+            filePath: null == filePath
+                ? _value.filePath
+                : filePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            fileType: null == fileType
+                ? _value.fileType
+                : fileType // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UploadFileRequestImplCopyWith<$Res>
     implements $UploadFileRequestCopyWith<$Res> {
-  factory _$$UploadFileRequestImplCopyWith(_$UploadFileRequestImpl value,
-          $Res Function(_$UploadFileRequestImpl) then) =
-      __$$UploadFileRequestImplCopyWithImpl<$Res>;
+  factory _$$UploadFileRequestImplCopyWith(
+    _$UploadFileRequestImpl value,
+    $Res Function(_$UploadFileRequestImpl) then,
+  ) = __$$UploadFileRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String filePath, String fileType});
@@ -83,41 +86,43 @@ abstract class _$$UploadFileRequestImplCopyWith<$Res>
 class __$$UploadFileRequestImplCopyWithImpl<$Res>
     extends _$UploadFileRequestCopyWithImpl<$Res, _$UploadFileRequestImpl>
     implements _$$UploadFileRequestImplCopyWith<$Res> {
-  __$$UploadFileRequestImplCopyWithImpl(_$UploadFileRequestImpl _value,
-      $Res Function(_$UploadFileRequestImpl) _then)
-      : super(_value, _then);
+  __$$UploadFileRequestImplCopyWithImpl(
+    _$UploadFileRequestImpl _value,
+    $Res Function(_$UploadFileRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? filePath = null,
-    Object? fileType = null,
-  }) {
-    return _then(_$UploadFileRequestImpl(
-      filePath: null == filePath
-          ? _value.filePath
-          : filePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileType: null == fileType
-          ? _value.fileType
-          : fileType // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? filePath = null, Object? fileType = null}) {
+    return _then(
+      _$UploadFileRequestImpl(
+        filePath: null == filePath
+            ? _value.filePath
+            : filePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        fileType: null == fileType
+            ? _value.fileType
+            : fileType // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UploadFileRequestImpl implements _UploadFileRequest {
-  const _$UploadFileRequestImpl(
-      {required this.filePath, required this.fileType});
+  const _$UploadFileRequestImpl({
+    required this.filePath,
+    required this.fileType,
+  });
 
   factory _$UploadFileRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$UploadFileRequestImplFromJson(json);
 
   @override
   final String filePath;
-// local file path or multipart
+  // local file path or multipart
   @override
   final String fileType;
 
@@ -146,20 +151,21 @@ class _$UploadFileRequestImpl implements _UploadFileRequest {
   @pragma('vm:prefer-inline')
   _$$UploadFileRequestImplCopyWith<_$UploadFileRequestImpl> get copyWith =>
       __$$UploadFileRequestImplCopyWithImpl<_$UploadFileRequestImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UploadFileRequestImplToJson(
-      this,
-    );
+    return _$$UploadFileRequestImplToJson(this);
   }
 }
 
 abstract class _UploadFileRequest implements UploadFileRequest {
-  const factory _UploadFileRequest(
-      {required final String filePath,
-      required final String fileType}) = _$UploadFileRequestImpl;
+  const factory _UploadFileRequest({
+    required final String filePath,
+    required final String fileType,
+  }) = _$UploadFileRequestImpl;
 
   factory _UploadFileRequest.fromJson(Map<String, dynamic> json) =
       _$UploadFileRequestImpl.fromJson;

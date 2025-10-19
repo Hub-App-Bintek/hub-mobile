@@ -12,6 +12,6 @@ class CreateProjectResponse with _$CreateProjectResponse {
     required String createdAt,
   }) = _CreateProjectResponse;
 
-  factory CreateProjectResponse.fromJson(Map<String, dynamic> json) => _$CreateProjectResponseFromJson(json);
+  factory CreateProjectResponse.fromJson(Map<String, dynamic> json) =>
+      _$CreateProjectResponseFromJson(json);
 }
-

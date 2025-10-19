@@ -9,7 +9,8 @@ class GetCompletedPortfoliosResponse with _$GetCompletedPortfoliosResponse {
     required List<PortfolioData> portfolios,
   }) = _GetCompletedPortfoliosResponse;
 
-  factory GetCompletedPortfoliosResponse.fromJson(Map<String, dynamic> json) => _$GetCompletedPortfoliosResponseFromJson(json);
+  factory GetCompletedPortfoliosResponse.fromJson(Map<String, dynamic> json) =>
+      _$GetCompletedPortfoliosResponseFromJson(json);
 }
 
 @freezed
@@ -27,7 +28,8 @@ class PortfolioData with _$PortfolioData {
     String? websiteUrl,
   }) = _PortfolioData;
 
-  factory PortfolioData.fromJson(Map<String, dynamic> json) => _$PortfolioDataFromJson(json);
+  factory PortfolioData.fromJson(Map<String, dynamic> json) =>
+      _$PortfolioDataFromJson(json);
 }
 
 @freezed
@@ -38,6 +40,6 @@ class UserData with _$UserData {
     String? name,
   }) = _UserData;
 
-  factory UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, dynamic> json) =>
+      _$UserDataFromJson(json);
 }
-

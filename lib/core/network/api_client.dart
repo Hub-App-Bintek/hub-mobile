@@ -78,7 +78,9 @@ class ApiClient {
         onError: (e, handler) {
           final ro = e.requestOptions;
           final reqUrl = _buildFullUrl(ro.baseUrl, ro.path, ro.queryParameters);
-          logger.d('URL [${ro.method}] [${e.response?.statusCode ?? '-'}]: $reqUrl');
+          logger.d(
+            'URL [${ro.method}] [${e.response?.statusCode ?? '-'}]: $reqUrl',
+          );
 
           if (ro.headers.isNotEmpty) {
             logger.d('HEADERS: ${_safeJson(_redactHeaders(ro.headers))}');

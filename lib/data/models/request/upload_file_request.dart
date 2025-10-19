@@ -10,6 +10,6 @@ class UploadFileRequest with _$UploadFileRequest {
     required String fileType, // KTP, Document, or Selfie
   }) = _UploadFileRequest;
 
-  factory UploadFileRequest.fromJson(Map<String, dynamic> json) => _$UploadFileRequestFromJson(json);
+  factory UploadFileRequest.fromJson(Map<String, dynamic> json) =>
+      _$UploadFileRequestFromJson(json);
 }
-

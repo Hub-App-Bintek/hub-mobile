@@ -12,10 +12,12 @@ part of 'activate_account_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ActivateAccountResponse _$ActivateAccountResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ActivateAccountResponse.fromJson(json);
 }
 
@@ -31,16 +33,19 @@ mixin _$ActivateAccountResponse {
 
 /// @nodoc
 abstract class $ActivateAccountResponseCopyWith<$Res> {
-  factory $ActivateAccountResponseCopyWith(ActivateAccountResponse value,
-          $Res Function(ActivateAccountResponse) then) =
-      _$ActivateAccountResponseCopyWithImpl<$Res, ActivateAccountResponse>;
+  factory $ActivateAccountResponseCopyWith(
+    ActivateAccountResponse value,
+    $Res Function(ActivateAccountResponse) then,
+  ) = _$ActivateAccountResponseCopyWithImpl<$Res, ActivateAccountResponse>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class _$ActivateAccountResponseCopyWithImpl<$Res,
-        $Val extends ActivateAccountResponse>
+class _$ActivateAccountResponseCopyWithImpl<
+  $Res,
+  $Val extends ActivateAccountResponse
+>
     implements $ActivateAccountResponseCopyWith<$Res> {
   _$ActivateAccountResponseCopyWithImpl(this._value, this._then);
 
@@ -51,15 +56,16 @@ class _$ActivateAccountResponseCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_value.copyWith(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? message = null}) {
+    return _then(
+      _value.copyWith(
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -67,9 +73,9 @@ class _$ActivateAccountResponseCopyWithImpl<$Res,
 abstract class _$$ActivateAccountResponseImplCopyWith<$Res>
     implements $ActivateAccountResponseCopyWith<$Res> {
   factory _$$ActivateAccountResponseImplCopyWith(
-          _$ActivateAccountResponseImpl value,
-          $Res Function(_$ActivateAccountResponseImpl) then) =
-      __$$ActivateAccountResponseImplCopyWithImpl<$Res>;
+    _$ActivateAccountResponseImpl value,
+    $Res Function(_$ActivateAccountResponseImpl) then,
+  ) = __$$ActivateAccountResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String message});
@@ -77,25 +83,28 @@ abstract class _$$ActivateAccountResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ActivateAccountResponseImplCopyWithImpl<$Res>
-    extends _$ActivateAccountResponseCopyWithImpl<$Res,
-        _$ActivateAccountResponseImpl>
+    extends
+        _$ActivateAccountResponseCopyWithImpl<
+          $Res,
+          _$ActivateAccountResponseImpl
+        >
     implements _$$ActivateAccountResponseImplCopyWith<$Res> {
   __$$ActivateAccountResponseImplCopyWithImpl(
-      _$ActivateAccountResponseImpl _value,
-      $Res Function(_$ActivateAccountResponseImpl) _then)
-      : super(_value, _then);
+    _$ActivateAccountResponseImpl _value,
+    $Res Function(_$ActivateAccountResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$ActivateAccountResponseImpl(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? message = null}) {
+    return _then(
+      _$ActivateAccountResponseImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -131,14 +140,14 @@ class _$ActivateAccountResponseImpl implements _ActivateAccountResponse {
   @override
   @pragma('vm:prefer-inline')
   _$$ActivateAccountResponseImplCopyWith<_$ActivateAccountResponseImpl>
-      get copyWith => __$$ActivateAccountResponseImplCopyWithImpl<
-          _$ActivateAccountResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$ActivateAccountResponseImplCopyWithImpl<
+        _$ActivateAccountResponseImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ActivateAccountResponseImplToJson(
-      this,
-    );
+    return _$$ActivateAccountResponseImplToJson(this);
   }
 }
 
@@ -154,5 +163,5 @@ abstract class _ActivateAccountResponse implements ActivateAccountResponse {
   @override
   @JsonKey(ignore: true)
   _$$ActivateAccountResponseImplCopyWith<_$ActivateAccountResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

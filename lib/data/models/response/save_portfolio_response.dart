@@ -18,7 +18,8 @@ class SavePortfolioResponse with _$SavePortfolioResponse {
     String? websiteUrl,
   }) = _SavePortfolioResponse;
 
-  factory SavePortfolioResponse.fromJson(Map<String, dynamic> json) => _$SavePortfolioResponseFromJson(json);
+  factory SavePortfolioResponse.fromJson(Map<String, dynamic> json) =>
+      _$SavePortfolioResponseFromJson(json);
 }
 
 @freezed
@@ -29,6 +30,6 @@ class UserData with _$UserData {
     String? name,
   }) = _UserData;
 
-  factory UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, dynamic> json) =>
+      _$UserDataFromJson(json);
 }
-

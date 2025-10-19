@@ -7,18 +7,16 @@ part of 'get_completed_portfolios_response.dart';
 // **************************************************************************
 
 _$GetCompletedPortfoliosResponseImpl
-    _$$GetCompletedPortfoliosResponseImplFromJson(Map<String, dynamic> json) =>
-        _$GetCompletedPortfoliosResponseImpl(
-          portfolios: (json['portfolios'] as List<dynamic>)
-              .map((e) => PortfolioData.fromJson(e as Map<String, dynamic>))
-              .toList(),
-        );
+_$$GetCompletedPortfoliosResponseImplFromJson(Map<String, dynamic> json) =>
+    _$GetCompletedPortfoliosResponseImpl(
+      portfolios: (json['portfolios'] as List<dynamic>)
+          .map((e) => PortfolioData.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$$GetCompletedPortfoliosResponseImplToJson(
-        _$GetCompletedPortfoliosResponseImpl instance) =>
-    <String, dynamic>{
-      'portfolios': instance.portfolios,
-    };
+  _$GetCompletedPortfoliosResponseImpl instance,
+) => <String, dynamic>{'portfolios': instance.portfolios};
 
 _$PortfolioDataImpl _$$PortfolioDataImplFromJson(Map<String, dynamic> json) =>
     _$PortfolioDataImpl(

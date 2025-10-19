@@ -12,7 +12,8 @@ part of 'user_action_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UserActionResponse _$UserActionResponseFromJson(Map<String, dynamic> json) {
   return _UserActionResponse.fromJson(json);
@@ -33,8 +34,9 @@ mixin _$UserActionResponse {
 /// @nodoc
 abstract class $UserActionResponseCopyWith<$Res> {
   factory $UserActionResponseCopyWith(
-          UserActionResponse value, $Res Function(UserActionResponse) then) =
-      _$UserActionResponseCopyWithImpl<$Res, UserActionResponse>;
+    UserActionResponse value,
+    $Res Function(UserActionResponse) then,
+  ) = _$UserActionResponseCopyWithImpl<$Res, UserActionResponse>;
   @useResult
   $Res call({int id, String email, String? name});
 }
@@ -51,34 +53,34 @@ class _$UserActionResponseCopyWithImpl<$Res, $Val extends UserActionResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UserActionResponseImplCopyWith<$Res>
     implements $UserActionResponseCopyWith<$Res> {
-  factory _$$UserActionResponseImplCopyWith(_$UserActionResponseImpl value,
-          $Res Function(_$UserActionResponseImpl) then) =
-      __$$UserActionResponseImplCopyWithImpl<$Res>;
+  factory _$$UserActionResponseImplCopyWith(
+    _$UserActionResponseImpl value,
+    $Res Function(_$UserActionResponseImpl) then,
+  ) = __$$UserActionResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String email, String? name});
@@ -88,39 +90,41 @@ abstract class _$$UserActionResponseImplCopyWith<$Res>
 class __$$UserActionResponseImplCopyWithImpl<$Res>
     extends _$UserActionResponseCopyWithImpl<$Res, _$UserActionResponseImpl>
     implements _$$UserActionResponseImplCopyWith<$Res> {
-  __$$UserActionResponseImplCopyWithImpl(_$UserActionResponseImpl _value,
-      $Res Function(_$UserActionResponseImpl) _then)
-      : super(_value, _then);
+  __$$UserActionResponseImplCopyWithImpl(
+    _$UserActionResponseImpl _value,
+    $Res Function(_$UserActionResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_$UserActionResponseImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _$UserActionResponseImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UserActionResponseImpl implements _UserActionResponse {
-  const _$UserActionResponseImpl(
-      {required this.id, required this.email, this.name});
+  const _$UserActionResponseImpl({
+    required this.id,
+    required this.email,
+    this.name,
+  });
 
   factory _$UserActionResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserActionResponseImplFromJson(json);
@@ -156,21 +160,22 @@ class _$UserActionResponseImpl implements _UserActionResponse {
   @pragma('vm:prefer-inline')
   _$$UserActionResponseImplCopyWith<_$UserActionResponseImpl> get copyWith =>
       __$$UserActionResponseImplCopyWithImpl<_$UserActionResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserActionResponseImplToJson(
-      this,
-    );
+    return _$$UserActionResponseImplToJson(this);
   }
 }
 
 abstract class _UserActionResponse implements UserActionResponse {
-  const factory _UserActionResponse(
-      {required final int id,
-      required final String email,
-      final String? name}) = _$UserActionResponseImpl;
+  const factory _UserActionResponse({
+    required final int id,
+    required final String email,
+    final String? name,
+  }) = _$UserActionResponseImpl;
 
   factory _UserActionResponse.fromJson(Map<String, dynamic> json) =
       _$UserActionResponseImpl.fromJson;

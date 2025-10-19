@@ -12,7 +12,8 @@ part of 'update_profile_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UpdateProfileRequest _$UpdateProfileRequestFromJson(Map<String, dynamic> json) {
   return _UpdateProfileRequest.fromJson(json);
@@ -36,22 +37,26 @@ mixin _$UpdateProfileRequest {
 
 /// @nodoc
 abstract class $UpdateProfileRequestCopyWith<$Res> {
-  factory $UpdateProfileRequestCopyWith(UpdateProfileRequest value,
-          $Res Function(UpdateProfileRequest) then) =
-      _$UpdateProfileRequestCopyWithImpl<$Res, UpdateProfileRequest>;
+  factory $UpdateProfileRequestCopyWith(
+    UpdateProfileRequest value,
+    $Res Function(UpdateProfileRequest) then,
+  ) = _$UpdateProfileRequestCopyWithImpl<$Res, UpdateProfileRequest>;
   @useResult
-  $Res call(
-      {String name,
-      String phone,
-      String address,
-      String ktpNumber,
-      String? ktpFilePath,
-      String? selfieFilePath});
+  $Res call({
+    String name,
+    String phone,
+    String address,
+    String ktpNumber,
+    String? ktpFilePath,
+    String? selfieFilePath,
+  });
 }
 
 /// @nodoc
-class _$UpdateProfileRequestCopyWithImpl<$Res,
-        $Val extends UpdateProfileRequest>
+class _$UpdateProfileRequestCopyWithImpl<
+  $Res,
+  $Val extends UpdateProfileRequest
+>
     implements $UpdateProfileRequestCopyWith<$Res> {
   _$UpdateProfileRequestCopyWithImpl(this._value, this._then);
 
@@ -70,59 +75,65 @@ class _$UpdateProfileRequestCopyWithImpl<$Res,
     Object? ktpFilePath = freezed,
     Object? selfieFilePath = freezed,
   }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      address: null == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
-      ktpNumber: null == ktpNumber
-          ? _value.ktpNumber
-          : ktpNumber // ignore: cast_nullable_to_non_nullable
-              as String,
-      ktpFilePath: freezed == ktpFilePath
-          ? _value.ktpFilePath
-          : ktpFilePath // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selfieFilePath: freezed == selfieFilePath
-          ? _value.selfieFilePath
-          : selfieFilePath // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            phone: null == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String,
+            address: null == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ktpNumber: null == ktpNumber
+                ? _value.ktpNumber
+                : ktpNumber // ignore: cast_nullable_to_non_nullable
+                      as String,
+            ktpFilePath: freezed == ktpFilePath
+                ? _value.ktpFilePath
+                : ktpFilePath // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            selfieFilePath: freezed == selfieFilePath
+                ? _value.selfieFilePath
+                : selfieFilePath // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UpdateProfileRequestImplCopyWith<$Res>
     implements $UpdateProfileRequestCopyWith<$Res> {
-  factory _$$UpdateProfileRequestImplCopyWith(_$UpdateProfileRequestImpl value,
-          $Res Function(_$UpdateProfileRequestImpl) then) =
-      __$$UpdateProfileRequestImplCopyWithImpl<$Res>;
+  factory _$$UpdateProfileRequestImplCopyWith(
+    _$UpdateProfileRequestImpl value,
+    $Res Function(_$UpdateProfileRequestImpl) then,
+  ) = __$$UpdateProfileRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String name,
-      String phone,
-      String address,
-      String ktpNumber,
-      String? ktpFilePath,
-      String? selfieFilePath});
+  $Res call({
+    String name,
+    String phone,
+    String address,
+    String ktpNumber,
+    String? ktpFilePath,
+    String? selfieFilePath,
+  });
 }
 
 /// @nodoc
 class __$$UpdateProfileRequestImplCopyWithImpl<$Res>
     extends _$UpdateProfileRequestCopyWithImpl<$Res, _$UpdateProfileRequestImpl>
     implements _$$UpdateProfileRequestImplCopyWith<$Res> {
-  __$$UpdateProfileRequestImplCopyWithImpl(_$UpdateProfileRequestImpl _value,
-      $Res Function(_$UpdateProfileRequestImpl) _then)
-      : super(_value, _then);
+  __$$UpdateProfileRequestImplCopyWithImpl(
+    _$UpdateProfileRequestImpl _value,
+    $Res Function(_$UpdateProfileRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -134,45 +145,48 @@ class __$$UpdateProfileRequestImplCopyWithImpl<$Res>
     Object? ktpFilePath = freezed,
     Object? selfieFilePath = freezed,
   }) {
-    return _then(_$UpdateProfileRequestImpl(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      phone: null == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String,
-      address: null == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
-      ktpNumber: null == ktpNumber
-          ? _value.ktpNumber
-          : ktpNumber // ignore: cast_nullable_to_non_nullable
-              as String,
-      ktpFilePath: freezed == ktpFilePath
-          ? _value.ktpFilePath
-          : ktpFilePath // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selfieFilePath: freezed == selfieFilePath
-          ? _value.selfieFilePath
-          : selfieFilePath // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$UpdateProfileRequestImpl(
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        phone: null == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String,
+        address: null == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ktpNumber: null == ktpNumber
+            ? _value.ktpNumber
+            : ktpNumber // ignore: cast_nullable_to_non_nullable
+                  as String,
+        ktpFilePath: freezed == ktpFilePath
+            ? _value.ktpFilePath
+            : ktpFilePath // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        selfieFilePath: freezed == selfieFilePath
+            ? _value.selfieFilePath
+            : selfieFilePath // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UpdateProfileRequestImpl implements _UpdateProfileRequest {
-  const _$UpdateProfileRequestImpl(
-      {required this.name,
-      required this.phone,
-      required this.address,
-      required this.ktpNumber,
-      this.ktpFilePath,
-      this.selfieFilePath});
+  const _$UpdateProfileRequestImpl({
+    required this.name,
+    required this.phone,
+    required this.address,
+    required this.ktpNumber,
+    this.ktpFilePath,
+    this.selfieFilePath,
+  });
 
   factory _$UpdateProfileRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$UpdateProfileRequestImplFromJson(json);
@@ -187,7 +201,7 @@ class _$UpdateProfileRequestImpl implements _UpdateProfileRequest {
   final String ktpNumber;
   @override
   final String? ktpFilePath;
-// local file path or multipart
+  // local file path or multipart
   @override
   final String? selfieFilePath;
 
@@ -214,33 +228,41 @@ class _$UpdateProfileRequestImpl implements _UpdateProfileRequest {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, phone, address, ktpNumber,
-      ktpFilePath, selfieFilePath);
+  int get hashCode => Object.hash(
+    runtimeType,
+    name,
+    phone,
+    address,
+    ktpNumber,
+    ktpFilePath,
+    selfieFilePath,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UpdateProfileRequestImplCopyWith<_$UpdateProfileRequestImpl>
-      get copyWith =>
-          __$$UpdateProfileRequestImplCopyWithImpl<_$UpdateProfileRequestImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$UpdateProfileRequestImplCopyWithImpl<_$UpdateProfileRequestImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UpdateProfileRequestImplToJson(
-      this,
-    );
+    return _$$UpdateProfileRequestImplToJson(this);
   }
 }
 
 abstract class _UpdateProfileRequest implements UpdateProfileRequest {
-  const factory _UpdateProfileRequest(
-      {required final String name,
-      required final String phone,
-      required final String address,
-      required final String ktpNumber,
-      final String? ktpFilePath,
-      final String? selfieFilePath}) = _$UpdateProfileRequestImpl;
+  const factory _UpdateProfileRequest({
+    required final String name,
+    required final String phone,
+    required final String address,
+    required final String ktpNumber,
+    final String? ktpFilePath,
+    final String? selfieFilePath,
+  }) = _$UpdateProfileRequestImpl;
 
   factory _UpdateProfileRequest.fromJson(Map<String, dynamic> json) =
       _$UpdateProfileRequestImpl.fromJson;
@@ -260,5 +282,5 @@ abstract class _UpdateProfileRequest implements UpdateProfileRequest {
   @override
   @JsonKey(ignore: true)
   _$$UpdateProfileRequestImplCopyWith<_$UpdateProfileRequestImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

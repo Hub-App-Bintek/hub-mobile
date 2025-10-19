@@ -11,6 +11,6 @@ class UserActionResponse with _$UserActionResponse {
     String? name,
   }) = _UserActionResponse;
 
-  factory UserActionResponse.fromJson(Map<String, dynamic> json) => _$UserActionResponseFromJson(json);
+  factory UserActionResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserActionResponseFromJson(json);
 }
-

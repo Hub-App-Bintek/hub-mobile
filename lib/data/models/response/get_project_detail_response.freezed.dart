@@ -12,10 +12,12 @@ part of 'get_project_detail_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 GetProjectDetailResponse _$GetProjectDetailResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _GetProjectDetailResponse.fromJson(json);
 }
 
@@ -31,9 +33,10 @@ mixin _$GetProjectDetailResponse {
 
 /// @nodoc
 abstract class $GetProjectDetailResponseCopyWith<$Res> {
-  factory $GetProjectDetailResponseCopyWith(GetProjectDetailResponse value,
-          $Res Function(GetProjectDetailResponse) then) =
-      _$GetProjectDetailResponseCopyWithImpl<$Res, GetProjectDetailResponse>;
+  factory $GetProjectDetailResponseCopyWith(
+    GetProjectDetailResponse value,
+    $Res Function(GetProjectDetailResponse) then,
+  ) = _$GetProjectDetailResponseCopyWithImpl<$Res, GetProjectDetailResponse>;
   @useResult
   $Res call({Project project});
 
@@ -41,8 +44,10 @@ abstract class $GetProjectDetailResponseCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GetProjectDetailResponseCopyWithImpl<$Res,
-        $Val extends GetProjectDetailResponse>
+class _$GetProjectDetailResponseCopyWithImpl<
+  $Res,
+  $Val extends GetProjectDetailResponse
+>
     implements $GetProjectDetailResponseCopyWith<$Res> {
   _$GetProjectDetailResponseCopyWithImpl(this._value, this._then);
 
@@ -53,15 +58,16 @@ class _$GetProjectDetailResponseCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? project = null,
-  }) {
-    return _then(_value.copyWith(
-      project: null == project
-          ? _value.project
-          : project // ignore: cast_nullable_to_non_nullable
-              as Project,
-    ) as $Val);
+  $Res call({Object? project = null}) {
+    return _then(
+      _value.copyWith(
+            project: null == project
+                ? _value.project
+                : project // ignore: cast_nullable_to_non_nullable
+                      as Project,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -77,9 +83,9 @@ class _$GetProjectDetailResponseCopyWithImpl<$Res,
 abstract class _$$GetProjectDetailResponseImplCopyWith<$Res>
     implements $GetProjectDetailResponseCopyWith<$Res> {
   factory _$$GetProjectDetailResponseImplCopyWith(
-          _$GetProjectDetailResponseImpl value,
-          $Res Function(_$GetProjectDetailResponseImpl) then) =
-      __$$GetProjectDetailResponseImplCopyWithImpl<$Res>;
+    _$GetProjectDetailResponseImpl value,
+    $Res Function(_$GetProjectDetailResponseImpl) then,
+  ) = __$$GetProjectDetailResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({Project project});
@@ -90,25 +96,28 @@ abstract class _$$GetProjectDetailResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$GetProjectDetailResponseImplCopyWithImpl<$Res>
-    extends _$GetProjectDetailResponseCopyWithImpl<$Res,
-        _$GetProjectDetailResponseImpl>
+    extends
+        _$GetProjectDetailResponseCopyWithImpl<
+          $Res,
+          _$GetProjectDetailResponseImpl
+        >
     implements _$$GetProjectDetailResponseImplCopyWith<$Res> {
   __$$GetProjectDetailResponseImplCopyWithImpl(
-      _$GetProjectDetailResponseImpl _value,
-      $Res Function(_$GetProjectDetailResponseImpl) _then)
-      : super(_value, _then);
+    _$GetProjectDetailResponseImpl _value,
+    $Res Function(_$GetProjectDetailResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? project = null,
-  }) {
-    return _then(_$GetProjectDetailResponseImpl(
-      project: null == project
-          ? _value.project
-          : project // ignore: cast_nullable_to_non_nullable
-              as Project,
-    ));
+  $Res call({Object? project = null}) {
+    return _then(
+      _$GetProjectDetailResponseImpl(
+        project: null == project
+            ? _value.project
+            : project // ignore: cast_nullable_to_non_nullable
+                  as Project,
+      ),
+    );
   }
 }
 
@@ -144,14 +153,14 @@ class _$GetProjectDetailResponseImpl implements _GetProjectDetailResponse {
   @override
   @pragma('vm:prefer-inline')
   _$$GetProjectDetailResponseImplCopyWith<_$GetProjectDetailResponseImpl>
-      get copyWith => __$$GetProjectDetailResponseImplCopyWithImpl<
-          _$GetProjectDetailResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$GetProjectDetailResponseImplCopyWithImpl<
+        _$GetProjectDetailResponseImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GetProjectDetailResponseImplToJson(
-      this,
-    );
+    return _$$GetProjectDetailResponseImplToJson(this);
   }
 }
 
@@ -167,5 +176,5 @@ abstract class _GetProjectDetailResponse implements GetProjectDetailResponse {
   @override
   @JsonKey(ignore: true)
   _$$GetProjectDetailResponseImplCopyWith<_$GetProjectDetailResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

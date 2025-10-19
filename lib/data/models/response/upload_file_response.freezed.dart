@@ -12,7 +12,8 @@ part of 'upload_file_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 UploadFileResponse _$UploadFileResponseFromJson(Map<String, dynamic> json) {
   return _UploadFileResponse.fromJson(json);
@@ -33,8 +34,9 @@ mixin _$UploadFileResponse {
 /// @nodoc
 abstract class $UploadFileResponseCopyWith<$Res> {
   factory $UploadFileResponseCopyWith(
-          UploadFileResponse value, $Res Function(UploadFileResponse) then) =
-      _$UploadFileResponseCopyWithImpl<$Res, UploadFileResponse>;
+    UploadFileResponse value,
+    $Res Function(UploadFileResponse) then,
+  ) = _$UploadFileResponseCopyWithImpl<$Res, UploadFileResponse>;
   @useResult
   $Res call({String fileId, String fileUrl, String checksum});
 }
@@ -56,29 +58,33 @@ class _$UploadFileResponseCopyWithImpl<$Res, $Val extends UploadFileResponse>
     Object? fileUrl = null,
     Object? checksum = null,
   }) {
-    return _then(_value.copyWith(
-      fileId: null == fileId
-          ? _value.fileId
-          : fileId // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileUrl: null == fileUrl
-          ? _value.fileUrl
-          : fileUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      checksum: null == checksum
-          ? _value.checksum
-          : checksum // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            fileId: null == fileId
+                ? _value.fileId
+                : fileId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            fileUrl: null == fileUrl
+                ? _value.fileUrl
+                : fileUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+            checksum: null == checksum
+                ? _value.checksum
+                : checksum // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$UploadFileResponseImplCopyWith<$Res>
     implements $UploadFileResponseCopyWith<$Res> {
-  factory _$$UploadFileResponseImplCopyWith(_$UploadFileResponseImpl value,
-          $Res Function(_$UploadFileResponseImpl) then) =
-      __$$UploadFileResponseImplCopyWithImpl<$Res>;
+  factory _$$UploadFileResponseImplCopyWith(
+    _$UploadFileResponseImpl value,
+    $Res Function(_$UploadFileResponseImpl) then,
+  ) = __$$UploadFileResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String fileId, String fileUrl, String checksum});
@@ -88,9 +94,10 @@ abstract class _$$UploadFileResponseImplCopyWith<$Res>
 class __$$UploadFileResponseImplCopyWithImpl<$Res>
     extends _$UploadFileResponseCopyWithImpl<$Res, _$UploadFileResponseImpl>
     implements _$$UploadFileResponseImplCopyWith<$Res> {
-  __$$UploadFileResponseImplCopyWithImpl(_$UploadFileResponseImpl _value,
-      $Res Function(_$UploadFileResponseImpl) _then)
-      : super(_value, _then);
+  __$$UploadFileResponseImplCopyWithImpl(
+    _$UploadFileResponseImpl _value,
+    $Res Function(_$UploadFileResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -99,28 +106,33 @@ class __$$UploadFileResponseImplCopyWithImpl<$Res>
     Object? fileUrl = null,
     Object? checksum = null,
   }) {
-    return _then(_$UploadFileResponseImpl(
-      fileId: null == fileId
-          ? _value.fileId
-          : fileId // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileUrl: null == fileUrl
-          ? _value.fileUrl
-          : fileUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      checksum: null == checksum
-          ? _value.checksum
-          : checksum // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$UploadFileResponseImpl(
+        fileId: null == fileId
+            ? _value.fileId
+            : fileId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        fileUrl: null == fileUrl
+            ? _value.fileUrl
+            : fileUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+        checksum: null == checksum
+            ? _value.checksum
+            : checksum // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$UploadFileResponseImpl implements _UploadFileResponse {
-  const _$UploadFileResponseImpl(
-      {required this.fileId, required this.fileUrl, required this.checksum});
+  const _$UploadFileResponseImpl({
+    required this.fileId,
+    required this.fileUrl,
+    required this.checksum,
+  });
 
   factory _$UploadFileResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UploadFileResponseImplFromJson(json);
@@ -157,21 +169,22 @@ class _$UploadFileResponseImpl implements _UploadFileResponse {
   @pragma('vm:prefer-inline')
   _$$UploadFileResponseImplCopyWith<_$UploadFileResponseImpl> get copyWith =>
       __$$UploadFileResponseImplCopyWithImpl<_$UploadFileResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UploadFileResponseImplToJson(
-      this,
-    );
+    return _$$UploadFileResponseImplToJson(this);
   }
 }
 
 abstract class _UploadFileResponse implements UploadFileResponse {
-  const factory _UploadFileResponse(
-      {required final String fileId,
-      required final String fileUrl,
-      required final String checksum}) = _$UploadFileResponseImpl;
+  const factory _UploadFileResponse({
+    required final String fileId,
+    required final String fileUrl,
+    required final String checksum,
+  }) = _$UploadFileResponseImpl;
 
   factory _UploadFileResponse.fromJson(Map<String, dynamic> json) =
       _$UploadFileResponseImpl.fromJson;

@@ -16,6 +16,6 @@ class SavePortfolioRequest with _$SavePortfolioRequest {
     String? websiteUrl,
   }) = _SavePortfolioRequest;
 
-  factory SavePortfolioRequest.fromJson(Map<String, dynamic> json) => _$SavePortfolioRequestFromJson(json);
+  factory SavePortfolioRequest.fromJson(Map<String, dynamic> json) =>
+      _$SavePortfolioRequestFromJson(json);
 }
-

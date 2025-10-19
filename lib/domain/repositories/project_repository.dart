@@ -7,7 +7,9 @@ import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
 
 abstract class ProjectRepository {
-  Future<Result<CreateProjectResponse, Failure>> createProject(CreateProjectRequest request);
+  Future<Result<CreateProjectResponse, Failure>> createProject(
+    CreateProjectRequest request,
+  );
   Future<Result<GetProjectsResponse, Failure>> getProjectList(
     GetProjectsRequest request,
   );
@@ -19,7 +21,9 @@ class ProjectRepositoryImpl implements ProjectRepository {
   ProjectRepositoryImpl(this._dataSource);
 
   @override
-  Future<Result<CreateProjectResponse, Failure>> createProject(CreateProjectRequest request) {
+  Future<Result<CreateProjectResponse, Failure>> createProject(
+    CreateProjectRequest request,
+  ) {
     return _dataSource.createProject(request);
   }
 

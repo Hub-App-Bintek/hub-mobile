@@ -27,7 +27,9 @@ class PkpElevatedButton extends StatelessWidget {
                 height: 16,
                 width: 16,
                 child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary, // Use onPrimary for contrast
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimary, // Use onPrimary for contrast
                   strokeWidth: 2.5,
                 ),
               )

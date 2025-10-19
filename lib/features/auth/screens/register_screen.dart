@@ -43,7 +43,9 @@ class RegisterScreen extends GetView<RegisterController> {
                               errorText: controller.emailError.value,
                             ),
                           ),
-                          const SizedBox(height: 16), // FIX: Use SizedBox for spacing
+                          const SizedBox(
+                            height: 16,
+                          ), // FIX: Use SizedBox for spacing
                           Obx(
                             () => PkpTextFormField(
                               controller: controller.passwordController,
@@ -53,7 +55,9 @@ class RegisterScreen extends GetView<RegisterController> {
                               errorText: controller.passwordError.value,
                             ),
                           ),
-                          const SizedBox(height: 16), // FIX: Use SizedBox for spacing
+                          const SizedBox(
+                            height: 16,
+                          ), // FIX: Use SizedBox for spacing
                           Obx(
                             () => PkpTextFormField(
                               controller: controller.confirmPasswordController,
@@ -63,7 +67,9 @@ class RegisterScreen extends GetView<RegisterController> {
                               errorText: controller.confirmPasswordError.value,
                             ),
                           ),
-                          const SizedBox(height: 24), // Use a slightly larger gap before terms
+                          const SizedBox(
+                            height: 24,
+                          ), // Use a slightly larger gap before terms
                           Obx(
                             () => Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,27 +87,35 @@ class RegisterScreen extends GetView<RegisterController> {
                                 Expanded(
                                   child: RichText(
                                     text: TextSpan(
-                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
                                       // Add gesture recognizers to make the links tappable
                                       children: <TextSpan>[
-                                        const TextSpan(text: AppStrings.termsPrefix),
+                                        const TextSpan(
+                                          text: AppStrings.termsPrefix,
+                                        ),
                                         TextSpan(
                                           text: AppStrings.termsConditions,
                                           style: const TextStyle(
                                             color: Colors.blue,
-                                            decoration: TextDecoration.underline,
+                                            decoration:
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               // TODO: Navigate to Terms and Conditions page
                                             },
                                         ),
-                                        const TextSpan(text: AppStrings.termsAnd),
+                                        const TextSpan(
+                                          text: AppStrings.termsAnd,
+                                        ),
                                         TextSpan(
                                           text: AppStrings.privacyPolicy,
                                           style: const TextStyle(
                                             color: Colors.blue,
-                                            decoration: TextDecoration.underline,
+                                            decoration:
+                                                TextDecoration.underline,
                                           ),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {

@@ -12,10 +12,12 @@ part of 'resend_activation_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ResendActivationResponse _$ResendActivationResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ResendActivationResponse.fromJson(json);
 }
 
@@ -31,16 +33,19 @@ mixin _$ResendActivationResponse {
 
 /// @nodoc
 abstract class $ResendActivationResponseCopyWith<$Res> {
-  factory $ResendActivationResponseCopyWith(ResendActivationResponse value,
-          $Res Function(ResendActivationResponse) then) =
-      _$ResendActivationResponseCopyWithImpl<$Res, ResendActivationResponse>;
+  factory $ResendActivationResponseCopyWith(
+    ResendActivationResponse value,
+    $Res Function(ResendActivationResponse) then,
+  ) = _$ResendActivationResponseCopyWithImpl<$Res, ResendActivationResponse>;
   @useResult
   $Res call({String message});
 }
 
 /// @nodoc
-class _$ResendActivationResponseCopyWithImpl<$Res,
-        $Val extends ResendActivationResponse>
+class _$ResendActivationResponseCopyWithImpl<
+  $Res,
+  $Val extends ResendActivationResponse
+>
     implements $ResendActivationResponseCopyWith<$Res> {
   _$ResendActivationResponseCopyWithImpl(this._value, this._then);
 
@@ -51,15 +56,16 @@ class _$ResendActivationResponseCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_value.copyWith(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? message = null}) {
+    return _then(
+      _value.copyWith(
+            message: null == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -67,9 +73,9 @@ class _$ResendActivationResponseCopyWithImpl<$Res,
 abstract class _$$ResendActivationResponseImplCopyWith<$Res>
     implements $ResendActivationResponseCopyWith<$Res> {
   factory _$$ResendActivationResponseImplCopyWith(
-          _$ResendActivationResponseImpl value,
-          $Res Function(_$ResendActivationResponseImpl) then) =
-      __$$ResendActivationResponseImplCopyWithImpl<$Res>;
+    _$ResendActivationResponseImpl value,
+    $Res Function(_$ResendActivationResponseImpl) then,
+  ) = __$$ResendActivationResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String message});
@@ -77,25 +83,28 @@ abstract class _$$ResendActivationResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$ResendActivationResponseImplCopyWithImpl<$Res>
-    extends _$ResendActivationResponseCopyWithImpl<$Res,
-        _$ResendActivationResponseImpl>
+    extends
+        _$ResendActivationResponseCopyWithImpl<
+          $Res,
+          _$ResendActivationResponseImpl
+        >
     implements _$$ResendActivationResponseImplCopyWith<$Res> {
   __$$ResendActivationResponseImplCopyWithImpl(
-      _$ResendActivationResponseImpl _value,
-      $Res Function(_$ResendActivationResponseImpl) _then)
-      : super(_value, _then);
+    _$ResendActivationResponseImpl _value,
+    $Res Function(_$ResendActivationResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? message = null,
-  }) {
-    return _then(_$ResendActivationResponseImpl(
-      message: null == message
-          ? _value.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? message = null}) {
+    return _then(
+      _$ResendActivationResponseImpl(
+        message: null == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -131,14 +140,14 @@ class _$ResendActivationResponseImpl implements _ResendActivationResponse {
   @override
   @pragma('vm:prefer-inline')
   _$$ResendActivationResponseImplCopyWith<_$ResendActivationResponseImpl>
-      get copyWith => __$$ResendActivationResponseImplCopyWithImpl<
-          _$ResendActivationResponseImpl>(this, _$identity);
+  get copyWith =>
+      __$$ResendActivationResponseImplCopyWithImpl<
+        _$ResendActivationResponseImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ResendActivationResponseImplToJson(
-      this,
-    );
+    return _$$ResendActivationResponseImplToJson(this);
   }
 }
 
@@ -154,5 +163,5 @@ abstract class _ResendActivationResponse implements ResendActivationResponse {
   @override
   @JsonKey(ignore: true)
   _$$ResendActivationResponseImplCopyWith<_$ResendActivationResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

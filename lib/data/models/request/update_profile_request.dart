@@ -14,6 +14,6 @@ class UpdateProfileRequest with _$UpdateProfileRequest {
     String? selfieFilePath, // local file path or multipart
   }) = _UpdateProfileRequest;
 
-  factory UpdateProfileRequest.fromJson(Map<String, dynamic> json) => _$UpdateProfileRequestFromJson(json);
+  factory UpdateProfileRequest.fromJson(Map<String, dynamic> json) =>
+      _$UpdateProfileRequestFromJson(json);
 }
-

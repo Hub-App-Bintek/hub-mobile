@@ -9,21 +9,15 @@ class NetworkServiceInjection {
 
   static void init() {
     Get.lazyPut<AuthApiService>(
-          () => AuthApiService(
-        Get.find<ApiClient>().dio,
-      ),
+      () => AuthApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
     Get.lazyPut<ProjectApiService>(
-          () => ProjectApiService(
-        Get.find<ApiClient>().dio,
-      ),
+      () => ProjectApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
     Get.lazyPut<ConsultantApiService>(
-          () => ConsultantApiService(
-        Get.find<ApiClient>().dio,
-      ),
+      () => ConsultantApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

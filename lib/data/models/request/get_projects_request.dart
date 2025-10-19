@@ -12,6 +12,6 @@ class GetProjectsRequest with _$GetProjectsRequest {
     String? status, // ACTIVE, COMPLETED, CANCELLED
   }) = _GetProjectsRequest;
 
-  factory GetProjectsRequest.fromJson(Map<String, dynamic> json) => _$GetProjectsRequestFromJson(json);
+  factory GetProjectsRequest.fromJson(Map<String, dynamic> json) =>
+      _$GetProjectsRequestFromJson(json);
 }
-

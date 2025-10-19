@@ -77,7 +77,7 @@ class LoginController extends BaseController {
           ),
         ),
         onSuccess: (loginResponse) async {
-          await _authLocalStorage.saveToken(loginResponse.token??'');
+          await _authLocalStorage.saveToken(loginResponse.token ?? '');
           navigateOffAll(AppRoutes.main);
         },
         onFailure: (failure) {

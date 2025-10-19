@@ -12,10 +12,12 @@ part of 'get_completed_portfolios_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 GetCompletedPortfoliosResponse _$GetCompletedPortfoliosResponseFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _GetCompletedPortfoliosResponse.fromJson(json);
 }
 
@@ -26,23 +28,28 @@ mixin _$GetCompletedPortfoliosResponse {
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GetCompletedPortfoliosResponseCopyWith<GetCompletedPortfoliosResponse>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $GetCompletedPortfoliosResponseCopyWith<$Res> {
   factory $GetCompletedPortfoliosResponseCopyWith(
-          GetCompletedPortfoliosResponse value,
-          $Res Function(GetCompletedPortfoliosResponse) then) =
-      _$GetCompletedPortfoliosResponseCopyWithImpl<$Res,
-          GetCompletedPortfoliosResponse>;
+    GetCompletedPortfoliosResponse value,
+    $Res Function(GetCompletedPortfoliosResponse) then,
+  ) =
+      _$GetCompletedPortfoliosResponseCopyWithImpl<
+        $Res,
+        GetCompletedPortfoliosResponse
+      >;
   @useResult
   $Res call({List<PortfolioData> portfolios});
 }
 
 /// @nodoc
-class _$GetCompletedPortfoliosResponseCopyWithImpl<$Res,
-        $Val extends GetCompletedPortfoliosResponse>
+class _$GetCompletedPortfoliosResponseCopyWithImpl<
+  $Res,
+  $Val extends GetCompletedPortfoliosResponse
+>
     implements $GetCompletedPortfoliosResponseCopyWith<$Res> {
   _$GetCompletedPortfoliosResponseCopyWithImpl(this._value, this._then);
 
@@ -53,15 +60,16 @@ class _$GetCompletedPortfoliosResponseCopyWithImpl<$Res,
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? portfolios = null,
-  }) {
-    return _then(_value.copyWith(
-      portfolios: null == portfolios
-          ? _value.portfolios
-          : portfolios // ignore: cast_nullable_to_non_nullable
-              as List<PortfolioData>,
-    ) as $Val);
+  $Res call({Object? portfolios = null}) {
+    return _then(
+      _value.copyWith(
+            portfolios: null == portfolios
+                ? _value.portfolios
+                : portfolios // ignore: cast_nullable_to_non_nullable
+                      as List<PortfolioData>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -69,9 +77,9 @@ class _$GetCompletedPortfoliosResponseCopyWithImpl<$Res,
 abstract class _$$GetCompletedPortfoliosResponseImplCopyWith<$Res>
     implements $GetCompletedPortfoliosResponseCopyWith<$Res> {
   factory _$$GetCompletedPortfoliosResponseImplCopyWith(
-          _$GetCompletedPortfoliosResponseImpl value,
-          $Res Function(_$GetCompletedPortfoliosResponseImpl) then) =
-      __$$GetCompletedPortfoliosResponseImplCopyWithImpl<$Res>;
+    _$GetCompletedPortfoliosResponseImpl value,
+    $Res Function(_$GetCompletedPortfoliosResponseImpl) then,
+  ) = __$$GetCompletedPortfoliosResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<PortfolioData> portfolios});
@@ -79,25 +87,28 @@ abstract class _$$GetCompletedPortfoliosResponseImplCopyWith<$Res>
 
 /// @nodoc
 class __$$GetCompletedPortfoliosResponseImplCopyWithImpl<$Res>
-    extends _$GetCompletedPortfoliosResponseCopyWithImpl<$Res,
-        _$GetCompletedPortfoliosResponseImpl>
+    extends
+        _$GetCompletedPortfoliosResponseCopyWithImpl<
+          $Res,
+          _$GetCompletedPortfoliosResponseImpl
+        >
     implements _$$GetCompletedPortfoliosResponseImplCopyWith<$Res> {
   __$$GetCompletedPortfoliosResponseImplCopyWithImpl(
-      _$GetCompletedPortfoliosResponseImpl _value,
-      $Res Function(_$GetCompletedPortfoliosResponseImpl) _then)
-      : super(_value, _then);
+    _$GetCompletedPortfoliosResponseImpl _value,
+    $Res Function(_$GetCompletedPortfoliosResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? portfolios = null,
-  }) {
-    return _then(_$GetCompletedPortfoliosResponseImpl(
-      portfolios: null == portfolios
-          ? _value._portfolios
-          : portfolios // ignore: cast_nullable_to_non_nullable
-              as List<PortfolioData>,
-    ));
+  $Res call({Object? portfolios = null}) {
+    return _then(
+      _$GetCompletedPortfoliosResponseImpl(
+        portfolios: null == portfolios
+            ? _value._portfolios
+            : portfolios // ignore: cast_nullable_to_non_nullable
+                  as List<PortfolioData>,
+      ),
+    );
   }
 }
 
@@ -105,13 +116,13 @@ class __$$GetCompletedPortfoliosResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GetCompletedPortfoliosResponseImpl
     implements _GetCompletedPortfoliosResponse {
-  const _$GetCompletedPortfoliosResponseImpl(
-      {required final List<PortfolioData> portfolios})
-      : _portfolios = portfolios;
+  const _$GetCompletedPortfoliosResponseImpl({
+    required final List<PortfolioData> portfolios,
+  }) : _portfolios = portfolios;
 
   factory _$GetCompletedPortfoliosResponseImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$GetCompletedPortfoliosResponseImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$GetCompletedPortfoliosResponseImplFromJson(json);
 
   final List<PortfolioData> _portfolios;
   @override
@@ -131,36 +142,41 @@ class _$GetCompletedPortfoliosResponseImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$GetCompletedPortfoliosResponseImpl &&
-            const DeepCollectionEquality()
-                .equals(other._portfolios, _portfolios));
+            const DeepCollectionEquality().equals(
+              other._portfolios,
+              _portfolios,
+            ));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_portfolios));
+    runtimeType,
+    const DeepCollectionEquality().hash(_portfolios),
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$GetCompletedPortfoliosResponseImplCopyWith<
-          _$GetCompletedPortfoliosResponseImpl>
-      get copyWith => __$$GetCompletedPortfoliosResponseImplCopyWithImpl<
-          _$GetCompletedPortfoliosResponseImpl>(this, _$identity);
+    _$GetCompletedPortfoliosResponseImpl
+  >
+  get copyWith =>
+      __$$GetCompletedPortfoliosResponseImplCopyWithImpl<
+        _$GetCompletedPortfoliosResponseImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GetCompletedPortfoliosResponseImplToJson(
-      this,
-    );
+    return _$$GetCompletedPortfoliosResponseImplToJson(this);
   }
 }
 
 abstract class _GetCompletedPortfoliosResponse
     implements GetCompletedPortfoliosResponse {
-  const factory _GetCompletedPortfoliosResponse(
-          {required final List<PortfolioData> portfolios}) =
-      _$GetCompletedPortfoliosResponseImpl;
+  const factory _GetCompletedPortfoliosResponse({
+    required final List<PortfolioData> portfolios,
+  }) = _$GetCompletedPortfoliosResponseImpl;
 
   factory _GetCompletedPortfoliosResponse.fromJson(Map<String, dynamic> json) =
       _$GetCompletedPortfoliosResponseImpl.fromJson;
@@ -170,8 +186,9 @@ abstract class _GetCompletedPortfoliosResponse
   @override
   @JsonKey(ignore: true)
   _$$GetCompletedPortfoliosResponseImplCopyWith<
-          _$GetCompletedPortfoliosResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$GetCompletedPortfoliosResponseImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 PortfolioData _$PortfolioDataFromJson(Map<String, dynamic> json) {
@@ -200,20 +217,22 @@ mixin _$PortfolioData {
 /// @nodoc
 abstract class $PortfolioDataCopyWith<$Res> {
   factory $PortfolioDataCopyWith(
-          PortfolioData value, $Res Function(PortfolioData) then) =
-      _$PortfolioDataCopyWithImpl<$Res, PortfolioData>;
+    PortfolioData value,
+    $Res Function(PortfolioData) then,
+  ) = _$PortfolioDataCopyWithImpl<$Res, PortfolioData>;
   @useResult
-  $Res call(
-      {int id,
-      UserData user,
-      String? bio,
-      String? specialization,
-      String? experience,
-      String? education,
-      String? certifications,
-      String? projectSamples,
-      String? linkedinUrl,
-      String? websiteUrl});
+  $Res call({
+    int id,
+    UserData user,
+    String? bio,
+    String? specialization,
+    String? experience,
+    String? education,
+    String? certifications,
+    String? projectSamples,
+    String? linkedinUrl,
+    String? websiteUrl,
+  });
 
   $UserDataCopyWith<$Res> get user;
 }
@@ -242,48 +261,51 @@ class _$PortfolioDataCopyWithImpl<$Res, $Val extends PortfolioData>
     Object? linkedinUrl = freezed,
     Object? websiteUrl = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserData,
-      bio: freezed == bio
-          ? _value.bio
-          : bio // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      experience: freezed == experience
-          ? _value.experience
-          : experience // ignore: cast_nullable_to_non_nullable
-              as String?,
-      education: freezed == education
-          ? _value.education
-          : education // ignore: cast_nullable_to_non_nullable
-              as String?,
-      certifications: freezed == certifications
-          ? _value.certifications
-          : certifications // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectSamples: freezed == projectSamples
-          ? _value.projectSamples
-          : projectSamples // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkedinUrl: freezed == linkedinUrl
-          ? _value.linkedinUrl
-          : linkedinUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      websiteUrl: freezed == websiteUrl
-          ? _value.websiteUrl
-          : websiteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            user: null == user
+                ? _value.user
+                : user // ignore: cast_nullable_to_non_nullable
+                      as UserData,
+            bio: freezed == bio
+                ? _value.bio
+                : bio // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            specialization: freezed == specialization
+                ? _value.specialization
+                : specialization // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            experience: freezed == experience
+                ? _value.experience
+                : experience // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            education: freezed == education
+                ? _value.education
+                : education // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            certifications: freezed == certifications
+                ? _value.certifications
+                : certifications // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            projectSamples: freezed == projectSamples
+                ? _value.projectSamples
+                : projectSamples // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            linkedinUrl: freezed == linkedinUrl
+                ? _value.linkedinUrl
+                : linkedinUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            websiteUrl: freezed == websiteUrl
+                ? _value.websiteUrl
+                : websiteUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -299,21 +321,23 @@ class _$PortfolioDataCopyWithImpl<$Res, $Val extends PortfolioData>
 abstract class _$$PortfolioDataImplCopyWith<$Res>
     implements $PortfolioDataCopyWith<$Res> {
   factory _$$PortfolioDataImplCopyWith(
-          _$PortfolioDataImpl value, $Res Function(_$PortfolioDataImpl) then) =
-      __$$PortfolioDataImplCopyWithImpl<$Res>;
+    _$PortfolioDataImpl value,
+    $Res Function(_$PortfolioDataImpl) then,
+  ) = __$$PortfolioDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      UserData user,
-      String? bio,
-      String? specialization,
-      String? experience,
-      String? education,
-      String? certifications,
-      String? projectSamples,
-      String? linkedinUrl,
-      String? websiteUrl});
+  $Res call({
+    int id,
+    UserData user,
+    String? bio,
+    String? specialization,
+    String? experience,
+    String? education,
+    String? certifications,
+    String? projectSamples,
+    String? linkedinUrl,
+    String? websiteUrl,
+  });
 
   @override
   $UserDataCopyWith<$Res> get user;
@@ -324,8 +348,9 @@ class __$$PortfolioDataImplCopyWithImpl<$Res>
     extends _$PortfolioDataCopyWithImpl<$Res, _$PortfolioDataImpl>
     implements _$$PortfolioDataImplCopyWith<$Res> {
   __$$PortfolioDataImplCopyWithImpl(
-      _$PortfolioDataImpl _value, $Res Function(_$PortfolioDataImpl) _then)
-      : super(_value, _then);
+    _$PortfolioDataImpl _value,
+    $Res Function(_$PortfolioDataImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -341,65 +366,68 @@ class __$$PortfolioDataImplCopyWithImpl<$Res>
     Object? linkedinUrl = freezed,
     Object? websiteUrl = freezed,
   }) {
-    return _then(_$PortfolioDataImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      user: null == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as UserData,
-      bio: freezed == bio
-          ? _value.bio
-          : bio // ignore: cast_nullable_to_non_nullable
-              as String?,
-      specialization: freezed == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String?,
-      experience: freezed == experience
-          ? _value.experience
-          : experience // ignore: cast_nullable_to_non_nullable
-              as String?,
-      education: freezed == education
-          ? _value.education
-          : education // ignore: cast_nullable_to_non_nullable
-              as String?,
-      certifications: freezed == certifications
-          ? _value.certifications
-          : certifications // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectSamples: freezed == projectSamples
-          ? _value.projectSamples
-          : projectSamples // ignore: cast_nullable_to_non_nullable
-              as String?,
-      linkedinUrl: freezed == linkedinUrl
-          ? _value.linkedinUrl
-          : linkedinUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      websiteUrl: freezed == websiteUrl
-          ? _value.websiteUrl
-          : websiteUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$PortfolioDataImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        user: null == user
+            ? _value.user
+            : user // ignore: cast_nullable_to_non_nullable
+                  as UserData,
+        bio: freezed == bio
+            ? _value.bio
+            : bio // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        specialization: freezed == specialization
+            ? _value.specialization
+            : specialization // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        experience: freezed == experience
+            ? _value.experience
+            : experience // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        education: freezed == education
+            ? _value.education
+            : education // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        certifications: freezed == certifications
+            ? _value.certifications
+            : certifications // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        projectSamples: freezed == projectSamples
+            ? _value.projectSamples
+            : projectSamples // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        linkedinUrl: freezed == linkedinUrl
+            ? _value.linkedinUrl
+            : linkedinUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        websiteUrl: freezed == websiteUrl
+            ? _value.websiteUrl
+            : websiteUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PortfolioDataImpl implements _PortfolioData {
-  const _$PortfolioDataImpl(
-      {required this.id,
-      required this.user,
-      this.bio,
-      this.specialization,
-      this.experience,
-      this.education,
-      this.certifications,
-      this.projectSamples,
-      this.linkedinUrl,
-      this.websiteUrl});
+  const _$PortfolioDataImpl({
+    required this.id,
+    required this.user,
+    this.bio,
+    this.specialization,
+    this.experience,
+    this.education,
+    this.certifications,
+    this.projectSamples,
+    this.linkedinUrl,
+    this.websiteUrl,
+  });
 
   factory _$PortfolioDataImpl.fromJson(Map<String, dynamic> json) =>
       _$$PortfolioDataImplFromJson(json);
@@ -457,17 +485,18 @@ class _$PortfolioDataImpl implements _PortfolioData {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      user,
-      bio,
-      specialization,
-      experience,
-      education,
-      certifications,
-      projectSamples,
-      linkedinUrl,
-      websiteUrl);
+    runtimeType,
+    id,
+    user,
+    bio,
+    specialization,
+    experience,
+    education,
+    certifications,
+    projectSamples,
+    linkedinUrl,
+    websiteUrl,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -477,24 +506,23 @@ class _$PortfolioDataImpl implements _PortfolioData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PortfolioDataImplToJson(
-      this,
-    );
+    return _$$PortfolioDataImplToJson(this);
   }
 }
 
 abstract class _PortfolioData implements PortfolioData {
-  const factory _PortfolioData(
-      {required final int id,
-      required final UserData user,
-      final String? bio,
-      final String? specialization,
-      final String? experience,
-      final String? education,
-      final String? certifications,
-      final String? projectSamples,
-      final String? linkedinUrl,
-      final String? websiteUrl}) = _$PortfolioDataImpl;
+  const factory _PortfolioData({
+    required final int id,
+    required final UserData user,
+    final String? bio,
+    final String? specialization,
+    final String? experience,
+    final String? education,
+    final String? certifications,
+    final String? projectSamples,
+    final String? linkedinUrl,
+    final String? websiteUrl,
+  }) = _$PortfolioDataImpl;
 
   factory _PortfolioData.fromJson(Map<String, dynamic> json) =
       _$PortfolioDataImpl.fromJson;
@@ -561,25 +589,24 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            name: freezed == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -587,8 +614,9 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
 abstract class _$$UserDataImplCopyWith<$Res>
     implements $UserDataCopyWith<$Res> {
   factory _$$UserDataImplCopyWith(
-          _$UserDataImpl value, $Res Function(_$UserDataImpl) then) =
-      __$$UserDataImplCopyWithImpl<$Res>;
+    _$UserDataImpl value,
+    $Res Function(_$UserDataImpl) then,
+  ) = __$$UserDataImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String email, String? name});
@@ -599,30 +627,29 @@ class __$$UserDataImplCopyWithImpl<$Res>
     extends _$UserDataCopyWithImpl<$Res, _$UserDataImpl>
     implements _$$UserDataImplCopyWith<$Res> {
   __$$UserDataImplCopyWithImpl(
-      _$UserDataImpl _value, $Res Function(_$UserDataImpl) _then)
-      : super(_value, _then);
+    _$UserDataImpl _value,
+    $Res Function(_$UserDataImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? id = null,
-    Object? email = null,
-    Object? name = freezed,
-  }) {
-    return _then(_$UserDataImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? id = null, Object? email = null, Object? name = freezed}) {
+    return _then(
+      _$UserDataImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        name: freezed == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
@@ -668,17 +695,16 @@ class _$UserDataImpl implements _UserData {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$UserDataImplToJson(
-      this,
-    );
+    return _$$UserDataImplToJson(this);
   }
 }
 
 abstract class _UserData implements UserData {
-  const factory _UserData(
-      {required final int id,
-      required final String email,
-      final String? name}) = _$UserDataImpl;
+  const factory _UserData({
+    required final int id,
+    required final String email,
+    final String? name,
+  }) = _$UserDataImpl;
 
   factory _UserData.fromJson(Map<String, dynamic> json) =
       _$UserDataImpl.fromJson;

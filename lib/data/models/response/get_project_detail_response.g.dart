@@ -7,13 +7,11 @@ part of 'get_project_detail_response.dart';
 // **************************************************************************
 
 _$GetProjectDetailResponseImpl _$$GetProjectDetailResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$GetProjectDetailResponseImpl(
-      project: Project.fromJson(json['project'] as Map<String, dynamic>),
-    );
+  Map<String, dynamic> json,
+) => _$GetProjectDetailResponseImpl(
+  project: Project.fromJson(json['project'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$$GetProjectDetailResponseImplToJson(
-        _$GetProjectDetailResponseImpl instance) =>
-    <String, dynamic>{
-      'project': instance.project,
-    };
+  _$GetProjectDetailResponseImpl instance,
+) => <String, dynamic>{'project': instance.project};

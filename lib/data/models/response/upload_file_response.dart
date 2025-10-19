@@ -11,6 +11,6 @@ class UploadFileResponse with _$UploadFileResponse {
     required String checksum,
   }) = _UploadFileResponse;
 
-  factory UploadFileResponse.fromJson(Map<String, dynamic> json) => _$UploadFileResponseFromJson(json);
+  factory UploadFileResponse.fromJson(Map<String, dynamic> json) =>
+      _$UploadFileResponseFromJson(json);
 }
-

@@ -38,7 +38,9 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
-      return Error(ServerFailure(message: 'Failed to parse login response: $e'));
+      return Error(
+        ServerFailure(message: 'Failed to parse login response: $e'),
+      );
     }
   }
 
