@@ -37,7 +37,8 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
                       consultant: controller.consultants[index],
                       onTap: () {
                         controller.goToPortfolio(
-                            controller.consultants[index].id ?? '');
+                          controller.consultants[index].id ?? '',
+                        );
                       },
                     );
                   }, childCount: controller.consultants.length),

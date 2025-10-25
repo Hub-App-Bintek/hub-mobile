@@ -12,8 +12,9 @@ _$PortfolioImpl _$$PortfolioImplFromJson(Map<String, dynamic> json) =>
       projectName: json['projectName'] as String,
       price: (json['price'] as num).toInt(),
       detailDescription: json['detailDescription'] as String,
-      imageUrls:
-          (json['imageUrls'] as List<dynamic>).map((e) => e as String).toList(),
+      imageUrls: (json['imageUrls'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 

@@ -12,7 +12,8 @@ part of 'get_projects_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 GetProjectsRequest _$GetProjectsRequestFromJson(Map<String, dynamic> json) {
   return _GetProjectsRequest.fromJson(json);
@@ -35,8 +36,9 @@ mixin _$GetProjectsRequest {
 /// @nodoc
 abstract class $GetProjectsRequestCopyWith<$Res> {
   factory $GetProjectsRequestCopyWith(
-          GetProjectsRequest value, $Res Function(GetProjectsRequest) then) =
-      _$GetProjectsRequestCopyWithImpl<$Res, GetProjectsRequest>;
+    GetProjectsRequest value,
+    $Res Function(GetProjectsRequest) then,
+  ) = _$GetProjectsRequestCopyWithImpl<$Res, GetProjectsRequest>;
   @useResult
   $Res call({int? page, int? size, String? type, String? status});
 }
@@ -59,33 +61,37 @@ class _$GetProjectsRequestCopyWithImpl<$Res, $Val extends GetProjectsRequest>
     Object? type = freezed,
     Object? status = freezed,
   }) {
-    return _then(_value.copyWith(
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as int?,
-      size: freezed == size
-          ? _value.size
-          : size // ignore: cast_nullable_to_non_nullable
-              as int?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            page: freezed == page
+                ? _value.page
+                : page // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            size: freezed == size
+                ? _value.size
+                : size // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            type: freezed == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            status: freezed == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$GetProjectsRequestImplCopyWith<$Res>
     implements $GetProjectsRequestCopyWith<$Res> {
-  factory _$$GetProjectsRequestImplCopyWith(_$GetProjectsRequestImpl value,
-          $Res Function(_$GetProjectsRequestImpl) then) =
-      __$$GetProjectsRequestImplCopyWithImpl<$Res>;
+  factory _$$GetProjectsRequestImplCopyWith(
+    _$GetProjectsRequestImpl value,
+    $Res Function(_$GetProjectsRequestImpl) then,
+  ) = __$$GetProjectsRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int? page, int? size, String? type, String? status});
@@ -95,9 +101,10 @@ abstract class _$$GetProjectsRequestImplCopyWith<$Res>
 class __$$GetProjectsRequestImplCopyWithImpl<$Res>
     extends _$GetProjectsRequestCopyWithImpl<$Res, _$GetProjectsRequestImpl>
     implements _$$GetProjectsRequestImplCopyWith<$Res> {
-  __$$GetProjectsRequestImplCopyWithImpl(_$GetProjectsRequestImpl _value,
-      $Res Function(_$GetProjectsRequestImpl) _then)
-      : super(_value, _then);
+  __$$GetProjectsRequestImplCopyWithImpl(
+    _$GetProjectsRequestImpl _value,
+    $Res Function(_$GetProjectsRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -107,32 +114,38 @@ class __$$GetProjectsRequestImplCopyWithImpl<$Res>
     Object? type = freezed,
     Object? status = freezed,
   }) {
-    return _then(_$GetProjectsRequestImpl(
-      page: freezed == page
-          ? _value.page
-          : page // ignore: cast_nullable_to_non_nullable
-              as int?,
-      size: freezed == size
-          ? _value.size
-          : size // ignore: cast_nullable_to_non_nullable
-              as int?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$GetProjectsRequestImpl(
+        page: freezed == page
+            ? _value.page
+            : page // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        size: freezed == size
+            ? _value.size
+            : size // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        type: freezed == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        status: freezed == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$GetProjectsRequestImpl implements _GetProjectsRequest {
-  const _$GetProjectsRequestImpl(
-      {this.page, this.size, this.type, this.status});
+  const _$GetProjectsRequestImpl({
+    this.page,
+    this.size,
+    this.type,
+    this.status,
+  });
 
   factory _$GetProjectsRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$GetProjectsRequestImplFromJson(json);
@@ -143,7 +156,7 @@ class _$GetProjectsRequestImpl implements _GetProjectsRequest {
   final int? size;
   @override
   final String? type;
-// PROTOTYPE or NON_PROTOTYPE
+  // PROTOTYPE or NON_PROTOTYPE
   @override
   final String? status;
 
@@ -172,22 +185,23 @@ class _$GetProjectsRequestImpl implements _GetProjectsRequest {
   @pragma('vm:prefer-inline')
   _$$GetProjectsRequestImplCopyWith<_$GetProjectsRequestImpl> get copyWith =>
       __$$GetProjectsRequestImplCopyWithImpl<_$GetProjectsRequestImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$GetProjectsRequestImplToJson(
-      this,
-    );
+    return _$$GetProjectsRequestImplToJson(this);
   }
 }
 
 abstract class _GetProjectsRequest implements GetProjectsRequest {
-  const factory _GetProjectsRequest(
-      {final int? page,
-      final int? size,
-      final String? type,
-      final String? status}) = _$GetProjectsRequestImpl;
+  const factory _GetProjectsRequest({
+    final int? page,
+    final int? size,
+    final String? type,
+    final String? status,
+  }) = _$GetProjectsRequestImpl;
 
   factory _GetProjectsRequest.fromJson(Map<String, dynamic> json) =
       _$GetProjectsRequestImpl.fromJson;

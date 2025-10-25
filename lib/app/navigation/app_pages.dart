@@ -63,7 +63,7 @@ class AppPages {
     // Consultant portfolio screen
     GetPage(
       name: _Paths.consultantPortfolio,
-      page: () => const ConsultantPortfolioScreen(),
+      page: () => const ConsultantPortfoliosScreen(),
       binding: ConsultantPortfolioBinding(),
     ),
   ];

@@ -7,17 +7,17 @@ part of 'register_request.dart';
 // **************************************************************************
 
 _$RegisterRequestImpl _$$RegisterRequestImplFromJson(
-        Map<String, dynamic> json) =>
-    _$RegisterRequestImpl(
-      email: json['email'] as String,
-      password: json['password'] as String,
-      confirmPassword: json['confirmPassword'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$RegisterRequestImpl(
+  email: json['email'] as String,
+  password: json['password'] as String,
+  confirmPassword: json['confirmPassword'] as String,
+);
 
 Map<String, dynamic> _$$RegisterRequestImplToJson(
-        _$RegisterRequestImpl instance) =>
-    <String, dynamic>{
-      'email': instance.email,
-      'password': instance.password,
-      'confirmPassword': instance.confirmPassword,
-    };
+  _$RegisterRequestImpl instance,
+) => <String, dynamic>{
+  'email': instance.email,
+  'password': instance.password,
+  'confirmPassword': instance.confirmPassword,
+};

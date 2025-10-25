@@ -57,14 +57,9 @@ class AppBinding extends Bindings {
     );
 
     final talker = Talker(
-      settings: TalkerSettings(
-        useConsoleLogs: true,
-        enabled: true,
-      ),
+      settings: TalkerSettings(useConsoleLogs: true, enabled: true),
       logger: TalkerLogger(
-        settings: const TalkerLoggerSettings(
-          enableColors: true,
-        ),
+        settings: const TalkerLoggerSettings(enableColors: true),
       ),
     );
 

@@ -3,10 +3,10 @@ import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/models/response/portfolio_response.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 
-class GetConsultantPortfolioListUseCase {
+class GetConsultantPortfoliosUseCase {
   final ConsultantRepository _repository;
 
-  GetConsultantPortfolioListUseCase(this._repository);
+  GetConsultantPortfoliosUseCase(this._repository);
 
   Future<Result<PortfolioResponse, Failure>> call({
     required String consultantId,
