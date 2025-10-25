@@ -12,8 +12,7 @@ part of 'verify_otp_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 VerifyOtpResponse _$VerifyOtpResponseFromJson(Map<String, dynamic> json) {
   return _VerifyOtpResponse.fromJson(json);
@@ -32,9 +31,8 @@ mixin _$VerifyOtpResponse {
 /// @nodoc
 abstract class $VerifyOtpResponseCopyWith<$Res> {
   factory $VerifyOtpResponseCopyWith(
-    VerifyOtpResponse value,
-    $Res Function(VerifyOtpResponse) then,
-  ) = _$VerifyOtpResponseCopyWithImpl<$Res, VerifyOtpResponse>;
+          VerifyOtpResponse value, $Res Function(VerifyOtpResponse) then) =
+      _$VerifyOtpResponseCopyWithImpl<$Res, VerifyOtpResponse>;
   @useResult
   $Res call({String message});
 }
@@ -51,26 +49,24 @@ class _$VerifyOtpResponseCopyWithImpl<$Res, $Val extends VerifyOtpResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _value.copyWith(
-            message: null == message
-                ? _value.message
-                : message // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_value.copyWith(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$VerifyOtpResponseImplCopyWith<$Res>
     implements $VerifyOtpResponseCopyWith<$Res> {
-  factory _$$VerifyOtpResponseImplCopyWith(
-    _$VerifyOtpResponseImpl value,
-    $Res Function(_$VerifyOtpResponseImpl) then,
-  ) = __$$VerifyOtpResponseImplCopyWithImpl<$Res>;
+  factory _$$VerifyOtpResponseImplCopyWith(_$VerifyOtpResponseImpl value,
+          $Res Function(_$VerifyOtpResponseImpl) then) =
+      __$$VerifyOtpResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String message});
@@ -80,22 +76,21 @@ abstract class _$$VerifyOtpResponseImplCopyWith<$Res>
 class __$$VerifyOtpResponseImplCopyWithImpl<$Res>
     extends _$VerifyOtpResponseCopyWithImpl<$Res, _$VerifyOtpResponseImpl>
     implements _$$VerifyOtpResponseImplCopyWith<$Res> {
-  __$$VerifyOtpResponseImplCopyWithImpl(
-    _$VerifyOtpResponseImpl _value,
-    $Res Function(_$VerifyOtpResponseImpl) _then,
-  ) : super(_value, _then);
+  __$$VerifyOtpResponseImplCopyWithImpl(_$VerifyOtpResponseImpl _value,
+      $Res Function(_$VerifyOtpResponseImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? message = null}) {
-    return _then(
-      _$VerifyOtpResponseImpl(
-        message: null == message
-            ? _value.message
-            : message // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$VerifyOtpResponseImpl(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -132,13 +127,13 @@ class _$VerifyOtpResponseImpl implements _VerifyOtpResponse {
   @pragma('vm:prefer-inline')
   _$$VerifyOtpResponseImplCopyWith<_$VerifyOtpResponseImpl> get copyWith =>
       __$$VerifyOtpResponseImplCopyWithImpl<_$VerifyOtpResponseImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VerifyOtpResponseImplToJson(this);
+    return _$$VerifyOtpResponseImplToJson(
+      this,
+    );
   }
 }
 

@@ -22,10 +22,7 @@ class ConsultantPortfolioController extends BaseController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    // Uncomment the next line to use API loading
-    // loadInitial();
-    // Use mock data for testing/demo
-    loadMockPortfolios();
+    loadInitial();
   }
 
   void loadInitial() {
@@ -56,20 +53,5 @@ class ConsultantPortfolioController extends BaseController {
       },
     );
     isLoading.value = false;
-  }
-
-  void loadMockPortfolios() {
-    portfolios.clear();
-    portfolios.add(
-      Portfolio(
-        id: 1,
-        projectName: 'Modern House Design',
-        price: 50000,
-        detailDescription: 'Complete modern house design...',
-        imageUrls: ['url1', 'url2', 'url3'],
-        createdAt: DateTime.parse('2025-01-15T10:30:00'),
-      ),
-    );
-    hasMore.value = false;
   }
 }

@@ -12,8 +12,7 @@ part of 'consultants_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ConsultantsResponse _$ConsultantsResponseFromJson(Map<String, dynamic> json) {
   return _ConsultantsResponse.fromJson(json);
@@ -32,9 +31,8 @@ mixin _$ConsultantsResponse {
 /// @nodoc
 abstract class $ConsultantsResponseCopyWith<$Res> {
   factory $ConsultantsResponseCopyWith(
-    ConsultantsResponse value,
-    $Res Function(ConsultantsResponse) then,
-  ) = _$ConsultantsResponseCopyWithImpl<$Res, ConsultantsResponse>;
+          ConsultantsResponse value, $Res Function(ConsultantsResponse) then) =
+      _$ConsultantsResponseCopyWithImpl<$Res, ConsultantsResponse>;
   @useResult
   $Res call({List<Consultant> consultants});
 }
@@ -51,26 +49,24 @@ class _$ConsultantsResponseCopyWithImpl<$Res, $Val extends ConsultantsResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? consultants = null}) {
-    return _then(
-      _value.copyWith(
-            consultants: null == consultants
-                ? _value.consultants
-                : consultants // ignore: cast_nullable_to_non_nullable
-                      as List<Consultant>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? consultants = null,
+  }) {
+    return _then(_value.copyWith(
+      consultants: null == consultants
+          ? _value.consultants
+          : consultants // ignore: cast_nullable_to_non_nullable
+              as List<Consultant>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ConsultantsResponseImplCopyWith<$Res>
     implements $ConsultantsResponseCopyWith<$Res> {
-  factory _$$ConsultantsResponseImplCopyWith(
-    _$ConsultantsResponseImpl value,
-    $Res Function(_$ConsultantsResponseImpl) then,
-  ) = __$$ConsultantsResponseImplCopyWithImpl<$Res>;
+  factory _$$ConsultantsResponseImplCopyWith(_$ConsultantsResponseImpl value,
+          $Res Function(_$ConsultantsResponseImpl) then) =
+      __$$ConsultantsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<Consultant> consultants});
@@ -80,22 +76,21 @@ abstract class _$$ConsultantsResponseImplCopyWith<$Res>
 class __$$ConsultantsResponseImplCopyWithImpl<$Res>
     extends _$ConsultantsResponseCopyWithImpl<$Res, _$ConsultantsResponseImpl>
     implements _$$ConsultantsResponseImplCopyWith<$Res> {
-  __$$ConsultantsResponseImplCopyWithImpl(
-    _$ConsultantsResponseImpl _value,
-    $Res Function(_$ConsultantsResponseImpl) _then,
-  ) : super(_value, _then);
+  __$$ConsultantsResponseImplCopyWithImpl(_$ConsultantsResponseImpl _value,
+      $Res Function(_$ConsultantsResponseImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? consultants = null}) {
-    return _then(
-      _$ConsultantsResponseImpl(
-        consultants: null == consultants
-            ? _value._consultants
-            : consultants // ignore: cast_nullable_to_non_nullable
-                  as List<Consultant>,
-      ),
-    );
+  $Res call({
+    Object? consultants = null,
+  }) {
+    return _then(_$ConsultantsResponseImpl(
+      consultants: null == consultants
+          ? _value._consultants
+          : consultants // ignore: cast_nullable_to_non_nullable
+              as List<Consultant>,
+    ));
   }
 }
 
@@ -103,7 +98,7 @@ class __$$ConsultantsResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsultantsResponseImpl implements _ConsultantsResponse {
   const _$ConsultantsResponseImpl({required final List<Consultant> consultants})
-    : _consultants = consultants;
+      : _consultants = consultants;
 
   factory _$ConsultantsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultantsResponseImplFromJson(json);
@@ -126,38 +121,34 @@ class _$ConsultantsResponseImpl implements _ConsultantsResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsultantsResponseImpl &&
-            const DeepCollectionEquality().equals(
-              other._consultants,
-              _consultants,
-            ));
+            const DeepCollectionEquality()
+                .equals(other._consultants, _consultants));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    const DeepCollectionEquality().hash(_consultants),
-  );
+      runtimeType, const DeepCollectionEquality().hash(_consultants));
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ConsultantsResponseImplCopyWith<_$ConsultantsResponseImpl> get copyWith =>
       __$$ConsultantsResponseImplCopyWithImpl<_$ConsultantsResponseImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsultantsResponseImplToJson(this);
+    return _$$ConsultantsResponseImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ConsultantsResponse implements ConsultantsResponse {
-  const factory _ConsultantsResponse({
-    required final List<Consultant> consultants,
-  }) = _$ConsultantsResponseImpl;
+  const factory _ConsultantsResponse(
+          {required final List<Consultant> consultants}) =
+      _$ConsultantsResponseImpl;
 
   factory _ConsultantsResponse.fromJson(Map<String, dynamic> json) =
       _$ConsultantsResponseImpl.fromJson;

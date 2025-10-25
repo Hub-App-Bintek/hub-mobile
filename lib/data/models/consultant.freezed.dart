@@ -12,8 +12,7 @@ part of 'consultant.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Consultant _$ConsultantFromJson(Map<String, dynamic> json) {
   return _Consultant.fromJson(json);
@@ -21,7 +20,7 @@ Consultant _$ConsultantFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consultant {
-  String? get consultantId => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   String? get fullName => throw _privateConstructorUsedError;
   String? get specialty => throw _privateConstructorUsedError;
   double? get rating => throw _privateConstructorUsedError;
@@ -44,25 +43,23 @@ mixin _$Consultant {
 /// @nodoc
 abstract class $ConsultantCopyWith<$Res> {
   factory $ConsultantCopyWith(
-    Consultant value,
-    $Res Function(Consultant) then,
-  ) = _$ConsultantCopyWithImpl<$Res, Consultant>;
+          Consultant value, $Res Function(Consultant) then) =
+      _$ConsultantCopyWithImpl<$Res, Consultant>;
   @useResult
-  $Res call({
-    String? consultantId,
-    String? fullName,
-    String? specialty,
-    double? rating,
-    double? distanceKm,
-    String? avatarUrl,
-    String? location,
-    String? type,
-    String? experienceLevel,
-    String? availabilityStatus,
-    String? contactInfo,
-    double? hourlyRate,
-    double? packageCost,
-  });
+  $Res call(
+      {String? id,
+      String? fullName,
+      String? specialty,
+      double? rating,
+      double? distanceKm,
+      String? avatarUrl,
+      String? location,
+      String? type,
+      String? experienceLevel,
+      String? availabilityStatus,
+      String? contactInfo,
+      double? hourlyRate,
+      double? packageCost});
 }
 
 /// @nodoc
@@ -78,7 +75,7 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? consultantId = freezed,
+    Object? id = freezed,
     Object? fullName = freezed,
     Object? specialty = freezed,
     Object? rating = freezed,
@@ -92,63 +89,60 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
     Object? hourlyRate = freezed,
     Object? packageCost = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            consultantId: freezed == consultantId
-                ? _value.consultantId
-                : consultantId // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            fullName: freezed == fullName
-                ? _value.fullName
-                : fullName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            specialty: freezed == specialty
-                ? _value.specialty
-                : specialty // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            rating: freezed == rating
-                ? _value.rating
-                : rating // ignore: cast_nullable_to_non_nullable
-                      as double?,
-            distanceKm: freezed == distanceKm
-                ? _value.distanceKm
-                : distanceKm // ignore: cast_nullable_to_non_nullable
-                      as double?,
-            avatarUrl: freezed == avatarUrl
-                ? _value.avatarUrl
-                : avatarUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            location: freezed == location
-                ? _value.location
-                : location // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            type: freezed == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            experienceLevel: freezed == experienceLevel
-                ? _value.experienceLevel
-                : experienceLevel // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            availabilityStatus: freezed == availabilityStatus
-                ? _value.availabilityStatus
-                : availabilityStatus // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            contactInfo: freezed == contactInfo
-                ? _value.contactInfo
-                : contactInfo // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            hourlyRate: freezed == hourlyRate
-                ? _value.hourlyRate
-                : hourlyRate // ignore: cast_nullable_to_non_nullable
-                      as double?,
-            packageCost: freezed == packageCost
-                ? _value.packageCost
-                : packageCost // ignore: cast_nullable_to_non_nullable
-                      as double?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fullName: freezed == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      specialty: freezed == specialty
+          ? _value.specialty
+          : specialty // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rating: freezed == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as double?,
+      distanceKm: freezed == distanceKm
+          ? _value.distanceKm
+          : distanceKm // ignore: cast_nullable_to_non_nullable
+              as double?,
+      avatarUrl: freezed == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      experienceLevel: freezed == experienceLevel
+          ? _value.experienceLevel
+          : experienceLevel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      availabilityStatus: freezed == availabilityStatus
+          ? _value.availabilityStatus
+          : availabilityStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      contactInfo: freezed == contactInfo
+          ? _value.contactInfo
+          : contactInfo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hourlyRate: freezed == hourlyRate
+          ? _value.hourlyRate
+          : hourlyRate // ignore: cast_nullable_to_non_nullable
+              as double?,
+      packageCost: freezed == packageCost
+          ? _value.packageCost
+          : packageCost // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ) as $Val);
   }
 }
 
@@ -156,26 +150,24 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
 abstract class _$$ConsultantImplCopyWith<$Res>
     implements $ConsultantCopyWith<$Res> {
   factory _$$ConsultantImplCopyWith(
-    _$ConsultantImpl value,
-    $Res Function(_$ConsultantImpl) then,
-  ) = __$$ConsultantImplCopyWithImpl<$Res>;
+          _$ConsultantImpl value, $Res Function(_$ConsultantImpl) then) =
+      __$$ConsultantImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String? consultantId,
-    String? fullName,
-    String? specialty,
-    double? rating,
-    double? distanceKm,
-    String? avatarUrl,
-    String? location,
-    String? type,
-    String? experienceLevel,
-    String? availabilityStatus,
-    String? contactInfo,
-    double? hourlyRate,
-    double? packageCost,
-  });
+  $Res call(
+      {String? id,
+      String? fullName,
+      String? specialty,
+      double? rating,
+      double? distanceKm,
+      String? avatarUrl,
+      String? location,
+      String? type,
+      String? experienceLevel,
+      String? availabilityStatus,
+      String? contactInfo,
+      double? hourlyRate,
+      double? packageCost});
 }
 
 /// @nodoc
@@ -183,14 +175,13 @@ class __$$ConsultantImplCopyWithImpl<$Res>
     extends _$ConsultantCopyWithImpl<$Res, _$ConsultantImpl>
     implements _$$ConsultantImplCopyWith<$Res> {
   __$$ConsultantImplCopyWithImpl(
-    _$ConsultantImpl _value,
-    $Res Function(_$ConsultantImpl) _then,
-  ) : super(_value, _then);
+      _$ConsultantImpl _value, $Res Function(_$ConsultantImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? consultantId = freezed,
+    Object? id = freezed,
     Object? fullName = freezed,
     Object? specialty = freezed,
     Object? rating = freezed,
@@ -204,89 +195,86 @@ class __$$ConsultantImplCopyWithImpl<$Res>
     Object? hourlyRate = freezed,
     Object? packageCost = freezed,
   }) {
-    return _then(
-      _$ConsultantImpl(
-        consultantId: freezed == consultantId
-            ? _value.consultantId
-            : consultantId // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        fullName: freezed == fullName
-            ? _value.fullName
-            : fullName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        specialty: freezed == specialty
-            ? _value.specialty
-            : specialty // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        rating: freezed == rating
-            ? _value.rating
-            : rating // ignore: cast_nullable_to_non_nullable
-                  as double?,
-        distanceKm: freezed == distanceKm
-            ? _value.distanceKm
-            : distanceKm // ignore: cast_nullable_to_non_nullable
-                  as double?,
-        avatarUrl: freezed == avatarUrl
-            ? _value.avatarUrl
-            : avatarUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        location: freezed == location
-            ? _value.location
-            : location // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        type: freezed == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        experienceLevel: freezed == experienceLevel
-            ? _value.experienceLevel
-            : experienceLevel // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        availabilityStatus: freezed == availabilityStatus
-            ? _value.availabilityStatus
-            : availabilityStatus // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        contactInfo: freezed == contactInfo
-            ? _value.contactInfo
-            : contactInfo // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        hourlyRate: freezed == hourlyRate
-            ? _value.hourlyRate
-            : hourlyRate // ignore: cast_nullable_to_non_nullable
-                  as double?,
-        packageCost: freezed == packageCost
-            ? _value.packageCost
-            : packageCost // ignore: cast_nullable_to_non_nullable
-                  as double?,
-      ),
-    );
+    return _then(_$ConsultantImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      fullName: freezed == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      specialty: freezed == specialty
+          ? _value.specialty
+          : specialty // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rating: freezed == rating
+          ? _value.rating
+          : rating // ignore: cast_nullable_to_non_nullable
+              as double?,
+      distanceKm: freezed == distanceKm
+          ? _value.distanceKm
+          : distanceKm // ignore: cast_nullable_to_non_nullable
+              as double?,
+      avatarUrl: freezed == avatarUrl
+          ? _value.avatarUrl
+          : avatarUrl // ignore: cast_nullable_to_non_nullable
+              as String?,
+      location: freezed == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as String?,
+      type: freezed == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String?,
+      experienceLevel: freezed == experienceLevel
+          ? _value.experienceLevel
+          : experienceLevel // ignore: cast_nullable_to_non_nullable
+              as String?,
+      availabilityStatus: freezed == availabilityStatus
+          ? _value.availabilityStatus
+          : availabilityStatus // ignore: cast_nullable_to_non_nullable
+              as String?,
+      contactInfo: freezed == contactInfo
+          ? _value.contactInfo
+          : contactInfo // ignore: cast_nullable_to_non_nullable
+              as String?,
+      hourlyRate: freezed == hourlyRate
+          ? _value.hourlyRate
+          : hourlyRate // ignore: cast_nullable_to_non_nullable
+              as double?,
+      packageCost: freezed == packageCost
+          ? _value.packageCost
+          : packageCost // ignore: cast_nullable_to_non_nullable
+              as double?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ConsultantImpl implements _Consultant {
-  const _$ConsultantImpl({
-    this.consultantId,
-    this.fullName,
-    this.specialty,
-    this.rating,
-    this.distanceKm,
-    this.avatarUrl,
-    this.location,
-    this.type,
-    this.experienceLevel,
-    this.availabilityStatus,
-    this.contactInfo,
-    this.hourlyRate,
-    this.packageCost,
-  });
+  const _$ConsultantImpl(
+      {this.id,
+      this.fullName,
+      this.specialty,
+      this.rating,
+      this.distanceKm,
+      this.avatarUrl,
+      this.location,
+      this.type,
+      this.experienceLevel,
+      this.availabilityStatus,
+      this.contactInfo,
+      this.hourlyRate,
+      this.packageCost});
 
   factory _$ConsultantImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultantImplFromJson(json);
 
   @override
-  final String? consultantId;
+  final String? id;
   @override
   final String? fullName;
   @override
@@ -314,7 +302,7 @@ class _$ConsultantImpl implements _Consultant {
 
   @override
   String toString() {
-    return 'Consultant(consultantId: $consultantId, fullName: $fullName, specialty: $specialty, rating: $rating, distanceKm: $distanceKm, avatarUrl: $avatarUrl, location: $location, type: $type, experienceLevel: $experienceLevel, availabilityStatus: $availabilityStatus, contactInfo: $contactInfo, hourlyRate: $hourlyRate, packageCost: $packageCost)';
+    return 'Consultant(id: $id, fullName: $fullName, specialty: $specialty, rating: $rating, distanceKm: $distanceKm, avatarUrl: $avatarUrl, location: $location, type: $type, experienceLevel: $experienceLevel, availabilityStatus: $availabilityStatus, contactInfo: $contactInfo, hourlyRate: $hourlyRate, packageCost: $packageCost)';
   }
 
   @override
@@ -322,8 +310,7 @@ class _$ConsultantImpl implements _Consultant {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsultantImpl &&
-            (identical(other.consultantId, consultantId) ||
-                other.consultantId == consultantId) &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.fullName, fullName) ||
                 other.fullName == fullName) &&
             (identical(other.specialty, specialty) ||
@@ -351,21 +338,20 @@ class _$ConsultantImpl implements _Consultant {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    consultantId,
-    fullName,
-    specialty,
-    rating,
-    distanceKm,
-    avatarUrl,
-    location,
-    type,
-    experienceLevel,
-    availabilityStatus,
-    contactInfo,
-    hourlyRate,
-    packageCost,
-  );
+      runtimeType,
+      id,
+      fullName,
+      specialty,
+      rating,
+      distanceKm,
+      avatarUrl,
+      location,
+      type,
+      experienceLevel,
+      availabilityStatus,
+      contactInfo,
+      hourlyRate,
+      packageCost);
 
   @JsonKey(ignore: true)
   @override
@@ -375,32 +361,33 @@ class _$ConsultantImpl implements _Consultant {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsultantImplToJson(this);
+    return _$$ConsultantImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Consultant implements Consultant {
-  const factory _Consultant({
-    final String? consultantId,
-    final String? fullName,
-    final String? specialty,
-    final double? rating,
-    final double? distanceKm,
-    final String? avatarUrl,
-    final String? location,
-    final String? type,
-    final String? experienceLevel,
-    final String? availabilityStatus,
-    final String? contactInfo,
-    final double? hourlyRate,
-    final double? packageCost,
-  }) = _$ConsultantImpl;
+  const factory _Consultant(
+      {final String? id,
+      final String? fullName,
+      final String? specialty,
+      final double? rating,
+      final double? distanceKm,
+      final String? avatarUrl,
+      final String? location,
+      final String? type,
+      final String? experienceLevel,
+      final String? availabilityStatus,
+      final String? contactInfo,
+      final double? hourlyRate,
+      final double? packageCost}) = _$ConsultantImpl;
 
   factory _Consultant.fromJson(Map<String, dynamic> json) =
       _$ConsultantImpl.fromJson;
 
   @override
-  String? get consultantId;
+  String? get id;
   @override
   String? get fullName;
   @override

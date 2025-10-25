@@ -12,8 +12,7 @@ part of 'login_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
   return _LoginResponse.fromJson(json);
@@ -38,19 +37,17 @@ mixin _$LoginResponse {
 /// @nodoc
 abstract class $LoginResponseCopyWith<$Res> {
   factory $LoginResponseCopyWith(
-    LoginResponse value,
-    $Res Function(LoginResponse) then,
-  ) = _$LoginResponseCopyWithImpl<$Res, LoginResponse>;
+          LoginResponse value, $Res Function(LoginResponse) then) =
+      _$LoginResponseCopyWithImpl<$Res, LoginResponse>;
   @useResult
-  $Res call({
-    int userId,
-    String? fullName,
-    String? email,
-    String? token,
-    String? role,
-    String? status,
-    int? expiresIn,
-  });
+  $Res call(
+      {int userId,
+      String? fullName,
+      String? email,
+      String? token,
+      String? role,
+      String? status,
+      int? expiresIn});
 }
 
 /// @nodoc
@@ -74,39 +71,36 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
     Object? status = freezed,
     Object? expiresIn = freezed,
   }) {
-    return _then(
-      _value.copyWith(
-            userId: null == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            fullName: freezed == fullName
-                ? _value.fullName
-                : fullName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            email: freezed == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            token: freezed == token
-                ? _value.token
-                : token // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            role: freezed == role
-                ? _value.role
-                : role // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            status: freezed == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            expiresIn: freezed == expiresIn
-                ? _value.expiresIn
-                : expiresIn // ignore: cast_nullable_to_non_nullable
-                      as int?,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      fullName: freezed == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      token: freezed == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiresIn: freezed == expiresIn
+          ? _value.expiresIn
+          : expiresIn // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
   }
 }
 
@@ -114,20 +108,18 @@ class _$LoginResponseCopyWithImpl<$Res, $Val extends LoginResponse>
 abstract class _$$LoginResponseImplCopyWith<$Res>
     implements $LoginResponseCopyWith<$Res> {
   factory _$$LoginResponseImplCopyWith(
-    _$LoginResponseImpl value,
-    $Res Function(_$LoginResponseImpl) then,
-  ) = __$$LoginResponseImplCopyWithImpl<$Res>;
+          _$LoginResponseImpl value, $Res Function(_$LoginResponseImpl) then) =
+      __$$LoginResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int userId,
-    String? fullName,
-    String? email,
-    String? token,
-    String? role,
-    String? status,
-    int? expiresIn,
-  });
+  $Res call(
+      {int userId,
+      String? fullName,
+      String? email,
+      String? token,
+      String? role,
+      String? status,
+      int? expiresIn});
 }
 
 /// @nodoc
@@ -135,9 +127,8 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     extends _$LoginResponseCopyWithImpl<$Res, _$LoginResponseImpl>
     implements _$$LoginResponseImplCopyWith<$Res> {
   __$$LoginResponseImplCopyWithImpl(
-    _$LoginResponseImpl _value,
-    $Res Function(_$LoginResponseImpl) _then,
-  ) : super(_value, _then);
+      _$LoginResponseImpl _value, $Res Function(_$LoginResponseImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -150,53 +141,50 @@ class __$$LoginResponseImplCopyWithImpl<$Res>
     Object? status = freezed,
     Object? expiresIn = freezed,
   }) {
-    return _then(
-      _$LoginResponseImpl(
-        userId: null == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        fullName: freezed == fullName
-            ? _value.fullName
-            : fullName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        email: freezed == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        token: freezed == token
-            ? _value.token
-            : token // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        role: freezed == role
-            ? _value.role
-            : role // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        status: freezed == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        expiresIn: freezed == expiresIn
-            ? _value.expiresIn
-            : expiresIn // ignore: cast_nullable_to_non_nullable
-                  as int?,
-      ),
-    );
+    return _then(_$LoginResponseImpl(
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
+              as int,
+      fullName: freezed == fullName
+          ? _value.fullName
+          : fullName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      email: freezed == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String?,
+      token: freezed == token
+          ? _value.token
+          : token // ignore: cast_nullable_to_non_nullable
+              as String?,
+      role: freezed == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String?,
+      expiresIn: freezed == expiresIn
+          ? _value.expiresIn
+          : expiresIn // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$LoginResponseImpl implements _LoginResponse {
-  const _$LoginResponseImpl({
-    required this.userId,
-    this.fullName,
-    this.email,
-    this.token,
-    this.role,
-    this.status,
-    this.expiresIn,
-  });
+  const _$LoginResponseImpl(
+      {required this.userId,
+      this.fullName,
+      this.email,
+      this.token,
+      this.role,
+      this.status,
+      this.expiresIn});
 
   factory _$LoginResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginResponseImplFromJson(json);
@@ -240,15 +228,7 @@ class _$LoginResponseImpl implements _LoginResponse {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    userId,
-    fullName,
-    email,
-    token,
-    role,
-    status,
-    expiresIn,
-  );
+      runtimeType, userId, fullName, email, token, role, status, expiresIn);
 
   @JsonKey(ignore: true)
   @override
@@ -258,20 +238,21 @@ class _$LoginResponseImpl implements _LoginResponse {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LoginResponseImplToJson(this);
+    return _$$LoginResponseImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _LoginResponse implements LoginResponse {
-  const factory _LoginResponse({
-    required final int userId,
-    final String? fullName,
-    final String? email,
-    final String? token,
-    final String? role,
-    final String? status,
-    final int? expiresIn,
-  }) = _$LoginResponseImpl;
+  const factory _LoginResponse(
+      {required final int userId,
+      final String? fullName,
+      final String? email,
+      final String? token,
+      final String? role,
+      final String? status,
+      final int? expiresIn}) = _$LoginResponseImpl;
 
   factory _LoginResponse.fromJson(Map<String, dynamic> json) =
       _$LoginResponseImpl.fromJson;

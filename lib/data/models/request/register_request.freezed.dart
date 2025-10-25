@@ -12,8 +12,7 @@ part of 'register_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 RegisterRequest _$RegisterRequestFromJson(Map<String, dynamic> json) {
   return _RegisterRequest.fromJson(json);
@@ -34,9 +33,8 @@ mixin _$RegisterRequest {
 /// @nodoc
 abstract class $RegisterRequestCopyWith<$Res> {
   factory $RegisterRequestCopyWith(
-    RegisterRequest value,
-    $Res Function(RegisterRequest) then,
-  ) = _$RegisterRequestCopyWithImpl<$Res, RegisterRequest>;
+          RegisterRequest value, $Res Function(RegisterRequest) then) =
+      _$RegisterRequestCopyWithImpl<$Res, RegisterRequest>;
   @useResult
   $Res call({String email, String password, String confirmPassword});
 }
@@ -58,33 +56,29 @@ class _$RegisterRequestCopyWithImpl<$Res, $Val extends RegisterRequest>
     Object? password = null,
     Object? confirmPassword = null,
   }) {
-    return _then(
-      _value.copyWith(
-            email: null == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                      as String,
-            password: null == password
-                ? _value.password
-                : password // ignore: cast_nullable_to_non_nullable
-                      as String,
-            confirmPassword: null == confirmPassword
-                ? _value.confirmPassword
-                : confirmPassword // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$RegisterRequestImplCopyWith<$Res>
     implements $RegisterRequestCopyWith<$Res> {
-  factory _$$RegisterRequestImplCopyWith(
-    _$RegisterRequestImpl value,
-    $Res Function(_$RegisterRequestImpl) then,
-  ) = __$$RegisterRequestImplCopyWithImpl<$Res>;
+  factory _$$RegisterRequestImplCopyWith(_$RegisterRequestImpl value,
+          $Res Function(_$RegisterRequestImpl) then) =
+      __$$RegisterRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String email, String password, String confirmPassword});
@@ -95,9 +89,8 @@ class __$$RegisterRequestImplCopyWithImpl<$Res>
     extends _$RegisterRequestCopyWithImpl<$Res, _$RegisterRequestImpl>
     implements _$$RegisterRequestImplCopyWith<$Res> {
   __$$RegisterRequestImplCopyWithImpl(
-    _$RegisterRequestImpl _value,
-    $Res Function(_$RegisterRequestImpl) _then,
-  ) : super(_value, _then);
+      _$RegisterRequestImpl _value, $Res Function(_$RegisterRequestImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -106,33 +99,30 @@ class __$$RegisterRequestImplCopyWithImpl<$Res>
     Object? password = null,
     Object? confirmPassword = null,
   }) {
-    return _then(
-      _$RegisterRequestImpl(
-        email: null == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
-                  as String,
-        password: null == password
-            ? _value.password
-            : password // ignore: cast_nullable_to_non_nullable
-                  as String,
-        confirmPassword: null == confirmPassword
-            ? _value.confirmPassword
-            : confirmPassword // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$RegisterRequestImpl(
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      password: null == password
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      confirmPassword: null == confirmPassword
+          ? _value.confirmPassword
+          : confirmPassword // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RegisterRequestImpl implements _RegisterRequest {
-  const _$RegisterRequestImpl({
-    required this.email,
-    required this.password,
-    required this.confirmPassword,
-  });
+  const _$RegisterRequestImpl(
+      {required this.email,
+      required this.password,
+      required this.confirmPassword});
 
   factory _$RegisterRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisterRequestImplFromJson(json);
@@ -171,22 +161,21 @@ class _$RegisterRequestImpl implements _RegisterRequest {
   @pragma('vm:prefer-inline')
   _$$RegisterRequestImplCopyWith<_$RegisterRequestImpl> get copyWith =>
       __$$RegisterRequestImplCopyWithImpl<_$RegisterRequestImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RegisterRequestImplToJson(this);
+    return _$$RegisterRequestImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _RegisterRequest implements RegisterRequest {
-  const factory _RegisterRequest({
-    required final String email,
-    required final String password,
-    required final String confirmPassword,
-  }) = _$RegisterRequestImpl;
+  const factory _RegisterRequest(
+      {required final String email,
+      required final String password,
+      required final String confirmPassword}) = _$RegisterRequestImpl;
 
   factory _RegisterRequest.fromJson(Map<String, dynamic> json) =
       _$RegisterRequestImpl.fromJson;

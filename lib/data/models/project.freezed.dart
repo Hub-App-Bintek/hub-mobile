@@ -12,8 +12,7 @@ part of 'project.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 Project _$ProjectFromJson(Map<String, dynamic> json) {
   return _Project.fromJson(json);
@@ -39,15 +38,14 @@ abstract class $ProjectCopyWith<$Res> {
   factory $ProjectCopyWith(Project value, $Res Function(Project) then) =
       _$ProjectCopyWithImpl<$Res, Project>;
   @useResult
-  $Res call({
-    String projectId,
-    String name,
-    String type,
-    String status,
-    ProjectLocation location,
-    double landArea,
-    DateTime createdAt,
-  });
+  $Res call(
+      {String projectId,
+      String name,
+      String type,
+      String status,
+      ProjectLocation location,
+      double landArea,
+      DateTime createdAt});
 
   $ProjectLocationCopyWith<$Res> get location;
 }
@@ -73,39 +71,36 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
     Object? landArea = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _value.copyWith(
-            projectId: null == projectId
-                ? _value.projectId
-                : projectId // ignore: cast_nullable_to_non_nullable
-                      as String,
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            type: null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as String,
-            status: null == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
-                      as String,
-            location: null == location
-                ? _value.location
-                : location // ignore: cast_nullable_to_non_nullable
-                      as ProjectLocation,
-            landArea: null == landArea
-                ? _value.landArea
-                : landArea // ignore: cast_nullable_to_non_nullable
-                      as double,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as ProjectLocation,
+      landArea: null == landArea
+          ? _value.landArea
+          : landArea // ignore: cast_nullable_to_non_nullable
+              as double,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
   }
 
   @override
@@ -120,20 +115,18 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
 /// @nodoc
 abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   factory _$$ProjectImplCopyWith(
-    _$ProjectImpl value,
-    $Res Function(_$ProjectImpl) then,
-  ) = __$$ProjectImplCopyWithImpl<$Res>;
+          _$ProjectImpl value, $Res Function(_$ProjectImpl) then) =
+      __$$ProjectImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String projectId,
-    String name,
-    String type,
-    String status,
-    ProjectLocation location,
-    double landArea,
-    DateTime createdAt,
-  });
+  $Res call(
+      {String projectId,
+      String name,
+      String type,
+      String status,
+      ProjectLocation location,
+      double landArea,
+      DateTime createdAt});
 
   @override
   $ProjectLocationCopyWith<$Res> get location;
@@ -144,9 +137,8 @@ class __$$ProjectImplCopyWithImpl<$Res>
     extends _$ProjectCopyWithImpl<$Res, _$ProjectImpl>
     implements _$$ProjectImplCopyWith<$Res> {
   __$$ProjectImplCopyWithImpl(
-    _$ProjectImpl _value,
-    $Res Function(_$ProjectImpl) _then,
-  ) : super(_value, _then);
+      _$ProjectImpl _value, $Res Function(_$ProjectImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -159,53 +151,50 @@ class __$$ProjectImplCopyWithImpl<$Res>
     Object? landArea = null,
     Object? createdAt = null,
   }) {
-    return _then(
-      _$ProjectImpl(
-        projectId: null == projectId
-            ? _value.projectId
-            : projectId // ignore: cast_nullable_to_non_nullable
-                  as String,
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        type: null == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as String,
-        status: null == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
-                  as String,
-        location: null == location
-            ? _value.location
-            : location // ignore: cast_nullable_to_non_nullable
-                  as ProjectLocation,
-        landArea: null == landArea
-            ? _value.landArea
-            : landArea // ignore: cast_nullable_to_non_nullable
-                  as double,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-      ),
-    );
+    return _then(_$ProjectImpl(
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      location: null == location
+          ? _value.location
+          : location // ignore: cast_nullable_to_non_nullable
+              as ProjectLocation,
+      landArea: null == landArea
+          ? _value.landArea
+          : landArea // ignore: cast_nullable_to_non_nullable
+              as double,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ProjectImpl implements _Project {
-  const _$ProjectImpl({
-    required this.projectId,
-    required this.name,
-    required this.type,
-    required this.status,
-    required this.location,
-    required this.landArea,
-    required this.createdAt,
-  });
+  const _$ProjectImpl(
+      {required this.projectId,
+      required this.name,
+      required this.type,
+      required this.status,
+      required this.location,
+      required this.landArea,
+      required this.createdAt});
 
   factory _$ProjectImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectImplFromJson(json);
@@ -250,16 +239,8 @@ class _$ProjectImpl implements _Project {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    projectId,
-    name,
-    type,
-    status,
-    location,
-    landArea,
-    createdAt,
-  );
+  int get hashCode => Object.hash(runtimeType, projectId, name, type, status,
+      location, landArea, createdAt);
 
   @JsonKey(ignore: true)
   @override
@@ -269,20 +250,21 @@ class _$ProjectImpl implements _Project {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjectImplToJson(this);
+    return _$$ProjectImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _Project implements Project {
-  const factory _Project({
-    required final String projectId,
-    required final String name,
-    required final String type,
-    required final String status,
-    required final ProjectLocation location,
-    required final double landArea,
-    required final DateTime createdAt,
-  }) = _$ProjectImpl;
+  const factory _Project(
+      {required final String projectId,
+      required final String name,
+      required final String type,
+      required final String status,
+      required final ProjectLocation location,
+      required final double landArea,
+      required final DateTime createdAt}) = _$ProjectImpl;
 
   factory _Project.fromJson(Map<String, dynamic> json) = _$ProjectImpl.fromJson;
 
@@ -325,9 +307,8 @@ mixin _$ProjectLocation {
 /// @nodoc
 abstract class $ProjectLocationCopyWith<$Res> {
   factory $ProjectLocationCopyWith(
-    ProjectLocation value,
-    $Res Function(ProjectLocation) then,
-  ) = _$ProjectLocationCopyWithImpl<$Res, ProjectLocation>;
+          ProjectLocation value, $Res Function(ProjectLocation) then) =
+      _$ProjectLocationCopyWithImpl<$Res, ProjectLocation>;
   @useResult
   $Res call({double latitude, double longitude, String address});
 }
@@ -349,33 +330,29 @@ class _$ProjectLocationCopyWithImpl<$Res, $Val extends ProjectLocation>
     Object? longitude = null,
     Object? address = null,
   }) {
-    return _then(
-      _value.copyWith(
-            latitude: null == latitude
-                ? _value.latitude
-                : latitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            longitude: null == longitude
-                ? _value.longitude
-                : longitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            address: null == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ProjectLocationImplCopyWith<$Res>
     implements $ProjectLocationCopyWith<$Res> {
-  factory _$$ProjectLocationImplCopyWith(
-    _$ProjectLocationImpl value,
-    $Res Function(_$ProjectLocationImpl) then,
-  ) = __$$ProjectLocationImplCopyWithImpl<$Res>;
+  factory _$$ProjectLocationImplCopyWith(_$ProjectLocationImpl value,
+          $Res Function(_$ProjectLocationImpl) then) =
+      __$$ProjectLocationImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({double latitude, double longitude, String address});
@@ -386,9 +363,8 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
     extends _$ProjectLocationCopyWithImpl<$Res, _$ProjectLocationImpl>
     implements _$$ProjectLocationImplCopyWith<$Res> {
   __$$ProjectLocationImplCopyWithImpl(
-    _$ProjectLocationImpl _value,
-    $Res Function(_$ProjectLocationImpl) _then,
-  ) : super(_value, _then);
+      _$ProjectLocationImpl _value, $Res Function(_$ProjectLocationImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -397,33 +373,28 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
     Object? longitude = null,
     Object? address = null,
   }) {
-    return _then(
-      _$ProjectLocationImpl(
-        latitude: null == latitude
-            ? _value.latitude
-            : latitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        longitude: null == longitude
-            ? _value.longitude
-            : longitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        address: null == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$ProjectLocationImpl(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      address: null == address
+          ? _value.address
+          : address // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ProjectLocationImpl implements _ProjectLocation {
-  const _$ProjectLocationImpl({
-    required this.latitude,
-    required this.longitude,
-    required this.address,
-  });
+  const _$ProjectLocationImpl(
+      {required this.latitude, required this.longitude, required this.address});
 
   factory _$ProjectLocationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectLocationImplFromJson(json);
@@ -461,22 +432,21 @@ class _$ProjectLocationImpl implements _ProjectLocation {
   @pragma('vm:prefer-inline')
   _$$ProjectLocationImplCopyWith<_$ProjectLocationImpl> get copyWith =>
       __$$ProjectLocationImplCopyWithImpl<_$ProjectLocationImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjectLocationImplToJson(this);
+    return _$$ProjectLocationImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ProjectLocation implements ProjectLocation {
-  const factory _ProjectLocation({
-    required final double latitude,
-    required final double longitude,
-    required final String address,
-  }) = _$ProjectLocationImpl;
+  const factory _ProjectLocation(
+      {required final double latitude,
+      required final double longitude,
+      required final String address}) = _$ProjectLocationImpl;
 
   factory _ProjectLocation.fromJson(Map<String, dynamic> json) =
       _$ProjectLocationImpl.fromJson;
