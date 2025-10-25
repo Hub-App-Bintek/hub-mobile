@@ -7,13 +7,15 @@ part of 'consultants_response.dart';
 // **************************************************************************
 
 _$ConsultantsResponseImpl _$$ConsultantsResponseImplFromJson(
-  Map<String, dynamic> json,
-) => _$ConsultantsResponseImpl(
-  consultants: (json['consultants'] as List<dynamic>)
-      .map((e) => Consultant.fromJson(e as Map<String, dynamic>))
-      .toList(),
-);
+        Map<String, dynamic> json) =>
+    _$ConsultantsResponseImpl(
+      consultants: (json['consultants'] as List<dynamic>)
+          .map((e) => Consultant.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
 Map<String, dynamic> _$$ConsultantsResponseImplToJson(
-  _$ConsultantsResponseImpl instance,
-) => <String, dynamic>{'consultants': instance.consultants};
+        _$ConsultantsResponseImpl instance) =>
+    <String, dynamic>{
+      'consultants': instance.consultants,
+    };

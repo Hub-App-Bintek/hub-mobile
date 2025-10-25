@@ -56,6 +56,18 @@ class AppBinding extends Bindings {
       fallback: flavor != 'development',
     );
 
+    final talker = Talker(
+      settings: TalkerSettings(
+        useConsoleLogs: true,
+        enabled: true,
+      ),
+      logger: TalkerLogger(
+        settings: const TalkerLoggerSettings(
+          enableColors: true,
+        ),
+      ),
+    );
+
     Environment.initialize(
       apiBaseUrl: apiBaseUrl,
       apiKey: apiKey,
@@ -65,7 +77,7 @@ class AppBinding extends Bindings {
     );
 
     Get.put<Logger>(Logger(), permanent: true);
-    Get.put<Talker>(Talker(), permanent: true);
+    Get.put<Talker>(talker, permanent: true);
     Get.put<FlutterSecureStorage>(
       const FlutterSecureStorage(),
       permanent: true,

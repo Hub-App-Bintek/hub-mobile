@@ -12,8 +12,7 @@ part of 'verify_otp_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 VerifyOtpRequest _$VerifyOtpRequestFromJson(Map<String, dynamic> json) {
   return _VerifyOtpRequest.fromJson(json);
@@ -33,9 +32,8 @@ mixin _$VerifyOtpRequest {
 /// @nodoc
 abstract class $VerifyOtpRequestCopyWith<$Res> {
   factory $VerifyOtpRequestCopyWith(
-    VerifyOtpRequest value,
-    $Res Function(VerifyOtpRequest) then,
-  ) = _$VerifyOtpRequestCopyWithImpl<$Res, VerifyOtpRequest>;
+          VerifyOtpRequest value, $Res Function(VerifyOtpRequest) then) =
+      _$VerifyOtpRequestCopyWithImpl<$Res, VerifyOtpRequest>;
   @useResult
   $Res call({String email, String otpCode});
 }
@@ -52,30 +50,29 @@ class _$VerifyOtpRequestCopyWithImpl<$Res, $Val extends VerifyOtpRequest>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? email = null, Object? otpCode = null}) {
-    return _then(
-      _value.copyWith(
-            email: null == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                      as String,
-            otpCode: null == otpCode
-                ? _value.otpCode
-                : otpCode // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? email = null,
+    Object? otpCode = null,
+  }) {
+    return _then(_value.copyWith(
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      otpCode: null == otpCode
+          ? _value.otpCode
+          : otpCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$VerifyOtpRequestImplCopyWith<$Res>
     implements $VerifyOtpRequestCopyWith<$Res> {
-  factory _$$VerifyOtpRequestImplCopyWith(
-    _$VerifyOtpRequestImpl value,
-    $Res Function(_$VerifyOtpRequestImpl) then,
-  ) = __$$VerifyOtpRequestImplCopyWithImpl<$Res>;
+  factory _$$VerifyOtpRequestImplCopyWith(_$VerifyOtpRequestImpl value,
+          $Res Function(_$VerifyOtpRequestImpl) then) =
+      __$$VerifyOtpRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String email, String otpCode});
@@ -85,26 +82,26 @@ abstract class _$$VerifyOtpRequestImplCopyWith<$Res>
 class __$$VerifyOtpRequestImplCopyWithImpl<$Res>
     extends _$VerifyOtpRequestCopyWithImpl<$Res, _$VerifyOtpRequestImpl>
     implements _$$VerifyOtpRequestImplCopyWith<$Res> {
-  __$$VerifyOtpRequestImplCopyWithImpl(
-    _$VerifyOtpRequestImpl _value,
-    $Res Function(_$VerifyOtpRequestImpl) _then,
-  ) : super(_value, _then);
+  __$$VerifyOtpRequestImplCopyWithImpl(_$VerifyOtpRequestImpl _value,
+      $Res Function(_$VerifyOtpRequestImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? email = null, Object? otpCode = null}) {
-    return _then(
-      _$VerifyOtpRequestImpl(
-        email: null == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
-                  as String,
-        otpCode: null == otpCode
-            ? _value.otpCode
-            : otpCode // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+  $Res call({
+    Object? email = null,
+    Object? otpCode = null,
+  }) {
+    return _then(_$VerifyOtpRequestImpl(
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      otpCode: null == otpCode
+          ? _value.otpCode
+          : otpCode // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
@@ -144,21 +141,20 @@ class _$VerifyOtpRequestImpl implements _VerifyOtpRequest {
   @pragma('vm:prefer-inline')
   _$$VerifyOtpRequestImplCopyWith<_$VerifyOtpRequestImpl> get copyWith =>
       __$$VerifyOtpRequestImplCopyWithImpl<_$VerifyOtpRequestImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$VerifyOtpRequestImplToJson(this);
+    return _$$VerifyOtpRequestImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _VerifyOtpRequest implements VerifyOtpRequest {
-  const factory _VerifyOtpRequest({
-    required final String email,
-    required final String otpCode,
-  }) = _$VerifyOtpRequestImpl;
+  const factory _VerifyOtpRequest(
+      {required final String email,
+      required final String otpCode}) = _$VerifyOtpRequestImpl;
 
   factory _VerifyOtpRequest.fromJson(Map<String, dynamic> json) =
       _$VerifyOtpRequestImpl.fromJson;

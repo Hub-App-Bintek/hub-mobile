@@ -8,7 +8,7 @@ part of 'consultant.dart';
 
 _$ConsultantImpl _$$ConsultantImplFromJson(Map<String, dynamic> json) =>
     _$ConsultantImpl(
-      consultantId: json['consultantId'] as String?,
+      id: json['id'] as String?,
       fullName: json['fullName'] as String?,
       specialty: json['specialty'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
@@ -25,7 +25,7 @@ _$ConsultantImpl _$$ConsultantImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$ConsultantImplToJson(_$ConsultantImpl instance) =>
     <String, dynamic>{
-      'consultantId': instance.consultantId,
+      'id': instance.id,
       'fullName': instance.fullName,
       'specialty': instance.specialty,
       'rating': instance.rating,

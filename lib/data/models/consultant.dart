@@ -6,7 +6,7 @@ part 'consultant.g.dart';
 @freezed
 class Consultant with _$Consultant {
   const factory Consultant({
-    String? consultantId,
+    String? id,
     String? fullName,
     String? specialty,
     double? rating,

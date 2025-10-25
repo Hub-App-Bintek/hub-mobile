@@ -33,8 +33,13 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
                     childAspectRatio: 0.92,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
-                    final c = controller.consultants[index];
-                    return ConsultantCard(consultant: c);
+                    return ConsultantCard(
+                      consultant: controller.consultants[index],
+                      onTap: () {
+                        controller.goToPortfolio(
+                            controller.consultants[index].id ?? '');
+                      },
+                    );
                   }, childCount: controller.consultants.length),
                 ),
               ),
@@ -56,17 +61,19 @@ class ConsultantListScreen extends GetView<ConsultantListController> {
 }
 
 class ConsultantCard extends StatelessWidget {
-  const ConsultantCard({super.key, required this.consultant});
+  const ConsultantCard({
+    super.key,
+    required this.consultant,
+    required this.onTap,
+  });
 
   final Consultant consultant;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        final controller = Get.find<ConsultantListController>();
-        controller.goToPortfolio(consultant.consultantId ?? '');
-      },
+      onTap: onTap,
       child: SizedBox(
         width: double.infinity,
         child: Stack(

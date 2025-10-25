@@ -51,8 +51,9 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
                 onPressed: () {
                   if (_selectedIndex == widget.projects.length) {
                     // New Project selected
-                    if (widget.onNewProjectTap != null)
+                    if (widget.onNewProjectTap != null) {
                       widget.onNewProjectTap!();
+                    }
                   } else {
                     if (widget.onConfirm != null) {
                       widget.onConfirm!(
