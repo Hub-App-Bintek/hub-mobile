@@ -9,8 +9,9 @@ import 'package:pkp_hub/core/utils/formatters.dart';
 
 import '../controllers/consultant_portfolio_controller.dart';
 
-class ConsultantPortfolioScreen extends GetView<ConsultantPortfolioController> {
-  const ConsultantPortfolioScreen({super.key});
+class ConsultantPortfoliosScreen
+    extends GetView<ConsultantPortfoliosController> {
+  const ConsultantPortfoliosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ class ConsultantPortfolioScreen extends GetView<ConsultantPortfolioController> {
                               const SizedBox(height: 4),
                               Text(
                                 Formatters.currency(
-                                  (item.price ?? 0).toDouble(),
+                                  (item.price).toDouble(),
                                 ),
                                 style: AppTextStyles.bodyM.copyWith(
                                   color: AppColors.neutralMedium,

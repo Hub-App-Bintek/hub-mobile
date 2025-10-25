@@ -4,9 +4,9 @@ import 'package:pkp_hub/data/models/portfolio.dart';
 import 'package:pkp_hub/data/models/response/portfolio_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 
-class ConsultantPortfolioController extends BaseController {
+class ConsultantPortfoliosController extends BaseController {
   final String _consultantId;
-  final GetConsultantPortfolioListUseCase _getPortfolioListUseCase;
+  final GetConsultantPortfoliosUseCase _getPortfolioListUseCase;
 
   final portfolios = <Portfolio>[].obs;
   final isLoading = false.obs;
@@ -14,7 +14,7 @@ class ConsultantPortfolioController extends BaseController {
   int _page = 1;
   final int _pageSize = 10;
 
-  ConsultantPortfolioController(
+  ConsultantPortfoliosController(
     this._consultantId,
     this._getPortfolioListUseCase,
   );

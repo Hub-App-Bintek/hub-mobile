@@ -19,6 +19,7 @@ class Project with _$Project {
     required ProjectLocation location,
     required double landArea,
     required DateTime createdAt,
+    String consultations?,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

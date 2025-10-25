@@ -7,13 +7,9 @@ part of 'verify_otp_response.dart';
 // **************************************************************************
 
 _$VerifyOtpResponseImpl _$$VerifyOtpResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$VerifyOtpResponseImpl(
-      message: json['message'] as String,
-    );
+  Map<String, dynamic> json,
+) => _$VerifyOtpResponseImpl(message: json['message'] as String);
 
 Map<String, dynamic> _$$VerifyOtpResponseImplToJson(
-        _$VerifyOtpResponseImpl instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-    };
+  _$VerifyOtpResponseImpl instance,
+) => <String, dynamic>{'message': instance.message};

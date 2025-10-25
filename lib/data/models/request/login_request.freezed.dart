@@ -12,7 +12,8 @@ part of 'login_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
   return _LoginRequest.fromJson(json);
@@ -32,8 +33,9 @@ mixin _$LoginRequest {
 /// @nodoc
 abstract class $LoginRequestCopyWith<$Res> {
   factory $LoginRequestCopyWith(
-          LoginRequest value, $Res Function(LoginRequest) then) =
-      _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
+    LoginRequest value,
+    $Res Function(LoginRequest) then,
+  ) = _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
   @useResult
   $Res call({String email, String password});
 }
@@ -50,20 +52,20 @@ class _$LoginRequestCopyWithImpl<$Res, $Val extends LoginRequest>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? email = null,
-    Object? password = null,
-  }) {
-    return _then(_value.copyWith(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? email = null, Object? password = null}) {
+    return _then(
+      _value.copyWith(
+            email: null == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            password: null == password
+                ? _value.password
+                : password // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -71,8 +73,9 @@ class _$LoginRequestCopyWithImpl<$Res, $Val extends LoginRequest>
 abstract class _$$LoginRequestImplCopyWith<$Res>
     implements $LoginRequestCopyWith<$Res> {
   factory _$$LoginRequestImplCopyWith(
-          _$LoginRequestImpl value, $Res Function(_$LoginRequestImpl) then) =
-      __$$LoginRequestImplCopyWithImpl<$Res>;
+    _$LoginRequestImpl value,
+    $Res Function(_$LoginRequestImpl) then,
+  ) = __$$LoginRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String email, String password});
@@ -83,25 +86,25 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
     extends _$LoginRequestCopyWithImpl<$Res, _$LoginRequestImpl>
     implements _$$LoginRequestImplCopyWith<$Res> {
   __$$LoginRequestImplCopyWithImpl(
-      _$LoginRequestImpl _value, $Res Function(_$LoginRequestImpl) _then)
-      : super(_value, _then);
+    _$LoginRequestImpl _value,
+    $Res Function(_$LoginRequestImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? email = null,
-    Object? password = null,
-  }) {
-    return _then(_$LoginRequestImpl(
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String,
-      password: null == password
-          ? _value.password
-          : password // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? email = null, Object? password = null}) {
+    return _then(
+      _$LoginRequestImpl(
+        email: null == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String,
+        password: null == password
+            ? _value.password
+            : password // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -145,16 +148,15 @@ class _$LoginRequestImpl implements _LoginRequest {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LoginRequestImplToJson(
-      this,
-    );
+    return _$$LoginRequestImplToJson(this);
   }
 }
 
 abstract class _LoginRequest implements LoginRequest {
-  const factory _LoginRequest(
-      {required final String email,
-      required final String password}) = _$LoginRequestImpl;
+  const factory _LoginRequest({
+    required final String email,
+    required final String password,
+  }) = _$LoginRequestImpl;
 
   factory _LoginRequest.fromJson(Map<String, dynamic> json) =
       _$LoginRequestImpl.fromJson;

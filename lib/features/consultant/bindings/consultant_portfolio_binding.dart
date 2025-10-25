@@ -6,15 +6,15 @@ import '../controllers/consultant_portfolio_controller.dart';
 class ConsultantPortfolioBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<GetConsultantPortfolioListUseCase>(
-      () => GetConsultantPortfolioListUseCase(Get.find()),
+    Get.lazyPut<GetConsultantPortfoliosUseCase>(
+      () => GetConsultantPortfoliosUseCase(Get.find()),
     );
 
-    Get.lazyPut<ConsultantPortfolioController>(() {
+    Get.lazyPut<ConsultantPortfoliosController>(() {
       final args = Get.arguments as Map<String, dynamic>?;
-      return ConsultantPortfolioController(
+      return ConsultantPortfoliosController(
         args?['consultantId'] ?? '',
-        Get.find<GetConsultantPortfolioListUseCase>(),
+        Get.find<GetConsultantPortfoliosUseCase>(),
       );
     });
   }

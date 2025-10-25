@@ -12,7 +12,8 @@ part of 'portfolio.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Portfolio _$PortfolioFromJson(Map<String, dynamic> json) {
   return _Portfolio.fromJson(json);
@@ -38,13 +39,14 @@ abstract class $PortfolioCopyWith<$Res> {
   factory $PortfolioCopyWith(Portfolio value, $Res Function(Portfolio) then) =
       _$PortfolioCopyWithImpl<$Res, Portfolio>;
   @useResult
-  $Res call(
-      {int id,
-      String projectName,
-      int price,
-      String detailDescription,
-      List<String> imageUrls,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String projectName,
+    int price,
+    String detailDescription,
+    List<String> imageUrls,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
@@ -67,32 +69,35 @@ class _$PortfolioCopyWithImpl<$Res, $Val extends Portfolio>
     Object? imageUrls = null,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      projectName: null == projectName
-          ? _value.projectName
-          : projectName // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      detailDescription: null == detailDescription
-          ? _value.detailDescription
-          : detailDescription // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageUrls: null == imageUrls
-          ? _value.imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            projectName: null == projectName
+                ? _value.projectName
+                : projectName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            detailDescription: null == detailDescription
+                ? _value.detailDescription
+                : detailDescription // ignore: cast_nullable_to_non_nullable
+                      as String,
+            imageUrls: null == imageUrls
+                ? _value.imageUrls
+                : imageUrls // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -100,17 +105,19 @@ class _$PortfolioCopyWithImpl<$Res, $Val extends Portfolio>
 abstract class _$$PortfolioImplCopyWith<$Res>
     implements $PortfolioCopyWith<$Res> {
   factory _$$PortfolioImplCopyWith(
-          _$PortfolioImpl value, $Res Function(_$PortfolioImpl) then) =
-      __$$PortfolioImplCopyWithImpl<$Res>;
+    _$PortfolioImpl value,
+    $Res Function(_$PortfolioImpl) then,
+  ) = __$$PortfolioImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String projectName,
-      int price,
-      String detailDescription,
-      List<String> imageUrls,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String projectName,
+    int price,
+    String detailDescription,
+    List<String> imageUrls,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
@@ -118,8 +125,9 @@ class __$$PortfolioImplCopyWithImpl<$Res>
     extends _$PortfolioCopyWithImpl<$Res, _$PortfolioImpl>
     implements _$$PortfolioImplCopyWith<$Res> {
   __$$PortfolioImplCopyWithImpl(
-      _$PortfolioImpl _value, $Res Function(_$PortfolioImpl) _then)
-      : super(_value, _then);
+    _$PortfolioImpl _value,
+    $Res Function(_$PortfolioImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -131,46 +139,48 @@ class __$$PortfolioImplCopyWithImpl<$Res>
     Object? imageUrls = null,
     Object? createdAt = null,
   }) {
-    return _then(_$PortfolioImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      projectName: null == projectName
-          ? _value.projectName
-          : projectName // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      detailDescription: null == detailDescription
-          ? _value.detailDescription
-          : detailDescription // ignore: cast_nullable_to_non_nullable
-              as String,
-      imageUrls: null == imageUrls
-          ? _value._imageUrls
-          : imageUrls // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$PortfolioImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        projectName: null == projectName
+            ? _value.projectName
+            : projectName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        detailDescription: null == detailDescription
+            ? _value.detailDescription
+            : detailDescription // ignore: cast_nullable_to_non_nullable
+                  as String,
+        imageUrls: null == imageUrls
+            ? _value._imageUrls
+            : imageUrls // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PortfolioImpl implements _Portfolio {
-  const _$PortfolioImpl(
-      {required this.id,
-      required this.projectName,
-      required this.price,
-      required this.detailDescription,
-      required final List<String> imageUrls,
-      required this.createdAt})
-      : _imageUrls = imageUrls;
+  const _$PortfolioImpl({
+    required this.id,
+    required this.projectName,
+    required this.price,
+    required this.detailDescription,
+    required final List<String> imageUrls,
+    required this.createdAt,
+  }) : _imageUrls = imageUrls;
 
   factory _$PortfolioImpl.fromJson(Map<String, dynamic> json) =>
       _$$PortfolioImplFromJson(json);
@@ -210,8 +220,10 @@ class _$PortfolioImpl implements _Portfolio {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.detailDescription, detailDescription) ||
                 other.detailDescription == detailDescription) &&
-            const DeepCollectionEquality()
-                .equals(other._imageUrls, _imageUrls) &&
+            const DeepCollectionEquality().equals(
+              other._imageUrls,
+              _imageUrls,
+            ) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
@@ -219,13 +231,14 @@ class _$PortfolioImpl implements _Portfolio {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      projectName,
-      price,
-      detailDescription,
-      const DeepCollectionEquality().hash(_imageUrls),
-      createdAt);
+    runtimeType,
+    id,
+    projectName,
+    price,
+    detailDescription,
+    const DeepCollectionEquality().hash(_imageUrls),
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -235,20 +248,19 @@ class _$PortfolioImpl implements _Portfolio {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PortfolioImplToJson(
-      this,
-    );
+    return _$$PortfolioImplToJson(this);
   }
 }
 
 abstract class _Portfolio implements Portfolio {
-  const factory _Portfolio(
-      {required final int id,
-      required final String projectName,
-      required final int price,
-      required final String detailDescription,
-      required final List<String> imageUrls,
-      required final DateTime createdAt}) = _$PortfolioImpl;
+  const factory _Portfolio({
+    required final int id,
+    required final String projectName,
+    required final int price,
+    required final String detailDescription,
+    required final List<String> imageUrls,
+    required final DateTime createdAt,
+  }) = _$PortfolioImpl;
 
   factory _Portfolio.fromJson(Map<String, dynamic> json) =
       _$PortfolioImpl.fromJson;

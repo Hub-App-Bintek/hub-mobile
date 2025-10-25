@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/project_list_controller.dart';
@@ -30,16 +31,12 @@ class ProjectListScreen extends GetView<ProjectListController> {
     }
 
     Widget buildProjectCard(Project project) {
-      return Card(
-        color: Colors.grey[100],
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-        child: ListTile(
-          title: Text(project.name, style: AppTextStyles.h2),
-          subtitle: Text(
-            Formatters.formatTitle(project.status),
-            style: AppTextStyles.bodyM,
-          ),
-          trailing: const Icon(Icons.chevron_right),
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: PkpCard(
+          title: project.name,
+          subtitle: 'Consultant name - ${Formatters.formatTitle(project.status)}',
+          suffixIcon: const Icon(Icons.chevron_right),
           onTap: () {
             // TODO: Navigate to project detail
           },
@@ -75,6 +72,33 @@ class ProjectListScreen extends GetView<ProjectListController> {
             controller: scrollController,
             padding: const EdgeInsets.all(16),
             children: [
+              // Example 1: With an action button
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: PkpCard(
+                  title: 'Dokumen kontrak telah tersedia',
+                  subtitle: 'Dokumen Kontrak',
+                  actionButton: ElevatedButton(
+                    onPressed: () {
+                      // TODO: Implement download logic
+                    },
+                    child: const Text('Download'),
+                  ),
+                ),
+              ),
+              // Example 2: With a suffix icon
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: PkpCard(
+                  title: 'Project Name',
+                  subtitle: 'Consultant name - Project status',
+                  suffixIcon: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    // TODO: Implement navigation
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
               if (grouped['ACTIVE'] != null && grouped['ACTIVE']!.isNotEmpty)
                 buildGroup('Active', grouped['ACTIVE']!),
               if (grouped['PENDING'] != null && grouped['PENDING']!.isNotEmpty)

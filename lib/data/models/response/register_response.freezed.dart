@@ -12,7 +12,8 @@ part of 'register_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) {
   return _RegisterResponse.fromJson(json);
@@ -39,19 +40,21 @@ mixin _$RegisterResponse {
 /// @nodoc
 abstract class $RegisterResponseCopyWith<$Res> {
   factory $RegisterResponseCopyWith(
-          RegisterResponse value, $Res Function(RegisterResponse) then) =
-      _$RegisterResponseCopyWithImpl<$Res, RegisterResponse>;
+    RegisterResponse value,
+    $Res Function(RegisterResponse) then,
+  ) = _$RegisterResponseCopyWithImpl<$Res, RegisterResponse>;
   @useResult
-  $Res call(
-      {int? userId,
-      String? fullName,
-      String? email,
-      String? phone,
-      String? username,
-      String? role,
-      String? status,
-      String? ktpUrl,
-      String? selfieUrl});
+  $Res call({
+    int? userId,
+    String? fullName,
+    String? email,
+    String? phone,
+    String? username,
+    String? role,
+    String? status,
+    String? ktpUrl,
+    String? selfieUrl,
+  });
 }
 
 /// @nodoc
@@ -77,74 +80,80 @@ class _$RegisterResponseCopyWithImpl<$Res, $Val extends RegisterResponse>
     Object? ktpUrl = freezed,
     Object? selfieUrl = freezed,
   }) {
-    return _then(_value.copyWith(
-      userId: freezed == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      fullName: freezed == fullName
-          ? _value.fullName
-          : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phone: freezed == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String?,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ktpUrl: freezed == ktpUrl
-          ? _value.ktpUrl
-          : ktpUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selfieUrl: freezed == selfieUrl
-          ? _value.selfieUrl
-          : selfieUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            userId: freezed == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            fullName: freezed == fullName
+                ? _value.fullName
+                : fullName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            email: freezed == email
+                ? _value.email
+                : email // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            phone: freezed == phone
+                ? _value.phone
+                : phone // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            username: freezed == username
+                ? _value.username
+                : username // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            role: freezed == role
+                ? _value.role
+                : role // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            status: freezed == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            ktpUrl: freezed == ktpUrl
+                ? _value.ktpUrl
+                : ktpUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            selfieUrl: freezed == selfieUrl
+                ? _value.selfieUrl
+                : selfieUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$RegisterResponseImplCopyWith<$Res>
     implements $RegisterResponseCopyWith<$Res> {
-  factory _$$RegisterResponseImplCopyWith(_$RegisterResponseImpl value,
-          $Res Function(_$RegisterResponseImpl) then) =
-      __$$RegisterResponseImplCopyWithImpl<$Res>;
+  factory _$$RegisterResponseImplCopyWith(
+    _$RegisterResponseImpl value,
+    $Res Function(_$RegisterResponseImpl) then,
+  ) = __$$RegisterResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int? userId,
-      String? fullName,
-      String? email,
-      String? phone,
-      String? username,
-      String? role,
-      String? status,
-      String? ktpUrl,
-      String? selfieUrl});
+  $Res call({
+    int? userId,
+    String? fullName,
+    String? email,
+    String? phone,
+    String? username,
+    String? role,
+    String? status,
+    String? ktpUrl,
+    String? selfieUrl,
+  });
 }
 
 /// @nodoc
 class __$$RegisterResponseImplCopyWithImpl<$Res>
     extends _$RegisterResponseCopyWithImpl<$Res, _$RegisterResponseImpl>
     implements _$$RegisterResponseImplCopyWith<$Res> {
-  __$$RegisterResponseImplCopyWithImpl(_$RegisterResponseImpl _value,
-      $Res Function(_$RegisterResponseImpl) _then)
-      : super(_value, _then);
+  __$$RegisterResponseImplCopyWithImpl(
+    _$RegisterResponseImpl _value,
+    $Res Function(_$RegisterResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -159,60 +168,63 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
     Object? ktpUrl = freezed,
     Object? selfieUrl = freezed,
   }) {
-    return _then(_$RegisterResponseImpl(
-      userId: freezed == userId
-          ? _value.userId
-          : userId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      fullName: freezed == fullName
-          ? _value.fullName
-          : fullName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      email: freezed == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
-              as String?,
-      phone: freezed == phone
-          ? _value.phone
-          : phone // ignore: cast_nullable_to_non_nullable
-              as String?,
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String?,
-      role: freezed == role
-          ? _value.role
-          : role // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ktpUrl: freezed == ktpUrl
-          ? _value.ktpUrl
-          : ktpUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selfieUrl: freezed == selfieUrl
-          ? _value.selfieUrl
-          : selfieUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$RegisterResponseImpl(
+        userId: freezed == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        fullName: freezed == fullName
+            ? _value.fullName
+            : fullName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        email: freezed == email
+            ? _value.email
+            : email // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        phone: freezed == phone
+            ? _value.phone
+            : phone // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        username: freezed == username
+            ? _value.username
+            : username // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        role: freezed == role
+            ? _value.role
+            : role // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        status: freezed == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        ktpUrl: freezed == ktpUrl
+            ? _value.ktpUrl
+            : ktpUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        selfieUrl: freezed == selfieUrl
+            ? _value.selfieUrl
+            : selfieUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$RegisterResponseImpl implements _RegisterResponse {
-  const _$RegisterResponseImpl(
-      {this.userId,
-      this.fullName,
-      this.email,
-      this.phone,
-      this.username,
-      this.role,
-      this.status,
-      this.ktpUrl,
-      this.selfieUrl});
+  const _$RegisterResponseImpl({
+    this.userId,
+    this.fullName,
+    this.email,
+    this.phone,
+    this.username,
+    this.role,
+    this.status,
+    this.ktpUrl,
+    this.selfieUrl,
+  });
 
   factory _$RegisterResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisterResponseImplFromJson(json);
@@ -262,35 +274,46 @@ class _$RegisterResponseImpl implements _RegisterResponse {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, fullName, email, phone,
-      username, role, status, ktpUrl, selfieUrl);
+  int get hashCode => Object.hash(
+    runtimeType,
+    userId,
+    fullName,
+    email,
+    phone,
+    username,
+    role,
+    status,
+    ktpUrl,
+    selfieUrl,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RegisterResponseImplCopyWith<_$RegisterResponseImpl> get copyWith =>
       __$$RegisterResponseImplCopyWithImpl<_$RegisterResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$RegisterResponseImplToJson(
-      this,
-    );
+    return _$$RegisterResponseImplToJson(this);
   }
 }
 
 abstract class _RegisterResponse implements RegisterResponse {
-  const factory _RegisterResponse(
-      {final int? userId,
-      final String? fullName,
-      final String? email,
-      final String? phone,
-      final String? username,
-      final String? role,
-      final String? status,
-      final String? ktpUrl,
-      final String? selfieUrl}) = _$RegisterResponseImpl;
+  const factory _RegisterResponse({
+    final int? userId,
+    final String? fullName,
+    final String? email,
+    final String? phone,
+    final String? username,
+    final String? role,
+    final String? status,
+    final String? ktpUrl,
+    final String? selfieUrl,
+  }) = _$RegisterResponseImpl;
 
   factory _RegisterResponse.fromJson(Map<String, dynamic> json) =
       _$RegisterResponseImpl.fromJson;
