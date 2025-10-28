@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -107,6 +109,65 @@ abstract class BaseController extends GetxController {
       route,
       (route) => route.settings.name == untilRoute,
       arguments: arguments,
+    );
+  }
+
+  /// Shows a modal bottom sheet using GetX.
+  void showBottomSheet(
+    Widget widget, {
+    bool isScrollControlled = true,
+    bool isDismissible = true,
+    bool enableDrag = true,
+  }) {
+    Get.bottomSheet(
+      widget,
+      isScrollControlled: isScrollControlled,
+      isDismissible: isDismissible,
+      enableDrag: enableDrag,
+      backgroundColor: AppColors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+    );
+  }
+
+  // --- Permissions ---
+
+  /// Checks if the specified permission is granted.
+  Future<bool> isPermissionGranted(Permission permission) async {
+    final status = await permission.status;
+    return status.isGranted;
+  }
+
+  /// Requests the specified permission from the user.
+  /// Returns the new permission status.
+  Future<PermissionStatus> requestPermission(Permission permission) async {
+    final status = await permission.request();
+    if (status.isPermanentlyDenied) {
+      _showPermissionPermanentlyDeniedDialog();
+    }
+    return status;
+  }
+
+  void _showPermissionPermanentlyDeniedDialog() {
+    Get.dialog(
+      AlertDialog(
+        title: const Text(AppStrings.permissionDenied),
+        content: const Text(AppStrings.permissionPermanentlyDenied),
+        actions: [
+          TextButton(
+            child: const Text(AppStrings.cancel),
+            onPressed: () => Get.back(),
+          ),
+          TextButton(
+            child: const Text(AppStrings.openSettings),
+            onPressed: () {
+              openAppSettings();
+              Get.back();
+            },
+          ),
+        ],
+      ),
     );
   }
 }

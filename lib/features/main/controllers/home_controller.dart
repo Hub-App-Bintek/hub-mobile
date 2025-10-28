@@ -5,16 +5,15 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-import 'package:pkp_hub/core/constants/app_strings.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 
-class HomeController extends BaseController {
-  final AuthStorage _authSession;
-  final GetProjectListUseCase getProjectListUseCase;
+class HomeController extends BaseController with WidgetsBindingObserver {
+  final UserStorage _userStorage;
+  final GetProjectsUseCase getProjectListUseCase;
   final RxDouble balance = 0.0.obs;
 
   final PageController carouselController = PageController();
@@ -32,23 +31,43 @@ class HomeController extends BaseController {
 
   String? _token;
 
-  HomeController(this._authSession, this.getProjectListUseCase);
+  HomeController(this._userStorage, this.getProjectListUseCase);
 
   @override
   void onInit() {
     super.onInit();
-    _loadToken();
+    // Register for app lifecycle events so we can refresh when the app resumes.
+    WidgetsBinding.instance.addObserver(this);
+    init();
   }
 
-  Future<void> _loadToken() async {
-    _token = await _authSession.getToken();
-    if (isLoggedIn) {
+  @override
+  void onClose() {
+    // Unregister lifecycle observer and clean up resources.
+    WidgetsBinding.instance.removeObserver(this);
+    carouselController.dispose();
+    _carouselTimer?.cancel();
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // When the app resumes, reload token and refresh relevant data.
+      init();
+    }
+  }
+
+  Future<void> init() async {
+    _token = await _userStorage.getToken();
+    if (_isLoggedIn) {
       loadBalance();
       fetchActiveProjects();
     }
   }
 
-  bool get isLoggedIn => _token?.isNotEmpty ?? false;
+  bool get _isLoggedIn => _token?.isNotEmpty ?? false;
 
   @override
   void onReady() {
@@ -56,40 +75,20 @@ class HomeController extends BaseController {
     _startCarouselTimer();
   }
 
-  @override
-  void onClose() {
-    carouselController.dispose();
-    _carouselTimer?.cancel();
-    super.onClose();
-  }
-
   Future<void> loadBalance() async {
     // TODO: Fetch balance from API or local storage
-  }
-
-  Future<bool> _requestLocationPermission() async {
-    final status = await Permission.location.status;
-    if (status.isGranted) {
-      return true;
-    } else if (status.isDenied) {
-      final result = await Permission.location.request();
-      return result.isGranted;
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-      return false;
-    }
-    return false;
   }
 
   // Fetch active projects from API
   Future<void> fetchActiveProjects() async {
     isProjectLoading.value = true;
     await handleAsync<GetProjectsResponse>(
-      () => getProjectListUseCase(
-        const GetProjectsRequest(page: 0, size: 100, status: 'ACTIVE'),
-      ),
+      () => getProjectListUseCase(const GetProjectsRequest()),
       onSuccess: (data) {
-        activeProjects.value = data.projects;
+        final result = data.projects
+            .where((p) => p.status != 'CANCELED' || p.status != 'COMPLETED')
+            .toList();
+        activeProjects.value = result;
         isProjectLoading.value = false;
       },
       onFailure: (failure) {
@@ -100,20 +99,25 @@ class HomeController extends BaseController {
     );
   }
 
-  Future<bool> handleMenuTap(String menu) async {
-    if (!isLoggedIn) {
+  Future<void> handleMenuTap(VoidCallback onHaveActiveProjects) async {
+    if (!_isLoggedIn) {
       navigateTo(AppRoutes.login);
-      return false;
+      return;
     }
-    final granted = await _requestLocationPermission();
-    if (!granted) return false;
-    final route = _getRouteForMenu(menu);
-    if (route == null) return false;
-    if (activeProjects.isNotEmpty) {
-      return true;
-    } else {
+
+    var permissionGranted = await isPermissionGranted(Permission.location);
+    if (!permissionGranted) {
+      final status = await requestPermission(Permission.location);
+      if (status.isPermanentlyDenied) {
+        return;
+      }
+      permissionGranted = status.isGranted;
+    }
+
+    if (permissionGranted && activeProjects.isEmpty) {
       navigateTo(AppRoutes.createProject);
-      return false;
+    } else if (permissionGranted && activeProjects.isNotEmpty) {
+      onHaveActiveProjects();
     }
   }
 
@@ -121,21 +125,27 @@ class HomeController extends BaseController {
     // TODO: Redirect to inbox screen
   }
 
-  String? _getRouteForMenu(String menu) {
-    switch (menu) {
-      case AppStrings.menuConsultation:
-        return AppRoutes.consultation;
-      case AppStrings.menuLicensing:
-        return AppRoutes.licensing;
-      case AppStrings.menuMaterial:
-        return AppRoutes.material;
-      case AppStrings.menuConstruction:
-        return AppRoutes.construction;
-      case AppStrings.menuMonitoring:
-        return AppRoutes.monitoring;
-      default:
-        return null;
+  void onProjectSelectedFromSheet(Project project) {
+    if (project.status == "CREATED") {
+      navigateTo(
+        AppRoutes.consultants,
+        arguments: {
+          'projectId': project.projectId,
+          'lat': project.location?.latitude ?? 0.0,
+          'long': project.location?.longitude ?? 0.0,
+          'type': project.projectId,
+        },
+      );
+    } else {
+      navigateTo(
+        AppRoutes.projectDetails,
+        arguments: {'projectId': project.projectId},
+      );
     }
+  }
+
+  void onNewProjectFromSheet() {
+    navigateTo(AppRoutes.createProject);
   }
 
   void _startCarouselTimer() {

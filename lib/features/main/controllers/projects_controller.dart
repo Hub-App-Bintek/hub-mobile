@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/project.dart';
@@ -6,8 +7,8 @@ import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 
-class ProjectListController extends BaseController {
-  final GetProjectListUseCase getProjectListUseCase;
+class ProjectsController extends BaseController {
+  final GetProjectsUseCase getProjectsUseCase;
 
   var isLoading = false.obs;
   var error = Rxn<Failure>();
@@ -17,7 +18,7 @@ class ProjectListController extends BaseController {
   final int pageSize = 10;
   bool hasMore = true;
 
-  ProjectListController(this.getProjectListUseCase);
+  ProjectsController(this.getProjectsUseCase);
 
   @override
   void onInit() {
@@ -42,7 +43,7 @@ class ProjectListController extends BaseController {
       status: status,
     );
     await handleAsync<GetProjectsResponse>(
-      () => getProjectListUseCase(request),
+      () => getProjectsUseCase(request),
       onSuccess: (data) {
         if (isRefresh) {
           projects.value = data.projects;
@@ -70,5 +71,24 @@ class ProjectListController extends BaseController {
     if (!hasMore || isLoading.value) return;
     currentPage++;
     await fetchProjectList(page: currentPage, size: pageSize);
+  }
+
+  void checkProjectStatus(Project project) {
+    if (project.status == "CREATED") {
+      navigateTo(
+        AppRoutes.consultants,
+        arguments: {
+          'projectId': project.projectId,
+          'lat': project.location?.latitude ?? 0.0,
+          'long': project.location?.longitude ?? 0.0,
+          'type': project.projectId,
+        },
+      );
+    } else {
+      navigateTo(
+        AppRoutes.projectDetails,
+        arguments: {'projectId': project.projectId},
+      );
+    }
   }
 }

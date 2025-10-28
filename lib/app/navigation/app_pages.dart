@@ -10,11 +10,13 @@ import 'package:pkp_hub/features/kyc/screens/kyc_screen.dart';
 import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
 import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
+import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
 import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
 import 'package:pkp_hub/features/consultant/bindings/consultant_list_binding.dart';
-import 'package:pkp_hub/features/consultant/screens/consultant_list_screen.dart';
+import 'package:pkp_hub/features/consultant/screens/consultants_screen.dart';
 import 'package:pkp_hub/features/consultant/bindings/consultant_portfolio_binding.dart';
-import 'package:pkp_hub/features/consultant/screens/consultant_portfolio_screen.dart';
+import 'package:pkp_hub/features/consultant/screens/consultant_portfolios_screen.dart';
+import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
 
 part 'app_routes.dart';
 
@@ -56,8 +58,8 @@ class AppPages {
     ),
     // Consultants list screen
     GetPage(
-      name: _Paths.consultation,
-      page: () => const ConsultantListScreen(),
+      name: _Paths.consultants,
+      page: () => const ConsultantsScreen(),
       binding: ConsultantListBinding(),
     ),
     // Consultant portfolio screen
@@ -65,6 +67,12 @@ class AppPages {
       name: _Paths.consultantPortfolio,
       page: () => const ConsultantPortfoliosScreen(),
       binding: ConsultantPortfolioBinding(),
+    ),
+    // Project details screen
+    GetPage(
+      name: _Paths.projectDetails,
+      page: () => const ProjectDetailsScreen(),
+      binding: ProjectDetailsBinding(),
     ),
   ];
 }

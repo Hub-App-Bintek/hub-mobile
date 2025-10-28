@@ -3,20 +3,19 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/data/models/project.dart';
 
 class ChooseProjectBottomSheet extends StatefulWidget {
   final List<Project> projects;
-  final int? initialSelectedIndex;
-  final VoidCallback? onNewProjectTap;
-  final ValueChanged<Project?>? onConfirm;
+  final VoidCallback onNewProjectTap;
+  final ValueChanged<Project> onConfirm;
 
-  const ChooseProjectBottomSheet({
-    super.key,
-    required this.projects,
-    this.initialSelectedIndex,
+  const ChooseProjectBottomSheet(
+    this.projects,
     this.onNewProjectTap,
-    this.onConfirm,
+    this.onConfirm, {
+    super.key,
   });
 
   @override
@@ -25,13 +24,7 @@ class ChooseProjectBottomSheet extends StatefulWidget {
 }
 
 class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
-  int? _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialSelectedIndex ?? 0;
-  }
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,26 +40,16 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               child: PkpElevatedButton(
-                text: 'Confirm',
+                text: AppStrings.choose,
                 onPressed: () {
+                  Get.back();
                   if (_selectedIndex == widget.projects.length) {
-                    // New Project selected
-                    if (widget.onNewProjectTap != null) {
-                      widget.onNewProjectTap!();
-                    }
+                    widget.onNewProjectTap();
                   } else {
-                    if (widget.onConfirm != null) {
-                      widget.onConfirm!(
-                        _selectedIndex != null &&
-                                _selectedIndex! < widget.projects.length
-                            ? widget.projects[_selectedIndex!]
-                            : null,
-                      );
-                    }
-                    Get.back();
+                    widget.onConfirm(widget.projects[_selectedIndex]);
                   }
                 },
-                enabled: _selectedIndex != null,
+                enabled: true,
               ),
             ),
           ],
@@ -85,7 +68,7 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 48.0),
               child: Text(
-                'Choose Project',
+                AppStrings.chooseProjectTitle,
                 style: AppTextStyles.bodyM.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -100,7 +83,6 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
             child: IconButton(
               icon: const Icon(Icons.close, color: AppColors.primaryDarkest),
               onPressed: () => Get.back(),
-              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
             ),
           ),
         ],
@@ -117,10 +99,10 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
         return RadioListTile<int>(
           value: index,
           groupValue: _selectedIndex,
-          onChanged: (val) => setState(() => _selectedIndex = val),
+          onChanged: (val) => setState(() => _selectedIndex = val!),
           title: Text(
             index < widget.projects.length
-                ? widget.projects[index].name
+                ? widget.projects[index].name ?? ''
                 : 'New Project',
             style: AppTextStyles.bodyM,
           ),

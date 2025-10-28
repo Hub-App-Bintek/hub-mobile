@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/usecases/auth/resend_otp_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/verify_otp_use_case.dart';
@@ -17,7 +17,7 @@ class VerifyOtpBinding extends Bindings {
         email: email,
         verifyOtpUseCase: Get.find<VerifyOtpUseCase>(),
         resendOtpUseCase: Get.find<ResendOtpUseCase>(),
-        authSession: Get.find<AuthStorage>(),
+        authSession: Get.find<UserStorage>(),
       ),
     );
   }

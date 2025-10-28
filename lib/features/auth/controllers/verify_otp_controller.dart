@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/request/verify_otp_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/resend_otp_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/verify_otp_use_case.dart';
@@ -13,7 +13,7 @@ import 'package:pkp_hub/domain/usecases/auth/verify_otp_use_case.dart';
 class VerifyOtpController extends BaseController {
   final VerifyOtpUseCase _verifyOtpUseCase;
   final ResendOtpUseCase _resendOtpUseCase;
-  final AuthStorage _authSession;
+  final UserStorage _userStorage;
 
   final String email;
 
@@ -36,10 +36,10 @@ class VerifyOtpController extends BaseController {
     required this.email,
     required VerifyOtpUseCase verifyOtpUseCase,
     required ResendOtpUseCase resendOtpUseCase,
-    required AuthStorage authSession,
+    required UserStorage authSession,
   }) : _verifyOtpUseCase = verifyOtpUseCase,
        _resendOtpUseCase = resendOtpUseCase,
-       _authSession = authSession;
+       _userStorage = authSession;
 
   @override
   void onInit() {
@@ -100,7 +100,6 @@ class VerifyOtpController extends BaseController {
           VerifyOtpRequest(email: email, otpCode: otpString),
         ),
         onSuccess: (loginResponse) async {
-          await _authSession.saveToken(loginResponse.token ?? '');
           navigateOffAll(AppRoutes.kyc);
         },
         onFailure: (Failure failure) {

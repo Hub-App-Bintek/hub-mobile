@@ -7,8 +7,8 @@ import 'package:pkp_hub/core/config/app_config.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/network_manager.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
 import 'package:pkp_hub/core/storage/secure_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:talker/talker.dart';
 
@@ -59,7 +59,7 @@ class AppBinding extends Bindings {
     final talker = Talker(
       settings: TalkerSettings(useConsoleLogs: true, enabled: true),
       logger: TalkerLogger(
-        settings: const TalkerLoggerSettings(enableColors: true),
+        settings: const TalkerLoggerSettings(enableColors: false),
       ),
     );
 
@@ -77,20 +77,30 @@ class AppBinding extends Bindings {
       const FlutterSecureStorage(),
       permanent: true,
     );
+
+    // Local Storage
     Get.put<SecureStorage>(
-      SecureStorage(Get.find(), Get.find()),
+      SecureStorage(Get.find<Logger>(), Get.find<FlutterSecureStorage>()),
       permanent: true,
     );
-    Get.put<AppConfig>(AppConfig(Get.find(), Get.find()), permanent: true);
-    Get.put<AuthStorage>(AuthStorage(Get.find()), permanent: true);
+    Get.put<UserStorage>(
+      UserStorage(Get.find<SecureStorage>()),
+      permanent: true,
+    );
+
+    Get.put<AppConfig>(
+      AppConfig(Get.find<Logger>(), Get.find<SecureStorage>()),
+      permanent: true,
+    );
     Get.putAsync<NetworkManager>(() async => NetworkManager(), permanent: true);
     Get.lazyPut<ApiClient>(
-      () => ApiClient(authStorage: Get.find(), talker: Get.find()),
+      () => ApiClient(userStorage: Get.find(), talker: Get.find()),
       fenix: true,
     );
 
     NetworkServiceInjection.init();
     DataSourceInjection.init();
     RepositoryInjection.init();
+    // UseCaseInjection.init(); // removed to avoid duplicate registration; feature bindings register use cases as needed.
   }
 }

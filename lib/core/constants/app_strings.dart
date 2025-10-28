@@ -103,4 +103,17 @@ abstract class AppStrings {
 
   // HomeScreen Bottom Sheet
   static const chooseProjectTitle = 'Pilih Project';
+  static const choose = 'Pilih';
+
+  // Permissions
+  static const permissionDenied = 'Izin Ditolak';
+  static const permissionPermanentlyDenied =
+      'Anda telah menolak izin secara permanen. Silakan buka pengaturan aplikasi untuk mengaktifkannya.';
+  static const cancel = 'Batal';
+  static const openSettings = 'Buka Pengaturan';
+
+  // Project Details Screen
+  static const projectDetailsTitle = 'Detail Proyek';
+  static const requestRevision = 'Minta Revisi';
+  static const scheduleSurvey = 'Jadwalkan Survey';
 }

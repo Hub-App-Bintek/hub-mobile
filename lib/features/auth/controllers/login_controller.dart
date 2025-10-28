@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/utils/form_validators.dart';
@@ -11,10 +10,9 @@ import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
 class LoginController extends BaseController {
   // Dependencies
   final LoginUseCase _loginUseCase;
-  final AuthStorage _authLocalStorage;
 
   // Constructor
-  LoginController(this._loginUseCase, this._authLocalStorage);
+  LoginController(this._loginUseCase);
 
   // Text editing controllers
   final emailController = TextEditingController();
@@ -73,7 +71,6 @@ class LoginController extends BaseController {
           ),
         ),
         onSuccess: (loginResponse) async {
-          await _authLocalStorage.saveToken(loginResponse.token ?? '');
           navigateOffAll(AppRoutes.main);
         },
         onFailure: (failure) {

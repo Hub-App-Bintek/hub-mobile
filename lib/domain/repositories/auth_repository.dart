@@ -1,5 +1,6 @@
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
 import 'package:pkp_hub/data/models/request/register_request.dart';
@@ -19,12 +20,17 @@ abstract class AuthRepository {
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthNetworkDataSource _remoteDataSource;
+  final AuthLocalDataSource _localDataSource;
 
-  AuthRepositoryImpl(this._remoteDataSource);
+  AuthRepositoryImpl(this._remoteDataSource, this._localDataSource);
 
   @override
-  Future<Result<LoginResponse, Failure>> login(LoginRequest request) {
-    return _remoteDataSource.login(request);
+  Future<Result<LoginResponse, Failure>> login(LoginRequest request) async {
+    final result = await _remoteDataSource.login(request);
+    if (result is Success<LoginResponse, Failure>) {
+      await _localDataSource.saveUser(result.value);
+    }
+    return result;
   }
 
   @override
@@ -33,8 +39,14 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Result<LoginResponse, Failure>> verifyOtp(VerifyOtpRequest request) {
-    return _remoteDataSource.verifyOtp(request);
+  Future<Result<LoginResponse, Failure>> verifyOtp(
+    VerifyOtpRequest request,
+  ) async {
+    final result = await _remoteDataSource.verifyOtp(request);
+    if (result is Success<LoginResponse, Failure>) {
+      await _localDataSource.saveUser(result.value);
+    }
+    return result;
   }
 
   @override

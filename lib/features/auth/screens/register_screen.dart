@@ -26,7 +26,6 @@ class RegisterScreen extends GetView<RegisterController> {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   child: IntrinsicHeight(
                     child: Form(
-                      key: controller.formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         // FIX: The invalid 'spacing' property is removed. Spacing is now
