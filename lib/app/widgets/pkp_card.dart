@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
+import 'package:pkp_hub/app/theme/app_text_styles.dart';
 
 /// A customizable card widget that displays a title, subtitle, and an optional
 /// trailing widget which can be an icon or a button.
 class PkpCard extends StatelessWidget {
   const PkpCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.subtitle,
     this.onTap,
     this.suffixIcon,
     this.actionButton,
-  })  : assert(
-          suffixIcon == null || actionButton == null,
-          'Cannot provide both a suffixIcon and an actionButton.',
-        ),
-        super(key: key);
+  }) : assert(
+         suffixIcon == null || actionButton == null,
+         'Cannot provide both a suffixIcon and an actionButton.',
+       );
 
   /// The primary text to display in the card.
   final String title;
@@ -34,22 +35,11 @@ class PkpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    // A light blueish-grey color like in the reference images.
-    // This could be part of the app's theme data.
-    final cardColor = Theme.of(context).brightness == Brightness.dark
-        ? colorScheme.surface
-        : const Color(0xFFF0F4F8);
-
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      color: cardColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      color: AppColors.primaryLight,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -61,24 +51,9 @@ class PkpCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      title,
-                      style: textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onSurface,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(title, style: AppTextStyles.h3),
                     const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    Text(subtitle, style: AppTextStyles.bodyXS),
                   ],
                 ),
               ),

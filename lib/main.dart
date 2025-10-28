@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/injection/app_binding.dart';
@@ -6,6 +7,7 @@ import 'package:pkp_hub/app/theme/app_theme.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 
 import 'app/navigation/app_pages.dart';
+import 'app/theme/app_colors.dart';
 
 Future<void> startApp({required String flavor}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,10 @@ Future<void> startApp({required String flavor}) async {
     _ => '.env.development',
   };
   await dotenv.load(fileName: envFile);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(statusBarColor: AppColors.white),
+  );
 
   runApp(
     GetMaterialApp(

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/services/auth_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
+import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 
 class NetworkServiceInjection {
@@ -18,6 +19,10 @@ class NetworkServiceInjection {
     );
     Get.lazyPut<ConsultantApiService>(
       () => ConsultantApiService(Get.find<ApiClient>().dio),
+      fenix: true,
+    );
+    Get.lazyPut<ConsultationApiService>(
+      () => ConsultationApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

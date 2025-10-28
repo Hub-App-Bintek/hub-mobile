@@ -46,3 +46,6 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Ignore AGENTS.md files (added by agent)
+**/AGENTS.md

@@ -3,17 +3,16 @@ import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_error_response.dart';
 import 'package:pkp_hub/core/network/auth_interceptor.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:talker/talker.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 class ApiClient {
   late final Dio _dio;
 
-  // Expose the configured Dio for consumers like Retrofit services.
   Dio get dio => _dio;
 
-  ApiClient({required AuthStorage authStorage, required Talker talker}) {
+  ApiClient({required UserStorage userStorage, required Talker talker}) {
     _dio = Dio(
       BaseOptions(
         baseUrl: Environment.instance.apiBaseUrl,
@@ -25,14 +24,13 @@ class ApiClient {
         },
       ),
     );
-    _setupInterceptors(authStorage, talker);
+    _setupInterceptors(userStorage, talker);
   }
 
-  void _setupInterceptors(AuthStorage authSession, Talker talker) {
-    _dio.interceptors.add(AuthInterceptor(authSession));
+  void _setupInterceptors(UserStorage userStorage, Talker talker) {
+    _dio.interceptors.add(AuthInterceptor(userStorage));
     final isLoggingEnabled = Environment.instance.enableLogging;
     if (isLoggingEnabled) {
-      // Add TalkerDioLogger for network logging
       _dio.interceptors.add(
         TalkerDioLogger(
           talker: talker,

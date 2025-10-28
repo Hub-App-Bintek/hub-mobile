@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import '../utils/logger.dart';
+
 import '../storage/secure_storage.dart';
+import '../utils/logger.dart';
 
 class AppConfig {
   final Logger _logger;

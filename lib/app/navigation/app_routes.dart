@@ -7,7 +7,7 @@ abstract class AppRoutes {
   static const register = _Paths.register;
   static const verifyOtp = _Paths.verifyOtp;
   static const main = _Paths.main;
-  static const consultation = _Paths.consultation;
+  static const consultants = _Paths.consultants;
   static const consultantPortfolio = _Paths.consultantPortfolio;
   static const licensing = _Paths.licensing;
   static const material = _Paths.material;
@@ -15,6 +15,7 @@ abstract class AppRoutes {
   static const monitoring = _Paths.monitoring;
   static const kyc = _Paths.kyc;
   static const createProject = _Paths.createProject;
+  static const projectDetails = _Paths.projectDetails;
 }
 
 abstract class _Paths {
@@ -22,7 +23,7 @@ abstract class _Paths {
   static const register = '/register';
   static const verifyOtp = '/verify-otp';
   static const main = '/main';
-  static const consultation = '/consultation';
+  static const consultants = '/consultants';
   static const consultantPortfolio = '/consultant-portfolio';
   static const licensing = '/licensing';
   static const material = '/material';
@@ -30,4 +31,5 @@ abstract class _Paths {
   static const monitoring = '/monitoring';
   static const kyc = '/kyc';
   static const createProject = '/create-project';
+  static const projectDetails = '/project-details';
 }

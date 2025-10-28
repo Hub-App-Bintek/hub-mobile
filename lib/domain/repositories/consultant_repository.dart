@@ -2,7 +2,7 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/consultant/consultant_network_data_source.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
-import 'package:pkp_hub/data/models/response/portfolio_response.dart';
+import 'package:pkp_hub/data/models/response/consultant_portfolios_response.dart';
 
 abstract class ConsultantRepository {
   Future<Result<ConsultantsResponse, Failure>> getConsultants({
@@ -12,11 +12,8 @@ abstract class ConsultantRepository {
     required int size,
   });
 
-  Future<Result<PortfolioResponse, Failure>> getConsultantPortfolios({
-    required String consultantId,
-    int? page,
-    int? size,
-  });
+  Future<Result<ConsultantPortfoliosResponse, Failure>>
+  getConsultantPortfolios({required String consultantId, int? page, int? size});
 }
 
 class ConsultantRepositoryImpl implements ConsultantRepository {
@@ -40,7 +37,8 @@ class ConsultantRepositoryImpl implements ConsultantRepository {
   }
 
   @override
-  Future<Result<PortfolioResponse, Failure>> getConsultantPortfolios({
+  Future<Result<ConsultantPortfoliosResponse, Failure>>
+  getConsultantPortfolios({
     required String consultantId,
     int? page,
     int? size,

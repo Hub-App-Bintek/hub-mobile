@@ -153,8 +153,9 @@ class CreateProjectController extends BaseController {
         ),
         onSuccess: (response) {
           navigateOff(
-            AppRoutes.consultation,
+            AppRoutes.consultants,
             arguments: {
+              'projectId': response.projectId,
               'lat': selectedLocation.value?.latitude ?? 0.0,
               'long': selectedLocation.value?.longitude ?? 0.0,
               'type': selectedProjectType.value?.id ?? '',

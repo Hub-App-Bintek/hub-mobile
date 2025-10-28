@@ -37,7 +37,7 @@ class _ConsultantApiService implements ConsultantApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/user/consultants',
+            '/api/users/consultants',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -55,7 +55,7 @@ class _ConsultantApiService implements ConsultantApiService {
   }
 
   @override
-  Future<PortfolioResponse> getConsultantPortfolio(
+  Future<ConsultantPortfoliosResponse> getConsultantPortfolio(
     String consultantId, {
     int? page,
     int? size,
@@ -65,7 +65,7 @@ class _ConsultantApiService implements ConsultantApiService {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<PortfolioResponse>(
+    final _options = _setStreamType<ConsultantPortfoliosResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -76,9 +76,9 @@ class _ConsultantApiService implements ConsultantApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late PortfolioResponse _value;
+    late ConsultantPortfoliosResponse _value;
     try {
-      _value = PortfolioResponse.fromJson(_result.data!);
+      _value = ConsultantPortfoliosResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

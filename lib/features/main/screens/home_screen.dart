@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
@@ -182,47 +181,16 @@ class HomeScreen extends GetView<HomeController> {
           return _buildMenuItem(
             title: menuItems[index].$1,
             imageUrl: menuItems[index].$2,
-            onTap: () async {
-              final shouldShowSheet = await controller.handleMenuTap(
-                menuItems[index].$1,
-              );
-              if (!context.mounted) return;
-              if (shouldShowSheet) {
-                if (controller.isProjectLoading.value) {
-                  await showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) =>
-                        const Center(child: CircularProgressIndicator()),
-                  );
-                  if (!context.mounted) return;
-                }
-                int selectedIndex = 0;
-                await showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(24),
-                    ),
+            onTap: () {
+              controller.handleMenuTap(() {
+                controller.showBottomSheet(
+                  ChooseProjectBottomSheet(
+                    controller.activeProjects,
+                    controller.onNewProjectFromSheet,
+                    controller.onProjectSelectedFromSheet,
                   ),
-                  builder: (context) {
-                    return ChooseProjectBottomSheet(
-                      projects: controller.activeProjects,
-                      initialSelectedIndex: selectedIndex,
-                      onNewProjectTap: () {
-                        Get.back();
-                        Get.toNamed(AppRoutes.createProject);
-                      },
-                      onConfirm: (selectedProject) {
-                        // Handle project selection here if needed
-                        Get.back();
-                      },
-                    );
-                  },
                 );
-              }
+              });
             },
           );
         },

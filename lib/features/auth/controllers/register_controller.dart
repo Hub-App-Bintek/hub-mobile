@@ -12,8 +12,6 @@ class RegisterController extends BaseController {
 
   RegisterController(this._registerUseCase);
 
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -45,30 +43,31 @@ class RegisterController extends BaseController {
 
   void _validateEmail() {
     final email = emailController.text.trim();
-    final err = FormValidators.email(email);
-    emailError.value = err;
-    isEmailValid.value = err == null;
+    final error = FormValidators.email(email);
+    emailError.value = error;
+    isEmailValid.value = error == null;
     _updateFormValidity();
   }
 
   void _validatePassword() {
     final password = passwordController.text;
-    final err = FormValidators.password(password);
-    passwordError.value = err;
-    isPasswordValid.value = err == null;
+    final error = FormValidators.password(password);
+    passwordError.value = error;
+    isPasswordValid.value = error == null;
 
     if (confirmPasswordController.text.isNotEmpty) {
       _validateConfirmPassword();
+    } else {
+      _updateFormValidity();
     }
-    _updateFormValidity();
   }
 
   void _validateConfirmPassword() {
     final confirmPassword = confirmPasswordController.text;
     final password = passwordController.text;
-    final err = FormValidators.confirmPassword(confirmPassword, password);
-    confirmPasswordError.value = err;
-    isConfirmPasswordValid.value = err == null;
+    final error = FormValidators.confirmPassword(confirmPassword, password);
+    confirmPasswordError.value = error;
+    isConfirmPasswordValid.value = error == null;
     _updateFormValidity();
   }
 

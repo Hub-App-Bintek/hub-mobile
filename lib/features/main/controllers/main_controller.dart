@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
-import 'package:pkp_hub/core/storage/auth_local_storage.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/features/main/screens/home_screen.dart';
 import 'package:pkp_hub/features/main/screens/profile_screen.dart';
-import 'package:pkp_hub/features/main/screens/project_list_screen.dart';
+import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 
 class MainController extends GetxController {
-  final AuthStorage _authSession;
+  final UserStorage _authSession;
 
   MainController(this._authSession);
 
@@ -30,7 +30,7 @@ class MainController extends GetxController {
 
   final List<Widget> pages = const [
     HomeScreen(),
-    ProjectListScreen(),
+    ProjectsScreen(),
     ProfileScreen(),
   ];
 
