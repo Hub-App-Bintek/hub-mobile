@@ -6,34 +6,35 @@ part of 'consultation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ConsultationImpl _$$ConsultationImplFromJson(Map<String, dynamic> json) =>
-    _$ConsultationImpl(
-      consultationId: json['consultationId'] as String?,
-      consultantName: json['consultantName'] as String?,
-      scheduledAt: json['scheduledAt'] as String?,
-      status: json['status'] as String?,
-      notes: json['notes'] as String?,
-      currentSurveySchedule: json['currentSurveySchedule'] == null
-          ? null
-          : CurrentSurveySchedule.fromJson(
-              json['currentSurveySchedule'] as Map<String, dynamic>,
-            ),
-      consultationHistory: (json['consultationHistory'] as List<dynamic>?)
-          ?.map((e) => ProjectHistory.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      documentExchange: json['documentExchange'] == null
-          ? null
-          : DocumentExchange.fromJson(
-              json['documentExchange'] as Map<String, dynamic>,
-            ),
-      revisionRequests: (json['revisionRequests'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      surveySchedules: (json['surveySchedules'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      permit: json['permit'] as String?,
-    );
+_$ConsultationImpl _$$ConsultationImplFromJson(
+  Map<String, dynamic> json,
+) => _$ConsultationImpl(
+  consultationId: json['consultationId'] as String?,
+  consultantName: json['consultantName'] as String?,
+  scheduledAt: json['scheduledAt'] as String?,
+  status: json['status'] as String?,
+  notes: json['notes'] as String?,
+  currentSurveySchedule: json['currentSurveySchedule'] == null
+      ? null
+      : CurrentSurveySchedule.fromJson(
+          json['currentSurveySchedule'] as Map<String, dynamic>,
+        ),
+  consultationHistory: (json['consultationHistory'] as List<dynamic>?)
+      ?.map((e) => ProjectHistory.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  documentExchange: json['documentExchange'] == null
+      ? null
+      : DocumentExchange.fromJson(
+          json['documentExchange'] as Map<String, dynamic>,
+        ),
+  revisionRequests: (json['revisionRequests'] as List<dynamic>?)
+      ?.map((e) => CurrentSurveySchedule.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  surveySchedules: (json['surveySchedules'] as List<dynamic>?)
+      ?.map((e) => CurrentSurveySchedule.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  permit: json['permit'] as String?,
+);
 
 Map<String, dynamic> _$$ConsultationImplToJson(_$ConsultationImpl instance) =>
     <String, dynamic>{

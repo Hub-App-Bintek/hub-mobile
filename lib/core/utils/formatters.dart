@@ -1,5 +1,75 @@
+import 'package:intl/intl.dart';
+
 /// Utility functions for formatting values across the app.
 class Formatters {
+  /// Default locale used across date/time formatting.
+  static const String defaultLocale = 'id_ID';
+
+  /// Attempts to parse an ISO-8601 string into a DateTime.
+  /// Returns null if parsing fails or input is null/empty.
+  static DateTime? tryParseIso(String? raw) {
+    if (raw == null) return null;
+    final s = raw.trim();
+    if (s.isEmpty) return null;
+    try {
+      return DateTime.parse(s);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Formats a DateTime into a date string (e.g., 12 Okt 2025) in Indonesian locale by default.
+  /// If [toLocal] is true, converts the DateTime to local time before formatting.
+  static String formatDate(
+    DateTime dt, {
+    String pattern = 'dd MMM yyyy',
+    String locale = defaultLocale,
+    bool toLocal = true,
+  }) {
+    final d = toLocal ? dt.toLocal() : dt;
+    return DateFormat(pattern, locale).format(d);
+  }
+
+  /// Formats a DateTime into a time string (e.g., 09.30) in Indonesian locale by default.
+  /// If [toLocal] is true, converts the DateTime to local time before formatting.
+  static String formatTime(
+    DateTime dt, {
+    String pattern = 'HH.mm',
+    String locale = defaultLocale,
+    bool toLocal = true,
+  }) {
+    final d = toLocal ? dt.toLocal() : dt;
+    return DateFormat(pattern, locale).format(d);
+  }
+
+  /// Convenience: formats an ISO-8601 string as a date string.
+  /// Returns null if [iso] can't be parsed.
+  static String? formatIsoDate(
+    String? iso, {
+    String pattern = 'dd MMM yyyy',
+    String locale = defaultLocale,
+    bool toLocal = true,
+  }) {
+    final dt = tryParseIso(iso);
+    return dt == null
+        ? null
+        : formatDate(dt, pattern: pattern, locale: locale, toLocal: toLocal);
+  }
+
+  /// Convenience: formats an ISO-8601 string as a time string.
+  /// Returns null if [iso] can't be parsed.
+  static String? formatIsoTime(
+    String? iso, {
+    String pattern = 'HH.mm',
+    String locale = defaultLocale,
+    bool toLocal = true,
+  }) {
+    final dt = tryParseIso(iso);
+    return dt == null
+        ? null
+        : formatTime(dt, pattern: pattern, locale: locale, toLocal: toLocal);
+  }
+
   /// Formats a double as a currency string with dot separators and currency symbol (e.g., Rp1.000.000)
   static String currency(double amount, {String currency = 'Rp'}) {
     final formatted = amount
@@ -56,5 +126,51 @@ class Formatters {
               : '',
         )
         .join(' ');
+  }
+
+  /// Formats a DateTime into a combined date and time string (e.g., 12 Okt 2025 09.30).
+  /// If [toLocal] is true, converts DateTime to local time before formatting.
+  /// Set [appendWib] to true to append 'WIB' after the time (e.g., "09.30 WIB").
+  static String formatDateTime(
+    DateTime dt, {
+    String datePattern = 'dd MMM yyyy',
+    String timePattern = 'HH.mm',
+    String locale = defaultLocale,
+    bool toLocal = true,
+    String joiner = ' ',
+    bool appendWib = false,
+    String wibLabel = 'WIB',
+  }) {
+    final d = toLocal ? dt.toLocal() : dt;
+    final dateStr = DateFormat(datePattern, locale).format(d);
+    final timeStr = DateFormat(timePattern, locale).format(d);
+    final timeWithZone = appendWib ? '$timeStr $wibLabel' : timeStr;
+    return [dateStr, timeWithZone].join(joiner);
+  }
+
+  /// Convenience: formats an ISO-8601 string as a combined date and time string.
+  /// Returns null if [iso] can't be parsed.
+  static String? formatIsoDateTime(
+    String? iso, {
+    String datePattern = 'dd MMM yyyy',
+    String timePattern = 'HH.mm',
+    String locale = defaultLocale,
+    bool toLocal = true,
+    String joiner = ' ',
+    bool appendWib = false,
+    String wibLabel = 'WIB',
+  }) {
+    final dt = tryParseIso(iso);
+    if (dt == null) return null;
+    return formatDateTime(
+      dt,
+      datePattern: datePattern,
+      timePattern: timePattern,
+      locale: locale,
+      toLocal: toLocal,
+      joiner: joiner,
+      appendWib: appendWib,
+      wibLabel: wibLabel,
+    );
   }
 }

@@ -6,9 +6,11 @@ import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
-import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
-import 'package:pkp_hub/core/enums/consultation_status.dart' as cs;
+import 'package:pkp_hub/data/models/response/project_details_response.dart';
+import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
+import 'package:pkp_hub/features/project/widgets/contract_actions_bottom_sheet.dart';
+import 'package:pkp_hub/features/project/widgets/survey_schedule_bottom_sheet.dart';
 
 class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   const ProjectDetailsScreen({super.key});
@@ -36,7 +38,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      controller.error.value!.message,
+                      controller.error.value?.message ?? '',
                       style: AppTextStyles.bodyM,
                       textAlign: TextAlign.center,
                     ),
@@ -50,28 +52,235 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               ),
             );
           }
-          final details = controller.details.value;
-          if (details == null) {
-            return const SizedBox.shrink();
-          }
           return Column(
             children: [
-              _buildStepper(),
+              _buildStepper(controller.details.value),
               Expanded(
                 child: SingleChildScrollView(
+                  controller: controller.timelineScrollController,
                   padding: const EdgeInsets.all(16.0),
-                  child: _buildTimeline(),
+                  child: _buildTimeline(controller.consultationHistory),
                 ),
               ),
             ],
           );
         }),
       ),
-      bottomNavigationBar: _buildBottomButtons(),
+      bottomNavigationBar: Obx(() {
+        if (controller.shouldShowConsultationConfirmationButtons) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: OutlinedButton(
+                      onPressed:
+                          (controller.rejectConsultationLoading.value ||
+                              controller.acceptConsultationLoading.value)
+                          ? null
+                          : controller.rejectConsultation,
+                      child: controller.rejectConsultationLoading.value
+                          ? SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            )
+                          : const Text('Tolak Konsultasi'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Terima Konsultasi',
+                    isLoading: controller.acceptConsultationLoading.value,
+                    enabled:
+                        !(controller.acceptConsultationLoading.value ||
+                            controller.rejectConsultationLoading.value),
+                    onPressed:
+                        (controller.acceptConsultationLoading.value ||
+                            controller.rejectConsultationLoading.value)
+                        ? null
+                        : controller.acceptConsultation,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Consultant reschedules when the latest proposed schedule was rejected
+        if (controller.shouldShowRescheduleButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Ajukan Ulang Jadwal',
+              enabled: true,
+              onPressed: () {
+                controller.showBottomSheet(
+                  SurveyScheduleBottomSheet(
+                    onButtonPressed: (request) {
+                      controller.submitRescheduleSurvey(request);
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        }
+
+        // Consultant proposes schedule
+        if (controller.shouldShowScheduleButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Ajukan Jadwal Survey',
+              enabled: true,
+              onPressed: () {
+                controller.showBottomSheet(
+                  SurveyScheduleBottomSheet(
+                    onButtonPressed: (request) {
+                      controller.submitSurveySchedule(request);
+                    },
+                  ),
+                );
+              },
+            ),
+          );
+        }
+
+        // Homeowner approves/rejects schedule
+        if (controller.shouldShowSurveyScheduleApprovalButtons) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: OutlinedButton(
+                      onPressed:
+                          (controller.rejectLoading.value ||
+                              controller.approveLoading.value)
+                          ? null
+                          : () => controller.rejectSurveySchedule(),
+                      child: controller.rejectLoading.value
+                          ? SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            )
+                          : const Text('Tolak Jadwal'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Setuju',
+                    isLoading: controller.approveLoading.value,
+                    enabled:
+                        !(controller.approveLoading.value ||
+                            controller.rejectLoading.value),
+                    onPressed:
+                        (controller.approveLoading.value ||
+                            controller.rejectLoading.value)
+                        ? null
+                        : controller.approveSurveySchedule,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Consultant marks survey as completed
+        if (controller.shouldShowCompleteSurveyButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Selesaikan Survey',
+              isLoading: controller.completeSurveyLoading.value,
+              enabled: !controller.completeSurveyLoading.value,
+              onPressed: controller.completeSurveyLoading.value
+                  ? null
+                  : controller.completeSurvey,
+            ),
+          );
+        }
+
+        // Consultant contract actions: download template & upload contract
+        if (controller.shouldShowContractActions) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 52,
+                    child: OutlinedButton(
+                      onPressed:
+                          (controller.downloadTemplateLoading.value ||
+                              controller.uploadContractLoading.value)
+                          ? null
+                          : () {
+                              controller.showBottomSheet(
+                                const ContractActionsBottomSheet(
+                                  isDownload: true,
+                                ),
+                              );
+                            },
+                      child: controller.downloadTemplateLoading.value
+                          ? SizedBox(
+                              height: 16,
+                              width: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            )
+                          : const Text('Unduh Template'),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Unggah Kontrak',
+                    isLoading: controller.uploadContractLoading.value,
+                    enabled:
+                        !(controller.uploadContractLoading.value ||
+                            controller.downloadTemplateLoading.value),
+                    onPressed:
+                        (controller.uploadContractLoading.value ||
+                            controller.downloadTemplateLoading.value)
+                        ? null
+                        : () {
+                            controller.showBottomSheet(
+                              const ContractActionsBottomSheet(),
+                            );
+                          },
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return const SizedBox.shrink();
+      }),
     );
   }
 
-  Widget _buildStepper() {
+  Widget _buildStepper(ProjectDetailsResponse? details) {
     return Column(
       children: [
         Container(
@@ -95,331 +304,38 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     );
   }
 
-  Widget _buildTimeline() {
-    final history = controller.consultationHistory.value ?? const [];
+  Widget _buildTimeline(List<ProjectHistory> history) {
+    // final history = controller.consultationHistory.value ?? const <ProjectHistory>[];
 
     if (history.isEmpty) {
-      return const PkpCard(
-        title: 'Belum ada riwayat konsultasi',
-        subtitle: 'Riwayat akan muncul setelah ada aktivitas baru.',
-      );
-    }
-
-    final children = <Widget>[];
-    for (var i = 0; i < history.length; i++) {
-      final ProjectHistory h = history[i];
-      if (i > 0) children.add(const SizedBox(height: 12));
-      final hasFiles =
-          (h.attachments?.isNotEmpty == true) || (h.files?.isNotEmpty == true);
-      children.add(
-        PkpCard(
-          title: h.title ?? '-',
-          subtitle: _historySubtitle(h),
-          actionButton: hasFiles
-              ? SizedBox(
-                  height: 36,
-                  child: OutlinedButton(
-                    onPressed: () => controller.onHistoryDownload(h),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text('Download'),
-                  ),
-                )
-              : null,
-        ),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            alignment: Alignment.center,
+            child: Text(
+              'Belum ada riwayat untuk ditampilkan',
+              style: AppTextStyles.bodyS.copyWith(
+                color: AppColors.neutralMedium,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
       );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: children,
-    );
-  }
-
-  String _historySubtitle(ProjectHistory h) {
-    final parts = <String>[];
-    if ((h.subtitle ?? '').trim().isNotEmpty) parts.add(h.subtitle!.trim());
-    final actor = h.metadata?.actor;
-    if ((actor ?? '').trim().isNotEmpty) parts.add('Oleh: ${actor!.trim()}');
-    final dt = h.metadata?.dateTime;
-    if ((dt ?? '').trim().isNotEmpty) parts.add(dt!.trim());
-    // Return empty string if nothing meaningful so the UI only shows the title.
-    return parts.isEmpty ? '' : parts.join(' • ');
-  }
-
-  // Bottom actions: prefers single "Upload Dokumen" during upload stages, otherwise falls back to consultant approve/reject.
-  Widget? _buildBottomButtons() {
-    return Obx(() {
-      // Use fast synchronous getters that react to Rx changes
-      if (controller.canConsultantSetSurveySchedule) {
-        return _singleSetSurveyButton();
-      }
-      if (controller.canConsultantCompleteSurvey) {
-        return _singleCompleteSurveyButton();
-      }
-      if (controller.canHomeownerScheduleApproval) {
-        return _homeownerScheduleApprovalButtons();
-      }
-      if (controller.canConsultantUploadFinalDocs) {
-        return _singleUploadFinalDocsButton();
-      }
-      if (controller.canHomeownerApproveFinalDocs) {
-        return _homeownerFinalDocsApprovalButtons();
-      }
-      if (controller.canConsultantFinalizeConsultation) {
-        return _singleFinalizeButton();
-      }
-
-      // Fallback: consultant waiting-for-confirmation
-      final details = controller.details.value;
-      final status = cs.consultationStatusFromString(
-        details?.consultation?.status,
-      );
-      if (status != cs.ConsultationStatus.waitingForConfirmation) {
-        return const SizedBox.shrink();
-      }
-      return FutureBuilder<bool>(
-        future: controller.showActionButtons(),
-        builder: (context, snapshot) {
-          final show = snapshot.data ?? false;
-          if (!show) return const SizedBox.shrink();
-          return _consultantWaitingButtons();
-        },
-      );
-    });
-  }
-
-  Widget _singleSetSurveyButton() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: PkpElevatedButton(
-          onPressed: controller.onSetSurveySchedulePressed,
-          text: 'Jadwalkan Survey',
-          enabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _singleCompleteSurveyButton() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: PkpElevatedButton(
-          onPressed: controller.completeSurvey,
-          text: 'Selesaikan Survey',
-          enabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _singleUploadFinalDocsButton() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: PkpElevatedButton(
-          onPressed: controller.onUploadFinalDocumentsPressed,
-          text: 'Upload Dokumen',
-          enabled: true,
-        ),
-      ),
-    );
-  }
-
-  Widget _consultantWaitingButtons() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: controller.rejectConsultation,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryDarkest,
-                    side: const BorderSide(color: AppColors.primaryDarkest),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Reject'),
-                ),
-              ),
+      children: history
+          .map(
+            (timeline) => PkpCard(
+              title: timeline.title ?? '',
+              subtitle: timeline.subtitle ?? '',
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: PkpElevatedButton(
-                onPressed: controller.acceptConsultation,
-                text: 'Approve',
-                enabled: true,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _homeownerScheduleApprovalButtons() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: controller.rejectSurveyBottomSheet,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryDarkest,
-                    side: const BorderSide(color: AppColors.primaryDarkest),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Reject'),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: PkpElevatedButton(
-                onPressed: controller.approveSurveySchedule,
-                text: 'Approve',
-                enabled: true,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _homeownerFinalDocsApprovalButtons() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: controller.rejectFinalDocumentsBottomSheet,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.primaryDarkest,
-                    side: const BorderSide(color: AppColors.primaryDarkest),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text('Reject'),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: PkpElevatedButton(
-                onPressed: controller.approveFinalDocuments,
-                text: 'Approve',
-                enabled: true,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _singleFinalizeButton() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: PkpElevatedButton(
-          onPressed: controller.finalizeConsultation,
-          text: 'Selesaikan Konsultasi',
-          enabled: true,
-        ),
-      ),
+          )
+          .toList(),
     );
   }
 }

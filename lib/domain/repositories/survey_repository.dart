@@ -2,10 +2,11 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
+import 'package:pkp_hub/data/models/response/survey_response.dart';
 import 'package:pkp_hub/data/models/survey_schedule.dart';
 
 abstract class SurveyRepository {
-  Future<Result<SurveySchedule, Failure>> createSurveySchedule(
+  Future<Result<SurveyResponse, Failure>> createSurveySchedule(
     String consultationId,
     CreateSurveyScheduleRequest request,
   );
@@ -31,7 +32,7 @@ class SurveyRepositoryImpl implements SurveyRepository {
   SurveyRepositoryImpl(this._ds);
 
   @override
-  Future<Result<SurveySchedule, Failure>> createSurveySchedule(
+  Future<Result<SurveyResponse, Failure>> createSurveySchedule(
     String consultationId,
     CreateSurveyScheduleRequest request,
   ) => _ds.createSurveySchedule(consultationId, request);

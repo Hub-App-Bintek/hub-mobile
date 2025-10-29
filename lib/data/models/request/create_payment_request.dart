@@ -1,17 +1,16 @@
-class CreatePaymentRequest {
-  final num amount;
-  final String description;
-  final String paymentMethod; // BANK_TRANSFER, etc
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  CreatePaymentRequest({
-    required this.amount,
-    required this.description,
-    required this.paymentMethod,
-  });
+part 'create_payment_request.freezed.dart';
+part 'create_payment_request.g.dart';
 
-  Map<String, dynamic> toJson() => {
-    'amount': amount,
-    'description': description,
-    'paymentMethod': paymentMethod,
-  };
+@freezed
+class CreatePaymentRequest with _$CreatePaymentRequest {
+  const factory CreatePaymentRequest({
+    required num amount,
+    required String description,
+    required String paymentMethod, // BANK_TRANSFER, etc
+  }) = _CreatePaymentRequest;
+
+  factory CreatePaymentRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreatePaymentRequestFromJson(json);
 }

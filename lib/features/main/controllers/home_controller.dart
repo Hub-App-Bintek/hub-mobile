@@ -41,6 +41,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     init();
   }
 
+  // Expose a public refresh method to allow views or other controllers
+  // (e.g., MainController) to force a data reload when Home becomes visible.
+  @override
+  Future<void> refresh() async {
+    await init();
+  }
+
   @override
   void onClose() {
     // Unregister lifecycle observer and clean up resources.
@@ -86,7 +93,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
       () => getProjectListUseCase(const GetProjectsRequest()),
       onSuccess: (data) {
         final result = data.projects
-            .where((p) => p.status != 'CANCELED' || p.status != 'COMPLETED')
+            .where((p) => p.status != 'CANCELED' && p.status != 'COMPLETED')
             .toList();
         activeProjects.value = result;
         isProjectLoading.value = false;

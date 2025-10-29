@@ -7,6 +7,7 @@ import 'dart:io';
 abstract class ContractRepository {
   Future<Result<Contract, Failure>> getContract(String consultationId);
   Future<Result<Contract, Failure>> signContract(String contractId);
+  Future<Result<Contract, Failure>> rejectContract(String contractId);
   Future<Result<Contract, Failure>> uploadContract(
     String consultationId,
     File file,
@@ -24,6 +25,10 @@ class ContractRepositoryImpl implements ContractRepository {
   @override
   Future<Result<Contract, Failure>> signContract(String contractId) =>
       _ds.signContract(contractId);
+
+  @override
+  Future<Result<Contract, Failure>> rejectContract(String contractId) =>
+      _ds.rejectContract(contractId);
 
   @override
   Future<Result<Contract, Failure>> uploadContract(

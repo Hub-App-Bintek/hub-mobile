@@ -30,7 +30,7 @@ mixin _$CurrentSurveySchedule {
   String? get proposedBy => throw _privateConstructorUsedError;
   String? get createdAt => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
-  int? get surveyCost => throw _privateConstructorUsedError;
+  double? get surveyCost => throw _privateConstructorUsedError;
   String? get surveyLocation => throw _privateConstructorUsedError;
   int? get estimatedDurationHours => throw _privateConstructorUsedError;
   String? get surveyType => throw _privateConstructorUsedError;
@@ -56,7 +56,7 @@ abstract class $CurrentSurveyScheduleCopyWith<$Res> {
     String? proposedBy,
     String? createdAt,
     String? updatedAt,
-    int? surveyCost,
+    double? surveyCost,
     String? surveyLocation,
     int? estimatedDurationHours,
     String? surveyType,
@@ -124,7 +124,7 @@ class _$CurrentSurveyScheduleCopyWithImpl<
             surveyCost: freezed == surveyCost
                 ? _value.surveyCost
                 : surveyCost // ignore: cast_nullable_to_non_nullable
-                      as int?,
+                      as double?,
             surveyLocation: freezed == surveyLocation
                 ? _value.surveyLocation
                 : surveyLocation // ignore: cast_nullable_to_non_nullable
@@ -160,7 +160,7 @@ abstract class _$$CurrentSurveyScheduleImplCopyWith<$Res>
     String? proposedBy,
     String? createdAt,
     String? updatedAt,
-    int? surveyCost,
+    double? surveyCost,
     String? surveyLocation,
     int? estimatedDurationHours,
     String? surveyType,
@@ -225,7 +225,7 @@ class __$$CurrentSurveyScheduleImplCopyWithImpl<$Res>
         surveyCost: freezed == surveyCost
             ? _value.surveyCost
             : surveyCost // ignore: cast_nullable_to_non_nullable
-                  as int?,
+                  as double?,
         surveyLocation: freezed == surveyLocation
             ? _value.surveyLocation
             : surveyLocation // ignore: cast_nullable_to_non_nullable
@@ -278,7 +278,7 @@ class _$CurrentSurveyScheduleImpl implements _CurrentSurveySchedule {
   @override
   final String? updatedAt;
   @override
-  final int? surveyCost;
+  final double? surveyCost;
   @override
   final String? surveyLocation;
   @override
@@ -360,7 +360,7 @@ abstract class _CurrentSurveySchedule implements CurrentSurveySchedule {
     final String? proposedBy,
     final String? createdAt,
     final String? updatedAt,
-    final int? surveyCost,
+    final double? surveyCost,
     final String? surveyLocation,
     final int? estimatedDurationHours,
     final String? surveyType,
@@ -384,7 +384,7 @@ abstract class _CurrentSurveySchedule implements CurrentSurveySchedule {
   @override
   String? get updatedAt;
   @override
-  int? get surveyCost;
+  double? get surveyCost;
   @override
   String? get surveyLocation;
   @override

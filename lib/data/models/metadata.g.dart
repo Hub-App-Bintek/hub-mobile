@@ -12,6 +12,9 @@ _$MetadataImpl _$$MetadataImplFromJson(Map<String, dynamic> json) =>
       actor: json['actor'] as String?,
       status: json['status'] as String?,
       notes: json['notes'] as String?,
+      contractId: json['contractId'] as String?,
+      surveyCost: (json['surveyCost'] as num?)?.toDouble(),
+      scheduleId: json['scheduleId'] as String?,
     );
 
 Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
@@ -20,4 +23,7 @@ Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
       'actor': instance.actor,
       'status': instance.status,
       'notes': instance.notes,
+      'contractId': instance.contractId,
+      'surveyCost': instance.surveyCost,
+      'scheduleId': instance.scheduleId,
     };

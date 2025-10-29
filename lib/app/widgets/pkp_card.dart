@@ -35,11 +35,13 @@ class PkpCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasSubtitle = subtitle.trim().isNotEmpty;
+
     return Card(
       elevation: 0,
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      color: AppColors.primaryLight,
+      color: AppColors.primaryLightest,
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -51,9 +53,21 @@ class PkpCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title, style: AppTextStyles.h3),
-                    const SizedBox(height: 4),
-                    Text(subtitle, style: AppTextStyles.bodyXS),
+                    Text(
+                      title,
+                      style: AppTextStyles.bodyL.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if (hasSubtitle) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.bodyXS.copyWith(
+                          color: AppColors.neutralMediumDark,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

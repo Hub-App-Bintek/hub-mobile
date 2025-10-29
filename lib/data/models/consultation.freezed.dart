@@ -31,8 +31,10 @@ mixin _$Consultation {
   List<ProjectHistory>? get consultationHistory =>
       throw _privateConstructorUsedError;
   DocumentExchange? get documentExchange => throw _privateConstructorUsedError;
-  List<String>? get revisionRequests => throw _privateConstructorUsedError;
-  List<String>? get surveySchedules => throw _privateConstructorUsedError;
+  List<CurrentSurveySchedule>? get revisionRequests =>
+      throw _privateConstructorUsedError;
+  List<CurrentSurveySchedule>? get surveySchedules =>
+      throw _privateConstructorUsedError;
   String? get permit => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,8 +59,8 @@ abstract class $ConsultationCopyWith<$Res> {
     CurrentSurveySchedule? currentSurveySchedule,
     List<ProjectHistory>? consultationHistory,
     DocumentExchange? documentExchange,
-    List<String>? revisionRequests,
-    List<String>? surveySchedules,
+    List<CurrentSurveySchedule>? revisionRequests,
+    List<CurrentSurveySchedule>? surveySchedules,
     String? permit,
   });
 
@@ -128,11 +130,11 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
             revisionRequests: freezed == revisionRequests
                 ? _value.revisionRequests
                 : revisionRequests // ignore: cast_nullable_to_non_nullable
-                      as List<String>?,
+                      as List<CurrentSurveySchedule>?,
             surveySchedules: freezed == surveySchedules
                 ? _value.surveySchedules
                 : surveySchedules // ignore: cast_nullable_to_non_nullable
-                      as List<String>?,
+                      as List<CurrentSurveySchedule>?,
             permit: freezed == permit
                 ? _value.permit
                 : permit // ignore: cast_nullable_to_non_nullable
@@ -187,8 +189,8 @@ abstract class _$$ConsultationImplCopyWith<$Res>
     CurrentSurveySchedule? currentSurveySchedule,
     List<ProjectHistory>? consultationHistory,
     DocumentExchange? documentExchange,
-    List<String>? revisionRequests,
-    List<String>? surveySchedules,
+    List<CurrentSurveySchedule>? revisionRequests,
+    List<CurrentSurveySchedule>? surveySchedules,
     String? permit,
   });
 
@@ -259,11 +261,11 @@ class __$$ConsultationImplCopyWithImpl<$Res>
         revisionRequests: freezed == revisionRequests
             ? _value._revisionRequests
             : revisionRequests // ignore: cast_nullable_to_non_nullable
-                  as List<String>?,
+                  as List<CurrentSurveySchedule>?,
         surveySchedules: freezed == surveySchedules
             ? _value._surveySchedules
             : surveySchedules // ignore: cast_nullable_to_non_nullable
-                  as List<String>?,
+                  as List<CurrentSurveySchedule>?,
         permit: freezed == permit
             ? _value.permit
             : permit // ignore: cast_nullable_to_non_nullable
@@ -285,8 +287,8 @@ class _$ConsultationImpl implements _Consultation {
     this.currentSurveySchedule,
     final List<ProjectHistory>? consultationHistory,
     this.documentExchange,
-    final List<String>? revisionRequests,
-    final List<String>? surveySchedules,
+    final List<CurrentSurveySchedule>? revisionRequests,
+    final List<CurrentSurveySchedule>? surveySchedules,
     this.permit,
   }) : _consultationHistory = consultationHistory,
        _revisionRequests = revisionRequests,
@@ -320,9 +322,9 @@ class _$ConsultationImpl implements _Consultation {
 
   @override
   final DocumentExchange? documentExchange;
-  final List<String>? _revisionRequests;
+  final List<CurrentSurveySchedule>? _revisionRequests;
   @override
-  List<String>? get revisionRequests {
+  List<CurrentSurveySchedule>? get revisionRequests {
     final value = _revisionRequests;
     if (value == null) return null;
     if (_revisionRequests is EqualUnmodifiableListView)
@@ -331,9 +333,9 @@ class _$ConsultationImpl implements _Consultation {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<String>? _surveySchedules;
+  final List<CurrentSurveySchedule>? _surveySchedules;
   @override
-  List<String>? get surveySchedules {
+  List<CurrentSurveySchedule>? get surveySchedules {
     final value = _surveySchedules;
     if (value == null) return null;
     if (_surveySchedules is EqualUnmodifiableListView) return _surveySchedules;
@@ -420,8 +422,8 @@ abstract class _Consultation implements Consultation {
     final CurrentSurveySchedule? currentSurveySchedule,
     final List<ProjectHistory>? consultationHistory,
     final DocumentExchange? documentExchange,
-    final List<String>? revisionRequests,
-    final List<String>? surveySchedules,
+    final List<CurrentSurveySchedule>? revisionRequests,
+    final List<CurrentSurveySchedule>? surveySchedules,
     final String? permit,
   }) = _$ConsultationImpl;
 
@@ -445,9 +447,9 @@ abstract class _Consultation implements Consultation {
   @override
   DocumentExchange? get documentExchange;
   @override
-  List<String>? get revisionRequests;
+  List<CurrentSurveySchedule>? get revisionRequests;
   @override
-  List<String>? get surveySchedules;
+  List<CurrentSurveySchedule>? get surveySchedules;
   @override
   String? get permit;
   @override

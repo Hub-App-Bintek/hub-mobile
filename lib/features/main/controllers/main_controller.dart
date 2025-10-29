@@ -6,6 +6,9 @@ import 'package:pkp_hub/features/main/screens/home_screen.dart';
 import 'package:pkp_hub/features/main/screens/profile_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 
+import '../controllers/home_controller.dart';
+import '../controllers/projects_controller.dart';
+
 class MainController extends GetxController {
   final UserStorage _authSession;
 
@@ -41,6 +44,20 @@ class MainController extends GetxController {
     }
     selectedIndex.value = index;
     pageController.jumpToPage(index);
+
+    // If Home tab is selected, force a refresh
+    if (index == 0) {
+      // Use Get.find to get the existing controller instance
+      final homeController = Get.find<HomeController>();
+      // Fire and forget; internal observables will drive the UI
+      homeController.refresh();
+    }
+
+    // If Projects tab is selected, refresh the projects list
+    if (index == 1) {
+      final projectsController = Get.find<ProjectsController>();
+      projectsController.refreshProjects();
+    }
   }
 
   @override

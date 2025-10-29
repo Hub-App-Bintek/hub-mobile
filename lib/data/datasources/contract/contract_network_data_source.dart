@@ -1,14 +1,16 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/data/models/contract.dart';
-import 'dart:io';
 
 abstract class ContractNetworkDataSource {
   Future<Result<Contract, Failure>> getContract(String consultationId);
   Future<Result<Contract, Failure>> signContract(String contractId);
+  Future<Result<Contract, Failure>> rejectContract(String contractId);
   Future<Result<Contract, Failure>> uploadContract(
     String consultationId,
     File file,
@@ -17,18 +19,14 @@ abstract class ContractNetworkDataSource {
 
 class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   final ApiClient _apiClient;
-  ContractNetworkDataSourceImpl(this._apiClient);
+  final ContractApiService _contractApi;
+  ContractNetworkDataSourceImpl(this._apiClient, this._contractApi);
 
   @override
   Future<Result<Contract, Failure>> getContract(String consultationId) async {
     try {
-      final res = await _apiClient.dio.get(
-        ApiEndpoints.contractByConsultation.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
-      return Success(Contract.fromJson(res.data as Map<String, dynamic>));
+      final response = await _contractApi.getContract(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -39,14 +37,26 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   @override
   Future<Result<Contract, Failure>> signContract(String contractId) async {
     try {
-      final res = await _apiClient.dio.patch(
-        ApiEndpoints.contractSign.replaceFirst('{contractId}', contractId),
-      );
-      return Success(Contract.fromJson(res.data as Map<String, dynamic>));
+      final response = await _contractApi.signContract(contractId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse sign contract: $e'));
+    }
+  }
+
+  @override
+  Future<Result<Contract, Failure>> rejectContract(String contractId) async {
+    try {
+      final response = await _contractApi.rejectContract(contractId);
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(message: 'Failed to parse reject contract: $e'),
+      );
     }
   }
 
@@ -57,17 +67,17 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   ) async {
     try {
       final fileName = file.path.split('/').last;
-      final form = FormData.fromMap({
+      final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(file.path, filename: fileName),
       });
-      final res = await _apiClient.dio.post(
+      final response = await _apiClient.dio.post(
         ApiEndpoints.contractByConsultation.replaceFirst(
           '{consultationId}',
           consultationId,
         ),
-        data: form,
+        data: formData,
       );
-      return Success(Contract.fromJson(res.data as Map<String, dynamic>));
+      return Success(Contract.fromJson(response.data as Map<String, dynamic>));
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {

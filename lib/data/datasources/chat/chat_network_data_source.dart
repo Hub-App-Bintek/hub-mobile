@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/chat_api_service.dart';
 import 'package:pkp_hub/data/models/chat_message.dart';
 import 'package:pkp_hub/data/models/request/send_chat_message_request.dart';
 
@@ -19,7 +19,9 @@ abstract class ChatNetworkDataSource {
 
 class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
   final ApiClient _apiClient;
-  ChatNetworkDataSourceImpl(this._apiClient);
+  final ChatApiService _chatApi;
+
+  ChatNetworkDataSourceImpl(this._apiClient, this._chatApi);
 
   @override
   Future<Result<ChatMessage, Failure>> sendMessage(
@@ -27,14 +29,8 @@ class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
     SendChatMessageRequest request,
   ) async {
     try {
-      final res = await _apiClient.dio.post(
-        ApiEndpoints.chatMessages.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-        data: request.toJson(),
-      );
-      return Success(ChatMessage.fromJson(res.data as Map<String, dynamic>));
+      final response = await _chatApi.sendMessage(consultationId, request);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -47,18 +43,8 @@ class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
     String consultationId,
   ) async {
     try {
-      final res = await _apiClient.dio.get(
-        ApiEndpoints.chatMessages.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
-      final data = res.data as List<dynamic>;
-      return Success(
-        data
-            .map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+      final response = await _chatApi.getMessages(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -71,13 +57,8 @@ class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
     String consultationId,
   ) async {
     try {
-      final res = await _apiClient.dio.get(
-        ApiEndpoints.chatLatest.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
-      return Success(ChatMessage.fromJson(res.data as Map<String, dynamic>));
+      final response = await _chatApi.getLatestMessage(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {

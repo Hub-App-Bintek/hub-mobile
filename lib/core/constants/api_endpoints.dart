@@ -47,6 +47,7 @@ abstract class ApiEndpoints {
   static const String contractByConsultation =
       '/api/contracts/{consultationId}';
   static const String contractSign = '/api/contracts/{contractId}/sign';
+  static const String contractReject = '/api/contracts/{contractId}/reject';
 
   // --- Chats ---
   static const String chatMessages = '/api/v1/chats/{consultationId}/messages';

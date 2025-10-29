@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
+import 'package:pkp_hub/data/models/response/survey_response.dart';
 import 'package:pkp_hub/data/models/survey_schedule.dart';
 
 abstract class SurveyNetworkDataSource {
-  Future<Result<SurveySchedule, Failure>> createSurveySchedule(
+  Future<Result<SurveyResponse, Failure>> createSurveySchedule(
     String consultationId,
     CreateSurveyScheduleRequest request,
   );
@@ -35,23 +36,21 @@ abstract class SurveyNetworkDataSource {
 
 class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
   final ApiClient _apiClient;
+  final SurveyApiService _surveyApi;
 
-  SurveyNetworkDataSourceImpl(this._apiClient);
+  SurveyNetworkDataSourceImpl(this._apiClient, this._surveyApi);
 
   @override
-  Future<Result<SurveySchedule, Failure>> createSurveySchedule(
+  Future<Result<SurveyResponse, Failure>> createSurveySchedule(
     String consultationId,
     CreateSurveyScheduleRequest request,
   ) async {
     try {
-      final res = await _apiClient.dio.post(
-        ApiEndpoints.surveyByConsultation.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-        data: request.toJson(),
+      final response = await _surveyApi.createSurveySchedule(
+        consultationId,
+        request,
       );
-      return Success(SurveySchedule.fromJson(res.data as Map<String, dynamic>));
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -66,13 +65,8 @@ class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
     String consultationId,
   ) async {
     try {
-      final res = await _apiClient.dio.post(
-        ApiEndpoints.surveyApprove.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
-      return Success(SurveySchedule.fromJson(res.data as Map<String, dynamic>));
+      final response = await _surveyApi.approveSurveySchedule(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -88,14 +82,11 @@ class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
     String? notes,
   }) async {
     try {
-      final res = await _apiClient.dio.post(
-        ApiEndpoints.surveyReject.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-        data: notes == null ? null : {'notes': notes},
+      final response = await _surveyApi.rejectSurveySchedule(
+        consultationId,
+        notes == null ? <String, dynamic>{} : {'notes': notes},
       );
-      return Success(SurveySchedule.fromJson(res.data as Map<String, dynamic>));
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -111,14 +102,11 @@ class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
     CreateSurveyScheduleRequest request,
   ) async {
     try {
-      final res = await _apiClient.dio.post(
-        ApiEndpoints.surveyReschedule.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-        data: request.toJson(),
+      final response = await _surveyApi.rescheduleSurvey(
+        consultationId,
+        request,
       );
-      return Success(SurveySchedule.fromJson(res.data as Map<String, dynamic>));
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -131,12 +119,7 @@ class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
   @override
   Future<Result<void, Failure>> completeSurvey(String consultationId) async {
     try {
-      await _apiClient.dio.post(
-        ApiEndpoints.surveyComplete.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
+      await _surveyApi.completeSurvey(consultationId);
       return const Success(null);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
@@ -150,18 +133,8 @@ class SurveyNetworkDataSourceImpl implements SurveyNetworkDataSource {
     String consultationId,
   ) async {
     try {
-      final res = await _apiClient.dio.get(
-        ApiEndpoints.surveyByConsultation.replaceFirst(
-          '{consultationId}',
-          consultationId,
-        ),
-      );
-      final data = res.data as List<dynamic>;
-      return Success(
-        data
-            .map((e) => SurveySchedule.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+      final response = await _surveyApi.getSurveySchedules(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {

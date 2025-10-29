@@ -1,17 +1,16 @@
-class CreateRevisionRequest {
-  final String title;
-  final String description;
-  final String priority; // HIGH, MEDIUM, LOW
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  CreateRevisionRequest({
-    required this.title,
-    required this.description,
-    required this.priority,
-  });
+part 'create_revision_request.freezed.dart';
+part 'create_revision_request.g.dart';
 
-  Map<String, dynamic> toJson() => {
-    'title': title,
-    'description': description,
-    'priority': priority,
-  };
+@freezed
+class CreateRevisionRequest with _$CreateRevisionRequest {
+  const factory CreateRevisionRequest({
+    required String title,
+    required String description,
+    required String priority, // HIGH, MEDIUM, LOW
+  }) = _CreateRevisionRequest;
+
+  factory CreateRevisionRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateRevisionRequestFromJson(json);
 }

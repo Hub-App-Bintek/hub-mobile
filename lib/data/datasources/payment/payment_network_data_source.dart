@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/data/models/payment.dart';
 import 'package:pkp_hub/data/models/request/create_payment_request.dart';
 
@@ -17,7 +17,8 @@ abstract class PaymentNetworkDataSource {
 
 class PaymentNetworkDataSourceImpl implements PaymentNetworkDataSource {
   final ApiClient _apiClient;
-  PaymentNetworkDataSourceImpl(this._apiClient);
+  final PaymentApiService _paymentApi;
+  PaymentNetworkDataSourceImpl(this._apiClient, this._paymentApi);
 
   @override
   Future<Result<Payment, Failure>> createPayment(
@@ -25,11 +26,8 @@ class PaymentNetworkDataSourceImpl implements PaymentNetworkDataSource {
     CreatePaymentRequest request,
   ) async {
     try {
-      final res = await _apiClient.dio.post(
-        '${ApiEndpoints.payments}?consultationId=$consultationId',
-        data: request.toJson(),
-      );
-      return Success(Payment.fromJson(res.data as Map<String, dynamic>));
+      final response = await _paymentApi.createPayment(consultationId, request);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -44,13 +42,8 @@ class PaymentNetworkDataSourceImpl implements PaymentNetworkDataSource {
     String consultationId,
   ) async {
     try {
-      final res = await _apiClient.dio.get(
-        '${ApiEndpoints.payments}?consultationId=$consultationId',
-      );
-      final data = res.data as List<dynamic>;
-      return Success(
-        data.map((e) => Payment.fromJson(e as Map<String, dynamic>)).toList(),
-      );
+      final response = await _paymentApi.getPayments(consultationId);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {

@@ -25,6 +25,9 @@ mixin _$Metadata {
   String? get actor => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
+  String? get contractId => throw _privateConstructorUsedError;
+  double? get surveyCost => throw _privateConstructorUsedError;
+  String? get scheduleId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +40,15 @@ abstract class $MetadataCopyWith<$Res> {
   factory $MetadataCopyWith(Metadata value, $Res Function(Metadata) then) =
       _$MetadataCopyWithImpl<$Res, Metadata>;
   @useResult
-  $Res call({String? dateTime, String? actor, String? status, String? notes});
+  $Res call({
+    String? dateTime,
+    String? actor,
+    String? status,
+    String? notes,
+    String? contractId,
+    double? surveyCost,
+    String? scheduleId,
+  });
 }
 
 /// @nodoc
@@ -57,6 +68,9 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
     Object? actor = freezed,
     Object? status = freezed,
     Object? notes = freezed,
+    Object? contractId = freezed,
+    Object? surveyCost = freezed,
+    Object? scheduleId = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -76,6 +90,18 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
                 ? _value.notes
                 : notes // ignore: cast_nullable_to_non_nullable
                       as String?,
+            contractId: freezed == contractId
+                ? _value.contractId
+                : contractId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            surveyCost: freezed == surveyCost
+                ? _value.surveyCost
+                : surveyCost // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            scheduleId: freezed == scheduleId
+                ? _value.scheduleId
+                : scheduleId // ignore: cast_nullable_to_non_nullable
+                      as String?,
           )
           as $Val,
     );
@@ -91,7 +117,15 @@ abstract class _$$MetadataImplCopyWith<$Res>
   ) = __$$MetadataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? dateTime, String? actor, String? status, String? notes});
+  $Res call({
+    String? dateTime,
+    String? actor,
+    String? status,
+    String? notes,
+    String? contractId,
+    double? surveyCost,
+    String? scheduleId,
+  });
 }
 
 /// @nodoc
@@ -110,6 +144,9 @@ class __$$MetadataImplCopyWithImpl<$Res>
     Object? actor = freezed,
     Object? status = freezed,
     Object? notes = freezed,
+    Object? contractId = freezed,
+    Object? surveyCost = freezed,
+    Object? scheduleId = freezed,
   }) {
     return _then(
       _$MetadataImpl(
@@ -129,6 +166,18 @@ class __$$MetadataImplCopyWithImpl<$Res>
             ? _value.notes
             : notes // ignore: cast_nullable_to_non_nullable
                   as String?,
+        contractId: freezed == contractId
+            ? _value.contractId
+            : contractId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        surveyCost: freezed == surveyCost
+            ? _value.surveyCost
+            : surveyCost // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        scheduleId: freezed == scheduleId
+            ? _value.scheduleId
+            : scheduleId // ignore: cast_nullable_to_non_nullable
+                  as String?,
       ),
     );
   }
@@ -137,7 +186,15 @@ class __$$MetadataImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$MetadataImpl implements _Metadata {
-  const _$MetadataImpl({this.dateTime, this.actor, this.status, this.notes});
+  const _$MetadataImpl({
+    this.dateTime,
+    this.actor,
+    this.status,
+    this.notes,
+    this.contractId,
+    this.surveyCost,
+    this.scheduleId,
+  });
 
   factory _$MetadataImpl.fromJson(Map<String, dynamic> json) =>
       _$$MetadataImplFromJson(json);
@@ -150,10 +207,16 @@ class _$MetadataImpl implements _Metadata {
   final String? status;
   @override
   final String? notes;
+  @override
+  final String? contractId;
+  @override
+  final double? surveyCost;
+  @override
+  final String? scheduleId;
 
   @override
   String toString() {
-    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes)';
+    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, contractId: $contractId, surveyCost: $surveyCost, scheduleId: $scheduleId)';
   }
 
   @override
@@ -165,12 +228,27 @@ class _$MetadataImpl implements _Metadata {
                 other.dateTime == dateTime) &&
             (identical(other.actor, actor) || other.actor == actor) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.notes, notes) || other.notes == notes));
+            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.contractId, contractId) ||
+                other.contractId == contractId) &&
+            (identical(other.surveyCost, surveyCost) ||
+                other.surveyCost == surveyCost) &&
+            (identical(other.scheduleId, scheduleId) ||
+                other.scheduleId == scheduleId));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, dateTime, actor, status, notes);
+  int get hashCode => Object.hash(
+    runtimeType,
+    dateTime,
+    actor,
+    status,
+    notes,
+    contractId,
+    surveyCost,
+    scheduleId,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -190,6 +268,9 @@ abstract class _Metadata implements Metadata {
     final String? actor,
     final String? status,
     final String? notes,
+    final String? contractId,
+    final double? surveyCost,
+    final String? scheduleId,
   }) = _$MetadataImpl;
 
   factory _Metadata.fromJson(Map<String, dynamic> json) =
@@ -203,6 +284,12 @@ abstract class _Metadata implements Metadata {
   String? get status;
   @override
   String? get notes;
+  @override
+  String? get contractId;
+  @override
+  double? get surveyCost;
+  @override
+  String? get scheduleId;
   @override
   @JsonKey(ignore: true)
   _$$MetadataImplCopyWith<_$MetadataImpl> get copyWith =>
