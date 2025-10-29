@@ -1,9 +1,16 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/services/auth_api_service.dart';
+import 'package:pkp_hub/core/network/services/chat_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
+import 'package:pkp_hub/core/network/services/contract_api_service.dart';
+import 'package:pkp_hub/core/network/services/design_api_service.dart';
+import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
+import 'package:pkp_hub/core/network/services/revision_api_service.dart';
+import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
@@ -60,31 +67,52 @@ class DataSourceInjection {
       fenix: true,
     );
     Get.lazyPut<SurveyNetworkDataSource>(
-      () => SurveyNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => SurveyNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<SurveyApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<ContractNetworkDataSource>(
-      () => ContractNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => ContractNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<ContractApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<ChatNetworkDataSource>(
-      () => ChatNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => ChatNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<ChatApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<revds.RevisionNetworkDataSource>(
-      () => revds.RevisionNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => revds.RevisionNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<RevisionApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<PaymentNetworkDataSource>(
-      () => PaymentNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => PaymentNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<PaymentApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<FinalDocumentNetworkDataSource>(
-      () => FinalDocumentNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => FinalDocumentNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<FinalDocumentApiService>(),
+      ),
       fenix: true,
     );
     Get.lazyPut<designds.DesignNetworkDataSource>(
-      () => designds.DesignNetworkDataSourceImpl(Get.find<ApiClient>()),
+      () => designds.DesignNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<DesignApiService>(),
+      ),
       fenix: true,
     );
   }

@@ -20,15 +20,19 @@ class HomeScreen extends GetView<HomeController> {
         onActionPressed: controller.onNotificationTapped,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildCarouselBanner(),
-              const SizedBox(height: 16),
-              _buildBalanceCard(),
-              const SizedBox(height: 16),
-              _buildMenuGrid(),
-            ],
+        child: RefreshIndicator(
+          onRefresh: controller.refresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                _buildCarouselBanner(),
+                const SizedBox(height: 16),
+                _buildBalanceCard(),
+                const SizedBox(height: 16),
+                _buildMenuGrid(),
+              ],
+            ),
           ),
         ),
       ),

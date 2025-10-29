@@ -7,10 +7,12 @@ enum PkpTextFormFieldType {
   email,
   password,
   datetime,
+  time,
   text,
   multiline,
   number,
   currency,
+  percentage,
 }
 
 /// A reusable and configurable text form field widget for the app,
@@ -24,6 +26,7 @@ class PkpTextFormField extends StatefulWidget {
     this.type = PkpTextFormFieldType.text,
     this.errorText,
     this.onChanged,
+    this.enabled = true,
   });
 
   final TextEditingController? controller;
@@ -32,6 +35,7 @@ class PkpTextFormField extends StatefulWidget {
   final PkpTextFormFieldType type;
   final String? errorText;
   final ValueChanged<String>? onChanged;
+  final bool enabled;
 
   @override
   State<PkpTextFormField> createState() => _PkpTextFormFieldState();
@@ -49,13 +53,20 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     return formatter.format(number);
   }
 
+  String _formatPercentage(String value) {
+    // Keep only digits; do not force % in the text as a suffix widget will render it.
+    return value.replaceAll(RegExp(r'[^0-9]'), '');
+  }
+
   @override
   Widget build(BuildContext context) {
     final isPassword = widget.type == PkpTextFormFieldType.password;
     final isDateTime = widget.type == PkpTextFormFieldType.datetime;
+    final isTime = widget.type == PkpTextFormFieldType.time;
     final isMultiline = widget.type == PkpTextFormFieldType.multiline;
     final isNumber = widget.type == PkpTextFormFieldType.number;
     final isCurrency = widget.type == PkpTextFormFieldType.currency;
+    final isPercentage = widget.type == PkpTextFormFieldType.percentage;
     final keyboardType = _getKeyboardType();
     final obscureText = isPassword && !_isPasswordVisible;
 
@@ -64,6 +75,10 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       suffixIcon = _buildPasswordSuffixIcon();
     } else if (isDateTime) {
       suffixIcon = _buildCalendarSuffixIcon(context);
+    } else if (isTime) {
+      suffixIcon = _buildTimeSuffixIcon(context);
+    } else if (isPercentage) {
+      suffixIcon = _buildPercentSuffix();
     }
 
     return Column(
@@ -80,10 +95,12 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
         ],
         TextFormField(
           controller: widget.controller,
+          enabled: widget.enabled,
           obscureText: obscureText,
           keyboardType: keyboardType,
-          readOnly: isDateTime,
+          readOnly: isDateTime || isTime,
           onChanged: (value) {
+            if (!widget.enabled) return; // ignore changes when disabled
             if (isNumber || isCurrency) {
               final formatted = _formatCurrency(value);
               widget.controller?.value = TextEditingValue(
@@ -91,6 +108,13 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                 selection: TextSelection.collapsed(offset: formatted.length),
               );
               widget.onChanged?.call(formatted);
+            } else if (isPercentage) {
+              final digits = _formatPercentage(value);
+              widget.controller?.value = TextEditingValue(
+                text: digits,
+                selection: TextSelection.collapsed(offset: digits.length),
+              );
+              widget.onChanged?.call(digits);
             } else {
               widget.onChanged?.call(value);
             }
@@ -114,7 +138,13 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
             ),
             errorText: widget.errorText,
           ),
-          onTap: isDateTime ? () => _selectDate(context) : null,
+          onTap: widget.enabled
+              ? (isDateTime
+                    ? () => _selectDate(context)
+                    : isTime
+                    ? () => _selectTime(context)
+                    : null)
+              : null,
         ),
       ],
     );
@@ -125,6 +155,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.email => TextInputType.emailAddress,
       PkpTextFormFieldType.password => TextInputType.visiblePassword,
       PkpTextFormFieldType.datetime => TextInputType.none,
+      PkpTextFormFieldType.time => TextInputType.none,
       PkpTextFormFieldType.text => TextInputType.text,
       PkpTextFormFieldType.multiline => TextInputType.multiline,
       PkpTextFormFieldType.number => const TextInputType.numberWithOptions(
@@ -133,24 +164,43 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.currency => const TextInputType.numberWithOptions(
         decimal: false,
       ),
+      PkpTextFormFieldType.percentage => const TextInputType.numberWithOptions(
+        decimal: false,
+      ),
     };
   }
 
   Widget _buildPasswordSuffixIcon() {
     return IconButton(
       icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-      onPressed: () {
-        setState(() {
-          _isPasswordVisible = !_isPasswordVisible;
-        });
-      },
+      onPressed: widget.enabled
+          ? () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            }
+          : null,
     );
   }
 
   Widget _buildCalendarSuffixIcon(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.calendar_today),
-      onPressed: () => _selectDate(context),
+      onPressed: widget.enabled ? () => _selectDate(context) : null,
+    );
+  }
+
+  Widget _buildTimeSuffixIcon(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.access_time),
+      onPressed: widget.enabled ? () => _selectTime(context) : null,
+    );
+  }
+
+  Widget _buildPercentSuffix() {
+    return SizedBox(
+      width: 40,
+      child: Center(child: Text('%', style: AppTextStyles.bodyL)),
     );
   }
 
@@ -164,11 +214,34 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     );
 
     if (newDate != null) {
-      final formattedDate = DateFormat('yyyy-MM-dd').format(newDate);
+      final formattedDate = DateFormat('dd MMM yyyy', 'id_ID').format(newDate);
       setState(() {
         widget.controller?.text = formattedDate;
       });
       widget.onChanged?.call(formattedDate);
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final initialTime = TimeOfDay.now();
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: initialTime,
+    );
+    if (picked != null) {
+      final now = DateTime.now();
+      final dt = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        picked.hour,
+        picked.minute,
+      );
+      final formatted = '${DateFormat('HH.mm').format(dt)} WIB';
+      setState(() {
+        widget.controller?.text = formatted;
+      });
+      widget.onChanged?.call(formatted);
     }
   }
 }

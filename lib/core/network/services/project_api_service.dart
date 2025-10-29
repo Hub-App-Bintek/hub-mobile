@@ -20,8 +20,8 @@ abstract class ProjectApiService {
 
   @GET(ApiEndpoints.projects)
   Future<GetProjectsResponse> getProjects(
-    @Query('page') int page,
-    @Query('size') int size,
+    @Query('page') int? page,
+    @Query('size') int? size,
     @Query('type') String? type,
     @Query('status') String? status,
   );

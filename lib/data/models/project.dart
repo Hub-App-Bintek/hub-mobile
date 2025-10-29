@@ -1,8 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
 
-import 'consultation.dart';
-
 part 'project.freezed.dart';
 part 'project.g.dart';
 

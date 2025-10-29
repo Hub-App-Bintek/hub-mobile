@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
@@ -7,7 +8,7 @@ import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 
-class ProjectsController extends BaseController {
+class ProjectsController extends BaseController with WidgetsBindingObserver {
   final GetProjectsUseCase getProjectsUseCase;
 
   var isLoading = false.obs;
@@ -15,7 +16,7 @@ class ProjectsController extends BaseController {
   var projects = <Project>[].obs;
 
   int currentPage = 0;
-  final int pageSize = 10;
+  final int pageSize = 100;
   bool hasMore = true;
 
   ProjectsController(this.getProjectsUseCase);
@@ -23,7 +24,23 @@ class ProjectsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     fetchProjectList(page: currentPage, size: pageSize);
+  }
+
+  @override
+  void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      // Refresh when app comes back to foreground and this tab may be visible
+      refreshProjects();
+    }
   }
 
   Future<void> fetchProjectList({
@@ -46,7 +63,8 @@ class ProjectsController extends BaseController {
       () => getProjectsUseCase(request),
       onSuccess: (data) {
         if (isRefresh) {
-          projects.value = data.projects;
+          // Ensure we replace with a mutable list to avoid unmodifiable list issues
+          projects.value = List<Project>.from(data.projects);
         } else {
           projects.addAll(data.projects);
         }
@@ -62,8 +80,9 @@ class ProjectsController extends BaseController {
   }
 
   Future<void> refreshProjects() async {
-    currentPage = 1;
+    currentPage = 0;
     hasMore = true;
+    // Do not clear here to avoid touching a potentially unmodifiable list.
     await fetchProjectList(page: currentPage, size: pageSize, isRefresh: true);
   }
 

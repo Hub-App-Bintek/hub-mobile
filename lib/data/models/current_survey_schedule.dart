@@ -13,7 +13,7 @@ class CurrentSurveySchedule with _$CurrentSurveySchedule {
     String? proposedBy,
     String? createdAt,
     String? updatedAt,
-    int? surveyCost,
+    double? surveyCost,
     String? surveyLocation,
     int? estimatedDurationHours,
     String? surveyType,

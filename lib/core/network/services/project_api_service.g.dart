@@ -46,8 +46,8 @@ class _ProjectApiService implements ProjectApiService {
 
   @override
   Future<GetProjectsResponse> getProjects(
-    int page,
-    int size,
+    int? page,
+    int? size,
     String? type,
     String? status,
   ) async {

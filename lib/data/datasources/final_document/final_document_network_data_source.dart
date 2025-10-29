@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/final_document.dart';
 
@@ -27,8 +28,9 @@ abstract class FinalDocumentNetworkDataSource {
 class FinalDocumentNetworkDataSourceImpl
     implements FinalDocumentNetworkDataSource {
   final ApiClient _apiClient;
+  final FinalDocumentApiService _finalDocumentApi;
 
-  FinalDocumentNetworkDataSourceImpl(this._apiClient);
+  FinalDocumentNetworkDataSourceImpl(this._apiClient, this._finalDocumentApi);
 
   @override
   Future<Result<FinalDocument, Failure>> uploadFinalDocuments({
@@ -38,16 +40,14 @@ class FinalDocumentNetworkDataSourceImpl
     required String fileSpektekUrl,
   }) async {
     try {
-      final url = ApiEndpoints.finalDocuments;
       final payload = {
         'consultationId': consultationId,
         'fileDedUrl': fileDedUrl,
         'fileRabUrl': fileRabUrl,
         'fileSpektekUrl': fileSpektekUrl,
       };
-      final res = await _apiClient.dio.post(url, data: payload);
-      final data = res.data as Map<String, dynamic>;
-      return Success(FinalDocument.fromJson(data));
+      final response = await _finalDocumentApi.uploadFinalDocuments(payload);
+      return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -85,11 +85,7 @@ class FinalDocumentNetworkDataSourceImpl
     String consultationId,
   ) async {
     try {
-      final url = ApiEndpoints.finalDocumentsApprove.replaceFirst(
-        '{consultationId}',
-        consultationId,
-      );
-      await _apiClient.dio.post(url);
+      await _finalDocumentApi.approveFinalDocuments(consultationId);
       return const Success(null);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
@@ -106,14 +102,8 @@ class FinalDocumentNetworkDataSourceImpl
     String? notes,
   }) async {
     try {
-      final url = ApiEndpoints.finalDocumentsReject.replaceFirst(
-        '{consultationId}',
-        consultationId,
-      );
-      await _apiClient.dio.post(
-        url,
-        data: notes == null ? null : {'notes': notes},
-      );
+      final payload = notes == null ? <String, dynamic>{} : {'notes': notes};
+      await _finalDocumentApi.rejectFinalDocuments(consultationId, payload);
       return const Success(null);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));

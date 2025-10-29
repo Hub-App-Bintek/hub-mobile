@@ -16,7 +16,7 @@ _$CurrentSurveyScheduleImpl _$$CurrentSurveyScheduleImplFromJson(
   proposedBy: json['proposedBy'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
-  surveyCost: (json['surveyCost'] as num?)?.toInt(),
+  surveyCost: (json['surveyCost'] as num?)?.toDouble(),
   surveyLocation: json['surveyLocation'] as String?,
   estimatedDurationHours: (json['estimatedDurationHours'] as num?)?.toInt(),
   surveyType: json['surveyType'] as String?,

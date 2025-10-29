@@ -11,16 +11,16 @@ class ProjectsScreen extends GetView<ProjectsController> {
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
-
-    scrollController.addListener(() {
-      if (scrollController.position.pixels >=
-              scrollController.position.maxScrollExtent - 200 &&
-          !controller.isLoading.value &&
-          controller.hasMore) {
-        controller.loadMoreProjects();
-      }
-    });
+    // final ScrollController scrollController = ScrollController();
+    //
+    // scrollController.addListener(() {
+    //   if (scrollController.position.pixels >=
+    //           scrollController.position.maxScrollExtent - 200 &&
+    //       !controller.isLoading.value &&
+    //       controller.hasMore) {
+    //     controller.loadMoreProjects();
+    //   }
+    // });
 
     Map<String, List<Project>> groupProjects(List<Project> projects) {
       final Map<String, List<Project>> grouped = {};
@@ -72,14 +72,14 @@ class ProjectsScreen extends GetView<ProjectsController> {
           return RefreshIndicator(
             onRefresh: controller.refreshProjects,
             child: ListView(
-              controller: scrollController,
+              // controller: scrollController,
               children: [
                 if (grouped['CREATED']?.isNotEmpty == true)
                   buildGroup('Baru Dibuat', grouped['CREATED']!),
-                if (grouped['ACTIVE']?.isNotEmpty == true)
-                  buildGroup('Sedang Berjalan', grouped['ACTIVE']!),
                 if (grouped['PENDING']?.isNotEmpty == true)
                   buildGroup('Menunggu Konfirmasi', grouped['PENDING']!),
+                if (grouped['ACTIVE']?.isNotEmpty == true)
+                  buildGroup('Sedang Berjalan', grouped['ACTIVE']!),
                 if (grouped['COMPLETED']?.isNotEmpty == true)
                   buildGroup('Selesai', grouped['COMPLETED']!),
                 if (grouped['CANCELLED']?.isNotEmpty == true)

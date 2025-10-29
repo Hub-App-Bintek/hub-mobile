@@ -17,8 +17,8 @@ class Consultation with _$Consultation {
     CurrentSurveySchedule? currentSurveySchedule,
     List<ProjectHistory>? consultationHistory,
     DocumentExchange? documentExchange,
-    List<String>? revisionRequests,
-    List<String>? surveySchedules,
+    List<CurrentSurveySchedule>? revisionRequests,
+    List<CurrentSurveySchedule>? surveySchedules,
     String? permit,
   }) = _Consultation;
 
