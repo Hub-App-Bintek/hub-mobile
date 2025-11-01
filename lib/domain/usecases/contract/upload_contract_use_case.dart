@@ -9,7 +9,12 @@ import 'package:pkp_hub/domain/repositories/contract_repository.dart';
 class UploadContractParams {
   final String consultationId;
   final File file;
-  UploadContractParams({required this.consultationId, required this.file});
+  final double contractValue;
+  UploadContractParams({
+    required this.consultationId,
+    required this.file,
+    required this.contractValue,
+  });
 }
 
 class UploadContractUseCase extends UseCase<Contract, UploadContractParams> {
@@ -18,6 +23,10 @@ class UploadContractUseCase extends UseCase<Contract, UploadContractParams> {
 
   @override
   Future<Result<Contract, Failure>> call(UploadContractParams params) {
-    return _repository.uploadContract(params.consultationId, params.file);
+    return _repository.uploadContract(
+      params.consultationId,
+      params.file,
+      params.contractValue,
+    );
   }
 }

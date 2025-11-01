@@ -34,7 +34,8 @@ mixin _$ProjectDetailsResponse {
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   Consultation? get consultation => throw _privateConstructorUsedError;
-  String? get permit => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get permit => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get monitoring => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -61,7 +62,8 @@ abstract class $ProjectDetailsResponseCopyWith<$Res> {
     DateTime? createdAt,
     DateTime? updatedAt,
     Consultation? consultation,
-    String? permit,
+    Map<String, dynamic>? permit,
+    Map<String, dynamic>? monitoring,
   });
 
   $ConsultationCopyWith<$Res>? get consultation;
@@ -95,6 +97,7 @@ class _$ProjectDetailsResponseCopyWithImpl<
     Object? updatedAt = freezed,
     Object? consultation = freezed,
     Object? permit = freezed,
+    Object? monitoring = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -145,7 +148,11 @@ class _$ProjectDetailsResponseCopyWithImpl<
             permit: freezed == permit
                 ? _value.permit
                 : permit // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as Map<String, dynamic>?,
+            monitoring: freezed == monitoring
+                ? _value.monitoring
+                : monitoring // ignore: cast_nullable_to_non_nullable
+                      as Map<String, dynamic>?,
           )
           as $Val,
     );
@@ -185,7 +192,8 @@ abstract class _$$ProjectDetailsResponseImplCopyWith<$Res>
     DateTime? createdAt,
     DateTime? updatedAt,
     Consultation? consultation,
-    String? permit,
+    Map<String, dynamic>? permit,
+    Map<String, dynamic>? monitoring,
   });
 
   @override
@@ -217,6 +225,7 @@ class __$$ProjectDetailsResponseImplCopyWithImpl<$Res>
     Object? updatedAt = freezed,
     Object? consultation = freezed,
     Object? permit = freezed,
+    Object? monitoring = freezed,
   }) {
     return _then(
       _$ProjectDetailsResponseImpl(
@@ -265,9 +274,13 @@ class __$$ProjectDetailsResponseImplCopyWithImpl<$Res>
             : consultation // ignore: cast_nullable_to_non_nullable
                   as Consultation?,
         permit: freezed == permit
-            ? _value.permit
+            ? _value._permit
             : permit // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as Map<String, dynamic>?,
+        monitoring: freezed == monitoring
+            ? _value._monitoring
+            : monitoring // ignore: cast_nullable_to_non_nullable
+                  as Map<String, dynamic>?,
       ),
     );
   }
@@ -288,8 +301,10 @@ class _$ProjectDetailsResponseImpl implements _ProjectDetailsResponse {
     this.createdAt,
     this.updatedAt,
     this.consultation,
-    this.permit,
-  });
+    final Map<String, dynamic>? permit,
+    final Map<String, dynamic>? monitoring,
+  }) : _permit = permit,
+       _monitoring = monitoring;
 
   factory _$ProjectDetailsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectDetailsResponseImplFromJson(json);
@@ -316,12 +331,29 @@ class _$ProjectDetailsResponseImpl implements _ProjectDetailsResponse {
   final DateTime? updatedAt;
   @override
   final Consultation? consultation;
+  final Map<String, dynamic>? _permit;
   @override
-  final String? permit;
+  Map<String, dynamic>? get permit {
+    final value = _permit;
+    if (value == null) return null;
+    if (_permit is EqualUnmodifiableMapView) return _permit;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
+
+  final Map<String, dynamic>? _monitoring;
+  @override
+  Map<String, dynamic>? get monitoring {
+    final value = _monitoring;
+    if (value == null) return null;
+    if (_monitoring is EqualUnmodifiableMapView) return _monitoring;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(value);
+  }
 
   @override
   String toString() {
-    return 'ProjectDetailsResponse(projectId: $projectId, name: $name, type: $type, status: $status, locationDetail: $locationDetail, longitude: $longitude, latitude: $latitude, landArea: $landArea, createdAt: $createdAt, updatedAt: $updatedAt, consultation: $consultation, permit: $permit)';
+    return 'ProjectDetailsResponse(projectId: $projectId, name: $name, type: $type, status: $status, locationDetail: $locationDetail, longitude: $longitude, latitude: $latitude, landArea: $landArea, createdAt: $createdAt, updatedAt: $updatedAt, consultation: $consultation, permit: $permit, monitoring: $monitoring)';
   }
 
   @override
@@ -348,7 +380,11 @@ class _$ProjectDetailsResponseImpl implements _ProjectDetailsResponse {
                 other.updatedAt == updatedAt) &&
             (identical(other.consultation, consultation) ||
                 other.consultation == consultation) &&
-            (identical(other.permit, permit) || other.permit == permit));
+            const DeepCollectionEquality().equals(other._permit, _permit) &&
+            const DeepCollectionEquality().equals(
+              other._monitoring,
+              _monitoring,
+            ));
   }
 
   @JsonKey(ignore: true)
@@ -366,7 +402,8 @@ class _$ProjectDetailsResponseImpl implements _ProjectDetailsResponse {
     createdAt,
     updatedAt,
     consultation,
-    permit,
+    const DeepCollectionEquality().hash(_permit),
+    const DeepCollectionEquality().hash(_monitoring),
   );
 
   @JsonKey(ignore: true)
@@ -398,7 +435,8 @@ abstract class _ProjectDetailsResponse implements ProjectDetailsResponse {
     final DateTime? createdAt,
     final DateTime? updatedAt,
     final Consultation? consultation,
-    final String? permit,
+    final Map<String, dynamic>? permit,
+    final Map<String, dynamic>? monitoring,
   }) = _$ProjectDetailsResponseImpl;
 
   factory _ProjectDetailsResponse.fromJson(Map<String, dynamic> json) =
@@ -427,7 +465,9 @@ abstract class _ProjectDetailsResponse implements ProjectDetailsResponse {
   @override
   Consultation? get consultation;
   @override
-  String? get permit;
+  Map<String, dynamic>? get permit;
+  @override
+  Map<String, dynamic>? get monitoring;
   @override
   @JsonKey(ignore: true)
   _$$ProjectDetailsResponseImplCopyWith<_$ProjectDetailsResponseImpl>

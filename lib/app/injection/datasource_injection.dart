@@ -6,6 +6,7 @@ import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
+import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
@@ -14,17 +15,17 @@ import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/chat/chat_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultant/consultant_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_source.dart';
-import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
-import 'package:pkp_hub/data/datasources/chat/chat_network_data_source.dart';
-import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.dart'
-    as revds;
-import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart';
-import 'package:pkp_hub/data/datasources/final_document/final_document_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
+import 'package:pkp_hub/data/datasources/final_document/final_document_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.dart'
+    as revds;
 import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart';
 
 class DataSourceInjection {
@@ -77,6 +78,7 @@ class DataSourceInjection {
       () => ContractNetworkDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<ContractApiService>(),
+        Get.find<FilesApiService>(),
       ),
       fenix: true,
     );

@@ -84,8 +84,6 @@ class ProjectsScreen extends GetView<ProjectsController> {
                   buildGroup('Selesai', grouped['COMPLETED']!),
                 if (grouped['CANCELLED']?.isNotEmpty == true)
                   buildGroup('Dibatalkan', grouped['CANCELLED']!),
-                if (grouped['IN PROGRESS']?.isNotEmpty == true)
-                  buildGroup('In Progress', grouped['IN PROGRESS']!),
                 if (controller.hasMore && controller.isLoading.value)
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 16),

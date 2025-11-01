@@ -146,8 +146,9 @@ class ConsultantPortfoliosController extends BaseController {
         ),
       ),
       onSuccess: (response) {
-        navigateTo(
+        navigateAndClearUntil(
           AppRoutes.projectDetails,
+          untilRoute: AppRoutes.main,
           arguments: {'projectId': _projectId},
         );
       },

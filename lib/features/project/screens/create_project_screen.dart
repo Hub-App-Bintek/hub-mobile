@@ -71,63 +71,75 @@ class CreateProjectScreen extends GetView<CreateProjectController> {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24),
-                      PkpTextFormField(
-                        labelText: AppStrings.projectNameLabel,
-                        hintText: AppStrings.projectNameHint,
-                        type: PkpTextFormFieldType.text,
-                        controller: controller.projectNameController,
-                      ),
-                      const SizedBox(height: 16),
-                      PkpTextFormField(
-                        labelText: AppStrings.locationDetailsLabel,
-                        hintText: AppStrings.locationDetailsHint,
-                        type: PkpTextFormFieldType.multiline,
-                        controller: controller.locationDetailsController,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        AppStrings.typeLabel,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      DropdownButtonFormField<ProjectType>(
-                        initialValue: controller.selectedProjectType.value,
-                        items: projectTypeList
-                            .map(
-                              (type) => DropdownMenuItem<ProjectType>(
-                                value: type,
-                                child: Text(type.name),
+                  child: Obx(
+                    () => IgnorePointer(
+                      ignoring: controller.isLoadingLocation.value,
+                      child: Opacity(
+                        opacity: controller.isLoadingLocation.value ? 0.6 : 1.0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 24),
+                            PkpTextFormField(
+                              labelText: AppStrings.projectNameLabel,
+                              hintText: AppStrings.projectNameHint,
+                              type: PkpTextFormFieldType.text,
+                              controller: controller.projectNameController,
+                            ),
+                            const SizedBox(height: 16),
+                            PkpTextFormField(
+                              labelText: AppStrings.locationDetailsLabel,
+                              hintText: AppStrings.locationDetailsHint,
+                              type: PkpTextFormFieldType.multiline,
+                              controller: controller.locationDetailsController,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              AppStrings.typeLabel,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(height: 8),
+                            DropdownButtonFormField<ProjectType>(
+                              initialValue:
+                                  controller.selectedProjectType.value,
+                              items: projectTypeList
+                                  .map(
+                                    (type) => DropdownMenuItem<ProjectType>(
+                                      value: type,
+                                      child: Text(type.name),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: controller.isLoadingLocation.value
+                                  ? null
+                                  : controller.updateProjectType,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(12),
+                                  ),
+                                ),
                               ),
-                            )
-                            .toList(),
-                        onChanged: controller.updateProjectType,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                          ),
+                            ),
+                            const SizedBox(height: 16),
+                            PkpTextFormField(
+                              labelText: AppStrings.landAreaLabel,
+                              hintText: AppStrings.landAreaHint,
+                              type: PkpTextFormFieldType.number,
+                              controller: controller.landAreaController,
+                            ),
+                            const SizedBox(height: 16),
+                            PkpTextFormField(
+                              labelText: AppStrings.incomeLabel,
+                              hintText: AppStrings.incomeHint,
+                              type: PkpTextFormFieldType.currency,
+                              controller: controller.incomeController,
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      PkpTextFormField(
-                        labelText: AppStrings.landAreaLabel,
-                        hintText: AppStrings.landAreaHint,
-                        type: PkpTextFormFieldType.number,
-                        controller: controller.landAreaController,
-                      ),
-                      const SizedBox(height: 16),
-                      PkpTextFormField(
-                        labelText: AppStrings.incomeLabel,
-                        hintText: AppStrings.incomeHint,
-                        type: PkpTextFormFieldType.currency,
-                        controller: controller.incomeController,
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -141,8 +153,17 @@ class CreateProjectScreen extends GetView<CreateProjectController> {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
           child: PkpElevatedButton(
             text: 'Continue',
-            onPressed: controller.isFormValid ? controller.createProject : null,
-            enabled: controller.isFormValid,
+            isLoading: controller.isRequesting.value,
+            onPressed:
+                (controller.isFormValid &&
+                    !controller.isLoadingLocation.value &&
+                    !controller.isRequesting.value)
+                ? controller.createProject
+                : null,
+            enabled:
+                controller.isFormValid &&
+                !controller.isLoadingLocation.value &&
+                !controller.isRequesting.value,
           ),
         ),
       ),

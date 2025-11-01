@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,8 @@ class CreateProjectController extends BaseController {
   final TextEditingController incomeController = TextEditingController();
 
   RxBool isLoadingLocation = true.obs;
+  RxBool isLocationError = false.obs;
+  RxnString locationErrorMessage = RxnString();
   RxBool isProjectNameValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
   RxBool isLandAreaValid = false.obs;
@@ -41,6 +45,16 @@ class CreateProjectController extends BaseController {
   bool get isFormValid => _isFormValid.value;
 
   RxBool isRequesting = false.obs;
+
+  // Debounce timer for map position updates
+  Timer? _positionUpdateTimer;
+  static const Duration _positionUpdateDebounce = Duration(milliseconds: 500);
+
+  // Location fetch timeout
+  static const Duration _locationFetchTimeout = Duration(seconds: 15);
+
+  // Default location fallback (Jakarta center as default)
+  static const LatLng _defaultLocation = LatLng(-6.2088, 106.8456);
 
   @override
   void onInit() {
@@ -85,7 +99,8 @@ class CreateProjectController extends BaseController {
         isProjectNameValid.value &&
         isLocationDetailsValid.value &&
         selectedProjectType.value != null &&
-        isLandAreaValid.value;
+        isLandAreaValid.value &&
+        !isLoadingLocation.value;
 
     debugPrint('Form validity updated: $_isFormValid');
   }
@@ -96,33 +111,109 @@ class CreateProjectController extends BaseController {
     locationDetailsController.dispose();
     landAreaController.dispose();
     incomeController.dispose();
+    _positionUpdateTimer?.cancel();
     super.onClose();
   }
 
   Future<void> _getUserLocation() async {
     isLoadingLocation.value = true;
-    final status = await Permission.location.status;
-    if (status.isGranted) {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      selectedLocation.value = LatLng(position.latitude, position.longitude);
-    } else if (status.isDenied) {
-      final result = await Permission.location.request();
-      if (result.isGranted) {
-        Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
+    isLocationError.value = false;
+    locationErrorMessage.value = null;
+
+    try {
+      final status = await Permission.location.status;
+
+      if (status.isGranted) {
+        await _fetchLocation();
+      } else if (status.isDenied) {
+        final result = await Permission.location.request();
+        if (result.isGranted) {
+          await _fetchLocation();
+        } else {
+          // Permission denied, use fallback
+          _setFallbackLocation(
+            'Izin lokasi ditolak. Menggunakan lokasi default.',
+          );
+        }
+      } else if (status.isPermanentlyDenied) {
+        // Permission permanently denied
+        _setFallbackLocation(
+          'Izin lokasi dinonaktifkan. Silakan aktifkan di pengaturan aplikasi.',
         );
-        selectedLocation.value = LatLng(position.latitude, position.longitude);
       }
-    } else if (status.isPermanentlyDenied) {
-      await openAppSettings();
+    } catch (e) {
+      // General error, use fallback
+      _setFallbackLocation('Gagal memperoleh lokasi: ${e.toString()}');
+    } finally {
+      isLoadingLocation.value = false;
     }
-    isLoadingLocation.value = false;
+  }
+
+  Future<void> _fetchLocation() async {
+    try {
+      final position =
+          await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            timeLimit: _locationFetchTimeout,
+          ).timeout(
+            _locationFetchTimeout,
+            onTimeout: () {
+              throw TimeoutException(
+                'Location fetch timed out after ${_locationFetchTimeout.inSeconds}s',
+              );
+            },
+          );
+
+      selectedLocation.value = LatLng(position.latitude, position.longitude);
+      _updateFormValidity();
+    } on TimeoutException catch (e) {
+      debugPrint('Location timeout: $e');
+      _setFallbackLocation(
+        'Lokasi GPS tidak responsif. Menggunakan lokasi default.',
+      );
+    } on LocationServiceDisabledException catch (e) {
+      debugPrint('Location service disabled: $e');
+      _setFallbackLocation(
+        'Layanan lokasi dinonaktifkan. Menggunakan lokasi default.',
+      );
+    } catch (e) {
+      debugPrint('Location fetch error: $e');
+      _setFallbackLocation('Gagal mendapatkan lokasi: ${e.toString()}');
+    }
+  }
+
+  void _setFallbackLocation(String errorMessage) {
+    selectedLocation.value = _defaultLocation;
+    isLocationError.value = true;
+    locationErrorMessage.value = errorMessage;
+    _updateFormValidity();
+
+    // Show error notification to user
+    Get.snackbar(
+      'Perhatian Lokasi',
+      errorMessage,
+      duration: const Duration(seconds: 4),
+    );
+
+    debugPrint(
+      'Fallback location set: ${_defaultLocation.latitude}, ${_defaultLocation.longitude}',
+    );
   }
 
   void updatePosition(LatLng location) {
-    selectedLocation.value = location;
+    // Don't update position while location is still loading to prevent state issues
+    if (isLoadingLocation.value) {
+      return;
+    }
+
+    // Cancel previous timer to debounce rapid updates
+    _positionUpdateTimer?.cancel();
+
+    // Debounce position updates to prevent excessive state changes
+    _positionUpdateTimer = Timer(_positionUpdateDebounce, () {
+      selectedLocation.value = location;
+      _updateFormValidity();
+    });
   }
 
   void updateProjectType(ProjectType? value) {

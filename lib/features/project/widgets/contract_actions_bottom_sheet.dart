@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 
 class ContractActionsBottomSheet extends StatefulWidget {
@@ -42,7 +45,7 @@ class _ContractActionsBottomSheetState
   void initState() {
     super.initState();
     // Refresh UI when any field changes so validation/enabling updates reactively.
-    for (final c in [
+    for (final controller in [
       _consultationCostCtrl,
       _firstTermWeightCtrl,
       _firstTermLastPaymentDateCtrl,
@@ -51,7 +54,7 @@ class _ContractActionsBottomSheetState
       _thirdTermWeightCtrl,
       _thirdTermLastPaymentDateCtrl,
     ]) {
-      c.addListener(() => setState(() {}));
+      controller.addListener(() => setState(() {}));
     }
     // Also react to GetX loading states to refresh button/file section instantly.
     _workers.addAll([
@@ -69,31 +72,39 @@ class _ContractActionsBottomSheetState
     _secondTermLastPaymentDateCtrl.dispose();
     _thirdTermWeightCtrl.dispose();
     _thirdTermLastPaymentDateCtrl.dispose();
-    for (final w in _workers) {
-      w.dispose();
+    for (final worker in _workers) {
+      worker.dispose();
     }
     super.dispose();
   }
 
   bool get _term1Filled =>
       _firstTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveInt(_firstTermWeightCtrl.text) > 0;
+      _parsePositiveDouble(_firstTermWeightCtrl.text) > 0;
 
   bool get _term2Filled =>
       _secondTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveInt(_secondTermWeightCtrl.text) > 0;
+      _parsePositiveDouble(_secondTermWeightCtrl.text) > 0;
 
   bool get _term3Filled =>
       _thirdTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveInt(_thirdTermWeightCtrl.text) > 0;
+      _parsePositiveDouble(_thirdTermWeightCtrl.text) > 0;
 
   bool get _consultationCostFilled =>
-      _parsePositiveInt(_consultationCostCtrl.text) > 0;
+      _parsePositiveDouble(_consultationCostCtrl.text) > 0;
 
-  int _parsePositiveInt(String text) {
+  double _parsePositiveDouble(String text) {
     final digits = text.replaceAll(RegExp(r'[^0-9]'), '');
-    return int.tryParse(digits) ?? 0;
+    return double.tryParse(digits) ?? 0.0;
   }
+
+  double _totalWeight() {
+    return _parsePositiveDouble(_firstTermWeightCtrl.text) +
+        _parsePositiveDouble(_secondTermWeightCtrl.text) +
+        _parsePositiveDouble(_thirdTermWeightCtrl.text);
+  }
+
+  bool get _isTotalWeightValid => _totalWeight() <= 100.0;
 
   Widget _fileSection(BuildContext context) {
     if (widget.isDownload) return const SizedBox.shrink();
@@ -116,11 +127,22 @@ class _ContractActionsBottomSheetState
     );
   }
 
+  DateTime? _parseIsoFromCtrl(TextEditingController ctrl) {
+    final iso = Formatters.toIsoDate(ctrl.text);
+    return Formatters.tryParseIso(iso);
+  }
+
+  DateTime? _nextDay(DateTime? dt) => dt == null
+      ? null
+      : DateTime(dt.year, dt.month, dt.day).add(const Duration(days: 1));
+
   Widget _termBlock({
     required String title,
     required TextEditingController dateCtrl,
     required TextEditingController weightCtrl,
     bool enabled = true,
+    DateTime? firstDate,
+    DateTime? initialDate,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -134,6 +156,8 @@ class _ContractActionsBottomSheetState
                 hintText: 'Pilih tanggal',
                 type: PkpTextFormFieldType.datetime,
                 enabled: enabled,
+                firstDate: firstDate,
+                initialDate: initialDate,
               ),
             ),
             const SizedBox(width: 12),
@@ -159,7 +183,11 @@ class _ContractActionsBottomSheetState
         _term1Filled &&
         _term2Filled &&
         _term3Filled &&
-        _selectedFile != null;
+        (_selectedFile != null && !widget.isDownload);
+  }
+
+  double _parseContractValue() {
+    return _parsePositiveDouble(_consultationCostCtrl.text).toDouble();
   }
 
   @override
@@ -168,8 +196,42 @@ class _ContractActionsBottomSheetState
     final downloading = controller.downloadTemplateLoading.value;
     final isBusy = uploading || downloading;
     final bool isActionEnabled = widget.isDownload
-        ? !isBusy
+        ? (!isBusy &&
+              _consultationCostFilled &&
+              _term1Filled &&
+              _term2Filled &&
+              _term3Filled)
         : (!isBusy && _isAllRequiredFilled());
+
+    List<Installment>? buildInstallments() {
+      final d1 = Formatters.toIsoDate(_firstTermLastPaymentDateCtrl.text);
+      final d2 = Formatters.toIsoDate(_secondTermLastPaymentDateCtrl.text);
+      final d3 = Formatters.toIsoDate(_thirdTermLastPaymentDateCtrl.text);
+      if (d1 == null || d2 == null || d3 == null) return null;
+      return [
+        Installment(
+          percentage: _parsePositiveDouble(
+            _firstTermWeightCtrl.text,
+          ).toDouble(),
+          dueDate: d1,
+        ),
+        Installment(
+          percentage: _parsePositiveDouble(
+            _secondTermWeightCtrl.text,
+          ).toDouble(),
+          dueDate: d2,
+        ),
+        Installment(
+          percentage: _parsePositiveDouble(
+            _thirdTermWeightCtrl.text,
+          ).toDouble(),
+          dueDate: d3,
+        ),
+      ];
+    }
+
+    final term1Date = _parseIsoFromCtrl(_firstTermLastPaymentDateCtrl);
+    final term2Date = _parseIsoFromCtrl(_secondTermLastPaymentDateCtrl);
 
     return SafeArea(
       child: ClipRRect(
@@ -213,6 +275,8 @@ class _ContractActionsBottomSheetState
                       dateCtrl: _secondTermLastPaymentDateCtrl,
                       weightCtrl: _secondTermWeightCtrl,
                       enabled: _term1Filled,
+                      firstDate: _nextDay(term1Date),
+                      initialDate: _nextDay(term1Date),
                     ),
                     const SizedBox(height: 16),
                     _termBlock(
@@ -220,6 +284,8 @@ class _ContractActionsBottomSheetState
                       dateCtrl: _thirdTermLastPaymentDateCtrl,
                       weightCtrl: _thirdTermWeightCtrl,
                       enabled: _term1Filled && _term2Filled,
+                      firstDate: _nextDay(term2Date),
+                      initialDate: _nextDay(term2Date),
                     ),
 
                     const SizedBox(height: 20),
@@ -227,22 +293,51 @@ class _ContractActionsBottomSheetState
                     // 3. Upload or download button (disabled until all validations pass)
                     PkpElevatedButton(
                       text: widget.isDownload
-                          ? 'Unduh Dokumen Kontrak'
-                          : 'Unggah Dokumen Kontrak',
+                          ? 'Generate Dokumen Kontrak'
+                          : 'Submit Dokumen Kontrak',
                       enabled: isActionEnabled,
                       isLoading: isBusy,
-                      onPressed: _isAllRequiredFilled()
+                      onPressed: widget.isDownload
                           ? () async {
-                              if (widget.isDownload) {
-                                await controller.downloadContractTemplate();
-                              } else {
-                                final ok = await controller.uploadContractFile(
-                                  _selectedFile!,
+                              if (!_isTotalWeightValid) {
+                                Get.snackbar(
+                                  'Error',
+                                  'Total bobot termin tidak boleh lebih dari 100%.',
+                                  colorText: AppColors.white,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: AppColors.errorDark,
                                 );
-                                if (ok) Get.back();
+                                return;
                               }
+
+                              final installments = buildInstallments();
+                              if (installments == null) {
+                                Get.snackbar(
+                                  'Error',
+                                  'Data termin tidak valid.',
+                                  colorText: AppColors.white,
+                                  snackPosition: SnackPosition.BOTTOM,
+                                  backgroundColor: AppColors.errorDark,
+                                );
+                                return;
+                              }
+
+                              await controller
+                                  .generateAndDownloadContractTemplate(
+                                    contractValue: _parseContractValue(),
+                                    installments: buildInstallments() ?? [],
+                                  );
                             }
-                          : null,
+                          : (_isAllRequiredFilled()
+                                ? () async {
+                                    final ok = await controller
+                                        .uploadContractFile(
+                                          _selectedFile!,
+                                          _parseContractValue(),
+                                        );
+                                    if (ok) Get.back();
+                                  }
+                                : null),
                     ),
                   ],
                 ),
