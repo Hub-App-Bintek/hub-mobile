@@ -173,4 +173,46 @@ class Formatters {
       wibLabel: wibLabel,
     );
   }
+
+  /// Attempts to normalize a user-entered date string into an ISO date (yyyy-MM-dd).
+  /// Returns null if parsing fails.
+  static String? toIsoDate(
+    String input, {
+    String outputPattern = 'yyyy-MM-dd',
+    String locale = defaultLocale,
+  }) {
+    final raw = input.trim();
+    if (raw.isEmpty) return null;
+
+    // Already ISO date (yyyy-MM-dd)
+    final isoDateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+    if (isoDateRegex.hasMatch(raw)) return raw;
+
+    // Try direct DateTime parse (handles full ISO with time or other formats supported by DateTime)
+    final direct = DateTime.tryParse(raw);
+    if (direct != null) {
+      final onlyDate = DateTime(direct.year, direct.month, direct.day);
+      return DateFormat(outputPattern).format(onlyDate);
+    }
+
+    // Try common local patterns
+    final patterns = <String>[
+      'dd/MM/yyyy',
+      'd/M/yyyy',
+      'dd-MM-yyyy',
+      'd-M-yyyy',
+      'dd MMM yyyy',
+      'd MMM yyyy',
+    ];
+    for (final p in patterns) {
+      try {
+        final dt = DateFormat(p, locale).parseStrict(raw);
+        final onlyDate = DateTime(dt.year, dt.month, dt.day);
+        return DateFormat(outputPattern).format(onlyDate);
+      } catch (_) {
+        // keep trying
+      }
+    }
+    return null;
+  }
 }

@@ -3,6 +3,8 @@ import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'dart:io';
+import 'package:retrofit/dio.dart';
+import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 
 abstract class ContractRepository {
   Future<Result<Contract, Failure>> getContract(String consultationId);
@@ -11,7 +13,12 @@ abstract class ContractRepository {
   Future<Result<Contract, Failure>> uploadContract(
     String consultationId,
     File file,
+    double contractValue,
   );
+  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+    required String consultationId,
+    required GenerateContractDraftRequest request,
+  });
 }
 
 class ContractRepositoryImpl implements ContractRepository {
@@ -34,5 +41,12 @@ class ContractRepositoryImpl implements ContractRepository {
   Future<Result<Contract, Failure>> uploadContract(
     String consultationId,
     File file,
-  ) => _ds.uploadContract(consultationId, file);
+    double contractValue,
+  ) => _ds.uploadContract(consultationId, file, contractValue);
+
+  @override
+  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+    required String consultationId,
+    required GenerateContractDraftRequest request,
+  }) => _ds.generateDraft(consultationId: consultationId, request: request);
 }

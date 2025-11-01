@@ -44,10 +44,26 @@ abstract class ApiEndpoints {
       '/api/survey-schedules/consultations/{consultationId}/complete';
 
   // --- Contracts ---
+  // Adjusted to match Contact Management API v1.0
   static const String contractByConsultation =
-      '/api/contracts/{consultationId}';
+      '/api/contracts/consultations/{consultationId}';
+  static const String contractCreateDraft =
+      '/api/contracts/consultations/{consultationId}/draft';
+  static const String contractGenerateDraft =
+      '/api/contracts/{consultationId}/generate-draft';
+  static const String contractRequestApproval =
+      '/api/contracts/{contractId}/request-approval';
+  static const String contractApprove = '/api/contracts/{contractId}/approve';
+  static const String contractRejectPost = '/api/contracts/{contractId}/reject';
+  static const String contractRequestRevision =
+      '/api/contracts/{contractId}/request-revision';
   static const String contractSign = '/api/contracts/{contractId}/sign';
-  static const String contractReject = '/api/contracts/{contractId}/reject';
+
+  // --- Files ---
+  static const String filesUpload = '/api/files/upload';
+  static const String filesList = '/api/files/list';
+  static const String filesDownload = '/api/files/download/{fileId}';
+  static const String filesDownloadUrl = '/api/files/download-url';
 
   // --- Chats ---
   static const String chatMessages = '/api/v1/chats/{consultationId}/messages';

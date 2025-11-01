@@ -5,6 +5,7 @@ import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
@@ -56,10 +57,13 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             children: [
               _buildStepper(controller.details.value),
               Expanded(
-                child: SingleChildScrollView(
-                  controller: controller.timelineScrollController,
-                  padding: const EdgeInsets.all(16.0),
-                  child: _buildTimeline(controller.consultationHistory),
+                child: RefreshIndicator(
+                  onRefresh: controller.fetchDetails,
+                  child: SingleChildScrollView(
+                    controller: controller.timelineScrollController,
+                    padding: const EdgeInsets.all(16.0),
+                    child: _buildTimeline(controller.consultationHistory),
+                  ),
                 ),
               ),
             ],
@@ -73,25 +77,17 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             child: Row(
               children: [
                 Expanded(
-                  child: SizedBox(
-                    height: 52,
-                    child: OutlinedButton(
-                      onPressed:
-                          (controller.rejectConsultationLoading.value ||
-                              controller.acceptConsultationLoading.value)
-                          ? null
-                          : controller.rejectConsultation,
-                      child: controller.rejectConsultationLoading.value
-                          ? SizedBox(
-                              height: 16,
-                              width: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            )
-                          : const Text('Tolak Konsultasi'),
-                    ),
+                  child: PkpOutlinedButton(
+                    text: 'Tolak Konsultasi',
+                    isLoading: controller.rejectConsultationLoading.value,
+                    enabled:
+                        !(controller.rejectConsultationLoading.value ||
+                            controller.acceptConsultationLoading.value),
+                    onPressed:
+                        (controller.rejectConsultationLoading.value ||
+                            controller.acceptConsultationLoading.value)
+                        ? null
+                        : controller.rejectConsultation,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -161,25 +157,17 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             child: Row(
               children: [
                 Expanded(
-                  child: SizedBox(
-                    height: 52,
-                    child: OutlinedButton(
-                      onPressed:
-                          (controller.rejectLoading.value ||
-                              controller.approveLoading.value)
-                          ? null
-                          : () => controller.rejectSurveySchedule(),
-                      child: controller.rejectLoading.value
-                          ? SizedBox(
-                              height: 16,
-                              width: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            )
-                          : const Text('Tolak Jadwal'),
-                    ),
+                  child: PkpOutlinedButton(
+                    text: 'Tolak Jadwal',
+                    isLoading: controller.rejectLoading.value,
+                    enabled:
+                        !(controller.rejectLoading.value ||
+                            controller.approveLoading.value),
+                    onPressed:
+                        (controller.rejectLoading.value ||
+                            controller.approveLoading.value)
+                        ? null
+                        : () => controller.rejectSurveySchedule(),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -224,31 +212,23 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             child: Row(
               children: [
                 Expanded(
-                  child: SizedBox(
-                    height: 52,
-                    child: OutlinedButton(
-                      onPressed:
-                          (controller.downloadTemplateLoading.value ||
-                              controller.uploadContractLoading.value)
-                          ? null
-                          : () {
-                              controller.showBottomSheet(
-                                const ContractActionsBottomSheet(
-                                  isDownload: true,
-                                ),
-                              );
-                            },
-                      child: controller.downloadTemplateLoading.value
-                          ? SizedBox(
-                              height: 16,
-                              width: 16,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: Theme.of(context).colorScheme.primary,
+                  child: PkpOutlinedButton(
+                    text: 'Unduh Template',
+                    isLoading: controller.downloadTemplateLoading.value,
+                    enabled:
+                        !(controller.downloadTemplateLoading.value ||
+                            controller.uploadContractLoading.value),
+                    onPressed:
+                        (controller.downloadTemplateLoading.value ||
+                            controller.uploadContractLoading.value)
+                        ? null
+                        : () {
+                            controller.showBottomSheet(
+                              const ContractActionsBottomSheet(
+                                isDownload: true,
                               ),
-                            )
-                          : const Text('Unduh Template'),
-                    ),
+                            );
+                          },
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -281,26 +261,58 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 
   Widget _buildStepper(ProjectDetailsResponse? details) {
-    return Column(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: const BoxDecoration(
-            color: AppColors.primaryDarkest,
-            shape: BoxShape.circle,
-          ),
-          child: Center(
-            child: Text(
-              '1',
-              style: AppTextStyles.bodyS.copyWith(color: Colors.white),
-            ),
-          ),
+    final steps = <_StepInfo>[];
+
+    if (details?.consultation != null) {
+      steps.add(
+        _StepInfo(
+          label: AppStrings.menuConsultation,
+          isCompleted: details?.consultation?.status == 'COMPLETED',
         ),
-        const SizedBox(height: 4),
-        // Show step label under the dot
-        Text(AppStrings.menuConsultation, style: AppTextStyles.bodyS),
-      ],
+      );
+    }
+
+    if (details?.permit != null) {
+      steps.add(
+        _StepInfo(
+          label: AppStrings.menuLicensing,
+          isCompleted: (details?.permit?.isNotEmpty ?? false),
+        ),
+      );
+    }
+
+    if (details?.monitoring != null) {
+      steps.add(
+        _StepInfo(
+          label: AppStrings.menuMonitoring,
+          isCompleted: details?.monitoring != null,
+        ),
+      );
+    }
+
+    final firstIncompleteIndex = steps.indexWhere((step) => !step.isCompleted);
+    final activeIndex = firstIncompleteIndex == -1
+        ? steps.length - 1
+        : firstIncompleteIndex;
+
+    return Container(
+      color: AppColors.white,
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        children: steps.asMap().entries.map((entry) {
+          final index = entry.key;
+          final step = entry.value;
+          final isActive = index == activeIndex;
+          return Expanded(
+            child: _StepIndicator(
+              index: index,
+              label: step.label,
+              isCompleted: step.isCompleted,
+              isActive: isActive,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -336,6 +348,74 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class _StepInfo {
+  const _StepInfo({required this.label, required this.isCompleted});
+
+  final String label;
+  final bool isCompleted;
+}
+
+class _StepIndicator extends StatelessWidget {
+  const _StepIndicator({
+    required this.index,
+    required this.label,
+    required this.isCompleted,
+    required this.isActive,
+  });
+
+  final int index;
+  final String label;
+  final bool isCompleted;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    final Widget icon;
+    Color circleColor;
+
+    if (isCompleted) {
+      circleColor = AppColors.primaryLightest;
+      icon = const Icon(Icons.check, size: 18, color: AppColors.primaryDark);
+    } else if (isActive) {
+      circleColor = AppColors.primaryDarkest;
+      icon = Text(
+        '${index + 1}',
+        style: AppTextStyles.bodyS.copyWith(
+          fontWeight: FontWeight.w700,
+          color: AppColors.white,
+        ),
+      );
+    } else {
+      circleColor = AppColors.neutralLightest;
+      icon = Text(
+        '${index + 1}',
+        style: AppTextStyles.bodyS.copyWith(color: AppColors.neutralMedium),
+      );
+    }
+
+    final textStyle = isActive
+        ? AppTextStyles.bodyS.copyWith(
+            fontWeight: FontWeight.w700,
+            color: AppColors.neutralDarkest,
+          )
+        : AppTextStyles.bodyS.copyWith(color: AppColors.neutralMedium);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
+          child: Center(child: icon),
+        ),
+        const SizedBox(height: 8),
+        Text(label, textAlign: TextAlign.center, style: textStyle),
+      ],
     );
   }
 }

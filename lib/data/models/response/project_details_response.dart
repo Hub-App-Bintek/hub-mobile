@@ -18,7 +18,8 @@ class ProjectDetailsResponse with _$ProjectDetailsResponse {
     DateTime? createdAt,
     DateTime? updatedAt,
     Consultation? consultation,
-    String? permit,
+    Map<String, dynamic>? permit,
+    Map<String, dynamic>? monitoring,
   }) = _ProjectDetailsResponse;
 
   factory ProjectDetailsResponse.fromJson(Map<String, dynamic> json) =>

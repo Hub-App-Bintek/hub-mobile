@@ -1,7 +1,8 @@
 class Contract {
   final String? id;
   final String? consultationId;
-  final String? pdfUrl;
+  final String? pdfUrl; // backward-compat
+  final String? fileUrl; // new API field
   final bool? digitalSignature;
   final String? status;
   final String? createdAt;
@@ -11,6 +12,7 @@ class Contract {
     this.id,
     this.consultationId,
     this.pdfUrl,
+    this.fileUrl,
     this.digitalSignature,
     this.status,
     this.createdAt,
@@ -21,6 +23,7 @@ class Contract {
     id: json['id']?.toString(),
     consultationId: json['consultationId']?.toString(),
     pdfUrl: json['pdfUrl']?.toString(),
+    fileUrl: json['fileUrl']?.toString() ?? json['pdfUrl']?.toString(),
     digitalSignature: json['digitalSignature'] is bool
         ? json['digitalSignature'] as bool
         : json['digitalSignature'] == null
@@ -35,6 +38,7 @@ class Contract {
     'id': id,
     'consultationId': consultationId,
     'pdfUrl': pdfUrl,
+    'fileUrl': fileUrl,
     'digitalSignature': digitalSignature,
     'status': status,
     'createdAt': createdAt,

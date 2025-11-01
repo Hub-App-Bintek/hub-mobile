@@ -8,11 +8,13 @@ import 'package:pkp_hub/core/enums/user_role.dart' as ur;
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/current_survey_schedule.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
+import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/data/models/response/survey_response.dart';
 import 'package:pkp_hub/data/models/survey_schedule.dart';
@@ -25,6 +27,7 @@ import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/reject_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
@@ -34,6 +37,9 @@ import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:pkp_hub/data/models/installment.dart';
 
 class ProjectDetailsController extends BaseController {
   final GetProjectDetailsUseCase _getDetailsUseCase;
@@ -55,6 +61,7 @@ class ProjectDetailsController extends BaseController {
   final GetContractUseCase _getContractUseCase;
   final SignContractUseCase _signContractUseCase;
   final RejectContractUseCase _rejectContractUseCase;
+  final GenerateContractDraftUseCase _generateContractDraftUseCase;
   final UploadFinalDocumentsUseCase _uploadFinalDocumentsUseCase;
   final ApproveFinalDocumentsUseCase _approveFinalDocumentsUseCase;
   final RejectFinalDocumentsUseCase _rejectFinalDocumentsUseCase;
@@ -77,12 +84,14 @@ class ProjectDetailsController extends BaseController {
     this._getContractUseCase,
     this._signContractUseCase,
     this._rejectContractUseCase,
+    this._generateContractDraftUseCase,
     this._uploadFinalDocumentsUseCase,
     this._approveFinalDocumentsUseCase,
     this._rejectFinalDocumentsUseCase,
   );
 
   var isLoading = false.obs;
+  var isRefreshing = false.obs;
   var error = Rxn<Failure>();
   var details = Rxn<ProjectDetailsResponse>();
 
@@ -116,7 +125,7 @@ class ProjectDetailsController extends BaseController {
       return;
     }
     _initUserRole();
-    fetchDetails();
+    fetchDetails(isInitialLoad: true);
   }
 
   @override
@@ -130,17 +139,26 @@ class ProjectDetailsController extends BaseController {
     userRole.value = ur.userRoleFromString(user?.role);
   }
 
-  Future<void> fetchDetails() async {
+  Future<void> fetchDetails({bool isInitialLoad = false}) async {
     if (projectId.isEmpty) {
       error.value = const ServerFailure(message: 'Invalid project id');
       return;
     }
-    if (isLoading.value) return;
-    isLoading.value = true;
-    error.value = null;
 
-    details.value = null;
-    consultationHistory.clear();
+    // Prevent concurrent requests
+    if (isLoading.value || isRefreshing.value) return;
+
+    // Distinguish between initial load and refresh
+    if (isInitialLoad) {
+      isLoading.value = true;
+      // Only clear data on initial load
+      details.value = null;
+      consultationHistory.clear();
+    } else {
+      isRefreshing.value = true;
+    }
+
+    error.value = null;
 
     await handleAsync<ProjectDetailsResponse>(
       () => _getDetailsUseCase(projectId),
@@ -148,10 +166,15 @@ class ProjectDetailsController extends BaseController {
         details.value = data;
         _handleConsultationHistory(data.consultation);
         isLoading.value = false;
+        isRefreshing.value = false;
       },
       onFailure: (failure) {
-        error.value = failure;
+        // Only set error on initial load, show snackbar on refresh
+        if (isInitialLoad) {
+          error.value = failure;
+        }
         isLoading.value = false;
+        isRefreshing.value = false;
         showError(failure);
       },
     );
@@ -190,8 +213,7 @@ class ProjectDetailsController extends BaseController {
           _buildProjectHistory(
             title: 'Konsultan telah mengajukan jadwal survey lokasi',
             subtitle: (surveySchedule != null)
-                ? 'Tanggal: ${Formatters.formatIsoDate(surveySchedule.proposedDateTime ?? '')}\n'
-                      'Waktu: ${Formatters.formatIsoTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
+                ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')}, WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
                 : '',
             projectHistory: project,
@@ -207,8 +229,7 @@ class ProjectDetailsController extends BaseController {
           _buildProjectHistory(
             title: 'Pemilik lahan menolak jadwal survey yang diajukan',
             subtitle: (surveySchedule != null)
-                ? 'Tanggal: ${Formatters.formatIsoDate(surveySchedule.proposedDateTime ?? '')}\n'
-                      'Waktu: ${Formatters.formatIsoTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
+                ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
                 : '',
             projectHistory: project,
@@ -224,8 +245,7 @@ class ProjectDetailsController extends BaseController {
           _buildProjectHistory(
             title: 'Konsultan telah mengajukan ulang jadwal survey lokasi',
             subtitle: (surveySchedule != null)
-                ? 'Tanggal: ${Formatters.formatIsoDate(surveySchedule.proposedDateTime ?? '')}\n'
-                      'Waktu: ${Formatters.formatIsoTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
+                ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
                 : '',
             projectHistory: project,
@@ -276,16 +296,18 @@ class ProjectDetailsController extends BaseController {
     }
     acceptConsultationLoading.value = true;
 
-    await handleAsync<Consultation>(
-      () => _acceptConsultationUseCase(consultationId),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Permintaan konsultasi diterima');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-
-    acceptConsultationLoading.value = false;
+    try {
+      await handleAsync<Consultation>(
+        () => _acceptConsultationUseCase(consultationId),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Permintaan konsultasi diterima');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      acceptConsultationLoading.value = false;
+    }
   }
 
   Future<void> rejectConsultation() async {
@@ -299,16 +321,18 @@ class ProjectDetailsController extends BaseController {
     }
     rejectConsultationLoading.value = true;
 
-    await handleAsync<Consultation>(
-      () => _rejectConsultationUseCase(consultationId),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Permintaan konsultasi ditolak');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-
-    rejectConsultationLoading.value = false;
+    try {
+      await handleAsync<Consultation>(
+        () => _rejectConsultationUseCase(consultationId),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Permintaan konsultasi ditolak');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      rejectConsultationLoading.value = false;
+    }
   }
 
   // Handle submission from SurveyScheduleBottomSheet
@@ -364,16 +388,20 @@ class ProjectDetailsController extends BaseController {
     }
     // Prevent concurrent actions
     if (approveLoading.value || rejectLoading.value) return;
+
     approveLoading.value = true;
-    await handleAsync<SurveySchedule>(
-      () => _approveSurveyScheduleUseCase(cId),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Jadwal survey disetujui');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-    approveLoading.value = false;
+    try {
+      await handleAsync<SurveySchedule>(
+        () => _approveSurveyScheduleUseCase(cId),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Jadwal survey disetujui');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      approveLoading.value = false;
+    }
   }
 
   // Reject schedule by homeowner
@@ -385,18 +413,22 @@ class ProjectDetailsController extends BaseController {
     }
     // Prevent concurrent actions
     if (rejectLoading.value || approveLoading.value) return;
+
     rejectLoading.value = true;
-    await handleAsync<SurveySchedule>(
-      () => _rejectSurveyScheduleUseCase(
-        RejectSurveyScheduleParams(consultationId: cId, notes: notes),
-      ),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Jadwal survey ditolak');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-    rejectLoading.value = false;
+    try {
+      await handleAsync<SurveySchedule>(
+        () => _rejectSurveyScheduleUseCase(
+          RejectSurveyScheduleParams(consultationId: cId, notes: notes),
+        ),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Jadwal survey ditolak');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      rejectLoading.value = false;
+    }
   }
 
   // Mark survey as completed by consultant
@@ -409,19 +441,21 @@ class ProjectDetailsController extends BaseController {
     if (completeSurveyLoading.value) return;
     completeSurveyLoading.value = true;
 
-    await handleAsync<void>(
-      () => _completeSurveyUseCase(cId),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Survey telah selesai');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-
-    completeSurveyLoading.value = false;
+    try {
+      await handleAsync<void>(
+        () => _completeSurveyUseCase(cId),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Survey telah selesai');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      completeSurveyLoading.value = false;
+    }
   }
 
-  // Download contract template (open the template PDF URL)
+  // Download contract template (open the template file URL)
   Future<void> downloadContractTemplate() async {
     final cId = details.value?.consultation?.consultationId;
     if (cId == null || cId.isEmpty) {
@@ -431,8 +465,50 @@ class ProjectDetailsController extends BaseController {
 
     if (downloadTemplateLoading.value) return;
     downloadTemplateLoading.value = true;
-    // TODO: Download contract document template file
-    downloadTemplateLoading.value = false;
+
+    try {
+      await handleAsync<Contract>(
+        () => _getContractUseCase(cId),
+        onSuccess: (contract) {
+          final url = (contract.fileUrl?.isNotEmpty == true)
+              ? contract.fileUrl
+              : contract.pdfUrl; // fallback
+          if (url == null || url.isEmpty) {
+            showError(
+              const ServerFailure(message: 'Dokumen kontrak tidak tersedia'),
+            );
+            return;
+          }
+          final uri = Uri.tryParse(url);
+          if (uri == null) {
+            showError(
+              const ServerFailure(message: 'URL dokumen kontrak tidak valid'),
+            );
+            return;
+          }
+          launchUrl(uri, mode: LaunchMode.externalApplication)
+              .then((ok) {
+                if (!ok) {
+                  showError(
+                    const ServerFailure(
+                      message: 'Gagal membuka dokumen kontrak',
+                    ),
+                  );
+                }
+              })
+              .catchError((_) {
+                showError(
+                  const ServerFailure(
+                    message: 'Terjadi kesalahan saat membuka dokumen',
+                  ),
+                );
+              });
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      downloadTemplateLoading.value = false;
+    }
   }
 
   // Upload signed contract document (PDF)
@@ -463,22 +539,28 @@ class ProjectDetailsController extends BaseController {
     if (uploadContractLoading.value) return;
     uploadContractLoading.value = true;
 
-    await handleAsync<Contract>(
-      () => _uploadContractUseCase(
-        UploadContractParams(consultationId: cId, file: File(path)),
-      ),
-      onSuccess: (_) {
-        Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-
-    uploadContractLoading.value = false;
+    try {
+      await handleAsync<Contract>(
+        () => _uploadContractUseCase(
+          UploadContractParams(
+            consultationId: cId,
+            file: File(path),
+            contractValue: 0.0,
+          ),
+        ),
+        onSuccess: (_) {
+          Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      uploadContractLoading.value = false;
+    }
   }
 
   // Upload a provided contract file (used by bottom sheet). Returns true on success
-  Future<bool> uploadContractFile(File file) async {
+  Future<bool> uploadContractFile(File file, double contractValue) async {
     final cId = details.value?.consultation?.consultationId;
     if (cId == null || cId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
@@ -488,20 +570,74 @@ class ProjectDetailsController extends BaseController {
     uploadContractLoading.value = true;
 
     var ok = false;
-    await handleAsync<Contract>(
-      () => _uploadContractUseCase(
-        UploadContractParams(consultationId: cId, file: file),
-      ),
-      onSuccess: (_) {
-        ok = true;
-        Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
-        fetchDetails();
-      },
-      onFailure: (f) => showError(f),
-    );
-
-    uploadContractLoading.value = false;
+    try {
+      await handleAsync<Contract>(
+        () => _uploadContractUseCase(
+          UploadContractParams(
+            consultationId: cId,
+            file: file,
+            contractValue: contractValue,
+          ),
+        ),
+        onSuccess: (_) {
+          ok = true;
+          Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      uploadContractLoading.value = false;
+    }
     return ok;
+  }
+
+  Future<void> generateAndDownloadContractTemplate({
+    required double contractValue,
+    required List<Installment> installments,
+  }) async {
+    final cId = details.value?.consultation?.consultationId;
+    if (cId == null || cId.isEmpty) {
+      showError(const ServerFailure(message: 'Consultation ID not found'));
+      return;
+    }
+
+    if (downloadTemplateLoading.value) return;
+    downloadTemplateLoading.value = true;
+
+    try {
+      final req = GenerateContractDraftRequest(
+        contractValue: contractValue,
+        installments: installments,
+      );
+      await handleAsync<DownloadedFile>(
+        () => _generateContractDraftUseCase(
+          GenerateContractDraftParams(consultationId: cId, request: req),
+        ),
+        onSuccess: (file) async {
+          final projectName = details.value?.name ?? 'Untitled';
+
+          // Prefer public Documents on Android; iOS will show a system Save dialog
+          final saved = await saveToExternalProjectDocuments(
+            projectName: projectName,
+            fileName: file.fileName,
+            bytes: file.bytes,
+          );
+
+          if (saved != null && saved.isNotEmpty) {
+            final where = Platform.isAndroid
+                ? 'Dokumen > PKP > $projectName'
+                : 'Files app (lokasi yang Anda pilih)';
+            Get.snackbar('Berhasil', 'Template disimpan di: $where');
+          } else {
+            Get.snackbar('Dibatalkan', 'Penyimpanan file dibatalkan.');
+          }
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      downloadTemplateLoading.value = false;
+    }
   }
 
   ProjectHistory _buildProjectHistory({

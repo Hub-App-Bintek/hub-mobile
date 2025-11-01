@@ -27,6 +27,9 @@ class PkpTextFormField extends StatefulWidget {
     this.errorText,
     this.onChanged,
     this.enabled = true,
+    this.firstDate,
+    this.lastDate,
+    this.initialDate,
   });
 
   final TextEditingController? controller;
@@ -36,6 +39,10 @@ class PkpTextFormField extends StatefulWidget {
   final String? errorText;
   final ValueChanged<String>? onChanged;
   final bool enabled;
+  // New: optional constraints for datetime picker
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+  final DateTime? initialDate;
 
   @override
   State<PkpTextFormField> createState() => _PkpTextFormFieldState();
@@ -205,12 +212,19 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final initialDate = DateTime.now();
+    final now = DateTime.now();
+    final first = widget.firstDate ?? DateTime(1900);
+    final last = widget.lastDate ?? DateTime(2100);
+
+    DateTime initial = _tryParseDisplayedDate() ?? widget.initialDate ?? now;
+    if (initial.isBefore(first)) initial = first;
+    if (initial.isAfter(last)) initial = last;
+
     final newDate = await showDatePicker(
       context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      initialDate: initial,
+      firstDate: first,
+      lastDate: last,
     );
 
     if (newDate != null) {
@@ -219,6 +233,16 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
         widget.controller?.text = formattedDate;
       });
       widget.onChanged?.call(formattedDate);
+    }
+  }
+
+  DateTime? _tryParseDisplayedDate() {
+    final t = widget.controller?.text;
+    if (t == null || t.trim().isEmpty) return null;
+    try {
+      return DateFormat('dd MMM yyyy', 'id_ID').parseStrict(t.trim());
+    } catch (_) {
+      return null;
     }
   }
 

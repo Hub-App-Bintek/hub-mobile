@@ -20,6 +20,7 @@ import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/reject_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
@@ -76,6 +77,9 @@ class ProjectDetailsBinding extends Bindings {
     Get.lazyPut<RejectContractUseCase>(
       () => RejectContractUseCase(Get.find<ContractRepository>()),
     );
+    Get.lazyPut<GenerateContractDraftUseCase>(
+      () => GenerateContractDraftUseCase(Get.find<ContractRepository>()),
+    );
 
     Get.lazyPut<UploadFinalDocumentsUseCase>(
       () => UploadFinalDocumentsUseCase(Get.find<FinalDocumentRepository>()),
@@ -108,6 +112,7 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<GetContractUseCase>(),
         Get.find<SignContractUseCase>(),
         Get.find<RejectContractUseCase>(),
+        Get.find<GenerateContractDraftUseCase>(),
         Get.find<UploadFinalDocumentsUseCase>(),
         Get.find<ApproveFinalDocumentsUseCase>(),
         Get.find<RejectFinalDocumentsUseCase>(),

@@ -26,7 +26,8 @@ _$ProjectDetailsResponseImpl _$$ProjectDetailsResponseImplFromJson(
   consultation: json['consultation'] == null
       ? null
       : Consultation.fromJson(json['consultation'] as Map<String, dynamic>),
-  permit: json['permit'] as String?,
+  permit: json['permit'] as Map<String, dynamic>?,
+  monitoring: json['monitoring'] as Map<String, dynamic>?,
 );
 
 Map<String, dynamic> _$$ProjectDetailsResponseImplToJson(
@@ -44,4 +45,5 @@ Map<String, dynamic> _$$ProjectDetailsResponseImplToJson(
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'consultation': instance.consultation,
   'permit': instance.permit,
+  'monitoring': instance.monitoring,
 };
