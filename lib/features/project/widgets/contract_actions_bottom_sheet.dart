@@ -104,7 +104,7 @@ class _ContractActionsBottomSheetState
         _parsePositiveDouble(_thirdTermWeightCtrl.text);
   }
 
-  bool get _isTotalWeightValid => _totalWeight() <= 100.0;
+  bool get _isTotalWeightValid => _totalWeight() == 100.0;
 
   Widget _fileSection(BuildContext context) {
     if (widget.isDownload) return const SizedBox.shrink();
@@ -190,6 +190,103 @@ class _ContractActionsBottomSheetState
     return _parsePositiveDouble(_consultationCostCtrl.text).toDouble();
   }
 
+  bool _isPdfFile(File f) {
+    final name = f.path.toLowerCase();
+    return name.endsWith('.pdf');
+  }
+
+  bool _validateUpload() {
+    // Basic required fields already checked by _isAllRequiredFilled.
+    // Here enforce extra rules and show user-friendly errors.
+    if (_selectedFile == null) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Silakan pilih dokumen kontrak (PDF).',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+    if (!_isPdfFile(_selectedFile!)) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Format file tidak valid. Hanya mendukung PDF.',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+    // File size limit: 2 MB max
+    final fileSize = _selectedFile!.lengthSync();
+    const maxBytes = 2 * 1024 * 1024; // 2MB
+    if (fileSize > maxBytes) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Ukuran file melebihi 2MB. Mohon unggah file ≤ 2MB.',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+
+    final value = _parseContractValue();
+    if (value <= 0) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Total biaya konsultasi harus lebih dari 0.',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+
+    if (!_isTotalWeightValid) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Total bobot termin harus tepat 100%.',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+
+    // Validate date ordering: Term1 < Term2 < Term3 (UI enforces via pickers, but re-validate).
+    final t1 = _parseIsoFromCtrl(_firstTermLastPaymentDateCtrl);
+    final t2 = _parseIsoFromCtrl(_secondTermLastPaymentDateCtrl);
+    final t3 = _parseIsoFromCtrl(_thirdTermLastPaymentDateCtrl);
+    if (t1 == null || t2 == null || t3 == null) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Tanggal pembayaran tiap termin wajib diisi.',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+    // Normalize to date-only for comparison
+    final d1 = DateTime(t1.year, t1.month, t1.day);
+    final d2 = DateTime(t2.year, t2.month, t2.day);
+    final d3 = DateTime(t3.year, t3.month, t3.day);
+    if (!(d1.isBefore(d2) && d2.isBefore(d3))) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Urutan tanggal termin harus berurutan (T1 < T2 < T3).',
+        colorText: AppColors.white,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+      );
+      return false;
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final uploading = controller.uploadContractLoading.value;
@@ -200,8 +297,9 @@ class _ContractActionsBottomSheetState
               _consultationCostFilled &&
               _term1Filled &&
               _term2Filled &&
-              _term3Filled)
-        : (!isBusy && _isAllRequiredFilled());
+              _term3Filled &&
+              _isTotalWeightValid)
+        : (!isBusy && _isAllRequiredFilled() && _isTotalWeightValid);
 
     List<Installment>? buildInstallments() {
       final d1 = Formatters.toIsoDate(_firstTermLastPaymentDateCtrl.text);
@@ -301,8 +399,8 @@ class _ContractActionsBottomSheetState
                           ? () async {
                               if (!_isTotalWeightValid) {
                                 Get.snackbar(
-                                  'Error',
-                                  'Total bobot termin tidak boleh lebih dari 100%.',
+                                  'Terjadi Kesalahan',
+                                  'Total bobot termin harus tepat 100%.',
                                   colorText: AppColors.white,
                                   snackPosition: SnackPosition.BOTTOM,
                                   backgroundColor: AppColors.errorDark,
@@ -313,7 +411,7 @@ class _ContractActionsBottomSheetState
                               final installments = buildInstallments();
                               if (installments == null) {
                                 Get.snackbar(
-                                  'Error',
+                                  'Terjadi Kesalahan',
                                   'Data termin tidak valid.',
                                   colorText: AppColors.white,
                                   snackPosition: SnackPosition.BOTTOM,
@@ -322,20 +420,28 @@ class _ContractActionsBottomSheetState
                                 return;
                               }
 
-                              await controller
+                              bool done = await controller
                                   .generateAndDownloadContractTemplate(
                                     contractValue: _parseContractValue(),
                                     installments: buildInstallments() ?? [],
                                   );
+
+                              if (done) {
+                                Get.back(); // Close bottom sheet on success
+                              }
                             }
                           : (_isAllRequiredFilled()
                                 ? () async {
-                                    final ok = await controller
-                                        .uploadContractFile(
-                                          _selectedFile!,
-                                          _parseContractValue(),
-                                        );
-                                    if (ok) Get.back();
+                                    // Extra validation before submitting upload
+                                    if (!_validateUpload()) return;
+                                    final installments =
+                                        buildInstallments() ?? [];
+
+                                    bool done = await controller.uploadContract(
+                                      _selectedFile!,
+                                      _parseContractValue(),
+                                      installments,
+                                    );
                                   }
                                 : null),
                     ),

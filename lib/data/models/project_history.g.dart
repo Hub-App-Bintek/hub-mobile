@@ -13,7 +13,7 @@ _$ProjectHistoryImpl _$$ProjectHistoryImplFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String?,
       subtitle: json['subtitle'] as String?,
       files: (json['files'] as List<dynamic>?)
-          ?.map((e) => e as String)
+          ?.map((e) => e as String?)
           .toList(),
       attachments: (json['attachments'] as List<dynamic>?)
           ?.map((e) => e as String)

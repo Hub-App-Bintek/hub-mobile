@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -262,7 +261,7 @@ abstract class BaseController extends GetxController {
 
       final sep = Platform.pathSeparator;
       final targetDir = Directory(
-        '${baseDir.path}${sep}PKP${sep}Documents${sep}$sanitizedProject',
+        '${baseDir.path}${sep}PKP${sep}Documents$sep$sanitizedProject',
       );
       if (!await targetDir.exists()) {
         await targetDir.create(recursive: true);

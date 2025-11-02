@@ -1,32 +1,20 @@
 // filepath: /Users/ibnutriyardi/StudioProjects/hub-mobile/lib/domain/usecases/contract/upload_contract_use_case.dart
-import 'dart:io';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/usecases/use_case.dart';
-import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/domain/repositories/contract_repository.dart';
+import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 
-class UploadContractParams {
-  final String consultationId;
-  final File file;
-  final double contractValue;
-  UploadContractParams({
-    required this.consultationId,
-    required this.file,
-    required this.contractValue,
-  });
-}
-
-class UploadContractUseCase extends UseCase<Contract, UploadContractParams> {
+class UploadContractUseCase
+    extends UseCase<UploadContractResponse, UploadContractParam> {
   final ContractRepository _repository;
   UploadContractUseCase(this._repository);
 
   @override
-  Future<Result<Contract, Failure>> call(UploadContractParams params) {
-    return _repository.uploadContract(
-      params.consultationId,
-      params.file,
-      params.contractValue,
-    );
+  Future<Result<UploadContractResponse, Failure>> call(
+    UploadContractParam params,
+  ) {
+    return _repository.uploadContract(params);
   }
 }

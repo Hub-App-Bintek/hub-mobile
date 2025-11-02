@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// A customizable card widget that displays a title, subtitle, and an optional
-/// trailing widget which can be an icon or a button.
+/// trailing widget which can be an icon or a button. If [fileUrl] is provided
+/// (and both [actionButton] and [suffixIcon] are null), a download button will
+/// be shown that calls [onDownload] with the URL or opens it using
+/// `url_launcher`.
 class PkpCard extends StatelessWidget {
   const PkpCard({
     super.key,
@@ -12,6 +16,9 @@ class PkpCard extends StatelessWidget {
     this.onTap,
     this.suffixIcon,
     this.actionButton,
+    this.fileUrl,
+    this.onDownload,
+    this.shouldShowDownloadButton = false,
   }) : assert(
          suffixIcon == null || actionButton == null,
          'Cannot provide both a suffixIcon and an actionButton.',
@@ -33,9 +40,41 @@ class PkpCard extends StatelessWidget {
   /// If provided, this will be used instead of [suffixIcon].
   final Widget? actionButton;
 
+  /// Optional file URL. When provided and neither [actionButton] nor [suffixIcon]
+  /// are supplied, a download button will be shown.
+  final String? fileUrl;
+
+  /// Optional download callback. If provided, it will be called with [fileUrl]
+  /// when the user taps the download button. If not provided, the card will
+  /// attempt to open the URL using `url_launcher`.
+  final ValueChanged<String>? onDownload;
+
+  final bool shouldShowDownloadButton;
+
   @override
   Widget build(BuildContext context) {
     final hasSubtitle = subtitle.trim().isNotEmpty;
+
+    // Determine trailing widget: actionButton > suffixIcon > download button (if fileUrl present)
+    Widget? trailing;
+    if (actionButton != null) {
+      trailing = actionButton;
+    } else if (suffixIcon != null) {
+      trailing = suffixIcon;
+    } else if (fileUrl != null &&
+        fileUrl!.trim().isNotEmpty &&
+        shouldShowDownloadButton) {
+      trailing = IconButton(
+        tooltip: 'Download',
+        icon: const Icon(Icons.download_rounded),
+        onPressed: () async {
+          final url = fileUrl!.trim();
+          if (onDownload != null) {
+            onDownload!(url);
+          }
+        },
+      );
+    }
 
     return Card(
       elevation: 0,
@@ -71,12 +110,8 @@ class PkpCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (actionButton != null || suffixIcon != null)
-                const SizedBox(width: 16),
-              if (actionButton != null)
-                actionButton!
-              else if (suffixIcon != null)
-                suffixIcon!,
+              if (trailing != null) const SizedBox(width: 16),
+              if (trailing != null) trailing,
             ],
           ),
         ),

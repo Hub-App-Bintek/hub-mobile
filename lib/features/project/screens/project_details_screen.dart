@@ -255,6 +255,46 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           );
         }
 
+        // Homeowner approve/reject contract
+        if (controller.shouldShowContractApprovalButtons) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: PkpOutlinedButton(
+                    text: 'Tolak Kontrak',
+                    isLoading: controller.contractRejectLoading.value,
+                    enabled:
+                        !(controller.contractRejectLoading.value ||
+                            controller.contractApproveLoading.value),
+                    onPressed:
+                        (controller.contractRejectLoading.value ||
+                            controller.contractApproveLoading.value)
+                        ? null
+                        : controller.rejectContract,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Setuju Kontrak',
+                    isLoading: controller.contractApproveLoading.value,
+                    enabled:
+                        !(controller.contractApproveLoading.value ||
+                            controller.contractRejectLoading.value),
+                    onPressed:
+                        (controller.contractApproveLoading.value ||
+                            controller.contractRejectLoading.value)
+                        ? null
+                        : controller.approveContract,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return const SizedBox.shrink();
       }),
     );
@@ -317,8 +357,6 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   }
 
   Widget _buildTimeline(List<ProjectHistory> history) {
-    // final history = controller.consultationHistory.value ?? const <ProjectHistory>[];
-
     if (history.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -340,14 +378,30 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: history
-          .map(
-            (timeline) => PkpCard(
-              title: timeline.title ?? '',
-              subtitle: timeline.subtitle ?? '',
-            ),
-          )
-          .toList(),
+      children: history.map((timeline) {
+        // find first non-empty file URL
+        String? firstFileUrl;
+        if (timeline.files != null) {
+          for (final f in timeline.files!) {
+            if (f != null && f.trim().isNotEmpty) {
+              firstFileUrl = f.trim();
+              break;
+            }
+          }
+        }
+
+        return PkpCard(
+          title: timeline.title ?? '',
+          subtitle: timeline.subtitle ?? '',
+          fileUrl: firstFileUrl,
+          shouldShowDownloadButton: timeline.step == 'CONTRACT',
+          onDownload: firstFileUrl != null
+              ? (url) {
+                  // controller.downloadFile(url);
+                }
+              : null,
+        );
+      }).toList(),
     );
   }
 }

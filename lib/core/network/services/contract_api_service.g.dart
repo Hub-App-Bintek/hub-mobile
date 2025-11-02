@@ -45,17 +45,32 @@ class _ContractApiService implements ContractApiService {
   }
 
   @override
-  Future<Contract> createDraft(
+  Future<UploadContractResponse> createDraft(
     String consultationId,
-    Map<String, dynamic> body,
+    String requestJson,
+    File file,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _options = _setStreamType<Contract>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _data = FormData();
+    _data.fields.add(MapEntry('request', requestJson));
+    _data.files.add(
+      MapEntry(
+        'file',
+        MultipartFile.fromFileSync(
+          file.path,
+          filename: file.path.split(Platform.pathSeparator).last,
+        ),
+      ),
+    );
+    final _options = _setStreamType<UploadContractResponse>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
             '/api/contracts/consultations/${consultationId}/draft',
@@ -65,9 +80,9 @@ class _ContractApiService implements ContractApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Contract _value;
+    late UploadContractResponse _value;
     try {
-      _value = Contract.fromJson(_result.data!);
+      _value = UploadContractResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -196,10 +211,11 @@ class _ContractApiService implements ContractApiService {
   @override
   Future<Contract> requestRevision(
     String contractId,
-    String revisionNotes,
+    String? revisionNotes,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'revisionNotes': revisionNotes};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<Contract>(
