@@ -12,7 +12,7 @@ class ProjectHistory with _$ProjectHistory {
     String? state,
     String? title,
     String? subtitle,
-    List<String>? files,
+    List<String?>? files,
     List<String>? attachments,
     Metadata? metadata,
   }) = _ProjectHistory;

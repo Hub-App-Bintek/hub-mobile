@@ -25,7 +25,7 @@ mixin _$ProjectHistory {
   String? get state => throw _privateConstructorUsedError;
   String? get title => throw _privateConstructorUsedError;
   String? get subtitle => throw _privateConstructorUsedError;
-  List<String>? get files => throw _privateConstructorUsedError;
+  List<String?>? get files => throw _privateConstructorUsedError;
   List<String>? get attachments => throw _privateConstructorUsedError;
   Metadata? get metadata => throw _privateConstructorUsedError;
 
@@ -47,7 +47,7 @@ abstract class $ProjectHistoryCopyWith<$Res> {
     String? state,
     String? title,
     String? subtitle,
-    List<String>? files,
+    List<String?>? files,
     List<String>? attachments,
     Metadata? metadata,
   });
@@ -97,7 +97,7 @@ class _$ProjectHistoryCopyWithImpl<$Res, $Val extends ProjectHistory>
             files: freezed == files
                 ? _value.files
                 : files // ignore: cast_nullable_to_non_nullable
-                      as List<String>?,
+                      as List<String?>?,
             attachments: freezed == attachments
                 ? _value.attachments
                 : attachments // ignore: cast_nullable_to_non_nullable
@@ -138,7 +138,7 @@ abstract class _$$ProjectHistoryImplCopyWith<$Res>
     String? state,
     String? title,
     String? subtitle,
-    List<String>? files,
+    List<String?>? files,
     List<String>? attachments,
     Metadata? metadata,
   });
@@ -188,7 +188,7 @@ class __$$ProjectHistoryImplCopyWithImpl<$Res>
         files: freezed == files
             ? _value._files
             : files // ignore: cast_nullable_to_non_nullable
-                  as List<String>?,
+                  as List<String?>?,
         attachments: freezed == attachments
             ? _value._attachments
             : attachments // ignore: cast_nullable_to_non_nullable
@@ -210,7 +210,7 @@ class _$ProjectHistoryImpl implements _ProjectHistory {
     this.state,
     this.title,
     this.subtitle,
-    final List<String>? files,
+    final List<String?>? files,
     final List<String>? attachments,
     this.metadata,
   }) : _files = files,
@@ -227,9 +227,9 @@ class _$ProjectHistoryImpl implements _ProjectHistory {
   final String? title;
   @override
   final String? subtitle;
-  final List<String>? _files;
+  final List<String?>? _files;
   @override
-  List<String>? get files {
+  List<String?>? get files {
     final value = _files;
     if (value == null) return null;
     if (_files is EqualUnmodifiableListView) return _files;
@@ -308,7 +308,7 @@ abstract class _ProjectHistory implements ProjectHistory {
     final String? state,
     final String? title,
     final String? subtitle,
-    final List<String>? files,
+    final List<String?>? files,
     final List<String>? attachments,
     final Metadata? metadata,
   }) = _$ProjectHistoryImpl;
@@ -325,7 +325,7 @@ abstract class _ProjectHistory implements ProjectHistory {
   @override
   String? get subtitle;
   @override
-  List<String>? get files;
+  List<String?>? get files;
   @override
   List<String>? get attachments;
   @override

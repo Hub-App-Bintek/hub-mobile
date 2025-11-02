@@ -6,6 +6,7 @@ import 'package:pkp_hub/core/network/auth_interceptor.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:talker/talker.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
+import 'package:pkp_hub/core/network/form_data_logger_interceptor.dart';
 
 class ApiClient {
   late final Dio _dio;
@@ -31,6 +32,8 @@ class ApiClient {
     _dio.interceptors.add(AuthInterceptor(userStorage));
     final isLoggingEnabled = Environment.instance.enableLogging;
     if (isLoggingEnabled) {
+      // Log multipart/form-data fields & file metadata
+      _dio.interceptors.add(FormDataLoggerInterceptor(talker));
       _dio.interceptors.add(
         TalkerDioLogger(
           talker: talker,

@@ -1,12 +1,13 @@
-import 'dart:io';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
-import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
+import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:retrofit/dio.dart';
 
 abstract class ContractNetworkDataSource {
@@ -16,10 +17,13 @@ abstract class ContractNetworkDataSource {
     String contractId, {
     String reason,
   });
-  Future<Result<Contract, Failure>> uploadContract(
-    String consultationId,
-    File file,
-    double contractValue,
+  Future<Result<Contract, Failure>> approveContract(String contractId);
+  Future<Result<Contract, Failure>> requestRevision(
+    String contractId, {
+    String? revisionNotes,
+  });
+  Future<Result<UploadContractResponse, Failure>> uploadContract(
+    UploadContractParam param,
   );
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
     required String consultationId,
@@ -30,12 +34,7 @@ abstract class ContractNetworkDataSource {
 class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   final ApiClient _apiClient;
   final ContractApiService _contractApi;
-  final FilesApiService _filesApi;
-  ContractNetworkDataSourceImpl(
-    this._apiClient,
-    this._contractApi,
-    this._filesApi,
-  );
+  ContractNetworkDataSourceImpl(this._apiClient, this._contractApi);
 
   @override
   Future<Result<Contract, Failure>> getContract(String consultationId) async {
@@ -79,29 +78,54 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   }
 
   @override
-  Future<Result<Contract, Failure>> uploadContract(
-    String consultationId,
-    File file,
-    double contractValue,
+  Future<Result<Contract, Failure>> approveContract(String contractId) async {
+    try {
+      final response = await _contractApi.approve(contractId);
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(message: 'Failed to parse approve contract: $e'),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Contract, Failure>> requestRevision(
+    String contractId, {
+    String? revisionNotes,
+  }) async {
+    try {
+      final response = await _contractApi.requestRevision(
+        contractId,
+        revisionNotes,
+      );
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(message: 'Failed to parse request revision: $e'),
+      );
+    }
+  }
+
+  @override
+  Future<Result<UploadContractResponse, Failure>> uploadContract(
+    UploadContractParam param,
   ) async {
     try {
-      // 1) Upload file via files service
-      final uploadJson = await _filesApi.upload(
-        'CONSULTATION',
-        'CONTRACT',
-        consultationId,
-        file,
-      );
-      final fileUrl = (uploadJson['fileUrl']?.toString() ?? '').trim();
-      if (fileUrl.isEmpty) {
-        return const Error(
-          ServerFailure(message: 'File upload failed: fileUrl missing'),
-        );
-      }
+      // Build JSON string for the 'request' part (include fileUrl null per backend spec)
+      final requestMap = param.generateContractRequest.toJson();
+      requestMap['fileUrl'] = null;
+      final requestJson = jsonEncode(requestMap);
 
-      // 2) Create contract draft using contract service
-      final payload = {'contractValue': contractValue, 'fileUrl': fileUrl};
-      final draft = await _contractApi.createDraft(consultationId, payload);
+      final draft = await _contractApi.createDraft(
+        param.consultationId,
+        requestJson,
+        param.file,
+      );
       return Success(draft);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));

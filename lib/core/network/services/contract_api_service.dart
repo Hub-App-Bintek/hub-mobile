@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'contract_api_service.g.dart';
@@ -12,10 +15,12 @@ abstract class ContractApiService {
   @GET(ApiEndpoints.contractByConsultation)
   Future<Contract> getContract(@Path('consultationId') String consultationId);
 
+  @MultiPart()
   @POST(ApiEndpoints.contractCreateDraft)
-  Future<Contract> createDraft(
+  Future<UploadContractResponse> createDraft(
     @Path('consultationId') String consultationId,
-    @Body() Map<String, dynamic> body,
+    @Part(name: 'request', contentType: 'application/json') String requestJson,
+    @Part(name: 'file') File file,
   );
 
   @DioResponseType(ResponseType.bytes)
@@ -40,7 +45,7 @@ abstract class ContractApiService {
   @POST(ApiEndpoints.contractRequestRevision)
   Future<Contract> requestRevision(
     @Path('contractId') String contractId,
-    @Query('revisionNotes') String revisionNotes,
+    @Query('revisionNotes') String? revisionNotes,
   );
 
   @PATCH(ApiEndpoints.contractSign)

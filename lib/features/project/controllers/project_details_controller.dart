@@ -1,33 +1,36 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart' as ur;
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
-import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/current_survey_schedule.dart';
+import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/data/models/response/survey_response.dart';
+import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/data/models/survey_schedule.dart';
 import 'package:pkp_hub/domain/usecases/consultation/accept_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/finalize_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/reject_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/start_active_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/start_revision_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/reject_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
@@ -38,8 +41,6 @@ import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.d
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:pkp_hub/data/models/installment.dart';
 
 class ProjectDetailsController extends BaseController {
   final GetProjectDetailsUseCase _getDetailsUseCase;
@@ -59,8 +60,8 @@ class ProjectDetailsController extends BaseController {
   final CompleteSurveyUseCase _completeSurveyUseCase;
   final UploadContractUseCase _uploadContractUseCase;
   final GetContractUseCase _getContractUseCase;
-  final SignContractUseCase _signContractUseCase;
-  final RejectContractUseCase _rejectContractUseCase;
+  final ApproveContractUseCase _approveContractUseCase;
+  final AskContractRevisionUseCase _askContractRevisionUseCase;
   final GenerateContractDraftUseCase _generateContractDraftUseCase;
   final UploadFinalDocumentsUseCase _uploadFinalDocumentsUseCase;
   final ApproveFinalDocumentsUseCase _approveFinalDocumentsUseCase;
@@ -82,8 +83,8 @@ class ProjectDetailsController extends BaseController {
     this._completeSurveyUseCase,
     this._uploadContractUseCase,
     this._getContractUseCase,
-    this._signContractUseCase,
-    this._rejectContractUseCase,
+    this._approveContractUseCase,
+    this._askContractRevisionUseCase,
     this._generateContractDraftUseCase,
     this._uploadFinalDocumentsUseCase,
     this._approveFinalDocumentsUseCase,
@@ -113,6 +114,10 @@ class ProjectDetailsController extends BaseController {
   // Loading flags for contract actions
   final RxBool downloadTemplateLoading = false.obs;
   final RxBool uploadContractLoading = false.obs;
+
+  // Loading flags for contract approval by homeowner
+  final RxBool contractApproveLoading = false.obs;
+  final RxBool contractRejectLoading = false.obs;
 
   // Scroll controller for timeline list
   final ScrollController timelineScrollController = ScrollController();
@@ -266,6 +271,30 @@ class ProjectDetailsController extends BaseController {
             projectHistory: project,
           ),
         );
+      } else if (project.step == 'CONTRACT' &&
+          project.state == 'REQUEST_FOR_APPROVAL') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Dokumen kontrak telah tersedia',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'CONTRACT' &&
+          project.state == 'REVISION_REQUESTED') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Pemilik lahan meminta revisi dokumen kontrak',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'CONTRACT' && project.state == 'APPROVED') {
+        timeline.add(
+          _buildProjectHistory(
+            title:
+                'Kontrak telah disetujui oleh pemilik lahan dan konsultan ${consultation.consultantName ?? ''} sedang menyiapkan dokumen akhir',
+            projectHistory: project,
+          ),
+        );
       }
     });
 
@@ -300,7 +329,13 @@ class ProjectDetailsController extends BaseController {
       await handleAsync<Consultation>(
         () => _acceptConsultationUseCase(consultationId),
         onSuccess: (_) {
-          Get.snackbar('Sukses', 'Permintaan konsultasi diterima');
+          Get.snackbar(
+            'Berhasil',
+            'Permintaan konsultasi diterima',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
           fetchDetails();
         },
         onFailure: (f) => showError(f),
@@ -325,7 +360,13 @@ class ProjectDetailsController extends BaseController {
       await handleAsync<Consultation>(
         () => _rejectConsultationUseCase(consultationId),
         onSuccess: (_) {
-          Get.snackbar('Sukses', 'Permintaan konsultasi ditolak');
+          Get.snackbar(
+            'Berhasil',
+            'Permintaan konsultasi berhasil ditolak',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
           fetchDetails();
         },
         onFailure: (f) => showError(f),
@@ -337,19 +378,28 @@ class ProjectDetailsController extends BaseController {
 
   // Handle submission from SurveyScheduleBottomSheet
   Future<void> submitSurveySchedule(CreateSurveyScheduleRequest request) async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
 
     await handleAsync<SurveyResponse>(
       () => _createSurveyScheduleUseCase(
-        CreateSurveyScheduleParams(consultationId: cId, request: request),
+        CreateSurveyScheduleParams(
+          consultationId: consultationId,
+          request: request,
+        ),
       ),
       onSuccess: (_) {
         Get.back();
-        Get.snackbar('Sukses', 'Jadwal survey berhasil dibuat');
+        Get.snackbar(
+          'Berhasil',
+          'Jadwal survey berhasil dibuat',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.successDark,
+          colorText: AppColors.white,
+        );
         fetchDetails();
       },
       onFailure: (f) => showError(f),
@@ -360,19 +410,28 @@ class ProjectDetailsController extends BaseController {
   Future<void> submitRescheduleSurvey(
     CreateSurveyScheduleRequest request,
   ) async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
 
     await handleAsync<SurveySchedule>(
       () => _rescheduleSurveyUseCase(
-        RescheduleSurveyParams(consultationId: cId, request: request),
+        RescheduleSurveyParams(
+          consultationId: consultationId,
+          request: request,
+        ),
       ),
       onSuccess: (_) {
         Get.back();
-        Get.snackbar('Sukses', 'Jadwal survey berhasil diajukan ulang');
+        Get.snackbar(
+          'Berhasil',
+          'Jadwal survey berhasil diajukan ulang',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.successDark,
+          colorText: AppColors.white,
+        );
         fetchDetails();
       },
       onFailure: (f) => showError(f),
@@ -381,8 +440,8 @@ class ProjectDetailsController extends BaseController {
 
   // Approve schedule by homeowner
   Future<void> approveSurveySchedule() async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
@@ -392,9 +451,15 @@ class ProjectDetailsController extends BaseController {
     approveLoading.value = true;
     try {
       await handleAsync<SurveySchedule>(
-        () => _approveSurveyScheduleUseCase(cId),
+        () => _approveSurveyScheduleUseCase(consultationId),
         onSuccess: (_) {
-          Get.snackbar('Sukses', 'Jadwal survey disetujui');
+          Get.snackbar(
+            'Sukses',
+            'Jadwal survey disetujui',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
           fetchDetails();
         },
         onFailure: (f) => showError(f),
@@ -406,8 +471,8 @@ class ProjectDetailsController extends BaseController {
 
   // Reject schedule by homeowner
   Future<void> rejectSurveySchedule({String? notes}) async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
@@ -418,10 +483,19 @@ class ProjectDetailsController extends BaseController {
     try {
       await handleAsync<SurveySchedule>(
         () => _rejectSurveyScheduleUseCase(
-          RejectSurveyScheduleParams(consultationId: cId, notes: notes),
+          RejectSurveyScheduleParams(
+            consultationId: consultationId,
+            notes: notes,
+          ),
         ),
         onSuccess: (_) {
-          Get.snackbar('Sukses', 'Jadwal survey ditolak');
+          Get.snackbar(
+            'Berhasil',
+            'Jadwal survey berhasil ditolak',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
           fetchDetails();
         },
         onFailure: (f) => showError(f),
@@ -433,8 +507,8 @@ class ProjectDetailsController extends BaseController {
 
   // Mark survey as completed by consultant
   Future<void> completeSurvey() async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
@@ -443,9 +517,15 @@ class ProjectDetailsController extends BaseController {
 
     try {
       await handleAsync<void>(
-        () => _completeSurveyUseCase(cId),
+        () => _completeSurveyUseCase(consultationId),
         onSuccess: (_) {
-          Get.snackbar('Sukses', 'Survey telah selesai');
+          Get.snackbar(
+            'Berhasil',
+            'Survey telah selesai dilakukan',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
           fetchDetails();
         },
         onFailure: (f) => showError(f),
@@ -457,8 +537,8 @@ class ProjectDetailsController extends BaseController {
 
   // Download contract template (open the template file URL)
   Future<void> downloadContractTemplate() async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return;
     }
@@ -468,7 +548,7 @@ class ProjectDetailsController extends BaseController {
 
     try {
       await handleAsync<Contract>(
-        () => _getContractUseCase(cId),
+        () => _getContractUseCase(consultationId),
         onSuccess: (contract) {
           final url = (contract.fileUrl?.isNotEmpty == true)
               ? contract.fileUrl
@@ -511,100 +591,70 @@ class ProjectDetailsController extends BaseController {
     }
   }
 
-  // Upload signed contract document (PDF)
-  Future<void> uploadContract() async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
-      showError(const ServerFailure(message: 'Consultation ID not found'));
-      return;
-    }
-
-    // Pick PDF file
-    final picked = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (picked == null || picked.files.isEmpty) {
-      // User cancelled
-      return;
-    }
-
-    final path = picked.files.single.path;
-    if (path == null || path.isEmpty) {
-      showError(const ServerFailure(message: 'File tidak valid'));
-      return;
-    }
-
-    if (uploadContractLoading.value) return;
-    uploadContractLoading.value = true;
-
-    try {
-      await handleAsync<Contract>(
-        () => _uploadContractUseCase(
-          UploadContractParams(
-            consultationId: cId,
-            file: File(path),
-            contractValue: 0.0,
-          ),
-        ),
-        onSuccess: (_) {
-          Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
-          fetchDetails();
-        },
-        onFailure: (f) => showError(f),
-      );
-    } finally {
-      uploadContractLoading.value = false;
-    }
-  }
-
   // Upload a provided contract file (used by bottom sheet). Returns true on success
-  Future<bool> uploadContractFile(File file, double contractValue) async {
-    final cId = details.value?.consultation?.consultationId;
-    if (cId == null || cId.isEmpty) {
+  Future<bool> uploadContract(
+    File file,
+    double contractValue,
+    List<Installment> installments,
+  ) async {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
       return false;
     }
-    if (uploadContractLoading.value) return false;
-    uploadContractLoading.value = true;
 
-    var ok = false;
+    uploadContractLoading.value = true;
+    bool done = false;
     try {
-      await handleAsync<Contract>(
+      await handleAsync<UploadContractResponse>(
         () => _uploadContractUseCase(
-          UploadContractParams(
-            consultationId: cId,
+          UploadContractParam(
+            consultationId: consultationId,
             file: file,
-            contractValue: contractValue,
+            generateContractRequest: GenerateContractDraftRequest(
+              contractValue: contractValue,
+              installments: installments,
+            ),
           ),
         ),
         onSuccess: (_) {
-          ok = true;
-          Get.snackbar('Sukses', 'Dokumen kontrak berhasil diunggah');
+          Get.snackbar(
+            'Berhasil',
+            'Dokumen kontrak berhasil disubmit',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          Get.back();
           fetchDetails();
+          done = true;
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) {
+          showError(failure);
+          done = false;
+        },
       );
     } finally {
       uploadContractLoading.value = false;
     }
-    return ok;
+
+    return done;
   }
 
-  Future<void> generateAndDownloadContractTemplate({
+  Future<bool> generateAndDownloadContractTemplate({
     required double contractValue,
     required List<Installment> installments,
   }) async {
     final cId = details.value?.consultation?.consultationId;
     if (cId == null || cId.isEmpty) {
       showError(const ServerFailure(message: 'Consultation ID not found'));
-      return;
+      return false;
     }
 
-    if (downloadTemplateLoading.value) return;
+    if (downloadTemplateLoading.value) return false;
     downloadTemplateLoading.value = true;
 
+    bool done = false;
     try {
       final req = GenerateContractDraftRequest(
         contractValue: contractValue,
@@ -628,15 +678,112 @@ class ProjectDetailsController extends BaseController {
             final where = Platform.isAndroid
                 ? 'Dokumen > PKP > $projectName'
                 : 'Files app (lokasi yang Anda pilih)';
-            Get.snackbar('Berhasil', 'Template disimpan di: $where');
+            Get.snackbar(
+              'Berhasil',
+              'Template disimpan di: $where',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.successDark,
+              colorText: AppColors.white,
+            );
           } else {
-            Get.snackbar('Dibatalkan', 'Penyimpanan file dibatalkan.');
+            Get.snackbar(
+              'Dibatalkan',
+              'Penyimpanan file dibatalkan.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.errorDark,
+              colorText: AppColors.white,
+            );
           }
+
+          done = true;
+        },
+        onFailure: (f) {
+          showError(f);
+          done = false;
+        },
+      );
+    } finally {
+      downloadTemplateLoading.value = false;
+    }
+
+    return done;
+  }
+
+  Future<void> approveContract() async {
+    String contractId = '';
+    for (final history in consultationHistory.reversed) {
+      if (history.step?.toUpperCase() == 'CONTRACT' &&
+          history.metadata?.contractId?.isNotEmpty == true) {
+        contractId = history.metadata?.contractId ?? '';
+        break;
+      }
+    }
+    if (contractId.isEmpty) {
+      showError(const ServerFailure(message: 'Contract ID not found'));
+      return;
+    }
+    if (contractApproveLoading.value || contractRejectLoading.value) return;
+    contractApproveLoading.value = true;
+
+    try {
+      await handleAsync<void>(
+        () => _approveContractUseCase(contractId),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Kontrak disetujui',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
         },
         onFailure: (f) => showError(f),
       );
     } finally {
-      downloadTemplateLoading.value = false;
+      contractApproveLoading.value = false;
+    }
+  }
+
+  Future<void> rejectContract() async {
+    String contractId = '';
+    for (final history in consultationHistory.reversed) {
+      if (history.step?.toUpperCase() == 'CONTRACT' &&
+          history.metadata?.contractId?.isNotEmpty == true) {
+        contractId = history.metadata?.contractId ?? '';
+        break;
+      }
+    }
+    if (contractId.isEmpty) {
+      showError(const ServerFailure(message: 'Contract ID not found'));
+      return;
+    }
+    if (contractRejectLoading.value || contractApproveLoading.value) return;
+    contractRejectLoading.value = true;
+
+    try {
+      await handleAsync<void>(
+        () => _askContractRevisionUseCase(
+          AskContractRevisionParams(
+            contractId: contractId,
+            // TODO: Update this using user input from a bottom sheet
+            revisionNotes: 'Ini tidak benar',
+          ),
+        ),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Berhasil meminta revisi kontrak',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (f) => showError(f),
+      );
+    } finally {
+      contractRejectLoading.value = false;
     }
   }
 
@@ -656,7 +803,7 @@ class ProjectDetailsController extends BaseController {
     );
   }
 
-  // Visibility rules for bottomNavigationBar button
+  /// Visibility rules for bottomNavigationBar button
   bool get shouldShowConsultationConfirmationButtons {
     final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
@@ -669,7 +816,7 @@ class ProjectDetailsController extends BaseController {
     return isConsultant && status == 'MENUNGGU_JADWAL_SURVEY';
   }
 
-  // Returns the latest survey schedule by updatedAt/createdAt
+  /// Returns the latest survey schedule by updatedAt/createdAt
   CurrentSurveySchedule? get latestSurveySchedule {
     final schedules = details.value?.consultation?.surveySchedules;
     if (schedules == null || schedules.isEmpty) return null;
@@ -691,31 +838,39 @@ class ProjectDetailsController extends BaseController {
     return sorted.last;
   }
 
-  // Visibility rules for reschedule when latest proposed schedule was rejected
+  /// Visibility rules for reschedule when latest proposed schedule was rejected
   bool get shouldShowRescheduleButton {
     final isConsultant = userRole.value == ur.UserRole.consultant;
     final lastStatus = latestSurveySchedule?.status?.toUpperCase();
     return isConsultant && lastStatus == 'REJECTED';
   }
 
-  // Visibility rules for homeowner approval actions
+  /// Visibility rules for homeowner approval actions
   bool get shouldShowSurveyScheduleApprovalButtons {
     final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isHomeowner && status == 'MENUNGGU_APPROVAL_JADWAL';
   }
 
-  // Visibility rule for consultant to mark survey as done
+  /// Visibility rule for consultant to mark survey as done
   bool get shouldShowCompleteSurveyButton {
     final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isConsultant && status == 'SURVEY_DIJADWALKAN';
   }
 
-  // Visibility rules for consultant contract actions (download & upload)
+  /// Visibility rules for consultant contract actions (download & upload)
   bool get shouldShowContractActions {
     final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant && status == 'SURVEY_SELESAI';
+    return isConsultant &&
+        (status == 'SURVEY_SELESAI' || status == 'MENYIAPKAN_KONTRAK');
+  }
+
+  /// Visibility rules for homeowner to approve or reject contract
+  bool get shouldShowContractApprovalButtons {
+    final isHomeowner = userRole.value == ur.UserRole.homeowner;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    return isHomeowner && status == 'MENUNGGU_APPROVAL_KONTRAK';
   }
 }

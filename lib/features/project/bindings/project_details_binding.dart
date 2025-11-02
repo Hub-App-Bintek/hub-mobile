@@ -18,12 +18,12 @@ import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/reject_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 
 class ProjectDetailsBinding extends Bindings {
@@ -71,11 +71,11 @@ class ProjectDetailsBinding extends Bindings {
     Get.lazyPut<GetContractUseCase>(
       () => GetContractUseCase(Get.find<ContractRepository>()),
     );
-    Get.lazyPut<SignContractUseCase>(
-      () => SignContractUseCase(Get.find<ContractRepository>()),
+    Get.lazyPut<ApproveContractUseCase>(
+      () => ApproveContractUseCase(Get.find<ContractRepository>()),
     );
-    Get.lazyPut<RejectContractUseCase>(
-      () => RejectContractUseCase(Get.find<ContractRepository>()),
+    Get.lazyPut<AskContractRevisionUseCase>(
+      () => AskContractRevisionUseCase(Get.find<ContractRepository>()),
     );
     Get.lazyPut<GenerateContractDraftUseCase>(
       () => GenerateContractDraftUseCase(Get.find<ContractRepository>()),
@@ -110,8 +110,8 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<CompleteSurveyUseCase>(),
         Get.find<UploadContractUseCase>(),
         Get.find<GetContractUseCase>(),
-        Get.find<SignContractUseCase>(),
-        Get.find<RejectContractUseCase>(),
+        Get.find<ApproveContractUseCase>(),
+        Get.find<AskContractRevisionUseCase>(),
         Get.find<GenerateContractDraftUseCase>(),
         Get.find<UploadFinalDocumentsUseCase>(),
         Get.find<ApproveFinalDocumentsUseCase>(),

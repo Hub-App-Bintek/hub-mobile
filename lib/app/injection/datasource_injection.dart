@@ -6,7 +6,6 @@ import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
-import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
@@ -78,7 +77,6 @@ class DataSourceInjection {
       () => ContractNetworkDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<ContractApiService>(),
-        Get.find<FilesApiService>(),
       ),
       fenix: true,
     );
