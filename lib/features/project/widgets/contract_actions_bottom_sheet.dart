@@ -35,9 +35,7 @@ class _ContractActionsBottomSheetState
   void initState() {
     super.initState();
     // Refresh UI when any field changes so validation/enabling updates reactively.
-    for (final controller in [
-      _consultationCostCtrl,
-    ]) {
+    for (final controller in [_consultationCostCtrl]) {
       controller.addListener(() => setState(() {}));
     }
     // Also react to GetX loading states to refresh button/file section instantly.
@@ -87,7 +85,8 @@ class _ContractActionsBottomSheetState
 
   bool _isAllRequiredFilled() {
     // Required for upload: file selected and consultation cost filled.
-    return _consultationCostFilled && (_selectedFile != null && !widget.isDownload);
+    return _consultationCostFilled &&
+        (_selectedFile != null && !widget.isDownload);
   }
 
   double _parseContractValue() {
@@ -201,40 +200,40 @@ class _ContractActionsBottomSheetState
                           ? () async {
                               final done = await controller
                                   .generateAndDownloadContractTemplate(
-                                contractValue: _parseContractValue(),
-                                installments: const <Installment>[],
-                              );
+                                    contractValue: _parseContractValue(),
+                                  );
                               if (done) {
                                 Get.back(); // Close bottom sheet on success
                               }
                             }
                           : (_isAllRequiredFilled()
-                              ? () async {
-                                  if (!_validateUpload()) return;
+                                ? () async {
+                                    if (!_validateUpload()) return;
 
-                                  final done = await controller.uploadContract(
-                                    _selectedFile!,
-                                    _parseContractValue(),
-                                    const <Installment>[],
-                                  );
-                                  if (done) {
-                                    await Future.delayed(
-                                      const Duration(milliseconds: 150),
-                                    );
-                                    try {
-                                      if (Navigator.of(context).canPop()) {
-                                        Navigator.of(context).pop();
-                                      } else {
-                                        Get.back();
-                                      }
-                                    } catch (_) {
+                                    final done = await controller
+                                        .uploadContract(
+                                          _selectedFile!,
+                                          _parseContractValue(),
+                                          const <Installment>[],
+                                        );
+                                    if (done) {
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 150),
+                                      );
                                       try {
-                                        Get.back();
-                                      } catch (_) {}
+                                        if (Navigator.of(context).canPop()) {
+                                          Navigator.of(context).pop();
+                                        } else {
+                                          Get.back();
+                                        }
+                                      } catch (_) {
+                                        try {
+                                          Get.back();
+                                        } catch (_) {}
+                                      }
                                     }
                                   }
-                                }
-                              : null),
+                                : null),
                     ),
                   ],
                 ),

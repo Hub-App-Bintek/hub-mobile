@@ -29,8 +29,10 @@ import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart'
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
@@ -40,7 +42,6 @@ import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
-import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDetailsController extends BaseController {
@@ -69,6 +70,9 @@ class ProjectDetailsController extends BaseController {
   final RejectFinalDocumentsUseCase _rejectFinalDocumentsUseCase;
   final DownloadFileUseCase _downloadFileUseCase;
 
+  // New use case for signing contract
+  final SignContractUseCase _signContractUseCase;
+
   ProjectDetailsController(
     this.projectId,
     this._getDetailsUseCase,
@@ -92,6 +96,8 @@ class ProjectDetailsController extends BaseController {
     this._approveFinalDocumentsUseCase,
     this._rejectFinalDocumentsUseCase,
     this._downloadFileUseCase,
+    // ...existing code...
+    this._signContractUseCase,
   );
 
   var isLoading = false.obs;
@@ -121,6 +127,9 @@ class ProjectDetailsController extends BaseController {
   // Loading flags for contract approval by homeowner
   final RxBool contractApproveLoading = false.obs;
   final RxBool contractRejectLoading = false.obs;
+
+  // Loading flag for signing contract
+  final RxBool signContractLoading = false.obs;
 
   // Scroll controller for timeline list
   final ScrollController timelineScrollController = ScrollController();
@@ -298,6 +307,34 @@ class ProjectDetailsController extends BaseController {
             projectHistory: project,
           ),
         );
+      } else if (project.step == 'CONTRACT' &&
+          project.state == 'CONSULTANT_SIGNED') {
+        timeline.add(
+          _buildProjectHistory(
+            title:
+                'Kontrak telah ditandatangani oleh konsultan ${consultation.consultantName ?? ''}.',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'CONTRACT' && project.state == 'HOME_SIGNED') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Kontrak telah ditandatangani oleh pemilik lahan.',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'CONTRACT' && project.state == 'SIGNED') {
+        String lastSigner =
+            consultationHistory.any(
+              (history) => history.state == 'CONSULTANT_SIGNED',
+            )
+            ? 'pemilik lahan'
+            : 'konsultan ${consultation.consultantName ?? ''}';
+        String timelineText =
+            'Kontrak telah ditandatangani oleh $lastSigner dan menunggu ${consultation.consultantName ?? ''} akan meminta proses pembayaran';
+        timeline.add(
+          _buildProjectHistory(title: timelineText, projectHistory: project),
+        );
       }
     });
 
@@ -341,7 +378,7 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       acceptConsultationLoading.value = false;
@@ -372,7 +409,7 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       rejectConsultationLoading.value = false;
@@ -405,7 +442,7 @@ class ProjectDetailsController extends BaseController {
         );
         fetchDetails();
       },
-      onFailure: (f) => showError(f),
+      onFailure: (failure) => showError(failure),
     );
   }
 
@@ -437,7 +474,7 @@ class ProjectDetailsController extends BaseController {
         );
         fetchDetails();
       },
-      onFailure: (f) => showError(f),
+      onFailure: (failure) => showError(failure),
     );
   }
 
@@ -465,7 +502,7 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       approveLoading.value = false;
@@ -531,7 +568,7 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       completeSurveyLoading.value = false;
@@ -587,7 +624,7 @@ class ProjectDetailsController extends BaseController {
                 );
               });
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       downloadTemplateLoading.value = false;
@@ -616,7 +653,6 @@ class ProjectDetailsController extends BaseController {
             file: file,
             generateContractRequest: GenerateContractDraftRequest(
               contractValue: contractValue,
-              installments: installments,
             ),
           ),
         ),
@@ -645,7 +681,7 @@ class ProjectDetailsController extends BaseController {
 
   Future<bool> generateAndDownloadContractTemplate({
     required double contractValue,
-    required List<Installment> installments,
+    // required List<Installment> installments,
   }) async {
     final cId = details.value?.consultation?.consultationId;
     if (cId == null || cId.isEmpty) {
@@ -660,10 +696,7 @@ class ProjectDetailsController extends BaseController {
 
     bool done = false;
     try {
-      final req = GenerateContractDraftRequest(
-        contractValue: contractValue,
-        installments: installments,
-      );
+      final req = GenerateContractDraftRequest(contractValue: contractValue);
       await handleAsync<DownloadedFile>(
         () => _generateContractDraftUseCase(
           GenerateContractDraftParams(consultationId: cId, request: req),
@@ -704,14 +737,79 @@ class ProjectDetailsController extends BaseController {
 
           done = true;
         },
-        onFailure: (f) {
+        onFailure: (failure) {
           hideLoadingOverlay();
-          showError(f);
+          showError(failure);
           done = false;
         },
       );
     } finally {
       // Ensure overlay is closed in case of early returns
+      hideLoadingOverlay();
+      downloadTemplateLoading.value = false;
+    }
+
+    return done;
+  }
+
+  Future<bool> downloadFileById(String? fileId) async {
+    if (fileId == null || fileId.isEmpty) {
+      showError(const ServerFailure(message: 'File ID not found'));
+      return false;
+    }
+
+    if (downloadTemplateLoading.value) return false;
+    downloadTemplateLoading.value = true;
+    // Show progress overlay during file download (immediately)
+    showLoadingOverlay(message: 'Mengunduh file...', delay: Duration.zero);
+
+    bool done = false;
+    try {
+      await handleAsync<DownloadedFile>(
+        () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
+        onSuccess: (file) async {
+          // Hide overlay before potential native save dialogs
+          hideLoadingOverlay();
+
+          final projectName = details.value?.name ?? 'Untitled';
+
+          final saved = await saveToExternalProjectDocuments(
+            projectName: projectName,
+            fileName: file.fileName,
+            bytes: file.bytes,
+          );
+
+          if (saved != null && saved.isNotEmpty) {
+            final where = Platform.isAndroid
+                ? 'Dokumen > PKP > $projectName'
+                : 'Files app (lokasi yang Anda pilih)';
+            Get.snackbar(
+              'Berhasil',
+              'File disimpan di: $where',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.successDark,
+              colorText: AppColors.white,
+            );
+            done = true;
+          } else {
+            Get.snackbar(
+              'Gagal',
+              'File gagal didownload.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.errorDark,
+              colorText: AppColors.white,
+            );
+            done = false;
+          }
+        },
+        onFailure: (failure) {
+          hideLoadingOverlay();
+          showError(failure);
+          done = false;
+        },
+      );
+    } finally {
+      // Ensure overlay is closed
       hideLoadingOverlay();
       downloadTemplateLoading.value = false;
     }
@@ -748,7 +846,7 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       contractApproveLoading.value = false;
@@ -790,10 +888,47 @@ class ProjectDetailsController extends BaseController {
           );
           fetchDetails();
         },
-        onFailure: (f) => showError(f),
+        onFailure: (failure) => showError(failure),
       );
     } finally {
       contractRejectLoading.value = false;
+    }
+  }
+
+  Future<void> signContract() async {
+    // Find latest contractId from history metadata
+    String contractId = '';
+    for (final history in consultationHistory.reversed) {
+      if (history.step?.toUpperCase() == 'CONTRACT' &&
+          history.metadata?.contractId?.isNotEmpty == true) {
+        contractId = history.metadata?.contractId ?? '';
+        break;
+      }
+    }
+    if (contractId.isEmpty) {
+      showError(const ServerFailure(message: 'Contract ID not found'));
+      return;
+    }
+    if (signContractLoading.value) return;
+    signContractLoading.value = true;
+
+    try {
+      await handleAsync<Contract>(
+        () => _signContractUseCase(contractId),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Kontrak berhasil ditandatangani',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (failure) => showError(failure),
+      );
+    } finally {
+      signContractLoading.value = false;
     }
   }
 
@@ -884,68 +1019,25 @@ class ProjectDetailsController extends BaseController {
     return isHomeowner && status == 'MENUNGGU_APPROVAL_KONTRAK';
   }
 
-  Future<bool> downloadFileById(String? fileId) async {
-    if (fileId == null || fileId.isEmpty) {
-      showError(const ServerFailure(message: 'File ID not found'));
-      return false;
-    }
+  /// Visibility rule for "Tanda Tangan Kontrak" button
+  /// Shows when status is MENUNGGU_TANDA_TANGAN_KONTRAK with additional role-based rules:
+  /// - If state is CONSULTANT_SIGNED => show only for homeowner
+  /// - If state is HOMEOWNER_SIGNED => show only for consultant
+  bool get shouldShowSignContractButton {
+    final status = details.value?.consultation?.status?.toUpperCase();
+    if (status != 'MENUNGGU_TANDA_TANGAN_KONTRAK') return false;
 
-    if (downloadTemplateLoading.value) return false;
-    downloadTemplateLoading.value = true;
-    // Show progress overlay during file download (immediately)
-    showLoadingOverlay(message: 'Mengunduh file...', delay: Duration.zero);
-
-    bool done = false;
-    try {
-      await handleAsync<DownloadedFile>(
-        () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
-        onSuccess: (file) async {
-          // Hide overlay before potential native save dialogs
-          hideLoadingOverlay();
-
-          final projectName = details.value?.name ?? 'Untitled';
-
-          final saved = await saveToExternalProjectDocuments(
-            projectName: projectName,
-            fileName: file.fileName,
-            bytes: file.bytes,
-          );
-
-          if (saved != null && saved.isNotEmpty) {
-            final where = Platform.isAndroid
-                ? 'Dokumen > PKP > $projectName'
-                : 'Files app (lokasi yang Anda pilih)';
-            Get.snackbar(
-              'Berhasil',
-              'File disimpan di: $where',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppColors.successDark,
-              colorText: AppColors.white,
-            );
-            done = true;
-          } else {
-            Get.snackbar(
-              'Gagal',
-              'File gagal didownload.',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: AppColors.errorDark,
-              colorText: AppColors.white,
-            );
-            done = false;
-          }
-        },
-        onFailure: (f) {
-          hideLoadingOverlay();
-          showError(f);
-          done = false;
-        },
+    final role = userRole.value;
+    if (role == ur.UserRole.consultant) {
+      return !consultationHistory.any(
+        (history) => history.state == 'CONSULTANT_SIGNED',
       );
-    } finally {
-      // Ensure overlay is closed
-      hideLoadingOverlay();
-      downloadTemplateLoading.value = false;
+    } else if (role == ur.UserRole.homeowner) {
+      return !consultationHistory.any(
+        (history) => history.state == 'HOMEOWNER_SIGNED',
+      );
     }
 
-    return done;
+    return role == ur.UserRole.homeowner || role == ur.UserRole.consultant;
   }
 }

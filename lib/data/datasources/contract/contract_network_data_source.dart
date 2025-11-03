@@ -118,7 +118,6 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
     try {
       // Build JSON string for the 'request' part (include fileUrl null per backend spec)
       final requestMap = param.generateContractRequest.toJson();
-      requestMap['fileUrl'] = null;
       final requestJson = jsonEncode(requestMap);
 
       final draft = await _contractApi.createDraft(
