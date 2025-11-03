@@ -296,6 +296,21 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           );
         }
 
+        // New: Sign contract button for both roles depending on partial sign state
+        if (controller.shouldShowSignContractButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Tanda Tangan Kontrak',
+              isLoading: controller.signContractLoading.value,
+              enabled: !controller.signContractLoading.value,
+              onPressed: controller.signContractLoading.value
+                  ? null
+                  : controller.signContract,
+            ),
+          );
+        }
+
         return const SizedBox.shrink();
       }),
     );

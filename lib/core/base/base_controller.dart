@@ -133,10 +133,6 @@ abstract class BaseController extends GetxController {
     );
 
     final overlay = Overlay.of(overlayContext, rootOverlay: true);
-    if (overlay == null) {
-      _progressPending = false;
-      return;
-    }
     overlay.insert(_progressOverlay!);
     _progressPending = false;
   }

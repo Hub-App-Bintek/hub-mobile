@@ -24,7 +24,6 @@ GenerateContractDraftRequest _$GenerateContractDraftRequestFromJson(
 /// @nodoc
 mixin _$GenerateContractDraftRequest {
   double get contractValue => throw _privateConstructorUsedError;
-  List<Installment> get installments => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,7 +42,7 @@ abstract class $GenerateContractDraftRequestCopyWith<$Res> {
         GenerateContractDraftRequest
       >;
   @useResult
-  $Res call({double contractValue, List<Installment> installments});
+  $Res call({double contractValue});
 }
 
 /// @nodoc
@@ -61,17 +60,13 @@ class _$GenerateContractDraftRequestCopyWithImpl<
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? contractValue = null, Object? installments = null}) {
+  $Res call({Object? contractValue = null}) {
     return _then(
       _value.copyWith(
             contractValue: null == contractValue
                 ? _value.contractValue
                 : contractValue // ignore: cast_nullable_to_non_nullable
                       as double,
-            installments: null == installments
-                ? _value.installments
-                : installments // ignore: cast_nullable_to_non_nullable
-                      as List<Installment>,
           )
           as $Val,
     );
@@ -87,7 +82,7 @@ abstract class _$$GenerateContractDraftRequestImplCopyWith<$Res>
   ) = __$$GenerateContractDraftRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double contractValue, List<Installment> installments});
+  $Res call({double contractValue});
 }
 
 /// @nodoc
@@ -105,17 +100,13 @@ class __$$GenerateContractDraftRequestImplCopyWithImpl<$Res>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? contractValue = null, Object? installments = null}) {
+  $Res call({Object? contractValue = null}) {
     return _then(
       _$GenerateContractDraftRequestImpl(
         contractValue: null == contractValue
             ? _value.contractValue
             : contractValue // ignore: cast_nullable_to_non_nullable
                   as double,
-        installments: null == installments
-            ? _value._installments
-            : installments // ignore: cast_nullable_to_non_nullable
-                  as List<Installment>,
       ),
     );
   }
@@ -125,10 +116,7 @@ class __$$GenerateContractDraftRequestImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$GenerateContractDraftRequestImpl
     implements _GenerateContractDraftRequest {
-  const _$GenerateContractDraftRequestImpl({
-    required this.contractValue,
-    required final List<Installment> installments,
-  }) : _installments = installments;
+  const _$GenerateContractDraftRequestImpl({required this.contractValue});
 
   factory _$GenerateContractDraftRequestImpl.fromJson(
     Map<String, dynamic> json,
@@ -136,17 +124,10 @@ class _$GenerateContractDraftRequestImpl
 
   @override
   final double contractValue;
-  final List<Installment> _installments;
-  @override
-  List<Installment> get installments {
-    if (_installments is EqualUnmodifiableListView) return _installments;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_installments);
-  }
 
   @override
   String toString() {
-    return 'GenerateContractDraftRequest(contractValue: $contractValue, installments: $installments)';
+    return 'GenerateContractDraftRequest(contractValue: $contractValue)';
   }
 
   @override
@@ -155,20 +136,12 @@ class _$GenerateContractDraftRequestImpl
         (other.runtimeType == runtimeType &&
             other is _$GenerateContractDraftRequestImpl &&
             (identical(other.contractValue, contractValue) ||
-                other.contractValue == contractValue) &&
-            const DeepCollectionEquality().equals(
-              other._installments,
-              _installments,
-            ));
+                other.contractValue == contractValue));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    contractValue,
-    const DeepCollectionEquality().hash(_installments),
-  );
+  int get hashCode => Object.hash(runtimeType, contractValue);
 
   @JsonKey(ignore: true)
   @override
@@ -191,7 +164,6 @@ abstract class _GenerateContractDraftRequest
     implements GenerateContractDraftRequest {
   const factory _GenerateContractDraftRequest({
     required final double contractValue,
-    required final List<Installment> installments,
   }) = _$GenerateContractDraftRequestImpl;
 
   factory _GenerateContractDraftRequest.fromJson(Map<String, dynamic> json) =
@@ -199,8 +171,6 @@ abstract class _GenerateContractDraftRequest
 
   @override
   double get contractValue;
-  @override
-  List<Installment> get installments;
   @override
   @JsonKey(ignore: true)
   _$$GenerateContractDraftRequestImplCopyWith<
