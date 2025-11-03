@@ -7,7 +7,6 @@ import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
-import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 
@@ -28,15 +27,6 @@ class _ContractActionsBottomSheetState
   File? _selectedFile;
 
   final TextEditingController _consultationCostCtrl = TextEditingController();
-  final TextEditingController _firstTermWeightCtrl = TextEditingController();
-  final TextEditingController _firstTermLastPaymentDateCtrl =
-      TextEditingController();
-  final TextEditingController _secondTermWeightCtrl = TextEditingController();
-  final TextEditingController _secondTermLastPaymentDateCtrl =
-      TextEditingController();
-  final TextEditingController _thirdTermWeightCtrl = TextEditingController();
-  final TextEditingController _thirdTermLastPaymentDateCtrl =
-      TextEditingController();
 
   // Track Rx subscriptions so we can dispose properly and rebuild when they change.
   final List<Worker> _workers = [];
@@ -47,12 +37,6 @@ class _ContractActionsBottomSheetState
     // Refresh UI when any field changes so validation/enabling updates reactively.
     for (final controller in [
       _consultationCostCtrl,
-      _firstTermWeightCtrl,
-      _firstTermLastPaymentDateCtrl,
-      _secondTermWeightCtrl,
-      _secondTermLastPaymentDateCtrl,
-      _thirdTermWeightCtrl,
-      _thirdTermLastPaymentDateCtrl,
     ]) {
       controller.addListener(() => setState(() {}));
     }
@@ -66,29 +50,11 @@ class _ContractActionsBottomSheetState
   @override
   void dispose() {
     _consultationCostCtrl.dispose();
-    _firstTermWeightCtrl.dispose();
-    _firstTermLastPaymentDateCtrl.dispose();
-    _secondTermWeightCtrl.dispose();
-    _secondTermLastPaymentDateCtrl.dispose();
-    _thirdTermWeightCtrl.dispose();
-    _thirdTermLastPaymentDateCtrl.dispose();
     for (final worker in _workers) {
       worker.dispose();
     }
     super.dispose();
   }
-
-  bool get _term1Filled =>
-      _firstTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveDouble(_firstTermWeightCtrl.text) > 0;
-
-  bool get _term2Filled =>
-      _secondTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveDouble(_secondTermWeightCtrl.text) > 0;
-
-  bool get _term3Filled =>
-      _thirdTermLastPaymentDateCtrl.text.trim().isNotEmpty &&
-      _parsePositiveDouble(_thirdTermWeightCtrl.text) > 0;
 
   bool get _consultationCostFilled =>
       _parsePositiveDouble(_consultationCostCtrl.text) > 0;
@@ -97,14 +63,6 @@ class _ContractActionsBottomSheetState
     final digits = text.replaceAll(RegExp(r'[^0-9]'), '');
     return double.tryParse(digits) ?? 0.0;
   }
-
-  double _totalWeight() {
-    return _parsePositiveDouble(_firstTermWeightCtrl.text) +
-        _parsePositiveDouble(_secondTermWeightCtrl.text) +
-        _parsePositiveDouble(_thirdTermWeightCtrl.text);
-  }
-
-  bool get _isTotalWeightValid => _totalWeight() == 100.0;
 
   Widget _fileSection(BuildContext context) {
     if (widget.isDownload) return const SizedBox.shrink();
@@ -127,63 +85,9 @@ class _ContractActionsBottomSheetState
     );
   }
 
-  DateTime? _parseIsoFromCtrl(TextEditingController ctrl) {
-    final iso = Formatters.toIsoDate(ctrl.text);
-    return Formatters.tryParseIso(iso);
-  }
-
-  DateTime? _nextDay(DateTime? dt) => dt == null
-      ? null
-      : DateTime(dt.year, dt.month, dt.day).add(const Duration(days: 1));
-
-  Widget _termBlock({
-    required String title,
-    required TextEditingController dateCtrl,
-    required TextEditingController weightCtrl,
-    bool enabled = true,
-    DateTime? firstDate,
-    DateTime? initialDate,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: PkpTextFormField(
-                controller: dateCtrl,
-                labelText: title,
-                hintText: 'Pilih tanggal',
-                type: PkpTextFormFieldType.datetime,
-                enabled: enabled,
-                firstDate: firstDate,
-                initialDate: initialDate,
-              ),
-            ),
-            const SizedBox(width: 12),
-            SizedBox(
-              width: 120,
-              child: PkpTextFormField(
-                controller: weightCtrl,
-                labelText: 'Bobot',
-                hintText: '0',
-                type: PkpTextFormFieldType.percentage,
-                enabled: enabled,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
   bool _isAllRequiredFilled() {
-    // All required fields for upload: file selected, consultation cost, and all three terms.
-    return _consultationCostFilled &&
-        _term1Filled &&
-        _term2Filled &&
-        _term3Filled &&
-        (_selectedFile != null && !widget.isDownload);
+    // Required for upload: file selected and consultation cost filled.
+    return _consultationCostFilled && (_selectedFile != null && !widget.isDownload);
   }
 
   double _parseContractValue() {
@@ -196,8 +100,7 @@ class _ContractActionsBottomSheetState
   }
 
   bool _validateUpload() {
-    // Basic required fields already checked by _isAllRequiredFilled.
-    // Here enforce extra rules and show user-friendly errors.
+    // Ensure file exists and is a valid PDF with size <= 2MB, and cost > 0
     if (_selectedFile == null) {
       Get.snackbar(
         'Terjadi Kesalahan',
@@ -244,46 +147,6 @@ class _ContractActionsBottomSheetState
       return false;
     }
 
-    if (!_isTotalWeightValid) {
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        'Total bobot termin harus tepat 100%.',
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.errorDark,
-      );
-      return false;
-    }
-
-    // Validate date ordering: Term1 < Term2 < Term3 (UI enforces via pickers, but re-validate).
-    final t1 = _parseIsoFromCtrl(_firstTermLastPaymentDateCtrl);
-    final t2 = _parseIsoFromCtrl(_secondTermLastPaymentDateCtrl);
-    final t3 = _parseIsoFromCtrl(_thirdTermLastPaymentDateCtrl);
-    if (t1 == null || t2 == null || t3 == null) {
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        'Tanggal pembayaran tiap termin wajib diisi.',
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.errorDark,
-      );
-      return false;
-    }
-    // Normalize to date-only for comparison
-    final d1 = DateTime(t1.year, t1.month, t1.day);
-    final d2 = DateTime(t2.year, t2.month, t2.day);
-    final d3 = DateTime(t3.year, t3.month, t3.day);
-    if (!(d1.isBefore(d2) && d2.isBefore(d3))) {
-      Get.snackbar(
-        'Terjadi Kesalahan',
-        'Urutan tanggal termin harus berurutan (T1 < T2 < T3).',
-        colorText: AppColors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.errorDark,
-      );
-      return false;
-    }
-
     return true;
   }
 
@@ -292,44 +155,11 @@ class _ContractActionsBottomSheetState
     final uploading = controller.uploadContractLoading.value;
     final downloading = controller.downloadTemplateLoading.value;
     final isBusy = uploading || downloading;
+
+    // Enable action when not busy and minimal required fields are filled
     final bool isActionEnabled = widget.isDownload
-        ? (!isBusy &&
-              _consultationCostFilled &&
-              _term1Filled &&
-              _term2Filled &&
-              _term3Filled &&
-              _isTotalWeightValid)
-        : (!isBusy && _isAllRequiredFilled() && _isTotalWeightValid);
-
-    List<Installment>? buildInstallments() {
-      final d1 = Formatters.toIsoDate(_firstTermLastPaymentDateCtrl.text);
-      final d2 = Formatters.toIsoDate(_secondTermLastPaymentDateCtrl.text);
-      final d3 = Formatters.toIsoDate(_thirdTermLastPaymentDateCtrl.text);
-      if (d1 == null || d2 == null || d3 == null) return null;
-      return [
-        Installment(
-          percentage: _parsePositiveDouble(
-            _firstTermWeightCtrl.text,
-          ).toDouble(),
-          dueDate: d1,
-        ),
-        Installment(
-          percentage: _parsePositiveDouble(
-            _secondTermWeightCtrl.text,
-          ).toDouble(),
-          dueDate: d2,
-        ),
-        Installment(
-          percentage: _parsePositiveDouble(
-            _thirdTermWeightCtrl.text,
-          ).toDouble(),
-          dueDate: d3,
-        ),
-      ];
-    }
-
-    final term1Date = _parseIsoFromCtrl(_firstTermLastPaymentDateCtrl);
-    final term2Date = _parseIsoFromCtrl(_secondTermLastPaymentDateCtrl);
+        ? (!isBusy && _consultationCostFilled)
+        : (!isBusy && _isAllRequiredFilled());
 
     return SafeArea(
       child: ClipRRect(
@@ -346,7 +176,7 @@ class _ContractActionsBottomSheetState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // 1. Upload file section
+                    // 1. Upload file section (upload mode only)
                     _fileSection(context),
                     const SizedBox(height: 16),
 
@@ -358,37 +188,9 @@ class _ContractActionsBottomSheetState
                       type: PkpTextFormFieldType.currency,
                     ),
 
-                    const SizedBox(height: 16),
-
-                    // 2. Form per terms (1, 2, 3)
-                    _termBlock(
-                      title: 'Batas Waktu Pembayaran Termin 1',
-                      dateCtrl: _firstTermLastPaymentDateCtrl,
-                      weightCtrl: _firstTermWeightCtrl,
-                      enabled: true,
-                    ),
-                    const SizedBox(height: 16),
-                    _termBlock(
-                      title: 'Batas Waktu Pembayaran Termin 2',
-                      dateCtrl: _secondTermLastPaymentDateCtrl,
-                      weightCtrl: _secondTermWeightCtrl,
-                      enabled: _term1Filled,
-                      firstDate: _nextDay(term1Date),
-                      initialDate: _nextDay(term1Date),
-                    ),
-                    const SizedBox(height: 16),
-                    _termBlock(
-                      title: 'Batas Waktu Pembayaran Termin 3',
-                      dateCtrl: _thirdTermLastPaymentDateCtrl,
-                      weightCtrl: _thirdTermWeightCtrl,
-                      enabled: _term1Filled && _term2Filled,
-                      firstDate: _nextDay(term2Date),
-                      initialDate: _nextDay(term2Date),
-                    ),
-
                     const SizedBox(height: 20),
 
-                    // 3. Upload or download button (disabled until all validations pass)
+                    // 2. Upload or download button
                     PkpElevatedButton(
                       text: widget.isDownload
                           ? 'Generate Dokumen Kontrak'
@@ -397,74 +199,42 @@ class _ContractActionsBottomSheetState
                       isLoading: isBusy,
                       onPressed: widget.isDownload
                           ? () async {
-                              if (!_isTotalWeightValid) {
-                                Get.snackbar(
-                                  'Terjadi Kesalahan',
-                                  'Total bobot termin harus tepat 100%.',
-                                  colorText: AppColors.white,
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: AppColors.errorDark,
-                                );
-                                return;
-                              }
-
-                              final installments = buildInstallments();
-                              if (installments == null) {
-                                Get.snackbar(
-                                  'Terjadi Kesalahan',
-                                  'Data termin tidak valid.',
-                                  colorText: AppColors.white,
-                                  snackPosition: SnackPosition.BOTTOM,
-                                  backgroundColor: AppColors.errorDark,
-                                );
-                                return;
-                              }
-
-                              bool done = await controller
+                              final done = await controller
                                   .generateAndDownloadContractTemplate(
-                                    contractValue: _parseContractValue(),
-                                    installments: buildInstallments() ?? [],
-                                  );
-
+                                contractValue: _parseContractValue(),
+                                installments: const <Installment>[],
+                              );
                               if (done) {
                                 Get.back(); // Close bottom sheet on success
                               }
                             }
                           : (_isAllRequiredFilled()
-                                ? () async {
-                                    // Extra validation before submitting upload
-                                    if (!_validateUpload()) return;
-                                    final installments =
-                                        buildInstallments() ?? [];
+                              ? () async {
+                                  if (!_validateUpload()) return;
 
-                                    bool done = await controller.uploadContract(
-                                      _selectedFile!,
-                                      _parseContractValue(),
-                                      installments,
+                                  final done = await controller.uploadContract(
+                                    _selectedFile!,
+                                    _parseContractValue(),
+                                    const <Installment>[],
+                                  );
+                                  if (done) {
+                                    await Future.delayed(
+                                      const Duration(milliseconds: 150),
                                     );
-                                    if (done) {
-                                      // Small delay to ensure snackbar/fetchDetails UI updates
-                                      // settle before closing the bottom sheet. This prevents
-                                      // occasional timing issues where the sheet fails to
-                                      // dismiss immediately after a rapid state change.
-                                      await Future.delayed(
-                                        const Duration(milliseconds: 150),
-                                      );
-                                      try {
-                                        if (Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
-                                        } else {
-                                          Get.back();
-                                        }
-                                      } catch (_) {
-                                        // Last-resort fallback
-                                        try {
-                                          Get.back();
-                                        } catch (_) {}
+                                    try {
+                                      if (Navigator.of(context).canPop()) {
+                                        Navigator.of(context).pop();
+                                      } else {
+                                        Get.back();
                                       }
+                                    } catch (_) {
+                                      try {
+                                        Get.back();
+                                      } catch (_) {}
                                     }
                                   }
-                                : null),
+                                }
+                              : null),
                     ),
                   ],
                 ),
