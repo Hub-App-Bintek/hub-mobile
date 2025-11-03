@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/domain/repositories/files_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/survey_repository.dart';
@@ -24,6 +25,7 @@ import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_us
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 
 class ProjectDetailsBinding extends Bindings {
@@ -80,7 +82,10 @@ class ProjectDetailsBinding extends Bindings {
     Get.lazyPut<GenerateContractDraftUseCase>(
       () => GenerateContractDraftUseCase(Get.find<ContractRepository>()),
     );
-
+    Get.lazyPut<DownloadFileUseCase>(
+      () => DownloadFileUseCase(Get.find<FilesRepository>()),
+      fenix: true,
+    );
     Get.lazyPut<UploadFinalDocumentsUseCase>(
       () => UploadFinalDocumentsUseCase(Get.find<FinalDocumentRepository>()),
     );
@@ -116,6 +121,7 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<UploadFinalDocumentsUseCase>(),
         Get.find<ApproveFinalDocumentsUseCase>(),
         Get.find<RejectFinalDocumentsUseCase>(),
+        Get.find<DownloadFileUseCase>(),
       );
     });
   }

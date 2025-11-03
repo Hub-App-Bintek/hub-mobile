@@ -26,6 +26,9 @@ import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dar
     as payds;
 import 'package:pkp_hub/data/datasources/final_document/final_document_network_data_source.dart'
     as fdds;
+import 'package:pkp_hub/domain/repositories/files_repository.dart';
+import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart'
+    as filesds;
 
 class RepositoryInjection {
   RepositoryInjection._();
@@ -79,6 +82,12 @@ class RepositoryInjection {
     );
     Get.lazyPut<DesignRepository>(
       () => DesignRepositoryImpl(Get.find<designds.DesignNetworkDataSource>()),
+      fenix: true,
+    );
+
+    // Files repository (for downloading binary files)
+    Get.lazyPut<FilesRepository>(
+      () => FilesRepositoryImpl(Get.find<filesds.FilesNetworkDataSource>()),
       fenix: true,
     );
   }

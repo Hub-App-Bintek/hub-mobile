@@ -40,6 +40,7 @@ import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
+import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDetailsController extends BaseController {
@@ -66,6 +67,7 @@ class ProjectDetailsController extends BaseController {
   final UploadFinalDocumentsUseCase _uploadFinalDocumentsUseCase;
   final ApproveFinalDocumentsUseCase _approveFinalDocumentsUseCase;
   final RejectFinalDocumentsUseCase _rejectFinalDocumentsUseCase;
+  final DownloadFileUseCase _downloadFileUseCase;
 
   ProjectDetailsController(
     this.projectId,
@@ -89,6 +91,7 @@ class ProjectDetailsController extends BaseController {
     this._uploadFinalDocumentsUseCase,
     this._approveFinalDocumentsUseCase,
     this._rejectFinalDocumentsUseCase,
+    this._downloadFileUseCase,
   );
 
   var isLoading = false.obs;
@@ -625,7 +628,6 @@ class ProjectDetailsController extends BaseController {
             backgroundColor: AppColors.successDark,
             colorText: AppColors.white,
           );
-          Get.back();
           fetchDetails();
           done = true;
         },
@@ -653,6 +655,8 @@ class ProjectDetailsController extends BaseController {
 
     if (downloadTemplateLoading.value) return false;
     downloadTemplateLoading.value = true;
+    // Show progress while generating/downloading (immediately to avoid missing fast ops)
+    showLoadingOverlay(message: 'Mengunduh dokumen...', delay: Duration.zero);
 
     bool done = false;
     try {
@@ -665,6 +669,9 @@ class ProjectDetailsController extends BaseController {
           GenerateContractDraftParams(consultationId: cId, request: req),
         ),
         onSuccess: (file) async {
+          // Hide overlay before showing any native save dialogs (esp. iOS)
+          hideLoadingOverlay();
+
           final projectName = details.value?.name ?? 'Untitled';
 
           // Prefer public Documents on Android; iOS will show a system Save dialog
@@ -698,11 +705,14 @@ class ProjectDetailsController extends BaseController {
           done = true;
         },
         onFailure: (f) {
+          hideLoadingOverlay();
           showError(f);
           done = false;
         },
       );
     } finally {
+      // Ensure overlay is closed in case of early returns
+      hideLoadingOverlay();
       downloadTemplateLoading.value = false;
     }
 
@@ -872,5 +882,70 @@ class ProjectDetailsController extends BaseController {
     final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isHomeowner && status == 'MENUNGGU_APPROVAL_KONTRAK';
+  }
+
+  Future<bool> downloadFileById(String? fileId) async {
+    if (fileId == null || fileId.isEmpty) {
+      showError(const ServerFailure(message: 'File ID not found'));
+      return false;
+    }
+
+    if (downloadTemplateLoading.value) return false;
+    downloadTemplateLoading.value = true;
+    // Show progress overlay during file download (immediately)
+    showLoadingOverlay(message: 'Mengunduh file...', delay: Duration.zero);
+
+    bool done = false;
+    try {
+      await handleAsync<DownloadedFile>(
+        () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
+        onSuccess: (file) async {
+          // Hide overlay before potential native save dialogs
+          hideLoadingOverlay();
+
+          final projectName = details.value?.name ?? 'Untitled';
+
+          final saved = await saveToExternalProjectDocuments(
+            projectName: projectName,
+            fileName: file.fileName,
+            bytes: file.bytes,
+          );
+
+          if (saved != null && saved.isNotEmpty) {
+            final where = Platform.isAndroid
+                ? 'Dokumen > PKP > $projectName'
+                : 'Files app (lokasi yang Anda pilih)';
+            Get.snackbar(
+              'Berhasil',
+              'File disimpan di: $where',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.successDark,
+              colorText: AppColors.white,
+            );
+            done = true;
+          } else {
+            Get.snackbar(
+              'Gagal',
+              'File gagal didownload.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.errorDark,
+              colorText: AppColors.white,
+            );
+            done = false;
+          }
+        },
+        onFailure: (f) {
+          hideLoadingOverlay();
+          showError(f);
+          done = false;
+        },
+      );
+    } finally {
+      // Ensure overlay is closed
+      hideLoadingOverlay();
+      downloadTemplateLoading.value = false;
+    }
+
+    return done;
   }
 }

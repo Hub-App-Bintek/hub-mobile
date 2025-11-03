@@ -17,4 +17,9 @@ abstract class FilesApiService {
     @Part(name: 'entityId') String entityId,
     @Part(name: 'file') File file,
   );
+
+  // Download a file by its id. Returns raw bytes in the HTTP response.
+  @DioResponseType(ResponseType.bytes)
+  @GET(ApiEndpoints.filesDownload)
+  Future<HttpResponse<List<int>>> downloadFile(@Path('fileId') String fileId);
 }
