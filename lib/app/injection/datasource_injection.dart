@@ -11,6 +11,7 @@ import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
+import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
@@ -26,6 +27,7 @@ import 'package:pkp_hub/data/datasources/project/project_network_data_source.dar
 import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.dart'
     as revds;
 import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart';
 
 class DataSourceInjection {
   DataSourceInjection._();
@@ -112,6 +114,15 @@ class DataSourceInjection {
       () => designds.DesignNetworkDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<DesignApiService>(),
+      ),
+      fenix: true,
+    );
+
+    // Files network datasource (uses ApiClient and FilesApiService)
+    Get.lazyPut<FilesNetworkDataSource>(
+      () => FilesNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<FilesApiService>(),
       ),
       fenix: true,
     );

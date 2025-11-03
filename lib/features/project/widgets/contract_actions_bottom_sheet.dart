@@ -442,6 +442,27 @@ class _ContractActionsBottomSheetState
                                       _parseContractValue(),
                                       installments,
                                     );
+                                    if (done) {
+                                      // Small delay to ensure snackbar/fetchDetails UI updates
+                                      // settle before closing the bottom sheet. This prevents
+                                      // occasional timing issues where the sheet fails to
+                                      // dismiss immediately after a rapid state change.
+                                      await Future.delayed(
+                                        const Duration(milliseconds: 150),
+                                      );
+                                      try {
+                                        if (Navigator.of(context).canPop()) {
+                                          Navigator.of(context).pop();
+                                        } else {
+                                          Get.back();
+                                        }
+                                      } catch (_) {
+                                        // Last-resort fallback
+                                        try {
+                                          Get.back();
+                                        } catch (_) {}
+                                      }
+                                    }
                                   }
                                 : null),
                     ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// A customizable card widget that displays a title, subtitle, and an optional
-/// trailing widget which can be an icon or a button. If [fileUrl] is provided
+/// trailing widget which can be an icon or a button. If [fileId] is provided
 /// (and both [actionButton] and [suffixIcon] are null), a download button will
 /// be shown that calls [onDownload] with the URL or opens it using
 /// `url_launcher`.
@@ -16,7 +15,7 @@ class PkpCard extends StatelessWidget {
     this.onTap,
     this.suffixIcon,
     this.actionButton,
-    this.fileUrl,
+    this.fileId,
     this.onDownload,
     this.shouldShowDownloadButton = false,
   }) : assert(
@@ -42,9 +41,9 @@ class PkpCard extends StatelessWidget {
 
   /// Optional file URL. When provided and neither [actionButton] nor [suffixIcon]
   /// are supplied, a download button will be shown.
-  final String? fileUrl;
+  final String? fileId;
 
-  /// Optional download callback. If provided, it will be called with [fileUrl]
+  /// Optional download callback. If provided, it will be called with [fileId]
   /// when the user taps the download button. If not provided, the card will
   /// attempt to open the URL using `url_launcher`.
   final ValueChanged<String>? onDownload;
@@ -61,16 +60,15 @@ class PkpCard extends StatelessWidget {
       trailing = actionButton;
     } else if (suffixIcon != null) {
       trailing = suffixIcon;
-    } else if (fileUrl != null &&
-        fileUrl!.trim().isNotEmpty &&
+    } else if (fileId != null &&
+        fileId?.trim().isNotEmpty == true &&
         shouldShowDownloadButton) {
       trailing = IconButton(
         tooltip: 'Download',
         icon: const Icon(Icons.download_rounded),
         onPressed: () async {
-          final url = fileUrl!.trim();
           if (onDownload != null) {
-            onDownload!(url);
+            onDownload!(fileId?.trim() ?? '');
           }
         },
       );

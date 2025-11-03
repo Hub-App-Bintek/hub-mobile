@@ -7,6 +7,7 @@ import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/user_role.dart' as ur;
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
@@ -379,25 +380,19 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: history.map((timeline) {
-        // find first non-empty file URL
-        String? firstFileUrl;
-        if (timeline.files != null) {
-          for (final f in timeline.files!) {
-            if (f != null && f.trim().isNotEmpty) {
-              firstFileUrl = f.trim();
-              break;
-            }
-          }
-        }
-
+        String fileId = timeline.files?.firstOrNull ?? '';
         return PkpCard(
           title: timeline.title ?? '',
           subtitle: timeline.subtitle ?? '',
-          fileUrl: firstFileUrl,
-          shouldShowDownloadButton: timeline.step == 'CONTRACT',
-          onDownload: firstFileUrl != null
-              ? (url) {
-                  // controller.downloadFile(url);
+          fileId: fileId,
+          shouldShowDownloadButton:
+              timeline.step == 'CONTRACT' &&
+              controller.userRole.value == ur.UserRole.homeowner,
+          onDownload: fileId.isNotEmpty
+              ? (fileId) {
+                  if (fileId.isNotEmpty) {
+                    controller.downloadFileById(fileId);
+                  }
                 }
               : null,
         );

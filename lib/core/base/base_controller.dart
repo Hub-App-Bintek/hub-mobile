@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
+import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/network_manager.dart';
@@ -24,6 +26,133 @@ abstract class BaseController extends GetxController {
   static const MethodChannel _filesChannel = MethodChannel(
     'id.go.pkp.hub/files',
   );
+
+  // --- Lightweight progress overlay (to avoid jank) ---
+  OverlayEntry? _progressOverlay;
+  Timer? _progressTimer;
+  bool _progressPending = false;
+  final ValueNotifier<String?> _progressMessage = ValueNotifier<String?>(null);
+
+  void showLoadingOverlay({
+    String? message,
+    Duration delay = const Duration(milliseconds: 150),
+  }) {
+    // If overlay is already visible, just update message.
+    if (_progressOverlay != null) {
+      _progressMessage.value = message;
+      return;
+    }
+    // If a show is already pending, update message and return.
+    if (_progressPending) {
+      _progressMessage.value = message;
+      return;
+    }
+
+    _progressPending = true;
+    _progressMessage.value = message;
+
+    // If delay is zero, insert immediately to avoid race with early hide calls
+    if (delay == Duration.zero) {
+      _insertProgressOverlay();
+      return;
+    }
+
+    _progressTimer = Timer(delay, () {
+      // If canceled before timer fires, do nothing.
+      if (!_progressPending) return;
+      _insertProgressOverlay();
+    });
+  }
+
+  void _insertProgressOverlay() {
+    final overlayContext = Get.overlayContext ?? Get.context;
+    if (overlayContext == null) {
+      _progressPending = false;
+      return;
+    }
+
+    _progressOverlay = OverlayEntry(
+      builder: (context) {
+        return RepaintBoundary(
+          child: IgnorePointer(
+            ignoring: false,
+            child: Stack(
+              children: [
+                // Light translucent scrim (cheaper than dialog barrier)
+                Positioned.fill(
+                  child: Container(color: Colors.black.withValues(alpha: 0.15)),
+                ),
+                // Centered compact progress card
+                Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 14,
+                        horizontal: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x14000000),
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(strokeWidth: 2.2),
+                          ),
+                          const SizedBox(width: 12),
+                          ValueListenableBuilder<String?>(
+                            valueListenable: _progressMessage,
+                            builder: (context, msg, _) {
+                              return Text(
+                                msg?.isNotEmpty == true ? msg! : 'Memproses...',
+                                style: AppTextStyles.bodyM,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    final overlay = Overlay.of(overlayContext, rootOverlay: true);
+    if (overlay == null) {
+      _progressPending = false;
+      return;
+    }
+    overlay.insert(_progressOverlay!);
+    _progressPending = false;
+  }
+
+  void hideLoadingOverlay() {
+    // Cancel any pending show
+    _progressPending = false;
+    _progressTimer?.cancel();
+    _progressTimer = null;
+
+    // Remove if visible
+    if (_progressOverlay != null) {
+      _progressOverlay!.remove();
+      _progressOverlay = null;
+    }
+  }
 
   @protected
   Future<void> handleAsync<T>(
