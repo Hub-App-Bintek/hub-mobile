@@ -16,6 +16,8 @@ abstract class ContractRepository {
     String contractId,
     String? revisionNotes,
   );
+
+  Future<Result<Contract, Failure>> requestPayment(String contractId);
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
   );
@@ -53,6 +55,10 @@ class ContractRepositoryImpl implements ContractRepository {
     contractId,
     revisionNotes: revisionNotes,
   );
+
+  @override
+  Future<Result<Contract, Failure>> requestPayment(String contractId) =>
+      _remoteDataSource.requestPayment(contractId);
 
   @override
   Future<Result<UploadContractResponse, Failure>> uploadContract(

@@ -311,6 +311,23 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           );
         }
 
+        // Consultant request payment action
+        if (controller.shouldShowRequestPaymentButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Request Pembayaran',
+              isLoading: controller.requestPaymentLoading.value,
+              enabled: !controller.requestPaymentLoading.value,
+              onPressed: controller.requestPaymentLoading.value
+                  ? null
+                  : () async {
+                      controller.requestPayment();
+                    },
+            ),
+          );
+        }
+
         return const SizedBox.shrink();
       }),
     );

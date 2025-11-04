@@ -50,4 +50,7 @@ abstract class ContractApiService {
 
   @PATCH(ApiEndpoints.contractSign)
   Future<Contract> signContract(@Path('contractId') String contractId);
+
+  @POST(ApiEndpoints.contractRequestPayment)
+  Future<Contract> requestPayment(@Path('contractId') String contractId);
 }

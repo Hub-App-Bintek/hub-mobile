@@ -22,6 +22,7 @@ abstract class ContractNetworkDataSource {
     String contractId, {
     String? revisionNotes,
   });
+  Future<Result<Contract, Failure>> requestPayment(String contractId);
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
   );
@@ -108,6 +109,18 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
       return Error(
         ServerFailure(message: 'Failed to parse request revision: $e'),
       );
+    }
+  }
+
+  @override
+  Future<Result<Contract, Failure>> requestPayment(String contractId) async {
+    try {
+      final response = await _contractApi.requestPayment(contractId);
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to request payment: $e'));
     }
   }
 
