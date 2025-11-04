@@ -1,34 +1,36 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
-import 'package:pkp_hub/domain/repositories/files_repository.dart';
-import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
-import 'package:pkp_hub/domain/repositories/survey_repository.dart';
 import 'package:pkp_hub/domain/repositories/contract_repository.dart';
+import 'package:pkp_hub/domain/repositories/files_repository.dart';
 import 'package:pkp_hub/domain/repositories/final_document_repository.dart';
-import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
+import 'package:pkp_hub/domain/repositories/payment_repository.dart';
+import 'package:pkp_hub/domain/repositories/project_repository.dart';
+import 'package:pkp_hub/domain/repositories/survey_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultation/accept_consultation_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/finalize_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/reject_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/start_active_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/start_revision_use_case.dart';
-import 'package:pkp_hub/domain/usecases/consultation/finalize_consultation_use_case.dart';
-import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
-import 'package:pkp_hub/domain/usecases/survey/approve_survey_schedule_use_case.dart';
-import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
-import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
-import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/request_payment_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
-import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
+import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/payment/approve_payment_use_case.dart';
+import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
+import 'package:pkp_hub/domain/usecases/survey/approve_survey_schedule_use_case.dart';
+import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
+import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
+import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
+import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
-import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/request_payment_use_case.dart';
 
 class ProjectDetailsBinding extends Bindings {
   @override
@@ -104,6 +106,9 @@ class ProjectDetailsBinding extends Bindings {
     Get.lazyPut<RequestPaymentUseCase>(
       () => RequestPaymentUseCase(Get.find<ContractRepository>()),
     );
+    Get.lazyPut<ApprovePaymentUseCase>(
+      () => ApprovePaymentUseCase(Get.find<PaymentRepository>()),
+    );
 
     Get.lazyPut<ProjectDetailsController>(() {
       final args = Get.arguments as Map<String, dynamic>?;
@@ -133,6 +138,7 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<DownloadFileUseCase>(),
         Get.find<SignContractUseCase>(),
         Get.find<RequestPaymentUseCase>(),
+        Get.find<ApprovePaymentUseCase>(),
       );
     });
   }

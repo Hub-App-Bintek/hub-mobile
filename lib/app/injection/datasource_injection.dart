@@ -12,6 +12,7 @@ import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/network/services/files_api_service.dart';
+import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
@@ -28,6 +29,8 @@ import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.d
     as revds;
 import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/wallet/wallet_local_repository.dart';
+import 'package:pkp_hub/data/datasources/wallet/wallet_network_data_source.dart';
 
 class DataSourceInjection {
   DataSourceInjection._();
@@ -123,6 +126,20 @@ class DataSourceInjection {
       () => FilesNetworkDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<FilesApiService>(),
+      ),
+      fenix: true,
+    );
+
+    Get.lazyPut<WalletLocalDataSource>(
+      () => WalletLocalDataSourceImpl(Get.find<UserStorage>()),
+      fenix: true,
+    );
+
+    // Wallet network datasource
+    Get.lazyPut<WalletNetworkDataSource>(
+      () => WalletNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<WalletApiService>(),
       ),
       fenix: true,
     );

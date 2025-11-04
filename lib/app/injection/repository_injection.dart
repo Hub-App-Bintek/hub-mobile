@@ -4,6 +4,7 @@ import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultant/consultant_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/wallet/wallet_local_repository.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
@@ -29,6 +30,8 @@ import 'package:pkp_hub/data/datasources/final_document/final_document_network_d
 import 'package:pkp_hub/domain/repositories/files_repository.dart';
 import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart'
     as filesds;
+import 'package:pkp_hub/data/datasources/wallet/wallet_network_data_source.dart';
+import 'package:pkp_hub/domain/repositories/wallet_repository.dart';
 
 class RepositoryInjection {
   RepositoryInjection._();
@@ -88,6 +91,15 @@ class RepositoryInjection {
     // Files repository (for downloading binary files)
     Get.lazyPut<FilesRepository>(
       () => FilesRepositoryImpl(Get.find<filesds.FilesNetworkDataSource>()),
+      fenix: true,
+    );
+
+    // Wallet repository
+    Get.lazyPut<WalletRepository>(
+      () => WalletRepositoryImpl(
+        Get.find<WalletNetworkDataSource>(),
+        Get.find<WalletLocalDataSource>(),
+      ),
       fenix: true,
     );
   }

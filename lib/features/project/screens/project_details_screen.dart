@@ -206,6 +206,25 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           );
         }
 
+        // Consultant can upload documents when consultation is active and
+        // the first consultation history state is STARTED
+        if (controller.shouldShowUploadDocumentsButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Unggah Dokumen',
+              // reuse existing uploadContractLoading as a conservative loading flag
+              isLoading: controller.uploadContractLoading.value,
+              enabled: !(controller.uploadContractLoading.value || controller.downloadTemplateLoading.value),
+              onPressed: (controller.uploadContractLoading.value || controller.downloadTemplateLoading.value)
+                  ? null
+                  : () {
+                      // TODO: Show upload required documents bottom sheet
+                    },
+            ),
+          );
+        }
+
         // Consultant contract actions: download template & upload contract
         if (controller.shouldShowContractActions) {
           return SafeArea(
@@ -316,13 +335,46 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           return SafeArea(
             minimum: const EdgeInsets.all(16),
             child: PkpElevatedButton(
-              text: 'Request Pembayaran',
+              text: 'Minta Pembayaran',
               isLoading: controller.requestPaymentLoading.value,
               enabled: !controller.requestPaymentLoading.value,
               onPressed: controller.requestPaymentLoading.value
                   ? null
                   : () async {
-                      controller.requestPayment();
+                      controller.showConfirmationDialog(
+                        title: 'Konfirmasi',
+                        message:
+                            'Apakah Anda yakin ingin meminta pembayaran ke pemilik lahan?',
+                        confirmText: 'Ya',
+                        onConfirm: controller.requestPayment,
+                        cancelText: 'Batal',
+                        onCancel: () {},
+                      );
+                    },
+            ),
+          );
+        }
+
+        // Homeowner payment actions (approve / pay)
+        if (controller.shouldShowPaymentButtons) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Lakukan Pembayaran',
+              isLoading: controller.approvePaymentLoading.value,
+              enabled: !controller.approvePaymentLoading.value,
+              onPressed: controller.approvePaymentLoading.value
+                  ? null
+                  : () async {
+                      controller.showConfirmationDialog(
+                        title: 'Konfirmasi Pembayaran',
+                        message:
+                            'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
+                        confirmText: 'Ya',
+                        onConfirm: controller.approvePayment,
+                        cancelText: 'Batal',
+                        onCancel: () {},
+                      );
                     },
             ),
           );

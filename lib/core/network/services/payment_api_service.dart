@@ -20,4 +20,7 @@ abstract class PaymentApiService {
   Future<List<Payment>> getPayments(
     @Query('consultationId') String consultationId,
   );
+
+  @POST(ApiEndpoints.paymentApprove)
+  Future<Payment> approvePayment(@Path('paymentId') String paymentId);
 }

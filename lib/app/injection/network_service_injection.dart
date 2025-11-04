@@ -12,6 +12,7 @@ import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/network/services/files_api_service.dart';
+import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
 
 class NetworkServiceInjection {
   NetworkServiceInjection._();
@@ -63,6 +64,10 @@ class NetworkServiceInjection {
     );
     Get.lazyPut<FilesApiService>(
       () => FilesApiService(Get.find<ApiClient>().dio),
+      fenix: true,
+    );
+    Get.lazyPut<WalletApiService>(
+      () => WalletApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

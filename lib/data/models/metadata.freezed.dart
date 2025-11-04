@@ -28,6 +28,8 @@ mixin _$Metadata {
   String? get contractId => throw _privateConstructorUsedError;
   double? get surveyCost => throw _privateConstructorUsedError;
   String? get scheduleId => throw _privateConstructorUsedError;
+  String? get paymentId => throw _privateConstructorUsedError;
+  double? get totalPaymentAmount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -48,6 +50,8 @@ abstract class $MetadataCopyWith<$Res> {
     String? contractId,
     double? surveyCost,
     String? scheduleId,
+    String? paymentId,
+    double? totalPaymentAmount,
   });
 }
 
@@ -71,6 +75,8 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
     Object? contractId = freezed,
     Object? surveyCost = freezed,
     Object? scheduleId = freezed,
+    Object? paymentId = freezed,
+    Object? totalPaymentAmount = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -102,6 +108,14 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
                 ? _value.scheduleId
                 : scheduleId // ignore: cast_nullable_to_non_nullable
                       as String?,
+            paymentId: freezed == paymentId
+                ? _value.paymentId
+                : paymentId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            totalPaymentAmount: freezed == totalPaymentAmount
+                ? _value.totalPaymentAmount
+                : totalPaymentAmount // ignore: cast_nullable_to_non_nullable
+                      as double?,
           )
           as $Val,
     );
@@ -125,6 +139,8 @@ abstract class _$$MetadataImplCopyWith<$Res>
     String? contractId,
     double? surveyCost,
     String? scheduleId,
+    String? paymentId,
+    double? totalPaymentAmount,
   });
 }
 
@@ -147,6 +163,8 @@ class __$$MetadataImplCopyWithImpl<$Res>
     Object? contractId = freezed,
     Object? surveyCost = freezed,
     Object? scheduleId = freezed,
+    Object? paymentId = freezed,
+    Object? totalPaymentAmount = freezed,
   }) {
     return _then(
       _$MetadataImpl(
@@ -178,6 +196,14 @@ class __$$MetadataImplCopyWithImpl<$Res>
             ? _value.scheduleId
             : scheduleId // ignore: cast_nullable_to_non_nullable
                   as String?,
+        paymentId: freezed == paymentId
+            ? _value.paymentId
+            : paymentId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        totalPaymentAmount: freezed == totalPaymentAmount
+            ? _value.totalPaymentAmount
+            : totalPaymentAmount // ignore: cast_nullable_to_non_nullable
+                  as double?,
       ),
     );
   }
@@ -194,6 +220,8 @@ class _$MetadataImpl implements _Metadata {
     this.contractId,
     this.surveyCost,
     this.scheduleId,
+    this.paymentId,
+    this.totalPaymentAmount,
   });
 
   factory _$MetadataImpl.fromJson(Map<String, dynamic> json) =>
@@ -213,10 +241,14 @@ class _$MetadataImpl implements _Metadata {
   final double? surveyCost;
   @override
   final String? scheduleId;
+  @override
+  final String? paymentId;
+  @override
+  final double? totalPaymentAmount;
 
   @override
   String toString() {
-    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, contractId: $contractId, surveyCost: $surveyCost, scheduleId: $scheduleId)';
+    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, contractId: $contractId, surveyCost: $surveyCost, scheduleId: $scheduleId, paymentId: $paymentId, totalPaymentAmount: $totalPaymentAmount)';
   }
 
   @override
@@ -234,7 +266,11 @@ class _$MetadataImpl implements _Metadata {
             (identical(other.surveyCost, surveyCost) ||
                 other.surveyCost == surveyCost) &&
             (identical(other.scheduleId, scheduleId) ||
-                other.scheduleId == scheduleId));
+                other.scheduleId == scheduleId) &&
+            (identical(other.paymentId, paymentId) ||
+                other.paymentId == paymentId) &&
+            (identical(other.totalPaymentAmount, totalPaymentAmount) ||
+                other.totalPaymentAmount == totalPaymentAmount));
   }
 
   @JsonKey(ignore: true)
@@ -248,6 +284,8 @@ class _$MetadataImpl implements _Metadata {
     contractId,
     surveyCost,
     scheduleId,
+    paymentId,
+    totalPaymentAmount,
   );
 
   @JsonKey(ignore: true)
@@ -271,6 +309,8 @@ abstract class _Metadata implements Metadata {
     final String? contractId,
     final double? surveyCost,
     final String? scheduleId,
+    final String? paymentId,
+    final double? totalPaymentAmount,
   }) = _$MetadataImpl;
 
   factory _Metadata.fromJson(Map<String, dynamic> json) =
@@ -290,6 +330,10 @@ abstract class _Metadata implements Metadata {
   double? get surveyCost;
   @override
   String? get scheduleId;
+  @override
+  String? get paymentId;
+  @override
+  double? get totalPaymentAmount;
   @override
   @JsonKey(ignore: true)
   _$$MetadataImplCopyWith<_$MetadataImpl> get copyWith =>

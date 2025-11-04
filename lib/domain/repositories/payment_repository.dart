@@ -10,6 +10,7 @@ abstract class PaymentRepository {
     CreatePaymentRequest request,
   );
   Future<Result<List<Payment>, Failure>> getPayments(String consultationId);
+  Future<Result<Payment, Failure>> approvePayment(String paymentId);
 }
 
 class PaymentRepositoryImpl implements PaymentRepository {
@@ -25,4 +26,8 @@ class PaymentRepositoryImpl implements PaymentRepository {
   @override
   Future<Result<List<Payment>, Failure>> getPayments(String consultationId) =>
       _ds.getPayments(consultationId);
+
+  @override
+  Future<Result<Payment, Failure>> approvePayment(String paymentId) =>
+      _ds.approvePayment(paymentId);
 }

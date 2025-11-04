@@ -15,6 +15,8 @@ _$MetadataImpl _$$MetadataImplFromJson(Map<String, dynamic> json) =>
       contractId: json['contractId'] as String?,
       surveyCost: (json['surveyCost'] as num?)?.toDouble(),
       scheduleId: json['scheduleId'] as String?,
+      paymentId: json['paymentId'] as String?,
+      totalPaymentAmount: (json['totalPaymentAmount'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
@@ -26,4 +28,6 @@ Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
       'contractId': instance.contractId,
       'surveyCost': instance.surveyCost,
       'scheduleId': instance.scheduleId,
+      'paymentId': instance.paymentId,
+      'totalPaymentAmount': instance.totalPaymentAmount,
     };
