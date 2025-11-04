@@ -13,6 +13,7 @@ abstract class PaymentNetworkDataSource {
   );
 
   Future<Result<List<Payment>, Failure>> getPayments(String consultationId);
+  Future<Result<Payment, Failure>> approvePayment(String paymentId);
 }
 
 class PaymentNetworkDataSourceImpl implements PaymentNetworkDataSource {
@@ -48,6 +49,18 @@ class PaymentNetworkDataSourceImpl implements PaymentNetworkDataSource {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse payments: $e'));
+    }
+  }
+
+  @override
+  Future<Result<Payment, Failure>> approvePayment(String paymentId) async {
+    try {
+      final response = await _paymentApi.approvePayment(paymentId);
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to approve payment: $e'));
     }
   }
 }

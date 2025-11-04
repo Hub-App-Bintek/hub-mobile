@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
@@ -13,6 +13,7 @@ import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/current_survey_schedule.dart';
 import 'package:pkp_hub/data/models/installment.dart';
+import 'package:pkp_hub/data/models/payment.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
@@ -37,6 +38,7 @@ import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/payment/approve_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/approve_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
@@ -74,6 +76,7 @@ class ProjectDetailsController extends BaseController {
   // New use case for signing contract
   final SignContractUseCase _signContractUseCase;
   final RequestPaymentUseCase _requestPaymentUseCase;
+  final ApprovePaymentUseCase _approvePaymentUseCase;
 
   ProjectDetailsController(
     this.projectId,
@@ -100,6 +103,7 @@ class ProjectDetailsController extends BaseController {
     this._downloadFileUseCase,
     this._signContractUseCase,
     this._requestPaymentUseCase,
+    this._approvePaymentUseCase,
   );
 
   var isLoading = false.obs;
@@ -110,6 +114,7 @@ class ProjectDetailsController extends BaseController {
   // Use RxList for robust reactivity with lists
   final RxList<ProjectHistory> consultationHistory = <ProjectHistory>[].obs;
   final userRole = Rxn<ur.UserRole>();
+  String _paymentId = '';
 
   // Loading flags for homeowner actions
   final RxBool approveLoading = false.obs;
@@ -133,6 +138,7 @@ class ProjectDetailsController extends BaseController {
   // Loading flag for signing contract
   final RxBool signContractLoading = false.obs;
   final RxBool requestPaymentLoading = false.obs;
+  final RxBool approvePaymentLoading = false.obs;
 
   // Scroll controller for timeline list
   final ScrollController timelineScrollController = ScrollController();
@@ -337,6 +343,29 @@ class ProjectDetailsController extends BaseController {
             'Kontrak telah ditandatangani oleh $lastSigner dan menunggu konsultan meminta proses pembayaran';
         timeline.add(
           _buildProjectHistory(title: timelineText, projectHistory: project),
+        );
+      } else if (project.step == 'PAYMENT' && project.state == 'REQUESTED') {
+        _paymentId =
+            details
+                .value
+                ?.consultation
+                ?.consultationHistory
+                ?.firstOrNull
+                ?.metadata
+                ?.paymentId ??
+            '';
+        String timelineText =
+            'Konsultan ${consultation.consultantName ?? ''} meminta pembayaran sebesar ${Formatters.currency(project.metadata?.totalPaymentAmount ?? 0.0)}';
+        timeline.add(
+          _buildProjectHistory(title: timelineText, projectHistory: project),
+        );
+      } else if (project.step == 'CONSULTATION' && project.state == 'STARTED') {
+        timeline.add(
+          _buildProjectHistory(
+            title:
+                'Pemilik lahan telah melakukan pembayaran. Konsultan ${consultation.consultantName ?? ''} akan menyiapkan dokumen yang diperlukan.',
+            projectHistory: project,
+          ),
         );
       }
     });
@@ -973,6 +1002,49 @@ class ProjectDetailsController extends BaseController {
     }
   }
 
+  Future<void> approvePayment() async {
+    if (_paymentId.isEmpty) {
+      showError(const ServerFailure(message: 'Payment ID not found'));
+      return;
+    }
+
+    if (approvePaymentLoading.value) return;
+    approvePaymentLoading.value = true;
+    final balance = await _userStorage.getBalance() ?? 0.0;
+    final requiredAmount =
+        consultationHistory.firstOrNull?.metadata?.totalPaymentAmount ?? 0.0;
+    if (requiredAmount > balance) {
+      Get.snackbar(
+        'Terjadi Kesalahan',
+        'Saldo di wallet tidak mencukupi',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+        colorText: AppColors.white,
+      );
+      approvePaymentLoading.value = false;
+      return;
+    }
+
+    try {
+      await handleAsync<Payment>(
+        () => _approvePaymentUseCase(_paymentId),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Pembayaran berhasil disetujui dan ditahan di escrow',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (failure) => showError(failure),
+      );
+    } finally {
+      approvePaymentLoading.value = false;
+    }
+  }
+
   ProjectHistory _buildProjectHistory({
     required String title,
     String? subtitle,
@@ -1053,6 +1125,22 @@ class ProjectDetailsController extends BaseController {
         (status == 'SURVEY_SELESAI' || status == 'MENYIAPKAN_KONTRAK');
   }
 
+  /// Visibility rule for consultant to upload documents when consultation is active
+  /// Show when user is consultant, consultation.status == 'AKTIF', and
+  /// the first consultation history item (from the detail response order)
+  /// has state == 'STARTED'.
+  bool get shouldShowUploadDocumentsButton {
+    final isConsultant = userRole.value == ur.UserRole.consultant;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    if (!isConsultant || status != 'AKTIF') return false;
+
+    final histories = details.value?.consultation?.consultationHistory;
+    if (histories == null || histories.isEmpty) return false;
+
+    final firstState = histories.first.state?.toUpperCase();
+    return firstState == 'STARTED';
+  }
+
   /// Visibility rules for homeowner to approve or reject contract
   bool get shouldShowContractApprovalButtons {
     final isHomeowner = userRole.value == ur.UserRole.homeowner;
@@ -1088,5 +1176,13 @@ class ProjectDetailsController extends BaseController {
     final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isConsultant && status == 'MENUNGGU_REQUEST_PAYMENT';
+  }
+
+  /// Visibility rule for homeowner payment actions
+  /// Shows when consultation status is MENUNGGU_PEMBAYARAN and user is homeowner
+  bool get shouldShowPaymentButtons {
+    final isHomeowner = userRole.value == ur.UserRole.homeowner;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    return isHomeowner && status == 'MENUNGGU_PEMBAYARAN';
   }
 }

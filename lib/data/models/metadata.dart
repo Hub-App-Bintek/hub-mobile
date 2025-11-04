@@ -13,6 +13,8 @@ class Metadata with _$Metadata {
     String? contractId,
     double? surveyCost,
     String? scheduleId,
+    String? paymentId,
+    double? totalPaymentAmount,
   }) = _Metadata;
 
   factory Metadata.fromJson(Map<String, dynamic> json) =>

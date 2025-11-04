@@ -9,11 +9,15 @@ import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
+import 'package:pkp_hub/data/models/response/wallet_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 
 class HomeController extends BaseController with WidgetsBindingObserver {
   final UserStorage _userStorage;
   final GetProjectsUseCase getProjectListUseCase;
+  final GetWalletBalanceUseCase getWalletBalanceUseCase;
+
   final RxDouble balance = 0.0.obs;
 
   final PageController carouselController = PageController();
@@ -31,7 +35,11 @@ class HomeController extends BaseController with WidgetsBindingObserver {
 
   String? _token;
 
-  HomeController(this._userStorage, this.getProjectListUseCase);
+  HomeController(
+    this._userStorage,
+    this.getProjectListUseCase,
+    this.getWalletBalanceUseCase,
+  );
 
   @override
   void onInit() {
@@ -83,7 +91,15 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   }
 
   Future<void> loadBalance() async {
-    // TODO: Fetch balance from API or local storage
+    await handleAsync<WalletResponse>(
+      () => getWalletBalanceUseCase(),
+      onSuccess: (response) async {
+        balance.value = response.balance ?? 0.0;
+      },
+      onFailure: (failure) async {
+        showError(failure);
+      },
+    );
   }
 
   // Fetch active projects from API

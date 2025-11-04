@@ -77,6 +77,7 @@ abstract class ApiEndpoints {
 
   // --- Payments ---
   static const String payments = '/api/payments';
+  static const String paymentApprove = '/api/payments/{paymentId}/approve';
 
   // --- Final Documents ---
   static const String finalDocuments = '/api/final-documents';
@@ -89,6 +90,9 @@ abstract class ApiEndpoints {
 
   // --- Prototype Designs (Catalog) ---
   static const String prototypeDesigns = '/api/consultations/designs';
+
+  // --- Wallet ---
+  static const String walletBalance = '/api/wallet/balance';
 
   // Add other endpoints here as the app grows, for example:
   // static const String forgotPassword = '/api/auth/forgot-password';

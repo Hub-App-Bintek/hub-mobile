@@ -1,19 +1,22 @@
 import 'dart:async';
 import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/network_manager.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
-import 'package:file_saver/file_saver.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter/services.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 
 abstract class BaseController extends GetxController {
   final _logger = Logger();
@@ -262,6 +265,115 @@ abstract class BaseController extends GetxController {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
+    );
+  }
+
+  /// Show a custom-styled confirmation dialog.
+  /// Returns `true` when the user confirms, `false` when cancelled, or null
+  /// if dismissed (e.g. barrier tap when allowed).
+  Future<bool?> showConfirmationDialog({
+    required String title,
+    required String message,
+    required VoidCallback onConfirm,
+    required VoidCallback onCancel,
+    String confirmText = 'Ya',
+    String cancelText = 'Batal',
+    bool barrierDismissible = true,
+  }) {
+    final ctx = Get.overlayContext ?? Get.context;
+    final maxWidth = ctx != null ? MediaQuery.of(ctx).size.width - 48 : 320.0;
+
+    return Get.dialog<bool>(
+      Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            constraints: BoxConstraints(maxWidth: maxWidth),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x14000000),
+                  blurRadius: 20,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header
+                Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primaryLightest,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.help_outline,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: AppTextStyles.h3.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Message
+                Text(
+                  message,
+                  style: AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralDarkest,
+                  ),
+                ),
+                const SizedBox(height: 18),
+
+                // Actions
+                Row(
+                  children: [
+                    Expanded(
+                      child: PkpOutlinedButton(
+                        enabled: true,
+                        onPressed: () {
+                          Get.back(result: false);
+                          onCancel();
+                        },
+                        text: cancelText,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: PkpElevatedButton(
+                        enabled: true,
+                        onPressed: () {
+                          Get.back(result: true);
+                          onConfirm();
+                        },
+                        text: confirmText,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      barrierDismissible: barrierDismissible,
     );
   }
 
