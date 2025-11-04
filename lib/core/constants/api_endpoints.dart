@@ -58,6 +58,8 @@ abstract class ApiEndpoints {
   static const String contractRequestRevision =
       '/api/contracts/{contractId}/request-revision';
   static const String contractSign = '/api/contracts/{contractId}/sign';
+  static const String contractRequestPayment =
+      '/api/contracts/{contractId}/request-payment';
 
   // --- Files ---
   static const String filesUpload = '/api/files/upload';

@@ -29,6 +29,7 @@ import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart'
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/request_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
@@ -72,6 +73,7 @@ class ProjectDetailsController extends BaseController {
 
   // New use case for signing contract
   final SignContractUseCase _signContractUseCase;
+  final RequestPaymentUseCase _requestPaymentUseCase;
 
   ProjectDetailsController(
     this.projectId,
@@ -96,8 +98,8 @@ class ProjectDetailsController extends BaseController {
     this._approveFinalDocumentsUseCase,
     this._rejectFinalDocumentsUseCase,
     this._downloadFileUseCase,
-    // ...existing code...
     this._signContractUseCase,
+    this._requestPaymentUseCase,
   );
 
   var isLoading = false.obs;
@@ -130,6 +132,7 @@ class ProjectDetailsController extends BaseController {
 
   // Loading flag for signing contract
   final RxBool signContractLoading = false.obs;
+  final RxBool requestPaymentLoading = false.obs;
 
   // Scroll controller for timeline list
   final ScrollController timelineScrollController = ScrollController();
@@ -303,7 +306,7 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title:
-                'Kontrak telah disetujui oleh pemilik lahan dan konsultan ${consultation.consultantName ?? ''} sedang menyiapkan dokumen akhir',
+                'Kontrak telah disetujui oleh pemilik lahan. Silakan tanda tangan dokumen kontrak.',
             projectHistory: project,
           ),
         );
@@ -324,14 +327,14 @@ class ProjectDetailsController extends BaseController {
           ),
         );
       } else if (project.step == 'CONTRACT' && project.state == 'SIGNED') {
+        List<ProjectHistory> histories =
+            details.value?.consultation?.consultationHistory ?? [];
         String lastSigner =
-            consultationHistory.any(
-              (history) => history.state == 'CONSULTANT_SIGNED',
-            )
+            histories.any((history) => history.state == 'CONSULTANT_SIGNED')
             ? 'pemilik lahan'
             : 'konsultan ${consultation.consultantName ?? ''}';
         String timelineText =
-            'Kontrak telah ditandatangani oleh $lastSigner dan menunggu ${consultation.consultantName ?? ''} akan meminta proses pembayaran';
+            'Kontrak telah ditandatangani oleh $lastSigner dan menunggu konsultan meminta proses pembayaran';
         timeline.add(
           _buildProjectHistory(title: timelineText, projectHistory: project),
         );
@@ -932,6 +935,44 @@ class ProjectDetailsController extends BaseController {
     }
   }
 
+  Future<void> requestPayment() async {
+    // Find latest contractId from history metadata
+    String contractId = '';
+    for (final history in consultationHistory.reversed) {
+      if (history.step?.toUpperCase() == 'CONTRACT' &&
+          history.metadata?.contractId?.isNotEmpty == true) {
+        contractId = history.metadata?.contractId ?? '';
+        break;
+      }
+    }
+    if (contractId.isEmpty) {
+      showError(const ServerFailure(message: 'Contract ID not found'));
+      return;
+    }
+
+    if (requestPaymentLoading.value) return;
+    requestPaymentLoading.value = true;
+
+    try {
+      await handleAsync<Contract>(
+        () => _requestPaymentUseCase(contractId),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Permintaan pembayaran telah dikirim',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (failure) => showError(failure),
+      );
+    } finally {
+      requestPaymentLoading.value = false;
+    }
+  }
+
   ProjectHistory _buildProjectHistory({
     required String title,
     String? subtitle,
@@ -1039,5 +1080,13 @@ class ProjectDetailsController extends BaseController {
     }
 
     return role == ur.UserRole.homeowner || role == ur.UserRole.consultant;
+  }
+
+  /// Visibility rule for showing "Request Payment" action
+  /// Shown when consultation status is MENUNGGU_REQUEST_PAYMENT and user is consultant
+  bool get shouldShowRequestPaymentButton {
+    final isConsultant = userRole.value == ur.UserRole.consultant;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    return isConsultant && status == 'MENUNGGU_REQUEST_PAYMENT';
   }
 }
