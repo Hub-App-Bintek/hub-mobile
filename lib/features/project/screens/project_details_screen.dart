@@ -13,6 +13,7 @@ import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 import 'package:pkp_hub/features/project/widgets/contract_actions_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/survey_schedule_bottom_sheet.dart';
+import 'package:pkp_hub/features/project/widgets/upload_design_documents_bottom_sheet.dart';
 
 class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   const ProjectDetailsScreen({super.key});
@@ -206,25 +207,6 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
           );
         }
 
-        // Consultant can upload documents when consultation is active and
-        // the first consultation history state is STARTED
-        if (controller.shouldShowUploadDocumentsButton) {
-          return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Unggah Dokumen',
-              // reuse existing uploadContractLoading as a conservative loading flag
-              isLoading: controller.uploadContractLoading.value,
-              enabled: !(controller.uploadContractLoading.value || controller.downloadTemplateLoading.value),
-              onPressed: (controller.uploadContractLoading.value || controller.downloadTemplateLoading.value)
-                  ? null
-                  : () {
-                      // TODO: Show upload required documents bottom sheet
-                    },
-            ),
-          );
-        }
-
         // Consultant contract actions: download template & upload contract
         if (controller.shouldShowContractActions) {
           return SafeArea(
@@ -283,7 +265,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               children: [
                 Expanded(
                   child: PkpOutlinedButton(
-                    text: 'Tolak Kontrak',
+                    text: 'Minta Revisi',
                     isLoading: controller.contractRejectLoading.value,
                     enabled:
                         !(controller.contractRejectLoading.value ||
@@ -298,7 +280,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: PkpElevatedButton(
-                    text: 'Setuju Kontrak',
+                    text: 'Setujui Kontrak',
                     isLoading: controller.contractApproveLoading.value,
                     enabled:
                         !(controller.contractApproveLoading.value ||
@@ -376,6 +358,87 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                         onCancel: () {},
                       );
                     },
+            ),
+          );
+        }
+
+        // Homeowner design approval/revision actions when requested
+        if (controller.shouldShowDesignApprovalButtons) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: PkpOutlinedButton(
+                    text: 'Minta Revisi',
+                    isLoading: controller.designRejectLoading.value,
+                    enabled:
+                        !(controller.designRejectLoading.value ||
+                            controller.designApproveLoading.value),
+                    onPressed:
+                        (controller.designRejectLoading.value ||
+                            controller.designApproveLoading.value)
+                        ? null
+                        : () => controller.askDesignRevision(),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Setujui Desain',
+                    isLoading: controller.designApproveLoading.value,
+                    enabled:
+                        !(controller.designApproveLoading.value ||
+                            controller.designRejectLoading.value),
+                    onPressed:
+                        (controller.designApproveLoading.value ||
+                            controller.designRejectLoading.value)
+                        ? null
+                        : controller.approveDesignDocuments,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // Consultant can upload documents when consultation is active and
+        // the first consultation history state is STARTED
+        if (controller.shouldShowUploadDocumentsButton) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: PkpElevatedButton(
+              text: 'Unggah Dokumen',
+              isLoading: controller.uploadDesignDocumentsLoading.value,
+              enabled: !controller.uploadDesignDocumentsLoading.value,
+              onPressed: controller.uploadDesignDocumentsLoading.value
+                  ? null
+                  : () {
+                      controller.showBottomSheet(
+                        const UploadDesignDocumentsBottomSheet(),
+                      );
+                    },
+            ),
+          );
+        }
+
+        if (controller.shouldShowFinalizeActions) {
+          return SafeArea(
+            minimum: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: PkpOutlinedButton(text: 'Selesai', onPressed: () {}),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: PkpElevatedButton(
+                    enabled: true,
+                    text: 'Lanjut Perizinan',
+                    onPressed: () {},
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -464,21 +527,57 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: history.map((timeline) {
-        String fileId = timeline.files?.firstOrNull ?? '';
+        final step = timeline.step?.toUpperCase() ?? '';
+        final state = timeline.state?.toUpperCase() ?? '';
+        final metadata = timeline.metadata;
+        final isHomeowner = controller.userRole.value == ur.UserRole.homeowner;
+
+        String fileId = '';
+        final hasContractFile =
+            timeline.files?.firstOrNull != null &&
+            timeline.files!.firstOrNull!.isNotEmpty;
+        final bool showContractDownload =
+            step == 'CONTRACT' && isHomeowner && hasContractFile;
+        if (showContractDownload) {
+          fileId = timeline.files!.firstOrNull ?? '';
+        }
+
+        final designFiles = metadata?.designFiles;
+        final bool hasDesignFiles =
+            designFiles != null &&
+            designFiles.any((file) => (file.fileId ?? '').isNotEmpty);
+        final bool showDesignDownload =
+            step == 'DESIGN' &&
+            state == 'REQUEST_FOR_APPROVAL' &&
+            isHomeowner &&
+            hasDesignFiles;
+
+        final bool shouldShowDownload =
+            showContractDownload || showDesignDownload;
+
+        ValueChanged<String>? onDownload;
+        if (showDesignDownload) {
+          onDownload = (_) {
+            if (!controller.designDownloadLoading.value) {
+              controller.downloadDesignFiles(
+                timeline.metadata?.designFiles ?? [],
+              );
+            }
+          };
+        } else if (showContractDownload) {
+          onDownload = (id) {
+            if (id.isNotEmpty) {
+              controller.downloadFileById(id);
+            }
+          };
+        }
+
         return PkpCard(
           title: timeline.title ?? '',
           subtitle: timeline.subtitle ?? '',
-          fileId: fileId,
-          shouldShowDownloadButton:
-              timeline.step == 'CONTRACT' &&
-              controller.userRole.value == ur.UserRole.homeowner,
-          onDownload: fileId.isNotEmpty
-              ? (fileId) {
-                  if (fileId.isNotEmpty) {
-                    controller.downloadFileById(fileId);
-                  }
-                }
-              : null,
+          fileId: showContractDownload ? fileId : null,
+          shouldShowDownloadButton: shouldShowDownload,
+          onDownload: onDownload,
         );
       }).toList(),
     );

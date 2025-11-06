@@ -480,10 +480,14 @@ abstract class BaseController extends GetxController {
     required String projectName,
     required String fileName,
     required Uint8List bytes,
+    String? subDirectory,
   }) async {
     try {
       final sanitizedProject = _sanitizePathSegment(projectName);
       final safeFileName = _sanitizeFileName(fileName);
+      final safeSubDirectory = subDirectory?.trim().isNotEmpty == true
+          ? _sanitizePathSegment(subDirectory!)
+          : null;
 
       Directory baseDir;
       if (Platform.isAndroid) {
@@ -497,9 +501,17 @@ abstract class BaseController extends GetxController {
       }
 
       final sep = Platform.pathSeparator;
-      final targetDir = Directory(
-        '${baseDir.path}${sep}PKP${sep}Documents$sep$sanitizedProject',
-      );
+      final documentsDir = Directory('${baseDir.path}${sep}Documents${sep}PKP');
+      if (!await documentsDir.exists()) {
+        await documentsDir.create(recursive: true);
+      }
+      final projectDir = Directory('${documentsDir.path}$sep$sanitizedProject');
+      if (!await projectDir.exists()) {
+        await projectDir.create(recursive: true);
+      }
+      final targetDir = safeSubDirectory != null
+          ? Directory('${projectDir.path}$sep$safeSubDirectory')
+          : projectDir;
       if (!await targetDir.exists()) {
         await targetDir.create(recursive: true);
       }
@@ -521,11 +533,15 @@ abstract class BaseController extends GetxController {
     required String projectName,
     required String fileName,
     required Uint8List bytes,
+    String? subDirectory,
     String mimeType = 'application/octet-stream',
   }) async {
     try {
       final sanitizedProject = _sanitizePathSegment(projectName);
       final safeFileName = _sanitizeFileName(fileName);
+      final safeSubDirectory = subDirectory?.trim().isNotEmpty == true
+          ? _sanitizePathSegment(subDirectory!)
+          : null;
 
       // Determine extension and better MIME type
       String ext = '';
@@ -558,8 +574,13 @@ abstract class BaseController extends GetxController {
         // On iOS, apps can't write to an arbitrary shared folder. Show a save dialog
         // so the user can pick a location in the Files app (iCloud Drive / On My iPhone).
         // We'll prefix the project name into the suggested file name for clarity.
-        final suggestedName = sanitizedProject.isNotEmpty
-            ? '${sanitizedProject}_$safeFileName'
+        final List<String> nameParts = [
+          if (sanitizedProject.isNotEmpty) sanitizedProject,
+          if (safeSubDirectory != null && safeSubDirectory.isNotEmpty)
+            safeSubDirectory,
+        ];
+        final suggestedName = nameParts.isNotEmpty
+            ? '${nameParts.join('_')}_$safeFileName'
             : safeFileName;
         final name = suggestedName.contains('.')
             ? suggestedName.substring(0, suggestedName.lastIndexOf('.'))
@@ -585,6 +606,7 @@ abstract class BaseController extends GetxController {
           projectName: sanitizedProject,
           fileName: safeFileName,
           bytes: bytes,
+          subDirectory: safeSubDirectory,
         );
       }
 
@@ -609,6 +631,7 @@ abstract class BaseController extends GetxController {
             'fileName': safeFileName,
             'bytes': bytes,
             'mimeType': resolvedMime,
+            'subDirectory': safeSubDirectory,
           });
 
       if (result is String) return result;

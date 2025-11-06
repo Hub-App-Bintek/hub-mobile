@@ -79,14 +79,14 @@ abstract class ApiEndpoints {
   static const String payments = '/api/payments';
   static const String paymentApprove = '/api/payments/{paymentId}/approve';
 
-  // --- Final Documents ---
-  static const String finalDocuments = '/api/final-documents';
-  static const String finalDocumentDownload =
-      '/api/final-documents/{documentId}/download';
-  static const String finalDocumentsApprove =
-      '/api/final-documents/consultations/{consultationId}/approve';
-  static const String finalDocumentsReject =
-      '/api/final-documents/consultations/{consultationId}/reject';
+  // --- Design Documents ---
+  static const String designDocumentsUpload = '/api/design-documents/upload';
+  static const String designDocumentDownload =
+      '/api/design-documents/{documentId}/download';
+  static const String designDocumentsApprove =
+      '/api/design-documents/{designDocumentId}/approve';
+  static const String designDocumentsRevisionRequest =
+      '/api/design-documents/{designDocumentId}/revision-request';
 
   // --- Prototype Designs (Catalog) ---
   static const String prototypeDesigns = '/api/consultations/designs';

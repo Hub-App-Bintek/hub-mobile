@@ -39,13 +39,13 @@ class PkpCard extends StatelessWidget {
   /// If provided, this will be used instead of [suffixIcon].
   final Widget? actionButton;
 
-  /// Optional file URL. When provided and neither [actionButton] nor [suffixIcon]
-  /// are supplied, a download button will be shown.
+  /// Optional file identifier. When provided and neither [actionButton] nor
+  /// [suffixIcon] are supplied, a download button can be shown.
   final String? fileId;
 
   /// Optional download callback. If provided, it will be called with [fileId]
-  /// when the user taps the download button. If not provided, the card will
-  /// attempt to open the URL using `url_launcher`.
+  /// (or an empty string when none is supplied) when the user taps the download
+  /// button.
   final ValueChanged<String>? onDownload;
 
   final bool shouldShowDownloadButton;
@@ -60,17 +60,12 @@ class PkpCard extends StatelessWidget {
       trailing = actionButton;
     } else if (suffixIcon != null) {
       trailing = suffixIcon;
-    } else if (fileId != null &&
-        fileId?.trim().isNotEmpty == true &&
-        shouldShowDownloadButton) {
+    } else if (shouldShowDownloadButton) {
+      final String downloadId = fileId?.trim() ?? '';
       trailing = IconButton(
         tooltip: 'Download',
         icon: const Icon(Icons.download_rounded),
-        onPressed: () async {
-          if (onDownload != null) {
-            onDownload!(fileId?.trim() ?? '');
-          }
-        },
+        onPressed: onDownload != null ? () => onDownload!(downloadId) : null,
       );
     }
 

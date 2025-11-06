@@ -6,7 +6,7 @@ import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
-import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
@@ -22,7 +22,7 @@ import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
-import 'package:pkp_hub/data/datasources/final_document/final_document_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/design_document/design_document_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.dart'
@@ -106,10 +106,10 @@ class DataSourceInjection {
       ),
       fenix: true,
     );
-    Get.lazyPut<FinalDocumentNetworkDataSource>(
-      () => FinalDocumentNetworkDataSourceImpl(
+    Get.lazyPut<DesignDocumentNetworkDataSource>(
+      () => DesignDocumentNetworkDataSourceImpl(
         Get.find<ApiClient>(),
-        Get.find<FinalDocumentApiService>(),
+        Get.find<DesignDocumentApiService>(),
       ),
       fenix: true,
     );

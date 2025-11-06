@@ -14,7 +14,7 @@ import 'package:pkp_hub/domain/repositories/contract_repository.dart';
 import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/repositories/revision_repository.dart';
 import 'package:pkp_hub/domain/repositories/payment_repository.dart';
-import 'package:pkp_hub/domain/repositories/final_document_repository.dart';
+import 'package:pkp_hub/domain/repositories/design_document_repository.dart';
 import 'package:pkp_hub/domain/repositories/design_repository.dart';
 import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
@@ -25,7 +25,7 @@ import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
 import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart'
     as payds;
-import 'package:pkp_hub/data/datasources/final_document/final_document_network_data_source.dart'
+import 'package:pkp_hub/data/datasources/design_document/design_document_network_data_source.dart'
     as fdds;
 import 'package:pkp_hub/domain/repositories/files_repository.dart';
 import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart'
@@ -77,9 +77,9 @@ class RepositoryInjection {
       () => PaymentRepositoryImpl(Get.find<payds.PaymentNetworkDataSource>()),
       fenix: true,
     );
-    Get.lazyPut<FinalDocumentRepository>(
-      () => FinalDocumentRepositoryImpl(
-        Get.find<fdds.FinalDocumentNetworkDataSource>(),
+    Get.lazyPut<DesignDocumentRepository>(
+      () => DesignDocumentRepositoryImpl(
+        Get.find<fdds.DesignDocumentNetworkDataSource>(),
       ),
       fenix: true,
     );

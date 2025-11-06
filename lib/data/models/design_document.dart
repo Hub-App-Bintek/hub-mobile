@@ -1,5 +1,5 @@
-// Final document model matching API doc
-class FinalDocument {
+// Design document model matching API doc
+class DesignDocument {
   final String? id;
   final String? consultationId;
   final String? fileDedUrl;
@@ -9,7 +9,7 @@ class FinalDocument {
   final String? createdAt;
   final String? updatedAt;
 
-  FinalDocument({
+  DesignDocument({
     this.id,
     this.consultationId,
     this.fileDedUrl,
@@ -20,7 +20,7 @@ class FinalDocument {
     this.updatedAt,
   });
 
-  factory FinalDocument.fromJson(Map<String, dynamic> json) => FinalDocument(
+  factory DesignDocument.fromJson(Map<String, dynamic> json) => DesignDocument(
     id: json['id']?.toString(),
     consultationId: json['consultationId']?.toString(),
     fileDedUrl: json['fileDedUrl']?.toString(),
