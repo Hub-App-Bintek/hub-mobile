@@ -6,7 +6,7 @@ import 'package:pkp_hub/core/network/services/consultant_api_service.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
-import 'package:pkp_hub/core/network/services/final_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
@@ -46,8 +46,8 @@ class NetworkServiceInjection {
       () => DesignApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
-    Get.lazyPut<FinalDocumentApiService>(
-      () => FinalDocumentApiService(Get.find<ApiClient>().dio),
+    Get.lazyPut<DesignDocumentApiService>(
+      () => DesignDocumentApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
     Get.lazyPut<PaymentApiService>(

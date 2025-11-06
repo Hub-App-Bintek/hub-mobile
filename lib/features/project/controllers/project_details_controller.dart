@@ -12,6 +12,8 @@ import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/current_survey_schedule.dart';
+import 'package:pkp_hub/data/models/design_document.dart';
+import 'package:pkp_hub/data/models/design_file_metadata.dart';
 import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/data/models/payment.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
@@ -34,10 +36,10 @@ import 'package:pkp_hub/domain/usecases/contract/request_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/payment/approve_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/approve_survey_schedule_use_case.dart';
@@ -68,9 +70,9 @@ class ProjectDetailsController extends BaseController {
   final ApproveContractUseCase _approveContractUseCase;
   final AskContractRevisionUseCase _askContractRevisionUseCase;
   final GenerateContractDraftUseCase _generateContractDraftUseCase;
-  final UploadFinalDocumentsUseCase _uploadFinalDocumentsUseCase;
-  final ApproveFinalDocumentsUseCase _approveFinalDocumentsUseCase;
-  final RejectFinalDocumentsUseCase _rejectFinalDocumentsUseCase;
+  final UploadDesignDocumentsUseCase _uploadDesignDocumentsUseCase;
+  final ApproveDesignDocumentsUseCase _approveDesignDocumentsUseCase;
+  final AskDesignRevisionUseCase _askDesignRevisionUseCase;
   final DownloadFileUseCase _downloadFileUseCase;
 
   // New use case for signing contract
@@ -97,9 +99,9 @@ class ProjectDetailsController extends BaseController {
     this._approveContractUseCase,
     this._askContractRevisionUseCase,
     this._generateContractDraftUseCase,
-    this._uploadFinalDocumentsUseCase,
-    this._approveFinalDocumentsUseCase,
-    this._rejectFinalDocumentsUseCase,
+    this._uploadDesignDocumentsUseCase,
+    this._approveDesignDocumentsUseCase,
+    this._askDesignRevisionUseCase,
     this._downloadFileUseCase,
     this._signContractUseCase,
     this._requestPaymentUseCase,
@@ -130,10 +132,14 @@ class ProjectDetailsController extends BaseController {
   // Loading flags for contract actions
   final RxBool downloadTemplateLoading = false.obs;
   final RxBool uploadContractLoading = false.obs;
+  final RxBool uploadDesignDocumentsLoading = false.obs;
 
   // Loading flags for contract approval by homeowner
   final RxBool contractApproveLoading = false.obs;
   final RxBool contractRejectLoading = false.obs;
+  final RxBool designApproveLoading = false.obs;
+  final RxBool designRejectLoading = false.obs;
+  final RxBool designDownloadLoading = false.obs;
 
   // Loading flag for signing contract
   final RxBool signContractLoading = false.obs;
@@ -364,6 +370,29 @@ class ProjectDetailsController extends BaseController {
           _buildProjectHistory(
             title:
                 'Pemilik lahan telah melakukan pembayaran. Konsultan ${consultation.consultantName ?? ''} akan menyiapkan dokumen yang diperlukan.',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'DESIGN' &&
+          project.state == 'REQUEST_FOR_APPROVAL') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Dokumen design telah tersedia',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'DESIGN' &&
+          project.state == 'REVISION_REQUESTED') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Pemilik lahan meminta revisi dokumen.',
+            projectHistory: project,
+          ),
+        );
+      } else if (project.step == 'DESIGN' && project.state == 'APPROVED') {
+        timeline.add(
+          _buildProjectHistory(
+            title: 'Konsultasi telah selesai.',
             projectHistory: project,
           ),
         );
@@ -709,6 +738,189 @@ class ProjectDetailsController extends BaseController {
     }
 
     return done;
+  }
+
+  Future<bool> uploadDesignDocuments({
+    required File fileDed,
+    required File fileRab,
+    required File fileBoq,
+  }) async {
+    final consultationId = details.value?.consultation?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
+      showError(const ServerFailure(message: 'Consultation ID not found'));
+      return false;
+    }
+
+    if (uploadDesignDocumentsLoading.value) return false;
+    uploadDesignDocumentsLoading.value = true;
+
+    bool done = false;
+    try {
+      await handleAsync<DesignDocument>(
+        () => _uploadDesignDocumentsUseCase(
+          UploadDesignDocumentsParams(
+            consultationId: consultationId,
+            fileDed: fileDed,
+            fileRab: fileRab,
+            fileBoq: fileBoq,
+          ),
+        ),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Dokumen desain berhasil disubmit',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+          done = true;
+        },
+        onFailure: (failure) {
+          showError(failure);
+          done = false;
+        },
+      );
+    } finally {
+      uploadDesignDocumentsLoading.value = false;
+    }
+
+    return done;
+  }
+
+  Future<void> approveDesignDocuments() async {
+    final designHistory = _latestDesignHistory;
+    final designDocumentId = designHistory?.metadata?.documentDesignId;
+    if (designDocumentId == null || designDocumentId.isEmpty) {
+      showError(const ServerFailure(message: 'Design document ID not found'));
+      return;
+    }
+    if (designApproveLoading.value || designRejectLoading.value) return;
+    designApproveLoading.value = true;
+
+    try {
+      await handleAsync<void>(
+        () => _approveDesignDocumentsUseCase(designDocumentId),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Dokumen desain disetujui',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (failure) => showError(failure),
+      );
+    } finally {
+      designApproveLoading.value = false;
+    }
+  }
+
+  Future<void> askDesignRevision({String? notes}) async {
+    final designHistory = _latestDesignHistory;
+    final designDocumentId = designHistory?.metadata?.documentDesignId;
+    if (designDocumentId == null || designDocumentId.isEmpty) {
+      showError(const ServerFailure(message: 'Design document ID not found'));
+      return;
+    }
+    if (designRejectLoading.value || designApproveLoading.value) return;
+    designRejectLoading.value = true;
+
+    try {
+      await handleAsync<void>(
+        () => _askDesignRevisionUseCase(
+          AskDesignRevisionParams(
+            designDocumentId: designDocumentId,
+            notes: notes,
+          ),
+        ),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Berhasil',
+            'Permintaan revisi dokumen desain telah dikirim',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+          fetchDetails();
+        },
+        onFailure: (failure) => showError(failure),
+      );
+    } finally {
+      designRejectLoading.value = false;
+    }
+  }
+
+  Future<void> downloadDesignFiles(List<DesignFileMetadata> files) async {
+    if (files.isEmpty) {
+      showError(const ServerFailure(message: 'Dokumen desain tidak tersedia'));
+      return;
+    }
+    if (designDownloadLoading.value || designApproveLoading.value) return;
+    designDownloadLoading.value = true;
+    showLoadingOverlay(
+      message: 'Mengunduh dokumen desain...',
+      delay: Duration.zero,
+    );
+
+    final projectName = details.value?.name ?? 'Untitled';
+    final List<String> failed = [];
+
+    try {
+      for (final fileMeta in files) {
+        final docType = fileMeta.documentType?.toUpperCase() ?? 'LAINNYA';
+        final fileId = fileMeta.fileId;
+        if (fileId == null || fileId.isEmpty) {
+          failed.add(docType);
+          continue;
+        }
+
+        await handleAsync<DownloadedFile>(
+          () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
+          onSuccess: (file) async {
+            final saved = await saveToExternalProjectDocuments(
+              projectName: projectName,
+              fileName: file.fileName,
+              bytes: file.bytes,
+              subDirectory: docType,
+            );
+            if (saved == null || saved.isEmpty) {
+              failed.add(docType);
+            }
+          },
+          onFailure: (failure) {
+            failed.add(docType);
+            showError(failure);
+          },
+        );
+      }
+
+      if (failed.isEmpty) {
+        final where = Platform.isAndroid
+            ? 'Documents/PKP/$projectName'
+            : 'Files app (lokasi yang Anda pilih)';
+        Get.snackbar(
+          'Berhasil',
+          'Semua dokumen desain disimpan di: $where',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.successDark,
+          colorText: AppColors.white,
+        );
+      } else {
+        Get.snackbar(
+          'Sebagian Gagal',
+          'Gagal menyimpan dokumen: ${failed.join(', ')}',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.errorDark,
+          colorText: AppColors.white,
+        );
+      }
+    } finally {
+      hideLoadingOverlay();
+      designDownloadLoading.value = false;
+    }
   }
 
   Future<bool> generateAndDownloadContractTemplate({
@@ -1125,20 +1337,13 @@ class ProjectDetailsController extends BaseController {
         (status == 'SURVEY_SELESAI' || status == 'MENYIAPKAN_KONTRAK');
   }
 
-  /// Visibility rule for consultant to upload documents when consultation is active
-  /// Show when user is consultant, consultation.status == 'AKTIF', and
-  /// the first consultation history item (from the detail response order)
-  /// has state == 'STARTED'.
-  bool get shouldShowUploadDocumentsButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
-    final status = details.value?.consultation?.status?.toUpperCase();
-    if (!isConsultant || status != 'AKTIF') return false;
-
-    final histories = details.value?.consultation?.consultationHistory;
-    if (histories == null || histories.isEmpty) return false;
-
-    final firstState = histories.first.state?.toUpperCase();
-    return firstState == 'STARTED';
+  ProjectHistory? get _latestDesignHistory {
+    final latestDesignHistory =
+        details.value?.consultation?.consultationHistory?.firstOrNull;
+    if (latestDesignHistory?.step == 'DESIGN') {
+      return latestDesignHistory;
+    }
+    return null;
   }
 
   /// Visibility rules for homeowner to approve or reject contract
@@ -1184,5 +1389,36 @@ class ProjectDetailsController extends BaseController {
     final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isHomeowner && status == 'MENUNGGU_PEMBAYARAN';
+  }
+
+  /// Visibility rule for consultant to upload documents when consultation is active
+  /// Show when user is consultant, consultation.status == 'AKTIF', and
+  /// the first consultation history item (from the detail response order)
+  /// has state == 'STARTED' or 'REVISION_REQUESTED' .
+  bool get shouldShowUploadDocumentsButton {
+    final isConsultant = userRole.value == ur.UserRole.consultant;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    if (!isConsultant || status != 'AKTIF') return false;
+
+    final histories = details.value?.consultation?.consultationHistory;
+    if (histories == null || histories.isEmpty) return false;
+
+    final state = histories.firstOrNull?.state?.toUpperCase();
+    return state == 'STARTED' || state == 'REVISION_REQUESTED';
+  }
+
+  bool get shouldShowDesignApprovalButtons {
+    final isHomeowner = userRole.value == ur.UserRole.homeowner;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    return isHomeowner &&
+        status == 'AKTIF' &&
+        _latestDesignHistory?.step?.toUpperCase() == 'DESIGN' &&
+        _latestDesignHistory?.state?.toUpperCase() == 'REQUEST_FOR_APPROVAL';
+  }
+
+  bool get shouldShowFinalizeActions {
+    final isHomeowner = userRole.value == ur.UserRole.homeowner;
+    final status = details.value?.consultation?.status?.toUpperCase();
+    return isHomeowner && status == 'FINAL';
   }
 }

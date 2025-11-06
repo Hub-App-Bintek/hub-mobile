@@ -25,11 +25,15 @@ mixin _$Metadata {
   String? get actor => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
   String? get notes => throw _privateConstructorUsedError;
-  String? get contractId => throw _privateConstructorUsedError;
   double? get surveyCost => throw _privateConstructorUsedError;
+  String? get surveyLocation => throw _privateConstructorUsedError;
+  String? get contractId => throw _privateConstructorUsedError;
   String? get scheduleId => throw _privateConstructorUsedError;
   String? get paymentId => throw _privateConstructorUsedError;
   double? get totalPaymentAmount => throw _privateConstructorUsedError;
+  String? get documentDesignId => throw _privateConstructorUsedError;
+  List<DesignFileMetadata>? get designFiles =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,11 +51,14 @@ abstract class $MetadataCopyWith<$Res> {
     String? actor,
     String? status,
     String? notes,
-    String? contractId,
     double? surveyCost,
+    String? surveyLocation,
+    String? contractId,
     String? scheduleId,
     String? paymentId,
     double? totalPaymentAmount,
+    String? documentDesignId,
+    List<DesignFileMetadata>? designFiles,
   });
 }
 
@@ -72,11 +79,14 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
     Object? actor = freezed,
     Object? status = freezed,
     Object? notes = freezed,
-    Object? contractId = freezed,
     Object? surveyCost = freezed,
+    Object? surveyLocation = freezed,
+    Object? contractId = freezed,
     Object? scheduleId = freezed,
     Object? paymentId = freezed,
     Object? totalPaymentAmount = freezed,
+    Object? documentDesignId = freezed,
+    Object? designFiles = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -96,14 +106,18 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
                 ? _value.notes
                 : notes // ignore: cast_nullable_to_non_nullable
                       as String?,
-            contractId: freezed == contractId
-                ? _value.contractId
-                : contractId // ignore: cast_nullable_to_non_nullable
-                      as String?,
             surveyCost: freezed == surveyCost
                 ? _value.surveyCost
                 : surveyCost // ignore: cast_nullable_to_non_nullable
                       as double?,
+            surveyLocation: freezed == surveyLocation
+                ? _value.surveyLocation
+                : surveyLocation // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            contractId: freezed == contractId
+                ? _value.contractId
+                : contractId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             scheduleId: freezed == scheduleId
                 ? _value.scheduleId
                 : scheduleId // ignore: cast_nullable_to_non_nullable
@@ -116,6 +130,14 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
                 ? _value.totalPaymentAmount
                 : totalPaymentAmount // ignore: cast_nullable_to_non_nullable
                       as double?,
+            documentDesignId: freezed == documentDesignId
+                ? _value.documentDesignId
+                : documentDesignId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            designFiles: freezed == designFiles
+                ? _value.designFiles
+                : designFiles // ignore: cast_nullable_to_non_nullable
+                      as List<DesignFileMetadata>?,
           )
           as $Val,
     );
@@ -136,11 +158,14 @@ abstract class _$$MetadataImplCopyWith<$Res>
     String? actor,
     String? status,
     String? notes,
-    String? contractId,
     double? surveyCost,
+    String? surveyLocation,
+    String? contractId,
     String? scheduleId,
     String? paymentId,
     double? totalPaymentAmount,
+    String? documentDesignId,
+    List<DesignFileMetadata>? designFiles,
   });
 }
 
@@ -160,11 +185,14 @@ class __$$MetadataImplCopyWithImpl<$Res>
     Object? actor = freezed,
     Object? status = freezed,
     Object? notes = freezed,
-    Object? contractId = freezed,
     Object? surveyCost = freezed,
+    Object? surveyLocation = freezed,
+    Object? contractId = freezed,
     Object? scheduleId = freezed,
     Object? paymentId = freezed,
     Object? totalPaymentAmount = freezed,
+    Object? documentDesignId = freezed,
+    Object? designFiles = freezed,
   }) {
     return _then(
       _$MetadataImpl(
@@ -184,14 +212,18 @@ class __$$MetadataImplCopyWithImpl<$Res>
             ? _value.notes
             : notes // ignore: cast_nullable_to_non_nullable
                   as String?,
-        contractId: freezed == contractId
-            ? _value.contractId
-            : contractId // ignore: cast_nullable_to_non_nullable
-                  as String?,
         surveyCost: freezed == surveyCost
             ? _value.surveyCost
             : surveyCost // ignore: cast_nullable_to_non_nullable
                   as double?,
+        surveyLocation: freezed == surveyLocation
+            ? _value.surveyLocation
+            : surveyLocation // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        contractId: freezed == contractId
+            ? _value.contractId
+            : contractId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         scheduleId: freezed == scheduleId
             ? _value.scheduleId
             : scheduleId // ignore: cast_nullable_to_non_nullable
@@ -204,6 +236,14 @@ class __$$MetadataImplCopyWithImpl<$Res>
             ? _value.totalPaymentAmount
             : totalPaymentAmount // ignore: cast_nullable_to_non_nullable
                   as double?,
+        documentDesignId: freezed == documentDesignId
+            ? _value.documentDesignId
+            : documentDesignId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        designFiles: freezed == designFiles
+            ? _value._designFiles
+            : designFiles // ignore: cast_nullable_to_non_nullable
+                  as List<DesignFileMetadata>?,
       ),
     );
   }
@@ -217,12 +257,15 @@ class _$MetadataImpl implements _Metadata {
     this.actor,
     this.status,
     this.notes,
-    this.contractId,
     this.surveyCost,
+    this.surveyLocation,
+    this.contractId,
     this.scheduleId,
     this.paymentId,
     this.totalPaymentAmount,
-  });
+    this.documentDesignId,
+    final List<DesignFileMetadata>? designFiles,
+  }) : _designFiles = designFiles;
 
   factory _$MetadataImpl.fromJson(Map<String, dynamic> json) =>
       _$$MetadataImplFromJson(json);
@@ -236,19 +279,32 @@ class _$MetadataImpl implements _Metadata {
   @override
   final String? notes;
   @override
-  final String? contractId;
-  @override
   final double? surveyCost;
+  @override
+  final String? surveyLocation;
+  @override
+  final String? contractId;
   @override
   final String? scheduleId;
   @override
   final String? paymentId;
   @override
   final double? totalPaymentAmount;
+  @override
+  final String? documentDesignId;
+  final List<DesignFileMetadata>? _designFiles;
+  @override
+  List<DesignFileMetadata>? get designFiles {
+    final value = _designFiles;
+    if (value == null) return null;
+    if (_designFiles is EqualUnmodifiableListView) return _designFiles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, contractId: $contractId, surveyCost: $surveyCost, scheduleId: $scheduleId, paymentId: $paymentId, totalPaymentAmount: $totalPaymentAmount)';
+    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, surveyCost: $surveyCost, surveyLocation: $surveyLocation, contractId: $contractId, scheduleId: $scheduleId, paymentId: $paymentId, totalPaymentAmount: $totalPaymentAmount, documentDesignId: $documentDesignId, designFiles: $designFiles)';
   }
 
   @override
@@ -261,16 +317,24 @@ class _$MetadataImpl implements _Metadata {
             (identical(other.actor, actor) || other.actor == actor) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.contractId, contractId) ||
-                other.contractId == contractId) &&
             (identical(other.surveyCost, surveyCost) ||
                 other.surveyCost == surveyCost) &&
+            (identical(other.surveyLocation, surveyLocation) ||
+                other.surveyLocation == surveyLocation) &&
+            (identical(other.contractId, contractId) ||
+                other.contractId == contractId) &&
             (identical(other.scheduleId, scheduleId) ||
                 other.scheduleId == scheduleId) &&
             (identical(other.paymentId, paymentId) ||
                 other.paymentId == paymentId) &&
             (identical(other.totalPaymentAmount, totalPaymentAmount) ||
-                other.totalPaymentAmount == totalPaymentAmount));
+                other.totalPaymentAmount == totalPaymentAmount) &&
+            (identical(other.documentDesignId, documentDesignId) ||
+                other.documentDesignId == documentDesignId) &&
+            const DeepCollectionEquality().equals(
+              other._designFiles,
+              _designFiles,
+            ));
   }
 
   @JsonKey(ignore: true)
@@ -281,11 +345,14 @@ class _$MetadataImpl implements _Metadata {
     actor,
     status,
     notes,
-    contractId,
     surveyCost,
+    surveyLocation,
+    contractId,
     scheduleId,
     paymentId,
     totalPaymentAmount,
+    documentDesignId,
+    const DeepCollectionEquality().hash(_designFiles),
   );
 
   @JsonKey(ignore: true)
@@ -306,11 +373,14 @@ abstract class _Metadata implements Metadata {
     final String? actor,
     final String? status,
     final String? notes,
-    final String? contractId,
     final double? surveyCost,
+    final String? surveyLocation,
+    final String? contractId,
     final String? scheduleId,
     final String? paymentId,
     final double? totalPaymentAmount,
+    final String? documentDesignId,
+    final List<DesignFileMetadata>? designFiles,
   }) = _$MetadataImpl;
 
   factory _Metadata.fromJson(Map<String, dynamic> json) =
@@ -325,15 +395,21 @@ abstract class _Metadata implements Metadata {
   @override
   String? get notes;
   @override
-  String? get contractId;
-  @override
   double? get surveyCost;
+  @override
+  String? get surveyLocation;
+  @override
+  String? get contractId;
   @override
   String? get scheduleId;
   @override
   String? get paymentId;
   @override
   double? get totalPaymentAmount;
+  @override
+  String? get documentDesignId;
+  @override
+  List<DesignFileMetadata>? get designFiles;
   @override
   @JsonKey(ignore: true)
   _$$MetadataImplCopyWith<_$MetadataImpl> get copyWith =>

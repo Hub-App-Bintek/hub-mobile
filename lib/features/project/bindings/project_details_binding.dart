@@ -3,7 +3,7 @@ import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/contract_repository.dart';
 import 'package:pkp_hub/domain/repositories/files_repository.dart';
-import 'package:pkp_hub/domain/repositories/final_document_repository.dart';
+import 'package:pkp_hub/domain/repositories/design_document_repository.dart';
 import 'package:pkp_hub/domain/repositories/payment_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/repositories/survey_repository.dart';
@@ -20,9 +20,9 @@ import 'package:pkp_hub/domain/usecases/contract/request_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/approve_final_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/reject_final_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/final_document/upload_final_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/payment/approve_payment_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/approve_survey_schedule_use_case.dart';
@@ -90,14 +90,14 @@ class ProjectDetailsBinding extends Bindings {
       () => DownloadFileUseCase(Get.find<FilesRepository>()),
       fenix: true,
     );
-    Get.lazyPut<UploadFinalDocumentsUseCase>(
-      () => UploadFinalDocumentsUseCase(Get.find<FinalDocumentRepository>()),
+    Get.lazyPut<UploadDesignDocumentsUseCase>(
+      () => UploadDesignDocumentsUseCase(Get.find<DesignDocumentRepository>()),
     );
-    Get.lazyPut<ApproveFinalDocumentsUseCase>(
-      () => ApproveFinalDocumentsUseCase(Get.find<FinalDocumentRepository>()),
+    Get.lazyPut<ApproveDesignDocumentsUseCase>(
+      () => ApproveDesignDocumentsUseCase(Get.find<DesignDocumentRepository>()),
     );
-    Get.lazyPut<RejectFinalDocumentsUseCase>(
-      () => RejectFinalDocumentsUseCase(Get.find<FinalDocumentRepository>()),
+    Get.lazyPut<AskDesignRevisionUseCase>(
+      () => AskDesignRevisionUseCase(Get.find<DesignDocumentRepository>()),
     );
     // Provide sign contract use case
     Get.lazyPut<SignContractUseCase>(
@@ -132,9 +132,9 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<ApproveContractUseCase>(),
         Get.find<AskContractRevisionUseCase>(),
         Get.find<GenerateContractDraftUseCase>(),
-        Get.find<UploadFinalDocumentsUseCase>(),
-        Get.find<ApproveFinalDocumentsUseCase>(),
-        Get.find<RejectFinalDocumentsUseCase>(),
+        Get.find<UploadDesignDocumentsUseCase>(),
+        Get.find<ApproveDesignDocumentsUseCase>(),
+        Get.find<AskDesignRevisionUseCase>(),
         Get.find<DownloadFileUseCase>(),
         Get.find<SignContractUseCase>(),
         Get.find<RequestPaymentUseCase>(),

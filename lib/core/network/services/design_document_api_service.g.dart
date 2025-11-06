@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'final_document_api_service.dart';
+part of 'design_document_api_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'final_document_api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
-class _FinalDocumentApiService implements FinalDocumentApiService {
-  _FinalDocumentApiService(this._dio, {this.baseUrl, this.errorLogger});
+class _DesignDocumentApiService implements DesignDocumentApiService {
+  _DesignDocumentApiService(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -18,26 +18,63 @@ class _FinalDocumentApiService implements FinalDocumentApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<FinalDocument> uploadFinalDocuments(Map<String, dynamic> body) async {
+  Future<DesignDocument> uploadDesignDocuments(
+    String consultationId,
+    File fileDed,
+    File fileRab,
+    File fileBoq,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _options = _setStreamType<FinalDocument>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+    final _data = FormData();
+    _data.fields.add(MapEntry('consultationId', consultationId));
+    _data.files.add(
+      MapEntry(
+        'fileDed',
+        MultipartFile.fromFileSync(
+          fileDed.path,
+          filename: fileDed.path.split(Platform.pathSeparator).last,
+        ),
+      ),
+    );
+    _data.files.add(
+      MapEntry(
+        'fileRab',
+        MultipartFile.fromFileSync(
+          fileRab.path,
+          filename: fileRab.path.split(Platform.pathSeparator).last,
+        ),
+      ),
+    );
+    _data.files.add(
+      MapEntry(
+        'fileBoq',
+        MultipartFile.fromFileSync(
+          fileBoq.path,
+          filename: fileBoq.path.split(Platform.pathSeparator).last,
+        ),
+      ),
+    );
+    final _options = _setStreamType<DesignDocument>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
-            '/api/final-documents',
+            '/api/design-documents/upload',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late FinalDocument _value;
+    late DesignDocument _value;
     try {
-      _value = FinalDocument.fromJson(_result.data!);
+      _value = DesignDocument.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -46,7 +83,7 @@ class _FinalDocumentApiService implements FinalDocumentApiService {
   }
 
   @override
-  Future<void> approveFinalDocuments(String consultationId) async {
+  Future<void> approveDesignDocuments(String designDocumentId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -55,7 +92,7 @@ class _FinalDocumentApiService implements FinalDocumentApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/final-documents/consultations/${consultationId}/approve',
+            '/api/design-documents/${designDocumentId}/approve',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -65,8 +102,8 @@ class _FinalDocumentApiService implements FinalDocumentApiService {
   }
 
   @override
-  Future<void> rejectFinalDocuments(
-    String consultationId,
+  Future<void> requestDesignRevision(
+    String designDocumentId,
     Map<String, dynamic> body,
   ) async {
     final _extra = <String, dynamic>{};
@@ -78,7 +115,7 @@ class _FinalDocumentApiService implements FinalDocumentApiService {
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/final-documents/consultations/${consultationId}/reject',
+            '/api/design-documents/${designDocumentId}/revision-request',
             queryParameters: queryParameters,
             data: _data,
           )

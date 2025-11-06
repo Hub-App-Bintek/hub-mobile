@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:pkp_hub/core/storage/secure_storage.dart';
 import 'package:pkp_hub/data/entity/user.dart';
-import 'package:pkp_hub/data/models/response/wallet_response.dart';
 
 class UserStorage {
   final SecureStorage _storage;
