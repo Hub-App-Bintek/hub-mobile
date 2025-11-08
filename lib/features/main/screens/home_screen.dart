@@ -20,8 +20,12 @@ class HomeScreen extends GetView<HomeController> {
     return Scaffold(
       appBar: PkpAppBar(
         showNavigation: false,
-        actions: Icons.mail_rounded,
-        onActionPressed: controller.onNotificationTapped,
+        actions: [
+          PkpAppBarAction(
+            icon: Icons.mail_rounded,
+            onPressed: controller.onNotificationTapped,
+          ),
+        ],
       ),
       body: SafeArea(
         child: RefreshIndicator(

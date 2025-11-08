@@ -11,17 +11,6 @@ class ProjectsScreen extends GetView<ProjectsController> {
 
   @override
   Widget build(BuildContext context) {
-    // final ScrollController scrollController = ScrollController();
-    //
-    // scrollController.addListener(() {
-    //   if (scrollController.position.pixels >=
-    //           scrollController.position.maxScrollExtent - 200 &&
-    //       !controller.isLoading.value &&
-    //       controller.hasMore) {
-    //     controller.loadMoreProjects();
-    //   }
-    // });
-
     Map<String, List<Project>> groupProjects(List<Project> projects) {
       final Map<String, List<Project>> grouped = {};
       for (var project in projects) {

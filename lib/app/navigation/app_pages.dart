@@ -17,6 +17,10 @@ import 'package:pkp_hub/features/consultant/screens/consultants_screen.dart';
 import 'package:pkp_hub/features/consultant/bindings/consultant_portfolio_binding.dart';
 import 'package:pkp_hub/features/consultant/screens/consultant_portfolios_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
+import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
+import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
+import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
+import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
 
 part 'app_routes.dart';
 
@@ -73,6 +77,16 @@ class AppPages {
       name: _Paths.projectDetails,
       page: () => const ProjectDetailsScreen(),
       binding: ProjectDetailsBinding(),
+    ),
+    GetPage(
+      name: _Paths.inbox,
+      page: () => const InboxScreen(),
+      binding: InboxBinding(),
+    ),
+    GetPage(
+      name: _Paths.chat,
+      page: () => const ChatScreen(),
+      binding: ChatBinding(),
     ),
   ];
 }

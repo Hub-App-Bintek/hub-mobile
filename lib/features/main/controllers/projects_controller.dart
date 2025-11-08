@@ -114,7 +114,6 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
           'projectId': project.projectId,
           'lat': project.location?.latitude ?? 0.0,
           'long': project.location?.longitude ?? 0.0,
-          'type': project.projectId,
         },
       );
     } else {

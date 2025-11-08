@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
@@ -23,10 +24,21 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     return Scaffold(
       appBar: PkpAppBar(
         title: AppStrings.projectDetailsTitle,
-        actions: Icons.cancel,
-        onActionPressed: () {
-          Get.back();
-        },
+        actions: [
+          PkpAppBarAction(
+            icon: Icons.chat,
+            onPressed: () {
+              controller.navigateTo(AppRoutes.chat);
+            },
+          ),
+          PkpAppBarAction(
+            icon: Icons.cancel,
+            onPressed: () {
+              // TODO: Cancel project
+              Get.back();
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Obx(() {
@@ -48,7 +60,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     const SizedBox(height: 12),
                     OutlinedButton(
                       onPressed: controller.fetchDetails,
-                      child: const Text('Retry'),
+                      child: const Text(AppStrings.retryButton),
                     ),
                   ],
                 ),

@@ -216,7 +216,7 @@ class ConsultantPortfoliosController extends BaseController {
   }
 
   void _navigateToConsultantChat() {
-    // TODO: Implement navigation to consultant chat screen when the route is available.
+    navigateTo(AppRoutes.chat);
   }
 
   @override
