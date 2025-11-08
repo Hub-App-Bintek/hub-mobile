@@ -5,20 +5,28 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
+import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/data/models/response/wallet_response.dart';
+import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
+import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
 class HomeController extends BaseController with WidgetsBindingObserver {
   final UserStorage _userStorage;
-  final GetProjectsUseCase getProjectListUseCase;
-  final GetWalletBalanceUseCase getWalletBalanceUseCase;
+  final GetProjectsUseCase _getProjectListUseCase;
+  final GetWalletBalanceUseCase _getWalletBalanceUseCase;
+  final GetConsultantsUseCase _getConsultantsUseCase;
+  Worker? _mainTabWorker;
 
   final RxDouble balance = 0.0.obs;
+  final Rxn<UserRole> userRole = Rxn<UserRole>();
 
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
@@ -30,15 +38,18 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=400&fit=crop',
   ];
 
-  final RxList<Project> activeProjects = <Project>[].obs;
+  final RxList<Project> projects = <Project>[].obs;
   final RxBool isProjectLoading = false.obs;
+  final RxList<Consultant> consultants = <Consultant>[].obs;
+  final RxBool isConsultantLoading = false.obs;
 
   String? _token;
 
   HomeController(
     this._userStorage,
-    this.getProjectListUseCase,
-    this.getWalletBalanceUseCase,
+    this._getProjectListUseCase,
+    this._getWalletBalanceUseCase,
+    this._getConsultantsUseCase,
   );
 
   @override
@@ -46,6 +57,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     super.onInit();
     // Register for app lifecycle events so we can refresh when the app resumes.
     WidgetsBinding.instance.addObserver(this);
+    _listenToMainTabChanges();
     init();
   }
 
@@ -60,6 +72,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   void onClose() {
     // Unregister lifecycle observer and clean up resources.
     WidgetsBinding.instance.removeObserver(this);
+    _mainTabWorker?.dispose();
     carouselController.dispose();
     _carouselTimer?.cancel();
     super.onClose();
@@ -74,15 +87,35 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     }
   }
 
+  void _listenToMainTabChanges() {
+    if (!Get.isRegistered<MainController>()) return;
+    final mainController = Get.find<MainController>();
+    _mainTabWorker = ever<int>(mainController.selectedIndex, (index) {
+      if (index == 0) {
+        refresh();
+      }
+    });
+  }
+
   Future<void> init() async {
+    userRole.value = await _userStorage.getRole();
     _token = await _userStorage.getToken();
+
     if (_isLoggedIn) {
-      loadBalance();
-      fetchActiveProjects();
+      await Future.wait([
+        _fetchBalance(),
+        _fetchProjects(),
+        _fetchConsultants(),
+      ]);
+    } else {
+      projects.clear();
+      await _fetchConsultants();
     }
   }
 
   bool get _isLoggedIn => _token?.isNotEmpty ?? false;
+
+  bool get isLoggedIn => _isLoggedIn;
 
   @override
   void onReady() {
@@ -90,9 +123,9 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     _startCarouselTimer();
   }
 
-  Future<void> loadBalance() async {
+  Future<void> _fetchBalance() async {
     await handleAsync<WalletResponse>(
-      () => getWalletBalanceUseCase(),
+      () => _getWalletBalanceUseCase(),
       onSuccess: (response) async {
         balance.value = response.balance ?? 0.0;
       },
@@ -102,53 +135,33 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     );
   }
 
-  // Fetch active projects from API
-  Future<void> fetchActiveProjects() async {
+  Future<void> _fetchProjects() async {
     isProjectLoading.value = true;
+    // List<Project>? latestProjects;
+
     await handleAsync<GetProjectsResponse>(
-      () => getProjectListUseCase(const GetProjectsRequest()),
+      () => _getProjectListUseCase(const GetProjectsRequest(size: 100)),
       onSuccess: (data) {
         final result = data.projects
             .where((p) => p.status != 'CANCELED' && p.status != 'COMPLETED')
             .toList();
-        activeProjects.value = result;
-        isProjectLoading.value = false;
+        projects.value = result;
       },
       onFailure: (failure) {
         showError(failure);
-        activeProjects.clear();
-        isProjectLoading.value = false;
+        projects.clear();
+        consultants.clear();
       },
     );
-  }
 
-  Future<void> handleMenuTap(VoidCallback onHaveActiveProjects) async {
-    if (!_isLoggedIn) {
-      navigateTo(AppRoutes.login);
-      return;
-    }
-
-    var permissionGranted = await isPermissionGranted(Permission.location);
-    if (!permissionGranted) {
-      final status = await requestPermission(Permission.location);
-      if (status.isPermanentlyDenied) {
-        return;
-      }
-      permissionGranted = status.isGranted;
-    }
-
-    if (permissionGranted && activeProjects.isEmpty) {
-      navigateTo(AppRoutes.createProject);
-    } else if (permissionGranted && activeProjects.isNotEmpty) {
-      onHaveActiveProjects();
-    }
+    isProjectLoading.value = false;
   }
 
   void onNotificationTapped() {
     // TODO: Redirect to inbox screen
   }
 
-  void onProjectSelectedFromSheet(Project project) {
+  void onSelectProject(Project project) {
     if (project.status == "CREATED") {
       navigateTo(
         AppRoutes.consultants,
@@ -171,6 +184,41 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     navigateTo(AppRoutes.createProject);
   }
 
+  void onConsultantCardTapped(Consultant consultant) {
+    final consultantId = consultant.id;
+    if (consultantId == null || consultantId.isEmpty) return;
+
+    navigateTo(
+      AppRoutes.consultantPortfolio,
+      arguments: {
+        'consultantId': consultantId,
+        'isPaidConsultation': (consultant.hourlyRate ?? 0) > 0,
+      },
+    );
+  }
+
+  Future<void> onFeatureTapped(VoidCallback onHaveProjects) async {
+    if (!_isLoggedIn) {
+      navigateTo(AppRoutes.login);
+      return;
+    }
+
+    var permissionGranted = await isPermissionGranted(Permission.location);
+    if (!permissionGranted) {
+      final status = await requestPermission(Permission.location);
+      if (status.isPermanentlyDenied) {
+        return;
+      }
+      permissionGranted = status.isGranted;
+    }
+
+    if (permissionGranted && projects.isEmpty) {
+      navigateTo(AppRoutes.createProject);
+    } else if (permissionGranted && projects.isNotEmpty) {
+      onHaveProjects();
+    }
+  }
+
   void _startCarouselTimer() {
     _carouselTimer?.cancel();
     _carouselTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -187,5 +235,20 @@ class HomeController extends BaseController with WidgetsBindingObserver {
         curve: Curves.easeInOut,
       );
     });
+  }
+
+  Future<void> _fetchConsultants({double lat = 0, double long = 0}) async {
+    isConsultantLoading.value = true;
+    await handleAsync<ConsultantsResponse>(
+      () => _getConsultantsUseCase(lat: lat, long: long, page: 0, size: 10),
+      onSuccess: (response) {
+        consultants.value = response.consultants;
+      },
+      onFailure: (failure) {
+        showError(failure);
+        consultants.clear();
+      },
+    );
+    isConsultantLoading.value = false;
   }
 }

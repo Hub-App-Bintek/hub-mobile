@@ -14,6 +14,16 @@ class LoginController extends BaseController {
   // Constructor
   LoginController(this._loginUseCase);
 
+  Map<String, dynamic>? get _navigationArgs =>
+      Get.arguments is Map<String, dynamic>
+      ? Get.arguments as Map<String, dynamic>?
+      : null;
+
+  bool get _shouldReturnToCaller {
+    final route = _navigationArgs?['fromRoute'];
+    return route is String && route.isNotEmpty;
+  }
+
   // Text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -71,7 +81,7 @@ class LoginController extends BaseController {
           ),
         ),
         onSuccess: (loginResponse) async {
-          navigateOffAll(AppRoutes.main);
+          _handlePostLoginNavigation();
         },
         onFailure: (failure) {
           // You now have full control over the failure logic.
@@ -99,6 +109,15 @@ class LoginController extends BaseController {
     } finally {
       isRequesting.value = false;
     }
+  }
+
+  void _handlePostLoginNavigation() {
+    if (_shouldReturnToCaller) {
+      goBack(result: true);
+      return;
+    }
+
+    navigateOffAll(AppRoutes.main);
   }
 
   @override

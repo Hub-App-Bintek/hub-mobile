@@ -1,20 +1,22 @@
 // Defines user roles with string mappings and parsing helpers.
 
-enum UserRole { homeowner, consultant, unknown }
+enum UserRole {
+  homeowner('HOMEOWNER'),
+  consultant('CONSULTANT'),
+  unknown('UNKNOWN');
 
-const Map<UserRole, String> _userRoleToString = {
-  UserRole.homeowner: 'HOMEOWNER',
-  UserRole.consultant: 'CONSULTANT',
-  UserRole.unknown: 'UNKNOWN',
-};
+  const UserRole(this.label);
 
-final Map<String, UserRole> _stringToUserRole = {
-  for (final entry in _userRoleToString.entries) entry.value: entry.key,
-};
+  final String label;
 
-String userRoleToString(UserRole role) => _userRoleToString[role] ?? 'UNKNOWN';
+  static UserRole fromString(String? value) {
+    if (value == null) return UserRole.unknown;
+    final normalized = value.toUpperCase();
+    return UserRole.values.firstWhere(
+      (role) => role.label == normalized,
+      orElse: () => UserRole.unknown,
+    );
+  }
 
-UserRole userRoleFromString(String? value) {
-  if (value == null) return UserRole.unknown;
-  return _stringToUserRole[value.toUpperCase()] ?? UserRole.unknown;
+  String get value => label;
 }

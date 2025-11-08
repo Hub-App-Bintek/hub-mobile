@@ -100,10 +100,23 @@ abstract class AppStrings {
   static const menuMaterial = 'Material';
   static const menuConstruction = 'Konstruksi';
   static const menuMonitoring = 'Pengawasan';
+  static const homeFeatureMonitoring = 'Monitoring';
+  static const homeFeatureSupervision = 'Pengawasan';
 
   // HomeScreen Bottom Sheet
   static const chooseProjectTitle = 'Pilih Project';
   static const choose = 'Pilih';
+
+  // HomeScreen Role Sections
+  static const homeConsultantSectionTitle = 'Rekomendasi Konsultan';
+  static const homeConsultantSectionSubtitle =
+      'Pilih konsultan untuk memulai konsultasi proyek Anda';
+  static const homeConsultantEmpty =
+      'Belum ada konsultan yang dapat ditampilkan.';
+  static const homeProjectsActiveTitle = 'Proyek Aktif';
+  static const homeProjectsPendingTitle = 'Menunggu Konfirmasi';
+  static const homeProjectsEmpty =
+      'Belum ada proyek aktif atau menunggu konfirmasi.';
 
   // Permissions
   static const permissionDenied = 'Izin Ditolak';
@@ -116,4 +129,8 @@ abstract class AppStrings {
   static const projectDetailsTitle = 'Detail Proyek';
   static const requestRevision = 'Minta Revisi';
   static const scheduleSurvey = 'Jadwalkan Survey';
+
+  /// Consultant Portfolio Screen
+  static const chatConsultant = 'Chat Konsultan';
+  static const askForConsultation = 'Minta Konsultasi';
 }

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-import 'package:pkp_hub/core/enums/user_role.dart' as ur;
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
@@ -115,7 +115,7 @@ class ProjectDetailsController extends BaseController {
 
   // Use RxList for robust reactivity with lists
   final RxList<ProjectHistory> consultationHistory = <ProjectHistory>[].obs;
-  final userRole = Rxn<ur.UserRole>();
+  final userRole = Rxn<UserRole>();
   String _paymentId = '';
 
   // Loading flags for homeowner actions
@@ -167,8 +167,7 @@ class ProjectDetailsController extends BaseController {
   }
 
   Future<void> _initUserRole() async {
-    final user = await _userStorage.getUser();
-    userRole.value = ur.userRoleFromString(user?.role);
+    userRole.value = await _userStorage.getRole();
   }
 
   Future<void> fetchDetails({bool isInitialLoad = false}) async {
@@ -1275,15 +1274,15 @@ class ProjectDetailsController extends BaseController {
 
   /// Visibility rules for bottomNavigationBar button
   bool get shouldShowConsultationConfirmationButtons {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant && status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
+    return userRole.value == UserRole.consultant &&
+        status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
   }
 
   bool get shouldShowScheduleButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant && status == 'MENUNGGU_JADWAL_SURVEY';
+    return userRole.value == UserRole.consultant &&
+        status == 'MENUNGGU_JADWAL_SURVEY';
   }
 
   /// Returns the latest survey schedule by updatedAt/createdAt
@@ -1310,30 +1309,28 @@ class ProjectDetailsController extends BaseController {
 
   /// Visibility rules for reschedule when latest proposed schedule was rejected
   bool get shouldShowRescheduleButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final lastStatus = latestSurveySchedule?.status?.toUpperCase();
-    return isConsultant && lastStatus == 'REJECTED';
+    return userRole.value == UserRole.consultant && lastStatus == 'REJECTED';
   }
 
   /// Visibility rules for homeowner approval actions
   bool get shouldShowSurveyScheduleApprovalButtons {
-    final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isHomeowner && status == 'MENUNGGU_APPROVAL_JADWAL';
+    return userRole.value == UserRole.homeowner &&
+        status == 'MENUNGGU_APPROVAL_JADWAL';
   }
 
   /// Visibility rule for consultant to mark survey as done
   bool get shouldShowCompleteSurveyButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant && status == 'SURVEY_DIJADWALKAN';
+    return userRole.value == UserRole.consultant &&
+        status == 'SURVEY_DIJADWALKAN';
   }
 
   /// Visibility rules for consultant contract actions (download & upload)
   bool get shouldShowContractActions {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant &&
+    return userRole.value == UserRole.consultant &&
         (status == 'SURVEY_SELESAI' || status == 'MENYIAPKAN_KONTRAK');
   }
 
@@ -1348,9 +1345,9 @@ class ProjectDetailsController extends BaseController {
 
   /// Visibility rules for homeowner to approve or reject contract
   bool get shouldShowContractApprovalButtons {
-    final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isHomeowner && status == 'MENUNGGU_APPROVAL_KONTRAK';
+    return userRole.value == UserRole.homeowner &&
+        status == 'MENUNGGU_APPROVAL_KONTRAK';
   }
 
   /// Visibility rule for "Tanda Tangan Kontrak" button
@@ -1362,33 +1359,33 @@ class ProjectDetailsController extends BaseController {
     if (status != 'MENUNGGU_TANDA_TANGAN_KONTRAK') return false;
 
     final role = userRole.value;
-    if (role == ur.UserRole.consultant) {
+    if (role == UserRole.consultant) {
       return !consultationHistory.any(
         (history) => history.state == 'CONSULTANT_SIGNED',
       );
-    } else if (role == ur.UserRole.homeowner) {
+    } else if (role == UserRole.homeowner) {
       return !consultationHistory.any(
         (history) => history.state == 'HOMEOWNER_SIGNED',
       );
     }
 
-    return role == ur.UserRole.homeowner || role == ur.UserRole.consultant;
+    return role == UserRole.homeowner || role == UserRole.consultant;
   }
 
   /// Visibility rule for showing "Request Payment" action
   /// Shown when consultation status is MENUNGGU_REQUEST_PAYMENT and user is consultant
   bool get shouldShowRequestPaymentButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isConsultant && status == 'MENUNGGU_REQUEST_PAYMENT';
+    return userRole.value == UserRole.consultant &&
+        status == 'MENUNGGU_REQUEST_PAYMENT';
   }
 
   /// Visibility rule for homeowner payment actions
   /// Shows when consultation status is MENUNGGU_PEMBAYARAN and user is homeowner
   bool get shouldShowPaymentButtons {
-    final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isHomeowner && status == 'MENUNGGU_PEMBAYARAN';
+    return userRole.value == UserRole.homeowner &&
+        status == 'MENUNGGU_PEMBAYARAN';
   }
 
   /// Visibility rule for consultant to upload documents when consultation is active
@@ -1396,7 +1393,7 @@ class ProjectDetailsController extends BaseController {
   /// the first consultation history item (from the detail response order)
   /// has state == 'STARTED' or 'REVISION_REQUESTED' .
   bool get shouldShowUploadDocumentsButton {
-    final isConsultant = userRole.value == ur.UserRole.consultant;
+    final isConsultant = userRole.value == UserRole.consultant;
     final status = details.value?.consultation?.status?.toUpperCase();
     if (!isConsultant || status != 'AKTIF') return false;
 
@@ -1408,7 +1405,7 @@ class ProjectDetailsController extends BaseController {
   }
 
   bool get shouldShowDesignApprovalButtons {
-    final isHomeowner = userRole.value == ur.UserRole.homeowner;
+    final isHomeowner = userRole.value == UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
     return isHomeowner &&
         status == 'AKTIF' &&
@@ -1417,8 +1414,7 @@ class ProjectDetailsController extends BaseController {
   }
 
   bool get shouldShowFinalizeActions {
-    final isHomeowner = userRole.value == ur.UserRole.homeowner;
     final status = details.value?.consultation?.status?.toUpperCase();
-    return isHomeowner && status == 'FINAL';
+    return userRole.value == UserRole.homeowner && status == 'FINAL';
   }
 }

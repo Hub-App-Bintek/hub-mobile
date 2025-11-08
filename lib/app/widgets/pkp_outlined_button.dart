@@ -10,7 +10,7 @@ class PkpOutlinedButton extends StatelessWidget {
     required this.onPressed,
     required this.text,
     this.isLoading = false,
-    this.enabled = false,
+    this.enabled = true,
     this.size = PkpButtonSize.normal,
   });
 

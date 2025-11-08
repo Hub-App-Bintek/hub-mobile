@@ -10,13 +10,25 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/project_type.dart';
+import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
+import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
+import 'package:pkp_hub/data/models/response/create_project_response.dart';
+import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 
 class CreateProjectController extends BaseController {
   final CreateProjectUseCase _createProjectUseCase;
+  final CreateConsultationUseCase _createConsultationUseCase;
+  final String? _consultantId;
+  final bool _isPaidConsultation;
 
-  CreateProjectController(this._createProjectUseCase);
+  CreateProjectController(
+    this._createProjectUseCase,
+    this._createConsultationUseCase,
+    this._consultantId,
+    this._isPaidConsultation,
+  );
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -220,6 +232,9 @@ class CreateProjectController extends BaseController {
     selectedProjectType.value = value;
   }
 
+  bool get _shouldCreateConsultation =>
+      _consultantId != null && _consultantId.isNotEmpty;
+
   Future<void> createProject() async {
     if (!isFormValid) {
       _validateProjectName();
@@ -229,6 +244,7 @@ class CreateProjectController extends BaseController {
     }
 
     isRequesting.value = true;
+    CreateProjectResponse? createdProject;
     try {
       await handleAsync(
         () => _createProjectUseCase(
@@ -243,22 +259,64 @@ class CreateProjectController extends BaseController {
           ),
         ),
         onSuccess: (response) {
-          navigateOff(
-            AppRoutes.consultants,
-            arguments: {
-              'projectId': response.projectId,
-              'lat': selectedLocation.value?.latitude ?? 0.0,
-              'long': selectedLocation.value?.longitude ?? 0.0,
-              'type': selectedProjectType.value?.id ?? '',
-            },
-          );
+          createdProject = response;
         },
         onFailure: (Failure failure) {
           showError(failure);
         },
       );
+
+      if (createdProject != null) {
+        if (_shouldCreateConsultation) {
+          await _createConsultationForProject(createdProject!.projectId);
+        } else {
+          _navigateToConsultants(createdProject!.projectId);
+        }
+      }
     } finally {
       isRequesting.value = false;
     }
+  }
+
+  void _navigateToConsultants(String projectId) {
+    navigateOff(
+      AppRoutes.consultants,
+      arguments: {
+        'projectId': projectId,
+        'lat': selectedLocation.value?.latitude ?? 0.0,
+        'long': selectedLocation.value?.longitude ?? 0.0,
+        'type': selectedProjectType.value?.id ?? '',
+      },
+    );
+  }
+
+  Future<void> _createConsultationForProject(String projectId) async {
+    final consultantId = int.tryParse(_consultantId ?? '');
+    if (consultantId == null) {
+      showError(const ServerFailure(message: 'Invalid consultant id.'));
+      _navigateToConsultants(projectId);
+      return;
+    }
+
+    await handleAsync<CreateConsultationResponse>(
+      () => _createConsultationUseCase(
+        CreateConsultationRequest(
+          consultantId: consultantId,
+          projectId: projectId,
+          consultationType: _isPaidConsultation ? 'BERBAYAR' : 'GRATIS',
+          channel: 'CHAT',
+        ),
+      ),
+      onSuccess: (_) {
+        navigateAndClearUntil(
+          AppRoutes.projectDetails,
+          untilRoute: AppRoutes.main,
+          arguments: {'projectId': projectId},
+        );
+      },
+      onFailure: (failure) {
+        showError(failure);
+      },
+    );
   }
 }

@@ -214,6 +214,13 @@ abstract class BaseController extends GetxController {
     Get.toNamed(route, arguments: arguments);
   }
 
+  /// Navigates to a named route and awaits a result.
+  Future<T?> navigateToForResult<T>(String route, {dynamic arguments}) async {
+    final result = await Get.toNamed(route, arguments: arguments);
+    if (result is T) return result;
+    return null;
+  }
+
   /// Navigates back to the previous screen.
   /// You can optionally provide a [result] to the previous screen.
   void goBack<T>({T? result}) {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/storage/secure_storage.dart';
 import 'package:pkp_hub/data/entity/user.dart';
 
@@ -29,6 +30,12 @@ class UserStorage {
     return user.token ?? '';
   }
 
+  /// Returns the currently persisted role (if any) without exposing the whole user object.
+  Future<UserRole?> getRole() async {
+    final user = await getUser();
+    return UserRole.fromString(user?.role ?? '');
+  }
+
   /// Persist a numeric balance value as a string in secure storage.
   Future<void> saveBalance(double balance) async {
     await _storage.write(_balanceKey, balance.toString());
@@ -39,11 +46,6 @@ class UserStorage {
     final s = await _storage.read(_balanceKey);
     if (s == null) return null;
     return double.tryParse(s);
-  }
-
-  /// Remove persisted balance.
-  Future<void> clearBalance() async {
-    await _storage.delete(_balanceKey);
   }
 
   Future<void> clear() async {
