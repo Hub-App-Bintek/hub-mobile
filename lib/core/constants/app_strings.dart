@@ -134,4 +134,14 @@ abstract class AppStrings {
   /// Consultant Portfolio Screen
   static const chatConsultant = 'Chat Konsultan';
   static const askForConsultation = 'Minta Konsultasi';
+
+  // Generic actions / messages
+  static const retryButton = 'Coba Lagi';
+  static const unableToFetchLocation = 'Tidak dapat mendapatkan lokasi.';
+
+  // Profile
+  static const profileScreenTitle = 'Profil';
+
+  // Consultant list
+  static const consultantSortLabel = 'Urutkan berdasarkan';
 }

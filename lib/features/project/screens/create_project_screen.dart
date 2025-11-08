@@ -31,7 +31,7 @@ class CreateProjectScreen extends GetView<CreateProjectController> {
               if (controller.selectedLocation.value == null) {
                 return const SizedBox(
                   height: 240,
-                  child: Center(child: Text('Unable to get location')),
+                  child: Center(child: Text(AppStrings.unableToFetchLocation)),
                 );
               }
               return SizedBox(

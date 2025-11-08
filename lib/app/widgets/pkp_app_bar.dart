@@ -10,7 +10,6 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.onLeadingPressed,
     this.actions,
-    this.onActionPressed,
     this.backgroundColor,
     this.elevation,
   });
@@ -19,8 +18,7 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showNavigation;
   final IconData? leading;
   final VoidCallback? onLeadingPressed;
-  final IconData? actions;
-  final VoidCallback? onActionPressed;
+  final List<PkpAppBarAction>? actions;
   final Color? backgroundColor;
   final double? elevation;
 
@@ -41,14 +39,23 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title, style: appBarTheme.titleTextStyle ?? AppTextStyles.h4),
       leading: showNavigation ? effectiveLeading : null,
-      actions: [
-        if (actions != null)
-          IconButton(
-            icon: Icon(actions, size: 24, color: AppColors.primaryDarkest),
-            onPressed: onActionPressed,
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          ),
-      ],
+      actions: actions != null
+          ? actions!
+                .map(
+                  (action) => IconButton(
+                    icon: Icon(
+                      action.icon,
+                      size: 24,
+                      color: action.color ?? AppColors.primaryDarkest,
+                    ),
+                    onPressed: action.onPressed,
+                    tooltip:
+                        action.tooltip ??
+                        MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  ),
+                )
+                .toList()
+          : null,
       backgroundColor:
           backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
       elevation: elevation ?? appBarTheme.elevation ?? 0,
@@ -67,4 +74,18 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Defaults to [kToolbarHeight].
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class PkpAppBarAction {
+  const PkpAppBarAction({
+    required this.icon,
+    this.onPressed,
+    this.tooltip,
+    this.color,
+  });
+
+  final IconData icon;
+  final VoidCallback? onPressed;
+  final String? tooltip;
+  final Color? color;
 }

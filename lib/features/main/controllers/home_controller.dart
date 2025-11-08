@@ -168,7 +168,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   }
 
   void onNotificationTapped() {
-    // TODO: Redirect to inbox screen
+    navigateTo(AppRoutes.inbox);
   }
 
   void onSelectProject(Project project) {

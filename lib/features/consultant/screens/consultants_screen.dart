@@ -6,6 +6,7 @@ import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
+import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/consultant/controllers/consultants_controller.dart';
 
 class ConsultantsScreen extends GetView<ConsultantsController> {
@@ -17,15 +18,17 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
       backgroundColor: AppColors.white,
       appBar: PkpAppBar(
         title: 'Konsultan',
-        actions: Icons.sort,
-        onActionPressed: () => controller.showBottomSheet(
-          _SortBottomSheet(
-            initialSort: controller.selectedSort.value,
-            onApply: (value) {
-              controller.updateSort(value);
-            },
+        actions: [
+          PkpAppBarAction(
+            icon: Icons.sort,
+            onPressed: () => controller.showBottomSheet(
+              _SortBottomSheet(
+                initialSort: controller.selectedSort.value,
+                onApply: controller.updateSort,
+              ),
+            ),
           ),
-        ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: controller.refreshList,
@@ -129,7 +132,10 @@ class _EmptyState extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Center(
-          child: OutlinedButton(onPressed: onRetry, child: const Text('Retry')),
+          child: OutlinedButton(
+            onPressed: onRetry,
+            child: const Text(AppStrings.retryButton),
+          ),
         ),
       ],
     );
@@ -170,7 +176,7 @@ class _SortBottomSheetState extends State<_SortBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Urutkan berdasarkan', style: AppTextStyles.h3),
+          Text(AppStrings.consultantSortLabel, style: AppTextStyles.h3),
           const SizedBox(height: 16),
           ...options.map(
             (option) => ListTile(

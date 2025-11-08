@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
+import 'package:pkp_hub/core/base/base_controller.dart';
 
-class KycController extends GetxController {
-  // Add your controller logic here
-}
+class KycController extends BaseController {}

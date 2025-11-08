@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/features/main/screens/home_screen.dart';
 import 'package:pkp_hub/features/main/screens/profile_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 
-class MainController extends GetxController {
+class MainController extends BaseController {
   final UserStorage _userStorage;
 
   MainController(this._userStorage);
