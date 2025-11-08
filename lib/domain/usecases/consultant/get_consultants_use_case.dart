@@ -13,12 +13,18 @@ class GetConsultantsUseCase {
     required double long,
     required int page,
     required int size,
+    String? type,
+    String? specialty,
+    String? sortBy,
   }) {
     return repository.getConsultants(
       lat: lat,
       long: long,
       page: page,
       size: size,
+      type: type,
+      specialty: specialty,
+      sortBy: sortBy,
     );
   }
 }

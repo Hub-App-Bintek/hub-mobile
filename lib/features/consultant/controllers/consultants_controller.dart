@@ -12,7 +12,9 @@ class ConsultantsController extends BaseController {
   final String _projectId;
   final double _lat;
   final double _long;
-  final String _type; // kept for future filters, even if not used in the call
+  final String? _type;
+  final String? _specialty;
+  final RxString selectedSort = ''.obs;
 
   ConsultantsController(
     this._getConsultantsUseCase,
@@ -20,6 +22,8 @@ class ConsultantsController extends BaseController {
     this._lat,
     this._long,
     this._type,
+    this._specialty,
+    String? initialSort,
   );
 
   // Reactive state
@@ -82,6 +86,9 @@ class ConsultantsController extends BaseController {
         long: _long,
         page: _page,
         size: _pageSize,
+        type: _type?.isNotEmpty == true ? _type : null,
+        specialty: _specialty?.isNotEmpty == true ? _specialty : null,
+        sortBy: selectedSort.value.isNotEmpty ? selectedSort.value : null,
       ),
       onSuccess: (response) {
         final result = response.consultants;
@@ -123,5 +130,11 @@ class ConsultantsController extends BaseController {
     scrollController.removeListener(_onScroll);
     scrollController.dispose();
     super.onClose();
+  }
+
+  void updateSort(String sortKey) {
+    if (selectedSort.value == sortKey) return;
+    selectedSort.value = sortKey;
+    refreshList();
   }
 }

@@ -229,7 +229,20 @@ class HomeScreen extends GetView<HomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.homeConsultantSectionTitle, style: AppTextStyles.h2),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  AppStrings.homeConsultantSectionTitle,
+                  style: AppTextStyles.h2,
+                ),
+              ),
+              TextButton(
+                onPressed: controller.onSeeAllConsultants,
+                child: const Text(AppStrings.homeConsultantSeeAll),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           if (isLoading)
             const Center(child: CircularProgressIndicator())
