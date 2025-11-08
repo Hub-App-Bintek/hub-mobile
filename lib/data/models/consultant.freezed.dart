@@ -28,6 +28,7 @@ mixin _$Consultant {
   double? get distanceKm => throw _privateConstructorUsedError;
   String? get avatarUrl => throw _privateConstructorUsedError;
   String? get location => throw _privateConstructorUsedError;
+  String? get address => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
   String? get experienceLevel => throw _privateConstructorUsedError;
   String? get availabilityStatus => throw _privateConstructorUsedError;
@@ -56,6 +57,7 @@ abstract class $ConsultantCopyWith<$Res> {
     double? distanceKm,
     String? avatarUrl,
     String? location,
+    String? address,
     String? type,
     String? experienceLevel,
     String? availabilityStatus,
@@ -85,6 +87,7 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
     Object? distanceKm = freezed,
     Object? avatarUrl = freezed,
     Object? location = freezed,
+    Object? address = freezed,
     Object? type = freezed,
     Object? experienceLevel = freezed,
     Object? availabilityStatus = freezed,
@@ -121,6 +124,10 @@ class _$ConsultantCopyWithImpl<$Res, $Val extends Consultant>
             location: freezed == location
                 ? _value.location
                 : location // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            address: freezed == address
+                ? _value.address
+                : address // ignore: cast_nullable_to_non_nullable
                       as String?,
             type: freezed == type
                 ? _value.type
@@ -169,6 +176,7 @@ abstract class _$$ConsultantImplCopyWith<$Res>
     double? distanceKm,
     String? avatarUrl,
     String? location,
+    String? address,
     String? type,
     String? experienceLevel,
     String? availabilityStatus,
@@ -197,6 +205,7 @@ class __$$ConsultantImplCopyWithImpl<$Res>
     Object? distanceKm = freezed,
     Object? avatarUrl = freezed,
     Object? location = freezed,
+    Object? address = freezed,
     Object? type = freezed,
     Object? experienceLevel = freezed,
     Object? availabilityStatus = freezed,
@@ -233,6 +242,10 @@ class __$$ConsultantImplCopyWithImpl<$Res>
         location: freezed == location
             ? _value.location
             : location // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        address: freezed == address
+            ? _value.address
+            : address // ignore: cast_nullable_to_non_nullable
                   as String?,
         type: freezed == type
             ? _value.type
@@ -274,6 +287,7 @@ class _$ConsultantImpl implements _Consultant {
     this.distanceKm,
     this.avatarUrl,
     this.location,
+    this.address,
     this.type,
     this.experienceLevel,
     this.availabilityStatus,
@@ -300,6 +314,8 @@ class _$ConsultantImpl implements _Consultant {
   @override
   final String? location;
   @override
+  final String? address;
+  @override
   final String? type;
   @override
   final String? experienceLevel;
@@ -314,7 +330,7 @@ class _$ConsultantImpl implements _Consultant {
 
   @override
   String toString() {
-    return 'Consultant(id: $id, fullName: $fullName, specialty: $specialty, rating: $rating, distanceKm: $distanceKm, avatarUrl: $avatarUrl, location: $location, type: $type, experienceLevel: $experienceLevel, availabilityStatus: $availabilityStatus, contactInfo: $contactInfo, hourlyRate: $hourlyRate, packageCost: $packageCost)';
+    return 'Consultant(id: $id, fullName: $fullName, specialty: $specialty, rating: $rating, distanceKm: $distanceKm, avatarUrl: $avatarUrl, location: $location, address: $address, type: $type, experienceLevel: $experienceLevel, availabilityStatus: $availabilityStatus, contactInfo: $contactInfo, hourlyRate: $hourlyRate, packageCost: $packageCost)';
   }
 
   @override
@@ -334,6 +350,7 @@ class _$ConsultantImpl implements _Consultant {
                 other.avatarUrl == avatarUrl) &&
             (identical(other.location, location) ||
                 other.location == location) &&
+            (identical(other.address, address) || other.address == address) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.experienceLevel, experienceLevel) ||
                 other.experienceLevel == experienceLevel) &&
@@ -358,6 +375,7 @@ class _$ConsultantImpl implements _Consultant {
     distanceKm,
     avatarUrl,
     location,
+    address,
     type,
     experienceLevel,
     availabilityStatus,
@@ -387,6 +405,7 @@ abstract class _Consultant implements Consultant {
     final double? distanceKm,
     final String? avatarUrl,
     final String? location,
+    final String? address,
     final String? type,
     final String? experienceLevel,
     final String? availabilityStatus,
@@ -412,6 +431,8 @@ abstract class _Consultant implements Consultant {
   String? get avatarUrl;
   @override
   String? get location;
+  @override
+  String? get address;
   @override
   String? get type;
   @override

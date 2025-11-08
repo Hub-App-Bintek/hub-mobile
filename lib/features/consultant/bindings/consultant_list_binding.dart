@@ -17,8 +17,10 @@ class ConsultantListBinding extends Bindings {
         args?['projectId'] ?? '',
         (args?['lat'] as num?)?.toDouble() ?? 0.0,
         (args?['long'] as num?)?.toDouble() ?? 0.0,
-        args?['type'] ?? '',
-      );
+        args?['type'] as String?,
+        args?['specialty'] as String?,
+        args?['sortBy'] as String?,
+      )..selectedSort.value = (args?['sortBy'] as String?) ?? '';
     });
   }
 }

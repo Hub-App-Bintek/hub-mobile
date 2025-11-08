@@ -4,6 +4,8 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/features/consultant/controllers/consultants_controller.dart';
 
 class ConsultantsScreen extends GetView<ConsultantsController> {
@@ -13,7 +15,18 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PkpAppBar(title: 'Konsultan'),
+      appBar: PkpAppBar(
+        title: 'Konsultan',
+        actions: Icons.sort,
+        onActionPressed: () => controller.showBottomSheet(
+          _SortBottomSheet(
+            initialSort: controller.selectedSort.value,
+            onApply: (value) {
+              controller.updateSort(value);
+            },
+          ),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: controller.refreshList,
         color: AppColors.primaryDarkest,
@@ -119,6 +132,83 @@ class _EmptyState extends StatelessWidget {
           child: OutlinedButton(onPressed: onRetry, child: const Text('Retry')),
         ),
       ],
+    );
+  }
+}
+
+class _SortBottomSheet extends StatefulWidget {
+  const _SortBottomSheet({required this.initialSort, required this.onApply});
+
+  final String initialSort;
+  final ValueChanged<String> onApply;
+
+  @override
+  State<_SortBottomSheet> createState() => _SortBottomSheetState();
+}
+
+class _SortBottomSheetState extends State<_SortBottomSheet> {
+  late String _selectedSort;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedSort = widget.initialSort;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final options = [
+      (label: 'Nama', value: 'name'),
+      (label: 'Rating', value: 'rating'),
+      (label: 'Harga', value: 'price'),
+      (label: 'Jarak', value: 'distance'),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Urutkan berdasarkan', style: AppTextStyles.h3),
+          const SizedBox(height: 16),
+          ...options.map(
+            (option) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(option.label, style: AppTextStyles.bodyM),
+              trailing: _selectedSort == option.value
+                  ? const Icon(Icons.check, color: AppColors.primaryDarkest)
+                  : null,
+              onTap: () => setState(() => _selectedSort = option.value),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: PkpOutlinedButton(
+                  text: 'Reset',
+                  onPressed: () {
+                    setState(() => _selectedSort = '');
+                    widget.onApply('');
+                    Get.back();
+                  },
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: PkpElevatedButton(
+                  text: 'Terapkan',
+                  onPressed: () {
+                    widget.onApply(_selectedSort);
+                    Get.back();
+                  },
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

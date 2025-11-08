@@ -13,6 +13,7 @@ class Consultant with _$Consultant {
     double? distanceKm,
     String? avatarUrl,
     String? location,
+    String? address,
     String? type,
     String? experienceLevel,
     String? availabilityStatus,

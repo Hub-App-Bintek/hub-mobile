@@ -109,6 +109,7 @@ abstract class AppStrings {
 
   // HomeScreen Role Sections
   static const homeConsultantSectionTitle = 'Rekomendasi Konsultan';
+  static const homeConsultantSeeAll = 'Lainnya';
   static const homeConsultantSectionSubtitle =
       'Pilih konsultan untuk memulai konsultasi proyek Anda';
   static const homeConsultantEmpty =

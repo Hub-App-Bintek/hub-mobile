@@ -23,6 +23,9 @@ class _ConsultantApiService implements ConsultantApiService {
     required double long,
     required int page,
     required int size,
+    String? type,
+    String? specialty,
+    String? sortBy,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -30,7 +33,11 @@ class _ConsultantApiService implements ConsultantApiService {
       r'long': long,
       r'page': page,
       r'size': size,
+      r'type': type,
+      r'specialty': specialty,
+      r'sortBy': sortBy,
     };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<ConsultantsResponse>(

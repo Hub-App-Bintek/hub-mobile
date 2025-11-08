@@ -18,6 +18,9 @@ abstract class ConsultantApiService {
     @Query('long') required double long,
     @Query('page') required int page,
     @Query('size') required int size,
+    @Query('type') String? type,
+    @Query('specialty') String? specialty,
+    @Query('sortBy') String? sortBy,
   });
 
   @GET(ApiEndpoints.consultantPortfolio)

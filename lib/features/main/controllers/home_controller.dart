@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
@@ -31,6 +32,8 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
   Timer? _carouselTimer;
+  double _currentLat = 0;
+  double _currentLong = 0;
 
   final List<String> carouselImages = [
     'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=400&fit=crop',
@@ -100,6 +103,14 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   Future<void> init() async {
     userRole.value = await _userStorage.getRole();
     _token = await _userStorage.getToken();
+    if (userRole.value != UserRole.consultant) {
+      final coords = await _determineUserLocation();
+      _currentLat = coords.$1;
+      _currentLong = coords.$2;
+    } else {
+      _currentLat = 0;
+      _currentLong = 0;
+    }
 
     if (_isLoggedIn) {
       await Future.wait([
@@ -137,7 +148,6 @@ class HomeController extends BaseController with WidgetsBindingObserver {
 
   Future<void> _fetchProjects() async {
     isProjectLoading.value = true;
-    // List<Project>? latestProjects;
 
     await handleAsync<GetProjectsResponse>(
       () => _getProjectListUseCase(const GetProjectsRequest(size: 100)),
@@ -219,6 +229,27 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     }
   }
 
+  void onSeeAllConsultants() {
+    () async {
+      if (_currentLat == 0 &&
+          _currentLong == 0 &&
+          userRole.value != UserRole.consultant) {
+        final coords = await _determineUserLocation();
+        _currentLat = coords.$1;
+        _currentLong = coords.$2;
+      }
+      navigateTo(
+        AppRoutes.consultants,
+        arguments: {
+          'projectId': '',
+          'lat': _currentLat,
+          'long': _currentLong,
+          'type': '',
+        },
+      );
+    }();
+  }
+
   void _startCarouselTimer() {
     _carouselTimer?.cancel();
     _carouselTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -237,10 +268,17 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     });
   }
 
-  Future<void> _fetchConsultants({double lat = 0, double long = 0}) async {
+  Future<void> _fetchConsultants({double? lat, double? long}) async {
     isConsultantLoading.value = true;
+    final targetLat = lat ?? _currentLat;
+    final targetLong = long ?? _currentLong;
     await handleAsync<ConsultantsResponse>(
-      () => _getConsultantsUseCase(lat: lat, long: long, page: 0, size: 10),
+      () => _getConsultantsUseCase(
+        lat: targetLat,
+        long: targetLong,
+        page: 0,
+        size: 10,
+      ),
       onSuccess: (response) {
         consultants.value = response.consultants;
       },
@@ -250,5 +288,27 @@ class HomeController extends BaseController with WidgetsBindingObserver {
       },
     );
     isConsultantLoading.value = false;
+  }
+
+  Future<(double, double)> _determineUserLocation() async {
+    double lat = 0;
+    double long = 0;
+    try {
+      var status = await Permission.location.status;
+      if (!status.isGranted) {
+        status = await Permission.location.request();
+      }
+      if (!status.isGranted) {
+        return (lat, long);
+      }
+      final position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.low,
+      );
+      lat = position.latitude;
+      long = position.longitude;
+    } catch (_) {
+      // Ignore and fallback to 0.0 for both coordinates
+    }
+    return (lat, long);
   }
 }
