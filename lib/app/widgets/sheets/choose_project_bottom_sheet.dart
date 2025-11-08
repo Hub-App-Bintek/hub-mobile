@@ -4,17 +4,20 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/data/models/project.dart';
 
 class ChooseProjectBottomSheet extends StatefulWidget {
   final List<Project> projects;
   final VoidCallback onNewProjectTap;
   final ValueChanged<Project> onConfirm;
+  final UserRole userRole;
 
   const ChooseProjectBottomSheet(
     this.projects,
     this.onNewProjectTap,
-    this.onConfirm, {
+    this.onConfirm,
+    this.userRole, {
     super.key,
   });
 
@@ -91,7 +94,13 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
   }
 
   Widget _buildProjectList(BuildContext context) {
-    final totalItems = widget.projects.length + 1; // +1 for New Project
+    int totalItems = 0;
+    if (widget.userRole == UserRole.homeowner) {
+      totalItems = widget.projects.length + 1; // +1 for New Project
+    } else {
+      totalItems = widget.projects.length;
+    }
+
     return ListView.separated(
       shrinkWrap: true,
       itemCount: totalItems,

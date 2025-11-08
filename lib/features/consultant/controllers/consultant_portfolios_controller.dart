@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/portfolio.dart';
@@ -36,7 +38,6 @@ class ConsultantPortfoliosController extends BaseController {
   final portfolios = <Portfolio>[].obs;
   final isLoading = false.obs; // any fetch in progress
   final hasMore = true.obs; // mirrors !_done
-  final showActionButton = false.obs;
 
   // Busy state for creating consultation
   final isCreatingConsultation = false.obs;
@@ -56,7 +57,6 @@ class ConsultantPortfoliosController extends BaseController {
   Future<void> onInit() async {
     super.onInit();
     scrollController.addListener(_onScroll);
-    await setActionButtonVisibility();
     await refreshList(); // fetch first page
   }
 
@@ -75,11 +75,6 @@ class ConsultantPortfoliosController extends BaseController {
         }
       });
     }
-  }
-
-  Future<void> setActionButtonVisibility() async {
-    final user = await _userStorage.getUser();
-    showActionButton.value = user?.role?.toLowerCase() == 'homeowner';
   }
 
   Future<void> refreshList() async {
@@ -125,8 +120,7 @@ class ConsultantPortfoliosController extends BaseController {
     isLoading.value = false;
   }
 
-  // Public: create consultation for this consultant
-  Future<void> createConsultation({required String channel}) async {
+  Future<void> _createConsultation({required String channel}) async {
     if (isCreatingConsultation.value) return;
 
     final consultantId = int.tryParse(_consultantId);
@@ -158,6 +152,71 @@ class ConsultantPortfoliosController extends BaseController {
     );
 
     isCreatingConsultation.value = false;
+  }
+
+  // Public: create consultation for this consultant
+  Future<void> onChatPressed() async {
+    final loggedIn = await _ensureLoggedIn();
+    if (!loggedIn) return;
+
+    _navigateToConsultantChat();
+  }
+
+  Future<void> onConsultPressed() async {
+    final loggedIn = await _ensureLoggedIn();
+    if (!loggedIn) return;
+
+    if (_projectId.isEmpty) {
+      final hasPermission = await _ensureLocationPermission();
+      if (!hasPermission) return;
+
+      navigateTo(
+        AppRoutes.createProject,
+        arguments: {
+          'consultantId': _consultantId,
+          'isPaidConsultation': _isPaidConsultation,
+        },
+      );
+      return;
+    }
+
+    await _createConsultation(channel: 'CHAT');
+  }
+
+  Future<bool> _ensureLocationPermission() async {
+    var status = await Permission.location.status;
+    if (status.isGranted) return true;
+
+    status = await Permission.location.request();
+    if (status.isGranted) return true;
+
+    final message = status.isPermanentlyDenied
+        ? AppStrings.permissionPermanentlyDenied
+        : AppStrings.permissionDenied;
+    showError(ServerFailure(message: message));
+    return false;
+  }
+
+  Future<bool> _ensureLoggedIn() async {
+    final token = await _userStorage.getToken();
+    if (token != null && token.isNotEmpty) {
+      return true;
+    }
+
+    await navigateToForResult<dynamic>(
+      AppRoutes.login,
+      arguments: {
+        'fromRoute': Get.currentRoute,
+        'returnArguments': Get.arguments,
+      },
+    );
+
+    final refreshedToken = await _userStorage.getToken();
+    return refreshedToken != null && refreshedToken.isNotEmpty;
+  }
+
+  void _navigateToConsultantChat() {
+    // TODO: Implement navigation to consultant chat screen when the route is available.
   }
 
   @override

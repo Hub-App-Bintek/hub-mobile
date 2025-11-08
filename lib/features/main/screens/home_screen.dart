@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/app/widgets/sheets/choose_project_bottom_sheet.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -25,12 +29,12 @@ class HomeScreen extends GetView<HomeController> {
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
+              spacing: 16,
               children: [
                 _buildCarouselBanner(),
-                const SizedBox(height: 16),
                 _buildBalanceCard(),
-                const SizedBox(height: 16),
-                _buildMenuGrid(),
+                _buildFeatureGrid(),
+                _buildRoleSpecificSection(),
               ],
             ),
           ),
@@ -96,123 +100,17 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildBalanceCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: AppColors.primaryLightest,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.neutralDarkest.withValues(alpha: 0.05),
-            spreadRadius: 0,
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.account_balance_wallet_outlined,
-            color: AppColors.primaryDarkest,
-            size: 24,
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Obx(
-              () => Text(
-                Formatters.currency(controller.balance.value),
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.neutralDarkest,
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(
-              Icons.add_circle_outline,
-              color: AppColors.primaryDarkest,
-              size: 24,
-            ),
-            onPressed: () {
-              // TODO: Implement top-up functionality
-            },
-          ),
-        ],
-      ),
-    );
-  }
+    return Obx(() {
+      final role = controller.userRole.value;
+      if (role == null || role == UserRole.unknown) {
+        return const SizedBox.shrink();
+      }
 
-  // TODO: Replace placeholder images with actual assets or network images
-  Widget _buildMenuGrid() {
-    final menuItems = [
-      (
-        AppStrings.menuConsultation,
-        'https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=300&fit=crop',
-      ),
-      (
-        AppStrings.menuLicensing,
-        'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&h=300&fit=crop',
-      ),
-      (
-        AppStrings.menuMaterial,
-        'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=300&fit=crop',
-      ),
-      (
-        AppStrings.menuConstruction,
-        'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=300&fit=crop',
-      ),
-      (
-        AppStrings.menuMonitoring,
-        'https://images.unsplash.com/photo-1464983953574-0892a716854b?w=400&h=300&fit=crop',
-      ),
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 1.0,
-        ),
-        itemCount: menuItems.length,
-        itemBuilder: (context, index) {
-          return _buildMenuItem(
-            title: menuItems[index].$1,
-            imageUrl: menuItems[index].$2,
-            onTap: () {
-              controller.handleMenuTap(() {
-                controller.showBottomSheet(
-                  ChooseProjectBottomSheet(
-                    controller.activeProjects,
-                    controller.onNewProjectFromSheet,
-                    controller.onProjectSelectedFromSheet,
-                  ),
-                );
-              });
-            },
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required String title,
-    required String imageUrl,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.only(left: 16),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: AppColors.primaryLightest,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -223,48 +121,261 @@ class HomeScreen extends GetView<HomeController> {
             ),
           ],
         ),
-        child: Column(
+        child: Row(
           children: [
+            const Icon(
+              Icons.account_balance_wallet_outlined,
+              color: AppColors.primaryDarkest,
+              size: 24,
+            ),
+            const SizedBox(width: 16),
             Expanded(
-              flex: 3,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    topRight: Radius.circular(16),
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+              child: Text(
+                Formatters.currency(controller.balance.value),
+                style: AppTextStyles.h3.copyWith(
+                  color: AppColors.neutralDarkest,
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
-                child: Center(
-                  child: Text(
-                    title,
-                    style: AppTextStyles.bodyXL.copyWith(
-                      color: AppColors.neutralDarkest,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
+            IconButton(
+              icon: Icon(
+                role == UserRole.homeowner
+                    ? Icons.add_circle_outline
+                    : Icons.archive_rounded,
+                color: AppColors.primaryDarkest,
+                size: 24,
               ),
+              onPressed: () {
+                // TODO: Implement top-up functionality
+              },
             ),
           ],
         ),
+      );
+    });
+  }
+
+  Widget _buildRoleSpecificSection() {
+    return Obx(() {
+      final role = controller.userRole.value;
+      final consultants = controller.consultants.toList();
+      final isConsultantLoading = controller.isConsultantLoading.value;
+
+      if (role == UserRole.consultant) {
+        return _buildConsultantSection();
+      }
+
+      return _buildConsultantGridSection(
+        isLoading: isConsultantLoading,
+        consultants: consultants,
+      );
+    });
+  }
+
+  Widget _buildFeatureGrid() {
+    final featureItems = [
+      (AppStrings.menuConsultation, Icons.chat_bubble_outline),
+      (AppStrings.menuLicensing, Icons.receipt_long),
+      (AppStrings.menuMaterial, Icons.inventory_2_outlined),
+      (AppStrings.homeFeatureSupervision, Icons.visibility_outlined),
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          const columns = 4;
+          const spacing = 16.0;
+          final itemWidth =
+              (constraints.maxWidth - spacing * (columns - 1)) / columns;
+
+          return Wrap(
+            spacing: spacing,
+            runSpacing: 12,
+            children: featureItems.map((item) {
+              final (title, iconData) = item;
+              return SizedBox(
+                width: itemWidth,
+                child: _FeatureTile(
+                  label: title,
+                  icon: iconData,
+                  onTap: () {
+                    controller.onFeatureTapped(() {
+                      controller.showBottomSheet(
+                        ChooseProjectBottomSheet(
+                          controller.projects,
+                          controller.onNewProjectFromSheet,
+                          controller.onSelectProject,
+                          controller.userRole.value ?? UserRole.unknown,
+                        ),
+                      );
+                    });
+                  },
+                ),
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildConsultantGridSection({
+    required bool isLoading,
+    required List consultants,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(AppStrings.homeConsultantSectionTitle, style: AppTextStyles.h2),
+          const SizedBox(height: 12),
+          if (isLoading)
+            const Center(child: CircularProgressIndicator())
+          else if (consultants.isEmpty)
+            _buildEmptyState(AppStrings.homeConsultantEmpty)
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 0.92,
+              ),
+              itemCount: consultants.length,
+              itemBuilder: (context, index) {
+                final consultant = consultants[index];
+                return ConsultantCard(
+                  consultant: consultant,
+                  onTap: () => controller.onConsultantCardTapped(consultant),
+                );
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConsultantSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Obx(() {
+        final isLoading = controller.isProjectLoading.value;
+        final projects = controller.projects;
+        final active = projects
+            .where((project) => project.status?.toUpperCase() == 'ACTIVE')
+            .toList();
+        final pending = projects
+            .where((project) => project.status?.toUpperCase() == 'PENDING')
+            .toList();
+
+        if (isLoading && projects.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final List<Widget> children = [];
+
+        if (pending.isNotEmpty) {
+          if (children.isNotEmpty) {
+            children.add(const SizedBox(height: 16));
+          }
+          children.add(
+            _buildProjectGroup(AppStrings.homeProjectsPendingTitle, pending),
+          );
+        }
+
+        if (active.isNotEmpty) {
+          children.add(
+            _buildProjectGroup(AppStrings.homeProjectsActiveTitle, active),
+          );
+        }
+
+        if (children.isEmpty && !isLoading) {
+          children.add(_buildEmptyState(AppStrings.homeProjectsEmpty));
+        }
+
+        if (isLoading && projects.isNotEmpty) {
+          children.add(
+            const Padding(
+              padding: EdgeInsets.only(top: 12),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        );
+      }),
+    );
+  }
+
+  Widget _buildProjectGroup(String title, List<Project> projects) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: AppTextStyles.h2),
+        const SizedBox(height: 12),
+        ...projects.map(_buildProjectCard),
+      ],
+    );
+  }
+
+  Widget _buildProjectCard(Project project) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: PkpCard(
+        title: project.name ?? '-',
+        subtitle: Formatters.formatTitle(project.status ?? ''),
+        suffixIcon: const Icon(Icons.chevron_right),
+        onTap: () => controller.onSelectProject(project),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String message) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      decoration: BoxDecoration(
+        color: AppColors.primaryLightest,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(
+        message,
+        style: AppTextStyles.bodyS.copyWith(color: AppColors.neutralMediumDark),
+      ),
+    );
+  }
+}
+
+class _FeatureTile extends StatelessWidget {
+  const _FeatureTile({
+    required this.label,
+    required this.icon,
+    required this.onTap,
+  });
+
+  final String label;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: AppColors.primaryDarkest),
+          const SizedBox(height: 8),
+          Text(label, style: AppTextStyles.bodyS, textAlign: TextAlign.center),
+        ],
       ),
     );
   }

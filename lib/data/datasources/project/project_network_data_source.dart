@@ -51,8 +51,8 @@ class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
   ) async {
     try {
       final response = await _projectApi.getProjects(
-        request.page ?? 0,
-        request.size ?? 10,
+        request.page,
+        request.size,
         request.type,
         request.status,
       );

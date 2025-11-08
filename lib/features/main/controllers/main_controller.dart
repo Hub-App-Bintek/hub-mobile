@@ -6,18 +6,15 @@ import 'package:pkp_hub/features/main/screens/home_screen.dart';
 import 'package:pkp_hub/features/main/screens/profile_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 
-import '../controllers/home_controller.dart';
-import '../controllers/projects_controller.dart';
-
 class MainController extends GetxController {
-  final UserStorage _authSession;
+  final UserStorage _userStorage;
 
-  MainController(this._authSession);
+  MainController(this._userStorage);
 
   final RxInt selectedIndex = 0.obs;
   final PageController pageController = PageController();
 
-  String? _token;
+  final RxString _token = ''.obs;
 
   @override
   void onInit() {
@@ -26,10 +23,11 @@ class MainController extends GetxController {
   }
 
   Future<void> _loadToken() async {
-    _token = await _authSession.getToken();
+    final token = await _userStorage.getToken();
+    _token.value = token ?? '';
   }
 
-  bool get isLoggedIn => _token?.isNotEmpty ?? false;
+  bool get isLoggedIn => _token.value.isNotEmpty;
 
   final List<Widget> pages = const [
     HomeScreen(),
@@ -38,26 +36,27 @@ class MainController extends GetxController {
   ];
 
   void onDestinationSelected(int index) {
+    _handleDestinationSelection(index);
+  }
+
+  Future<void> _handleDestinationSelection(int index) async {
+    await _loadToken();
     if ((index == 1 || index == 2) && !isLoggedIn) {
-      Get.toNamed(AppRoutes.login);
-      return;
+      await Get.toNamed(
+        AppRoutes.login,
+        arguments: {'fromRoute': AppRoutes.main, 'returnArguments': null},
+      );
+      await _loadToken();
+      if (!isLoggedIn) {
+        return;
+      }
     }
+    _switchTab(index);
+  }
+
+  void _switchTab(int index) {
     selectedIndex.value = index;
     pageController.jumpToPage(index);
-
-    // If Home tab is selected, force a refresh
-    if (index == 0) {
-      // Use Get.find to get the existing controller instance
-      final homeController = Get.find<HomeController>();
-      // Fire and forget; internal observables will drive the UI
-      homeController.refresh();
-    }
-
-    // If Projects tab is selected, refresh the projects list
-    if (index == 1) {
-      final projectsController = Get.find<ProjectsController>();
-      projectsController.refreshProjects();
-    }
   }
 
   @override

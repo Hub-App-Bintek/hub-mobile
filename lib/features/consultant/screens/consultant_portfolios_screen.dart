@@ -63,21 +63,28 @@ class ConsultantPortfoliosScreen
           ),
         );
       }),
-      bottomNavigationBar: Obx(() {
-        debugPrint('Show action button: ${controller.showActionButton.value}');
-        return controller.showActionButton.value
-            ? SafeArea(
-                minimum: const EdgeInsets.all(16),
-                child: PkpElevatedButton(
-                  text: AppStrings.menuConsultation,
-                  enabled: true,
-                  onPressed: () {
-                    controller.createConsultation(channel: "CHAT");
-                  },
-                ),
-              )
-            : const SizedBox.shrink();
-      }),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: PkpElevatedButton(
+                text: AppStrings.chatConsultant,
+                enabled: !controller.isCreatingConsultation.value,
+                onPressed: controller.onChatPressed,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: PkpElevatedButton(
+                text: AppStrings.askForConsultation,
+                enabled: !controller.isCreatingConsultation.value,
+                onPressed: controller.onConsultPressed,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -7,9 +7,11 @@ import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
 class ProjectsController extends BaseController with WidgetsBindingObserver {
   final GetProjectsUseCase getProjectsUseCase;
+  Worker? _mainTabWorker;
 
   var isLoading = false.obs;
   var error = Rxn<Failure>();
@@ -25,12 +27,14 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    _listenToMainTabChanges();
     fetchProjectList(page: currentPage, size: pageSize);
   }
 
   @override
   void onClose() {
     WidgetsBinding.instance.removeObserver(this);
+    _mainTabWorker?.dispose();
     super.onClose();
   }
 
@@ -41,6 +45,16 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
       // Refresh when app comes back to foreground and this tab may be visible
       refreshProjects();
     }
+  }
+
+  void _listenToMainTabChanges() {
+    if (!Get.isRegistered<MainController>()) return;
+    final mainController = Get.find<MainController>();
+    _mainTabWorker = ever<int>(mainController.selectedIndex, (index) {
+      if (index == 1) {
+        refreshProjects();
+      }
+    });
   }
 
   Future<void> fetchProjectList({
