@@ -39,23 +39,21 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title, style: appBarTheme.titleTextStyle ?? AppTextStyles.h4),
       leading: showNavigation ? effectiveLeading : null,
-      actions: actions != null
-          ? actions!
-                .map(
-                  (action) => IconButton(
-                    icon: Icon(
-                      action.icon,
-                      size: 24,
-                      color: action.color ?? AppColors.primaryDarkest,
-                    ),
-                    onPressed: action.onPressed,
-                    tooltip:
-                        action.tooltip ??
-                        MaterialLocalizations.of(context).openAppDrawerTooltip,
-                  ),
-                )
-                .toList()
-          : null,
+      actions: actions
+          ?.map(
+            (action) => IconButton(
+              icon: Icon(
+                action.icon,
+                size: 24,
+                color: action.color ?? AppColors.primaryDarkest,
+              ),
+              onPressed: action.onPressed,
+              tooltip:
+                  action.tooltip ??
+                  MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
+          )
+          .toList(),
       backgroundColor:
           backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
       elevation: elevation ?? appBarTheme.elevation ?? 0,

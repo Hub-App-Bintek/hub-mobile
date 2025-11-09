@@ -14,7 +14,7 @@ import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 import 'package:pkp_hub/features/project/widgets/contract_actions_bottom_sheet.dart';
-import 'package:pkp_hub/features/project/widgets/project_location_bottom_sheet.dart';
+import 'package:pkp_hub/features/project/widgets/project_information_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/survey_schedule_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/upload_design_documents_bottom_sheet.dart';
 

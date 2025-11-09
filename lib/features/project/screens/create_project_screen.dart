@@ -5,6 +5,7 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
+import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/data/models/project_type.dart';
 import 'package:pkp_hub/features/project/controllers/create_project_controller.dart';
@@ -136,6 +137,25 @@ class CreateProjectScreen extends GetView<CreateProjectController> {
                               type: PkpTextFormFieldType.currency,
                               controller: controller.incomeController,
                             ),
+                            const SizedBox(height: 16),
+                            PkpUploadDocumentWidget(
+                              title: AppStrings.incomeProofLabel,
+                              buttonText: AppStrings.chooseFile,
+                              selectedFileName:
+                                  controller.incomeProofFileName.value,
+                              allowedExtensions: const [
+                                'pdf',
+                                'jpg',
+                                'jpeg',
+                                'png',
+                              ],
+                              uploadStatus:
+                                  controller.incomeProofFile.value != null
+                                  ? PkpUploadStatus.success
+                                  : PkpUploadStatus.none,
+                              onFileSelected: controller.onIncomeProofSelected,
+                            ),
+                            const SizedBox(height: 16),
                           ],
                         ),
                       ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
@@ -9,8 +11,9 @@ import 'package:pkp_hub/data/models/response/project_details_response.dart';
 
 abstract class ProjectRepository {
   Future<Result<CreateProjectResponse, Failure>> createProject(
-    CreateProjectRequest request,
-  );
+    CreateProjectRequest request, {
+    File? incomeProofFile,
+  });
   Future<Result<GetProjectsResponse, Failure>> getProjectList(
     GetProjectsRequest request,
   );
@@ -26,9 +29,10 @@ class ProjectRepositoryImpl implements ProjectRepository {
 
   @override
   Future<Result<CreateProjectResponse, Failure>> createProject(
-    CreateProjectRequest request,
-  ) {
-    return _dataSource.createProject(request);
+    CreateProjectRequest request, {
+    File? incomeProofFile,
+  }) {
+    return _dataSource.createProject(request, incomeProofFile: incomeProofFile);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -37,6 +38,8 @@ class CreateProjectController extends BaseController {
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
+  final Rxn<File> incomeProofFile = Rxn<File>();
+  final RxnString incomeProofFileName = RxnString();
 
   RxBool isLoadingLocation = true.obs;
   RxBool isLocationError = false.obs;
@@ -44,11 +47,13 @@ class CreateProjectController extends BaseController {
   RxBool isProjectNameValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
   RxBool isLandAreaValid = false.obs;
+  RxBool isIncomeValid = false.obs;
 
   Rxn<LatLng> selectedLocation = Rxn<LatLng>();
   RxnString projectNameError = RxnString();
   RxnString locationDetailsError = RxnString();
   RxnString landAreaError = RxnString();
+  RxnString incomeError = RxnString();
 
   Rxn<ProjectType> selectedProjectType = Rxn<ProjectType>(prototype);
 
@@ -75,6 +80,7 @@ class CreateProjectController extends BaseController {
     projectNameController.addListener(_validateProjectName);
     locationDetailsController.addListener(_validateLocationDetails);
     landAreaController.addListener(_validateLandArea);
+    incomeController.addListener(_validateIncome);
   }
 
   void _validateProjectName() {
@@ -105,6 +111,13 @@ class CreateProjectController extends BaseController {
     _updateFormValidity();
   }
 
+  void _validateIncome() {
+    final value = incomeController.text.trim();
+    incomeError.value = value.isEmpty ? AppStrings.incomeRequired : null;
+    isIncomeValid.value = value.isNotEmpty;
+    _updateFormValidity();
+  }
+
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
@@ -112,6 +125,7 @@ class CreateProjectController extends BaseController {
         isLocationDetailsValid.value &&
         selectedProjectType.value != null &&
         isLandAreaValid.value &&
+        isIncomeValid.value &&
         !isLoadingLocation.value;
 
     debugPrint('Form validity updated: $_isFormValid');
@@ -122,7 +136,10 @@ class CreateProjectController extends BaseController {
     projectNameController.dispose();
     locationDetailsController.dispose();
     landAreaController.dispose();
+    incomeController.removeListener(_validateIncome);
     incomeController.dispose();
+    incomeProofFile.value = null;
+    incomeProofFileName.value = null;
     _positionUpdateTimer?.cancel();
     super.onClose();
   }
@@ -232,6 +249,13 @@ class CreateProjectController extends BaseController {
     selectedProjectType.value = value;
   }
 
+  void onIncomeProofSelected(File file) {
+    incomeProofFile.value = file;
+    incomeProofFileName.value = file.uri.pathSegments.isNotEmpty
+        ? file.uri.pathSegments.last
+        : '';
+  }
+
   bool get _shouldCreateConsultation =>
       _consultantId != null && _consultantId.isNotEmpty;
 
@@ -248,14 +272,21 @@ class CreateProjectController extends BaseController {
     try {
       await handleAsync(
         () => _createProjectUseCase(
-          CreateProjectRequest(
-            name: projectNameController.text.trim(),
-            locationDetail: locationDetailsController.text.trim(),
-            landArea: double.tryParse(landAreaController.text.trim()) ?? 0.0,
-            income: double.tryParse(incomeController.text.trim()) ?? 0.0,
-            latitude: selectedLocation.value?.latitude ?? 0.0,
-            longitude: selectedLocation.value?.longitude ?? 0.0,
-            type: selectedProjectType.value?.id ?? '',
+          CreateProjectParams(
+            request: CreateProjectRequest(
+              name: projectNameController.text.trim(),
+              locationDetail: locationDetailsController.text.trim(),
+              landArea: double.tryParse(landAreaController.text.trim()) ?? 0.0,
+              income:
+                  double.tryParse(
+                    incomeController.text.trim().replaceAll('.', ''),
+                  ) ??
+                  0.0,
+              latitude: selectedLocation.value?.latitude ?? 0.0,
+              longitude: selectedLocation.value?.longitude ?? 0.0,
+              type: selectedProjectType.value?.id ?? '',
+            ),
+            incomeProofFile: incomeProofFile.value,
           ),
         ),
         onSuccess: (response) {
