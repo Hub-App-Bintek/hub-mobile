@@ -81,6 +81,22 @@ class Formatters {
     return '$currency$formatted';
   }
 
+  /// Formats land area with locale-aware thousand separators and appends `m²` (or a custom unit).
+  /// Example: 1234.56 -> "1.235 m²" when [fractionDigits] is 0.
+  static String formatLandArea(
+    double? area, {
+    String unit = 'm²',
+    int fractionDigits = 0,
+    String locale = defaultLocale,
+  }) {
+    if (area == null) return '-';
+    final formatter = NumberFormat.decimalPattern(locale)
+      ..minimumFractionDigits = fractionDigits
+      ..maximumFractionDigits = fractionDigits;
+    final formatted = formatter.format(area);
+    return '$formatted $unit';
+  }
+
   /// Formats seconds into mm:ss string (e.g. 00:09, 02:30).
   /// This is useful for countdown timers that show minutes and seconds.
   static String formatTimer(int seconds) {

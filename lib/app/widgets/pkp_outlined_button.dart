@@ -20,11 +20,19 @@ class PkpOutlinedButton extends StatelessWidget {
   final bool enabled;
   final PkpButtonSize size;
 
-  double get _effectiveHeight => size == PkpButtonSize.small ? 24 : 52;
+  double get _effectiveHeight => size == PkpButtonSize.small
+      ? 24
+      : size == PkpButtonSize.medium
+      ? 32
+      : 52;
+  double get _spinnerSize => size == PkpButtonSize.small
+      ? 12
+      : size == PkpButtonSize.medium
+      ? 16
+      : 26;
   EdgeInsetsGeometry get _padding => size == PkpButtonSize.small
       ? const EdgeInsets.symmetric(horizontal: 8)
       : const EdgeInsets.symmetric(horizontal: 12);
-  double get _spinnerSize => size == PkpButtonSize.small ? 14 : 16;
 
   @override
   Widget build(BuildContext context) {

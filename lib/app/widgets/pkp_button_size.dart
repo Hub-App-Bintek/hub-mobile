@@ -1,1 +1,1 @@
-enum PkpButtonSize { small, normal }
+enum PkpButtonSize { small, medium, normal }

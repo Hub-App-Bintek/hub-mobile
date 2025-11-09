@@ -307,11 +307,18 @@ class CreateProjectController extends BaseController {
           channel: 'CHAT',
         ),
       ),
-      onSuccess: (_) {
+      onSuccess: (response) {
         navigateAndClearUntil(
           AppRoutes.projectDetails,
           untilRoute: AppRoutes.main,
-          arguments: {'projectId': projectId},
+          arguments: {
+            'projectId': projectId,
+            'homeOwnerId': response.homeOwnerId,
+            'homeOwnerName': response.homeOwnerName,
+            'consultantId':
+                response.consultantId ?? int.tryParse(_consultantId ?? ''),
+            'consultantName': response.consultantName,
+          },
         );
       },
       onFailure: (failure) {

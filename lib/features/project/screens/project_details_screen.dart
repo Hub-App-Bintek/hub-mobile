@@ -4,15 +4,17 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/app/widgets/pkp_card.dart';
+import 'package:pkp_hub/app/widgets/pkp_button_size.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
-import 'package:pkp_hub/core/enums/user_role.dart' as ur;
+import 'package:pkp_hub/core/enums/user_role.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
 import 'package:pkp_hub/features/project/widgets/contract_actions_bottom_sheet.dart';
+import 'package:pkp_hub/features/project/widgets/project_location_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/survey_schedule_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/upload_design_documents_bottom_sheet.dart';
 
@@ -76,7 +78,10 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                   child: SingleChildScrollView(
                     controller: controller.timelineScrollController,
                     padding: const EdgeInsets.all(16.0),
-                    child: _buildTimeline(controller.consultationHistory),
+                    child: _buildTimeline(
+                      controller.consultationHistory,
+                      controller.details.value,
+                    ),
                   ),
                 ),
               ),
@@ -516,82 +521,92 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
     );
   }
 
-  Widget _buildTimeline(List<ProjectHistory> history) {
+  Widget _buildTimeline(
+    List<ProjectHistory> history,
+    ProjectDetailsResponse? details,
+  ) {
     if (history.isEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            alignment: Alignment.center,
-            child: Text(
-              'Belum ada riwayat untuk ditampilkan',
-              style: AppTextStyles.bodyS.copyWith(
-                color: AppColors.neutralMedium,
-              ),
-              textAlign: TextAlign.center,
-            ),
+      return const _TimelineEmptyState();
+    }
+
+    final widgets = <Widget>[];
+    final lastIndex = history.length - 1;
+
+    for (var i = 0; i < history.length; i++) {
+      final item = history[i];
+      final actorRole = UserRole.fromString(item.metadata?.actor);
+      final isRightAligned = _isRightAligned(actorRole);
+      final isLatest = i == lastIndex;
+      final action = controller.timelineActionFor(item);
+      final projectInfoAction = (i == 0 && details != null)
+          ? () => _showProjectInfo(details)
+          : null;
+
+      widgets.add(
+        _TimelineItem(
+          isRightAligned: isRightAligned,
+          child: _TimelineBubble(
+            title: item.title ?? '-',
+            body: _buildBodyText(item),
+            roleLabel: _roleLabel(actorRole),
+            timestamp: _formatTimelineTimestamp(item.metadata?.dateTime),
+            isLatest: isLatest,
+            isRightAligned: isRightAligned,
+            action: action,
+            onProjectInfoTap: projectInfoAction,
           ),
-        ],
+        ),
       );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: history.map((timeline) {
-        final step = timeline.step?.toUpperCase() ?? '';
-        final state = timeline.state?.toUpperCase() ?? '';
-        final metadata = timeline.metadata;
-        final isHomeowner = controller.userRole.value == ur.UserRole.homeowner;
+      children: widgets,
+    );
+  }
 
-        String fileId = '';
-        final hasContractFile =
-            timeline.files?.firstOrNull != null &&
-            timeline.files!.firstOrNull!.isNotEmpty;
-        final bool showContractDownload =
-            step == 'CONTRACT' && isHomeowner && hasContractFile;
-        if (showContractDownload) {
-          fileId = timeline.files!.firstOrNull ?? '';
-        }
+  bool _isRightAligned(UserRole role) {
+    return role == UserRole.consultant;
+  }
 
-        final designFiles = metadata?.designFiles;
-        final bool hasDesignFiles =
-            designFiles != null &&
-            designFiles.any((file) => (file.fileId ?? '').isNotEmpty);
-        final bool showDesignDownload =
-            step == 'DESIGN' &&
-            state == 'REQUEST_FOR_APPROVAL' &&
-            isHomeowner &&
-            hasDesignFiles;
+  String _roleLabel(UserRole role) {
+    switch (role) {
+      case UserRole.consultant:
+        return AppStrings.roleConsultant;
+      case UserRole.homeowner:
+        return AppStrings.roleHomeowner;
+      default:
+        return AppStrings.roleUnknown;
+    }
+  }
 
-        final bool shouldShowDownload =
-            showContractDownload || showDesignDownload;
+  String? _buildBodyText(ProjectHistory history) {
+    final subtitle = history.subtitle?.trim() ?? '';
+    if (subtitle.isNotEmpty) return subtitle;
+    final notes = history.metadata?.notes?.trim() ?? '';
+    return notes.isNotEmpty ? notes : null;
+  }
 
-        ValueChanged<String>? onDownload;
-        if (showDesignDownload) {
-          onDownload = (_) {
-            if (!controller.designDownloadLoading.value) {
-              controller.downloadDesignFiles(
-                timeline.metadata?.designFiles ?? [],
-              );
-            }
-          };
-        } else if (showContractDownload) {
-          onDownload = (id) {
-            if (id.isNotEmpty) {
-              controller.downloadFileById(id);
-            }
-          };
-        }
+  String _formatTimelineTimestamp(String? isoDateTime) {
+    final formatted = Formatters.formatIsoDateTime(
+      isoDateTime,
+      joiner: ' · ',
+      appendWib: true,
+    );
+    return formatted ?? '';
+  }
 
-        return PkpCard(
-          title: timeline.title ?? '',
-          subtitle: timeline.subtitle ?? '',
-          fileId: showContractDownload ? fileId : null,
-          shouldShowDownloadButton: shouldShowDownload,
-          onDownload: onDownload,
-        );
-      }).toList(),
+  void _showProjectInfo(ProjectDetailsResponse details) {
+    controller.showBottomSheet(
+      ProjectInformationBottomSheet(
+        projectName: details.name ?? '-',
+        locationDetail: details.locationDetail,
+        landArea: details.landArea,
+        latitude: details.latitude,
+        longitude: details.longitude,
+        createdAt: details.createdAt,
+        homeOwnerName: controller.homeOwnerName,
+      ),
     );
   }
 }
@@ -660,6 +675,239 @@ class _StepIndicator extends StatelessWidget {
         const SizedBox(height: 8),
         Text(label, textAlign: TextAlign.center, style: textStyle),
       ],
+    );
+  }
+}
+
+class _TimelineEmptyState extends StatelessWidget {
+  const _TimelineEmptyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: Column(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: const BoxDecoration(
+              color: AppColors.neutralLightest,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.chat_bubble_outline,
+              color: AppColors.neutralMedium,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            AppStrings.consultationTimelineEmpty,
+            style: AppTextStyles.bodyM.copyWith(color: AppColors.neutralMedium),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TimelineItem extends StatelessWidget {
+  const _TimelineItem({required this.isRightAligned, required this.child});
+
+  final bool isRightAligned;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final bubbleWidth = constraints.maxWidth * 0.85;
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: isRightAligned
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: bubbleWidth,
+                child: Align(
+                  alignment: isRightAligned
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: child,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _TimelineBubble extends StatelessWidget {
+  const _TimelineBubble({
+    required this.title,
+    required this.roleLabel,
+    required this.timestamp,
+    required this.isLatest,
+    required this.isRightAligned,
+    this.body,
+    this.action,
+    this.onProjectInfoTap,
+  });
+
+  final String title;
+  final String roleLabel;
+  final String timestamp;
+  final bool isLatest;
+  final bool isRightAligned;
+  final String? body;
+  final TimelineActionConfig? action;
+  final VoidCallback? onProjectInfoTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final bubbleColor = isRightAligned
+        ? AppColors.primaryLightest
+        : AppColors.white;
+    final borderColor = isLatest
+        ? AppColors.primaryDark
+        : AppColors.neutralLight;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: bubbleColor,
+        borderRadius: BorderRadius.only(
+          topLeft: const Radius.circular(16),
+          topRight: const Radius.circular(16),
+          bottomLeft: Radius.circular(isRightAligned ? 16 : 4),
+          bottomRight: Radius.circular(isRightAligned ? 4 : 16),
+        ),
+        border: Border.all(color: borderColor, width: 1.2),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x11000000),
+            blurRadius: 12,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _RoleChip(label: roleLabel, isRightAligned: isRightAligned),
+          if (timestamp.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              timestamp,
+              style: AppTextStyles.bodyXS.copyWith(
+                color: AppColors.neutralMedium,
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: AppTextStyles.bodyM.copyWith(
+              color: AppColors.neutralDarkest,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (body != null) ...[
+            const SizedBox(height: 8),
+            Text(
+              body!,
+              style: AppTextStyles.bodyS.copyWith(color: AppColors.neutralDark),
+            ),
+          ],
+          if (action != null) ...[
+            const SizedBox(height: 12),
+            _TimelineActionButton(config: action!),
+          ],
+          if (onProjectInfoTap != null) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: PkpOutlinedButton(
+                size: PkpButtonSize.medium,
+                text: AppStrings.consultationTimelineProjectInfo,
+                onPressed: onProjectInfoTap,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _RoleChip extends StatelessWidget {
+  const _RoleChip({required this.label, required this.isRightAligned});
+
+  final String label;
+  final bool isRightAligned;
+
+  @override
+  Widget build(BuildContext context) {
+    final background = isRightAligned
+        ? AppColors.primaryDark
+        : AppColors.neutralMedium;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: AppTextStyles.bodyXS.copyWith(color: AppColors.white),
+      ),
+    );
+  }
+}
+
+class _TimelineActionButton extends StatelessWidget {
+  const _TimelineActionButton({required this.config});
+
+  final TimelineActionConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: PkpOutlinedButton(
+        text: config.label,
+        size: PkpButtonSize.medium,
+        isLoading: config.isLoading,
+        onPressed: config.isLoading ? null : config.onPressed,
+        // style: OutlinedButton.styleFrom(
+        //   padding: const EdgeInsets.symmetric(vertical: 10),
+        //   side: const BorderSide(color: AppColors.primaryDark),
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        // ),
+        // child: config.isLoading
+        //     ? const SizedBox(
+        //         width: 16,
+        //         height: 16,
+        //         child: CircularProgressIndicator(
+        //           strokeWidth: 2,
+        //           color: AppColors.primaryDark,
+        //         ),
+        //       )
+        //     : Text(
+        //         config.label,
+        //         style: AppTextStyles.bodyS.copyWith(
+        //           color: AppColors.primaryDark,
+        //           fontWeight: FontWeight.w600,
+        //         ),
+        //       ),
+      ),
     );
   }
 }
