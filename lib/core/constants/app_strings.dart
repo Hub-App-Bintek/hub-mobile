@@ -130,6 +130,21 @@ abstract class AppStrings {
   static const projectDetailsTitle = 'Detail Proyek';
   static const requestRevision = 'Minta Revisi';
   static const scheduleSurvey = 'Jadwalkan Survey';
+  static const consultationTimelineEmpty =
+      'Belum ada riwayat konsultasi untuk proyek ini.';
+  static const consultationTimelineProjectInfo = 'Lihat Info Proyek';
+  static const consultationTimelineDownloadHistory = 'Unduh Riwayat';
+  static const consultationTimelineContractDownload = 'Unduh Kontrak';
+  static const consultationTimelineDesignDownload = 'Unduh Dokumen Desain';
+  static const roleConsultant = 'Konsultan';
+  static const roleHomeowner = 'Pemilik Lahan';
+  static const roleSystem = 'Sistem';
+  static const roleUnknown = 'Pihak Terkait';
+  static const projectInfoTitle = 'Informasi Proyek';
+  static const projectInfoLocationLabel = 'Detail Lokasi';
+  static const projectInfoCoordinateLabel = 'Koordinat';
+  static const projectInfoCreatedAtLabel = 'Dibuat pada';
+  static const projectInfoLocationEmpty = 'Lokasi proyek belum tersedia.';
 
   /// Consultant Portfolio Screen
   static const chatConsultant = 'Chat Konsultan';

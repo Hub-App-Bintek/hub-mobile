@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
@@ -15,6 +16,7 @@ import 'package:pkp_hub/data/models/current_survey_schedule.dart';
 import 'package:pkp_hub/data/models/design_document.dart';
 import 'package:pkp_hub/data/models/design_file_metadata.dart';
 import 'package:pkp_hub/data/models/installment.dart';
+import 'package:pkp_hub/data/models/metadata.dart';
 import 'package:pkp_hub/data/models/payment.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/request/create_survey_schedule_request.dart';
@@ -50,9 +52,13 @@ import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProjectDetailsController extends BaseController {
+  final String projectId;
+  final int? _initialHomeOwnerId;
+  final String? _initialHomeOwnerName;
+  final int? _initialConsultantId;
+  final String? _initialConsultantName;
   final GetProjectDetailsUseCase _getDetailsUseCase;
   final UserStorage _userStorage;
-  final String projectId;
 
   // Consultation use cases
   final AcceptConsultationUseCase _acceptConsultationUseCase;
@@ -82,6 +88,10 @@ class ProjectDetailsController extends BaseController {
 
   ProjectDetailsController(
     this.projectId,
+    this._initialHomeOwnerId,
+    this._initialHomeOwnerName,
+    this._initialConsultantId,
+    this._initialConsultantName,
     this._getDetailsUseCase,
     this._userStorage,
     this._acceptConsultationUseCase,
@@ -220,8 +230,15 @@ class ProjectDetailsController extends BaseController {
     final List<ProjectHistory> timeline = [];
     timeline.add(
       _buildProjectHistory(
-        title:
-            'Menunggu konsultan ${consultation.consultantName ?? ''} untuk menerima permintaan konsultasi',
+        title: 'Pemilik lahan mengajukan permintaan konsultasi',
+        subtitle:
+            'Menunggu ${consultation.consultantName ?? ''} menerima permintaan konsultasi',
+        projectHistory: ProjectHistory(
+          metadata: Metadata(
+            dateTime: details.value?.createdAt.toString(),
+            actor: UserRole.homeowner.value,
+          ),
+        ),
       ),
     );
 
@@ -229,8 +246,9 @@ class ProjectDetailsController extends BaseController {
       if (project.step == 'CONSULTATION' && project.state == 'ACCEPTED') {
         timeline.add(
           _buildProjectHistory(
-            title:
-                'Konsultan ${consultation.consultantName ?? ''} telah menerima permintaan konsultasi dan akan mengajukan jadwal survey',
+            title: 'Konsultan menerima permintaan konsultasi',
+            subtitle:
+                '${consultation.consultantName ?? ''} akan mengajukan jadwal untuk survey lokasi',
             projectHistory: project,
           ),
         );
@@ -242,9 +260,10 @@ class ProjectDetailsController extends BaseController {
 
         timeline.add(
           _buildProjectHistory(
-            title: 'Konsultan telah mengajukan jadwal survey lokasi',
+            title: 'Konsultan mengajukan jadwal survey lokasi',
             subtitle: (surveySchedule != null)
-                ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')}, WIB\n'
+                ? 'Menunggu konfirmasi pemilik lahan untuk menerima jadwal survey\n\n'
+                      'Waktu dan Tanggal: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')}, WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
                 : '',
             projectHistory: project,
@@ -258,7 +277,7 @@ class ProjectDetailsController extends BaseController {
 
         timeline.add(
           _buildProjectHistory(
-            title: 'Pemilik lahan menolak jadwal survey yang diajukan',
+            title: 'Pemilik lahan menolak jadwal survey',
             subtitle: (surveySchedule != null)
                 ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
@@ -274,9 +293,10 @@ class ProjectDetailsController extends BaseController {
 
         timeline.add(
           _buildProjectHistory(
-            title: 'Konsultan telah mengajukan ulang jadwal survey lokasi',
+            title: 'Konsultan mengajukan ulang jadwal survey lokasi',
             subtitle: (surveySchedule != null)
-                ? 'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
+                ? 'Menunggu konfirmasi pemilik lahan untuk menerima jadwal survey\n\n'
+                      'Jadwal Survey: ${Formatters.formatIsoDateTime(surveySchedule.proposedDateTime ?? '')} WIB\n'
                       'Biaya: ${Formatters.currency(surveySchedule.surveyCost ?? 0.0)}'
                 : '',
             projectHistory: project,
@@ -286,14 +306,17 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title: 'Jadwal survey telah disetujui',
+            subtitle:
+                '${consultation.consultantName ?? ''} akan melakukan survey sesuai jadwal yang disepakati',
             projectHistory: project,
           ),
         );
       } else if (project.step == 'SURVEY' && project.state == 'COMPLETED') {
         timeline.add(
           _buildProjectHistory(
-            title:
-                'Konsultan telah menyelesaikan survey lokasi dan sedang menyiapkan dokumen kontrak',
+            title: 'Konsultan telah menyelesaikan survey lokasi',
+            subtitle:
+                '${consultation.consultantName ?? ''} akan menyiapkan dokumen kontrak',
             projectHistory: project,
           ),
         );
@@ -302,6 +325,7 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title: 'Dokumen kontrak telah tersedia',
+            subtitle: 'Menunggu approval dari pemilik lahan',
             projectHistory: project,
           ),
         );
@@ -310,14 +334,16 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title: 'Pemilik lahan meminta revisi dokumen kontrak',
+            subtitle:
+                '${consultation.consultantName ?? ''} akan merevisi dokumen kontrak',
             projectHistory: project,
           ),
         );
       } else if (project.step == 'CONTRACT' && project.state == 'APPROVED') {
         timeline.add(
           _buildProjectHistory(
-            title:
-                'Kontrak telah disetujui oleh pemilik lahan. Silakan tanda tangan dokumen kontrak.',
+            title: 'Kontrak telah disetujui oleh pemilik lahan',
+            subtitle: 'Menunggu kedua belah pihak tanda tangan dokumen kontrak',
             projectHistory: project,
           ),
         );
@@ -325,8 +351,8 @@ class ProjectDetailsController extends BaseController {
           project.state == 'CONSULTANT_SIGNED') {
         timeline.add(
           _buildProjectHistory(
-            title:
-                'Kontrak telah ditandatangani oleh konsultan ${consultation.consultantName ?? ''}.',
+            title: 'Kontrak telah ditandatangani oleh konsultan',
+            subtitle: 'Menunggu pemilik lahan menandatangani kontrak',
             projectHistory: project,
           ),
         );
@@ -334,6 +360,8 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title: 'Kontrak telah ditandatangani oleh pemilik lahan.',
+            subtitle:
+                'Menunggu ${consultation.consultantName ?? ''} menandatangani kontrak',
             projectHistory: project,
           ),
         );
@@ -344,10 +372,14 @@ class ProjectDetailsController extends BaseController {
             histories.any((history) => history.state == 'CONSULTANT_SIGNED')
             ? 'pemilik lahan'
             : 'konsultan ${consultation.consultantName ?? ''}';
-        String timelineText =
-            'Kontrak telah ditandatangani oleh $lastSigner dan menunggu konsultan meminta proses pembayaran';
+        String timelineText = 'Kontrak telah ditandatangani oleh $lastSigner';
         timeline.add(
-          _buildProjectHistory(title: timelineText, projectHistory: project),
+          _buildProjectHistory(
+            title: timelineText,
+            subtitle:
+                '${consultation.consultantName ?? ''} akan meminta proses pembayaran',
+            projectHistory: project,
+          ),
         );
       } else if (project.step == 'PAYMENT' && project.state == 'REQUESTED') {
         _paymentId =
@@ -359,16 +391,20 @@ class ProjectDetailsController extends BaseController {
                 ?.metadata
                 ?.paymentId ??
             '';
-        String timelineText =
-            'Konsultan ${consultation.consultantName ?? ''} meminta pembayaran sebesar ${Formatters.currency(project.metadata?.totalPaymentAmount ?? 0.0)}';
         timeline.add(
-          _buildProjectHistory(title: timelineText, projectHistory: project),
+          _buildProjectHistory(
+            title: 'Konsultan meminta pembayaran',
+            subtitle:
+                '${consultation.consultantName ?? ''} meminta pembayaran sebesar ${Formatters.currency(project.metadata?.totalPaymentAmount ?? 0.0)}',
+            projectHistory: project,
+          ),
         );
       } else if (project.step == 'CONSULTATION' && project.state == 'STARTED') {
         timeline.add(
           _buildProjectHistory(
-            title:
-                'Pemilik lahan telah melakukan pembayaran. Konsultan ${consultation.consultantName ?? ''} akan menyiapkan dokumen yang diperlukan.',
+            title: 'Pemilik lahan telah melakukan pembayaran',
+            subtitle:
+                'Konsultan ${consultation.consultantName ?? ''} akan menyiapkan dokumen DED, RAB dan BOQ',
             projectHistory: project,
           ),
         );
@@ -376,7 +412,8 @@ class ProjectDetailsController extends BaseController {
           project.state == 'REQUEST_FOR_APPROVAL') {
         timeline.add(
           _buildProjectHistory(
-            title: 'Dokumen design telah tersedia',
+            title: 'Dokumen DED, RAB dan BOQ telah tersedia',
+            subtitle: 'Menunggu approval dari pemilik lahan',
             projectHistory: project,
           ),
         );
@@ -385,13 +422,17 @@ class ProjectDetailsController extends BaseController {
         timeline.add(
           _buildProjectHistory(
             title: 'Pemilik lahan meminta revisi dokumen.',
+            subtitle:
+                '${consultation.consultantName ?? ''} akan merevisi dokumen DED, RAB dan BOQ',
             projectHistory: project,
           ),
         );
       } else if (project.step == 'DESIGN' && project.state == 'APPROVED') {
         timeline.add(
           _buildProjectHistory(
-            title: 'Konsultasi telah selesai.',
+            title: 'Konsultasi telah selesai',
+            subtitle:
+                'Pemilik lahan menyetujui dokumen DED, RAB dan BOQ dari konsultan dan ${consultation.consultantName ?? ''} telah menerima pembayaran',
             projectHistory: project,
           ),
         );
@@ -1417,4 +1458,61 @@ class ProjectDetailsController extends BaseController {
     final status = details.value?.consultation?.status?.toUpperCase();
     return userRole.value == UserRole.homeowner && status == 'FINAL';
   }
+
+  int? get homeOwnerId => _initialHomeOwnerId;
+  String? get homeOwnerName => _initialHomeOwnerName;
+  int? get consultantId => _initialConsultantId;
+  String? get consultantName =>
+      details.value?.consultation?.consultantName ?? _initialConsultantName;
+
+  TimelineActionConfig? timelineActionFor(ProjectHistory history) {
+    final step = history.step?.toUpperCase() ?? '';
+    final state = history.state?.toUpperCase() ?? '';
+    final metadata = history.metadata;
+    final bool isHomeowner = userRole.value == UserRole.homeowner;
+
+    if (isHomeowner && step == 'CONTRACT') {
+      final fileId = history.files?.firstWhereOrNull(
+        (file) => (file ?? '').isNotEmpty,
+      );
+      if (fileId != null && fileId.isNotEmpty) {
+        return TimelineActionConfig(
+          label: AppStrings.consultationTimelineContractDownload,
+          isLoading: () => downloadTemplateLoading.value,
+          onPressed: () => downloadFileById(fileId),
+        );
+      }
+    }
+
+    final designFiles = metadata?.designFiles;
+    final hasDesignFiles =
+        designFiles != null &&
+        designFiles.any((file) => (file.fileId ?? '').isNotEmpty);
+    if (isHomeowner &&
+        step == 'DESIGN' &&
+        state == 'REQUEST_FOR_APPROVAL' &&
+        hasDesignFiles) {
+      return TimelineActionConfig(
+        label: AppStrings.consultationTimelineDesignDownload,
+        isLoading: () => designDownloadLoading.value,
+        onPressed: () => downloadDesignFiles(designFiles!),
+      );
+    }
+
+    return null;
+  }
+}
+
+class TimelineActionConfig {
+  TimelineActionConfig({
+    required this.label,
+    required this.onPressed,
+    bool Function()? isLoading,
+  }) : _isLoading = isLoading;
+
+  final String label;
+  final VoidCallback onPressed;
+  final bool Function()? _isLoading;
+
+  bool get isLoading => _isLoading?.call() ?? false;
 }

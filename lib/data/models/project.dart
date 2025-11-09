@@ -14,6 +14,10 @@ class Project with _$Project {
     ProjectLocation? location,
     double? landArea,
     DateTime? createdAt,
+    int? homeOwnerId,
+    String? homeOwnerName,
+    int? consultantId,
+    String? consultantName,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

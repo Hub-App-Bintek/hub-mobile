@@ -143,7 +143,14 @@ class ConsultantPortfoliosController extends BaseController {
         navigateAndClearUntil(
           AppRoutes.projectDetails,
           untilRoute: AppRoutes.main,
-          arguments: {'projectId': _projectId},
+          arguments: {
+            'projectId': _projectId,
+            'homeOwnerId': response.homeOwnerId,
+            'homeOwnerName': response.homeOwnerName,
+            'consultantId':
+                response.consultantId ?? int.tryParse(_consultantId),
+            'consultantName': response.consultantName,
+          },
         );
       },
       onFailure: (failure) {

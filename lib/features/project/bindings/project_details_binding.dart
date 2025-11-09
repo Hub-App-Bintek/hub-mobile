@@ -111,10 +111,26 @@ class ProjectDetailsBinding extends Bindings {
     );
 
     Get.lazyPut<ProjectDetailsController>(() {
+      int? asInt(dynamic value) {
+        if (value == null) return null;
+        if (value is int) return value;
+        if (value is num) return value.toInt();
+        if (value is String) return int.tryParse(value);
+        return null;
+      }
+
       final args = Get.arguments as Map<String, dynamic>?;
       final projectId = args?['projectId'] as String? ?? '';
+      final homeOwnerId = asInt(args?['homeOwnerId']);
+      final homeOwnerName = args?['homeOwnerName'] as String?;
+      final consultantId = asInt(args?['consultantId']);
+      final consultantName = args?['consultantName'] as String?;
       return ProjectDetailsController(
         projectId,
+        homeOwnerId,
+        homeOwnerName,
+        consultantId,
+        consultantName,
         Get.find<GetProjectDetailsUseCase>(),
         Get.find<UserStorage>(),
         Get.find<AcceptConsultationUseCase>(),

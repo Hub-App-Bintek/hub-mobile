@@ -185,7 +185,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     } else {
       navigateTo(
         AppRoutes.projectDetails,
-        arguments: {'projectId': project.projectId},
+        arguments: {
+          'projectId': project.projectId,
+          'homeOwnerId': project.homeOwnerId,
+          'homeOwnerName': project.homeOwnerName,
+          'consultantId': project.consultantId,
+          'consultantName': project.consultantName,
+        },
       );
     }
   }
