@@ -61,6 +61,9 @@ abstract class AppStrings {
   static const landAreaHint = '100';
   static const incomeLabel = 'Pendapatan';
   static const incomeHint = '123.456.789';
+  static const incomeRequired = 'Pendapatan wajib diisi';
+  static const incomeProofLabel = 'Bukti Pendapatan';
+  static const incomeProofUploadButton = 'Unggah Bukti';
 
   // Create Project Validation
   static const projectNameRequired = 'Nama proyek wajib diisi';
@@ -153,6 +156,7 @@ abstract class AppStrings {
   // Generic actions / messages
   static const retryButton = 'Coba Lagi';
   static const unableToFetchLocation = 'Tidak dapat mendapatkan lokasi.';
+  static const chooseFile = 'Pilih File';
 
   // Profile
   static const profileScreenTitle = 'Profil';

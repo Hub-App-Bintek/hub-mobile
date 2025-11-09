@@ -1495,7 +1495,7 @@ class ProjectDetailsController extends BaseController {
       return TimelineActionConfig(
         label: AppStrings.consultationTimelineDesignDownload,
         isLoading: () => designDownloadLoading.value,
-        onPressed: () => downloadDesignFiles(designFiles!),
+        onPressed: () => downloadDesignFiles(designFiles),
       );
     }
 

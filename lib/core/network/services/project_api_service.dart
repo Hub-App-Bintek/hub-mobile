@@ -1,11 +1,10 @@
 // Retrofit API service for project-related endpoints.
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
-import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
+import 'package:retrofit/retrofit.dart';
 
 part 'project_api_service.g.dart';
 
@@ -13,10 +12,9 @@ part 'project_api_service.g.dart';
 abstract class ProjectApiService {
   factory ProjectApiService(Dio dio, {String? baseUrl}) = _ProjectApiService;
 
+  @MultiPart()
   @POST(ApiEndpoints.projects)
-  Future<CreateProjectResponse> createProject(
-    @Body() CreateProjectRequest body,
-  );
+  Future<CreateProjectResponse> createProject(@Body() FormData body);
 
   @GET(ApiEndpoints.projects)
   Future<GetProjectsResponse> getProjects(
