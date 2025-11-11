@@ -36,7 +36,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
               'Consultant name - ${Formatters.formatTitle(project.status ?? '')}',
           suffixIcon: const Icon(Icons.chevron_right),
           onTap: () {
-            controller.checkProjectStatus(project);
+            controller.openProjectReview(project);
           },
         ),
       );

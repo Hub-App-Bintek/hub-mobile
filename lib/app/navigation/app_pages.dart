@@ -19,6 +19,7 @@ import 'package:pkp_hub/features/consultant/screens/consultants_screen.dart';
 import 'package:pkp_hub/features/consultant/bindings/consultant_portfolio_binding.dart';
 import 'package:pkp_hub/features/consultant/screens/consultant_portfolios_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
+import 'package:pkp_hub/features/project/screens/project_review_screen.dart';
 import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
 import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
@@ -72,6 +73,10 @@ class AppPages {
       name: _Paths.projects,
       page: () => const ProjectsScreen(controllerTag: ProjectsBinding.routeTag),
       binding: ProjectsBinding(),
+    ),
+    GetPage(
+      name: _Paths.projectReview,
+      page: () => const ProjectReviewScreen(),
     ),
     // Consultant portfolio screen
     GetPage(

@@ -140,27 +140,7 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     await fetchProjectList(page: currentPage, size: pageSize);
   }
 
-  void checkProjectStatus(Project project) {
-    if (project.status == "CREATED") {
-      navigateTo(
-        AppRoutes.consultants,
-        arguments: {
-          'projectId': project.projectId,
-          'lat': project.location?.latitude ?? 0.0,
-          'long': project.location?.longitude ?? 0.0,
-        },
-      );
-    } else {
-      navigateTo(
-        AppRoutes.projectDetails,
-        arguments: {
-          'projectId': project.projectId,
-          'homeOwnerId': project.homeOwnerId,
-          'homeOwnerName': project.homeOwnerName,
-          'consultantId': project.consultantId,
-          'consultantName': project.consultantName,
-        },
-      );
-    }
+  void openProjectReview(Project project) {
+    navigateTo(AppRoutes.projectReview, arguments: {'project': project});
   }
 }
