@@ -30,6 +30,8 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   ProjectsController(this.getProjectsUseCase, this.status) {
     if (status != null) {
       _statusFilter.value = status;
+    } else {
+      _statusFilter.value = 'ACTIVE';
     }
   }
 

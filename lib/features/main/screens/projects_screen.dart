@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
@@ -77,6 +79,11 @@ class ProjectsScreen extends GetView<ProjectsController> {
             child: ListView(
               // controller: scrollController,
               children: [
+                if (controller.status == null) ...[
+                  const SizedBox(height: 16),
+                  _buildStatusMenu(context),
+                  const SizedBox(height: 16),
+                ],
                 if (grouped['CREATED']?.isNotEmpty == true)
                   buildGroup('Baru Dibuat', grouped['CREATED']!),
                 if (grouped['PENDING']?.isNotEmpty == true)
@@ -99,4 +106,59 @@ class ProjectsScreen extends GetView<ProjectsController> {
       ),
     );
   }
+
+  Widget _buildStatusMenu(BuildContext context) {
+    const options = [
+      _ProjectStatusOption(
+        'Sedang Berjalan',
+        'ACTIVE',
+        Icons.play_circle_outline,
+      ),
+      _ProjectStatusOption(
+        'Menunggu Konfirmasi',
+        'PENDING',
+        Icons.hourglass_top,
+      ),
+      _ProjectStatusOption('Selesai', 'COMPLETED', Icons.check_circle_outline),
+    ];
+
+    final cardWidth = (MediaQuery.of(context).size.width - 64) / 3;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        alignment: WrapAlignment.spaceBetween,
+        children: options.map((option) {
+          final isSelected = controller.statusFilter == option.status;
+          final backgroundColor = isSelected
+              ? AppColors.primaryDarkest.withValues(alpha: 0.08)
+              : AppColors.primaryLightest;
+          return SizedBox(
+            width: cardWidth,
+            child: FeatureCircleCard(
+              label: option.label,
+              icon: option.icon,
+              backgroundColor: backgroundColor,
+              iconColor: AppColors.primaryDarkest,
+              onTap: () {
+                if (!isSelected) {
+                  controller.updateStatusFilter(option.status);
+                }
+              },
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _ProjectStatusOption {
+  const _ProjectStatusOption(this.label, this.status, this.icon);
+
+  final String label;
+  final String status;
+  final IconData icon;
 }
