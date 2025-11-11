@@ -153,18 +153,33 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
         if (controller.shouldShowScheduleButton) {
           return SafeArea(
             minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Ajukan Jadwal Survey',
-              enabled: true,
-              onPressed: () {
-                controller.showBottomSheet(
-                  SurveyScheduleBottomSheet(
-                    onButtonPressed: (request) {
-                      controller.submitSurveySchedule(request);
+            child: Row(
+              children: [
+                Expanded(
+                  child: PkpOutlinedButton(
+                    text: 'Lanjut Tanpa Survey',
+                    enabled: true,
+                    onPressed: () {
+                      /// TODO: Do nothing
                     },
                   ),
-                );
-              },
+                ),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Ajukan Jadwal Survey',
+                    enabled: true,
+                    onPressed: () {
+                      controller.showBottomSheet(
+                        SurveyScheduleBottomSheet(
+                          onButtonPressed: (request) {
+                            controller.submitSurveySchedule(request);
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           );
         }
