@@ -102,9 +102,11 @@ abstract class AppStrings {
   static const menuLicensing = 'Perizinan';
   static const menuMaterial = 'Material';
   static const menuConstruction = 'Konstruksi';
+  static const menuFinancing = 'Pembiayaan';
   static const menuMonitoring = 'Pengawasan';
   static const homeFeatureMonitoring = 'Monitoring';
   static const homeFeatureSupervision = 'Pengawasan';
+  static const homeFeatureChat = 'Chat';
 
   // HomeScreen Bottom Sheet
   static const chooseProjectTitle = 'Pilih Project';

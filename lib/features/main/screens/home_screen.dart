@@ -3,9 +3,8 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/consultant_card.dart';
-import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
-import 'package:pkp_hub/app/widgets/sheets/choose_project_bottom_sheet.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
@@ -18,15 +17,6 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PkpAppBar(
-        showNavigation: false,
-        actions: [
-          PkpAppBarAction(
-            icon: Icons.mail_rounded,
-            onPressed: controller.onNotificationTapped,
-          ),
-        ],
-      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: controller.refresh,
@@ -169,55 +159,122 @@ class HomeScreen extends GetView<HomeController> {
         return _buildConsultantSection();
       }
 
-      return _buildConsultantGridSection(
-        isLoading: isConsultantLoading,
-        consultants: consultants,
-      );
+      return const SizedBox.shrink();
     });
   }
 
   Widget _buildFeatureGrid() {
-    final featureItems = [
-      (AppStrings.menuConsultation, Icons.chat_bubble_outline),
-      (AppStrings.menuLicensing, Icons.receipt_long),
-      (AppStrings.menuMaterial, Icons.inventory_2_outlined),
-      (AppStrings.homeFeatureSupervision, Icons.visibility_outlined),
-    ];
+    final featureItems = [];
+    final role = controller.userRole.value;
+    if (role == UserRole.homeowner) {
+      featureItems.add(
+        const _FeatureItem(
+          id: 'consultation',
+          title: AppStrings.menuConsultation,
+          iconData: Icons.pending_actions_rounded,
+        ),
+      );
+
+      featureItems.add(
+        const _FeatureItem(
+          id: 'licensing',
+          title: AppStrings.menuLicensing,
+          iconData: Icons.receipt_long,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'material',
+          title: AppStrings.menuMaterial,
+          iconData: Icons.inventory_2_outlined,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'financing',
+          title: AppStrings.menuFinancing,
+          iconData: Icons.account_balance_wallet_outlined,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'construction',
+          title: AppStrings.menuConstruction,
+          iconData: Icons.construction_outlined,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'supervision',
+          title: AppStrings.homeFeatureSupervision,
+          iconData: Icons.visibility_outlined,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'chat',
+          title: AppStrings.homeFeatureChat,
+          iconData: Icons.chat_bubble_outline,
+          badgeValue: '99+',
+          showBadge: true,
+        ),
+      );
+    } else {
+      featureItems.add(
+        const _FeatureItem(
+          id: 'get_pending_projects',
+          title: AppStrings.homeProjectsPendingTitle,
+          iconData: Icons.pending_actions_rounded,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'get_active_projects',
+          title: AppStrings.homeProjectsActiveTitle,
+          iconData: Icons.pending_actions_rounded,
+        ),
+      );
+      featureItems.add(
+        const _FeatureItem(
+          id: 'chat',
+          title: AppStrings.homeFeatureChat,
+          iconData: Icons.chat_bubble_outline,
+          badgeValue: '99+',
+          showBadge: true,
+        ),
+      );
+    }
+
+    const crossAxisSpacing = 16.0;
+    const mainAxisSpacing = 12.0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          const columns = 4;
-          const spacing = 16.0;
-          final itemWidth =
-              (constraints.maxWidth - spacing * (columns - 1)) / columns;
-
-          return Wrap(
-            spacing: spacing,
-            runSpacing: 12,
-            children: featureItems.map((item) {
-              final (title, iconData) = item;
-              return SizedBox(
-                width: itemWidth,
-                child: _FeatureTile(
-                  label: title,
-                  icon: iconData,
-                  onTap: () {
-                    controller.onFeatureTapped(() {
-                      controller.showBottomSheet(
-                        ChooseProjectBottomSheet(
-                          controller.projects,
-                          controller.onNewProjectFromSheet,
-                          controller.onSelectProject,
-                          controller.userRole.value ?? UserRole.unknown,
-                        ),
-                      );
-                    });
-                  },
-                ),
-              );
-            }).toList(),
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        itemCount: featureItems.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: crossAxisSpacing,
+          mainAxisSpacing: mainAxisSpacing,
+          childAspectRatio: 1,
+        ),
+        itemBuilder: (context, index) {
+          final item = featureItems[index];
+          return Center(
+            child: FeatureCircleCard(
+              label: item.title,
+              icon: item.iconData,
+              showBadge: item.showBadge,
+              badgeValue: item.badgeValue,
+              onTap: () {
+                controller.onFeatureTapped(() {
+                  /// TODO: Implement different action for each id
+                });
+              },
+            ),
           );
         },
       ),
@@ -370,30 +427,18 @@ class HomeScreen extends GetView<HomeController> {
   }
 }
 
-class _FeatureTile extends StatelessWidget {
-  const _FeatureTile({
-    required this.label,
-    required this.icon,
-    required this.onTap,
+class _FeatureItem {
+  const _FeatureItem({
+    required this.id,
+    required this.title,
+    required this.iconData,
+    this.badgeValue,
+    this.showBadge = false,
   });
 
-  final String label;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: AppColors.primaryDarkest),
-          const SizedBox(height: 8),
-          Text(label, style: AppTextStyles.bodyS, textAlign: TextAlign.center),
-        ],
-      ),
-    );
-  }
+  final String id;
+  final String title;
+  final IconData iconData;
+  final String? badgeValue;
+  final bool showBadge;
 }

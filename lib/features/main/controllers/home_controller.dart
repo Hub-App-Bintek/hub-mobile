@@ -115,7 +115,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     if (_isLoggedIn) {
       await Future.wait([
         _fetchBalance(),
-        _fetchProjects(),
+        _fetchProjects('PENDING'),
         _fetchConsultants(),
       ]);
     } else {
@@ -146,11 +146,11 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _fetchProjects() async {
+  Future<void> _fetchProjects(String status) async {
     isProjectLoading.value = true;
 
     await handleAsync<GetProjectsResponse>(
-      () => _getProjectListUseCase(const GetProjectsRequest(size: 100)),
+      () => _getProjectListUseCase(GetProjectsRequest(size: 100, status: status)),
       onSuccess: (data) {
         final result = data.projects
             .where((p) => p.status != 'CANCELED' && p.status != 'COMPLETED')
@@ -228,11 +228,11 @@ class HomeController extends BaseController with WidgetsBindingObserver {
       permissionGranted = status.isGranted;
     }
 
-    if (permissionGranted && projects.isEmpty) {
-      navigateTo(AppRoutes.createProject);
-    } else if (permissionGranted && projects.isNotEmpty) {
-      onHaveProjects();
-    }
+    // if (permissionGranted && projects.isEmpty) {
+    //   navigateTo(AppRoutes.createProject);
+    // } else if (permissionGranted && projects.isNotEmpty) {
+    //   onHaveProjects();
+    // }
   }
 
   void onSeeAllConsultants() {
