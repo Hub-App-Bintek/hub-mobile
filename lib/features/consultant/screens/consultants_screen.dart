@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/consultant_card.dart';
+import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
@@ -17,7 +19,7 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: PkpAppBar(
-        title: 'Konsultan',
+        title: AppStrings.menuConsultation,
         actions: [
           PkpAppBarAction(
             icon: Icons.sort,
@@ -34,55 +36,120 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
         onRefresh: controller.refreshList,
         color: AppColors.primaryDarkest,
         child: Obx(() {
-          final items = controller.consultants;
+          final items = controller.consultants.toList();
           final isLoading = controller.isLoading.value;
           final hasMore = controller.hasMore.value;
 
-          // Show a big spinner only for the very first load
           final initialLoading = isLoading && items.isEmpty;
           if (initialLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Empty state
           if (!isLoading && items.isEmpty) {
             return _EmptyState(onRetry: controller.refreshList);
           }
 
+          final sortedItems = items.toList()
+            ..sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
           final showLoaderTile = hasMore || isLoading;
 
-          return GridView.builder(
+          return CustomScrollView(
             controller: controller.scrollController,
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16),
-            cacheExtent: 1200,
-            // small look-ahead for smoother scrolling
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 16,
-              childAspectRatio: 0.92,
-            ),
-            itemCount: items.length + (showLoaderTile ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index >= items.length) {
-                return const _LoaderTile();
-              }
-
-              final item = items[index];
-              return ConsultantCard(
-                key: ValueKey(item.id ?? index),
-                consultant: item,
-                onTap: () => controller.goToPortfolio(
-                  item.id.toString(),
-                  item.hourlyRate ?? 0.0,
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.all(16),
+                sliver: SliverToBoxAdapter(child: _buildFeatureMenu()),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.all(16),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    AppStrings.homeConsultantSectionTitle,
+                    style: AppTextStyles.h3,
+                  ),
                 ),
-              );
-            },
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 0.92,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    if (index >= sortedItems.length) {
+                      return const _LoaderTile();
+                    }
+
+                    final item = sortedItems[index];
+                    return ConsultantCard(
+                      key: ValueKey(item.id ?? index),
+                      consultant: item,
+                      onTap: () => controller.goToPortfolio(
+                        item.id.toString(),
+                        item.hourlyRate ?? 0.0,
+                      ),
+                    );
+                  }, childCount: sortedItems.length + (showLoaderTile ? 1 : 0)),
+                ),
+              ),
+            ],
           );
         }),
       ),
     );
+  }
+
+  Widget _buildFeatureMenu() {
+    final menuItems = [
+      _ConsultantFeatureMenu(
+        'create_project',
+        'Buat Proyek',
+        Icons.add_box_outlined,
+        onTap: () {
+          controller.navigateTo(AppRoutes.createProject);
+        },
+      ),
+      _ConsultantFeatureMenu(
+        'on_going_project',
+        AppStrings.homeProjectsActiveTitle,
+        Icons.play_circle_outline,
+        onTap: () {
+          _navigateToProjectsWithStatus('ACTIVE');
+        },
+      ),
+      _ConsultantFeatureMenu(
+        'finished_project',
+        'Selesai',
+        Icons.check_circle_outline,
+        onTap: () {
+          _navigateToProjectsWithStatus('DONE');
+        },
+      ),
+    ];
+
+    return Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (var i = 0; i < menuItems.length; i++) ...[
+            if (i > 0) const SizedBox(width: 24),
+            FeatureCircleCard(
+              label: menuItems[i].label,
+              icon: menuItems[i].icon,
+              onTap: menuItems[i].onTap ?? () {},
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  void _navigateToProjectsWithStatus(String status) {
+    controller.navigateTo(AppRoutes.projects, arguments: {'status': status});
   }
 }
 
@@ -217,4 +284,13 @@ class _SortBottomSheetState extends State<_SortBottomSheet> {
       ),
     );
   }
+}
+
+class _ConsultantFeatureMenu {
+  const _ConsultantFeatureMenu(this.id, this.label, this.icon, {this.onTap});
+
+  final String id;
+  final String label;
+  final IconData icon;
+  final VoidCallback? onTap;
 }

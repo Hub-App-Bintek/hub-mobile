@@ -115,7 +115,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     if (_isLoggedIn) {
       await Future.wait([
         _fetchBalance(),
-        _fetchProjects('PENDING'),
+        fetchProjects('PENDING'),
         _fetchConsultants(),
       ]);
     } else {
@@ -146,15 +146,14 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     );
   }
 
-  Future<void> _fetchProjects(String status) async {
+  Future<void> fetchProjects(String status) async {
     isProjectLoading.value = true;
 
     await handleAsync<GetProjectsResponse>(
-      () => _getProjectListUseCase(GetProjectsRequest(size: 100, status: status)),
+      () =>
+          _getProjectListUseCase(GetProjectsRequest(size: 100, status: status)),
       onSuccess: (data) {
-        final result = data.projects
-            .where((p) => p.status != 'CANCELED' && p.status != 'COMPLETED')
-            .toList();
+        final result = data.projects.where((p) => p.status == status).toList();
         projects.value = result;
       },
       onFailure: (failure) {

@@ -270,9 +270,18 @@ class HomeScreen extends GetView<HomeController> {
               showBadge: item.showBadge,
               badgeValue: item.badgeValue,
               onTap: () {
-                controller.onFeatureTapped(() {
-                  /// TODO: Implement different action for each id
-                });
+                if (item.id == 'consultation') {
+                  controller.onSeeAllConsultants();
+                } else if (item.id == 'get_pending_projects') {
+                  controller.fetchProjects('PENDING');
+                } else if (item.id == 'get_active_projects') {
+                  controller.fetchProjects('ACTIVE');
+                } else if (item.id == 'chat') {
+                  controller.onNotificationTapped();
+                }
+                // controller.onFeatureTapped(() {
+                //
+                // });
               },
             ),
           );

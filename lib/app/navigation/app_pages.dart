@@ -8,7 +8,9 @@ import 'package:pkp_hub/features/auth/screens/verify_otp_screen.dart';
 import 'package:pkp_hub/features/kyc/bindings/kyc_binding.dart';
 import 'package:pkp_hub/features/kyc/screens/kyc_screen.dart';
 import 'package:pkp_hub/features/main/bindings/main_binding.dart';
+import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
+import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
 import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
 import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
@@ -65,6 +67,11 @@ class AppPages {
       name: _Paths.consultants,
       page: () => const ConsultantsScreen(),
       binding: ConsultantListBinding(),
+    ),
+    GetPage(
+      name: _Paths.projects,
+      page: () => const ProjectsScreen(controllerTag: ProjectsBinding.routeTag),
+      binding: ProjectsBinding(),
     ),
     // Consultant portfolio screen
     GetPage(

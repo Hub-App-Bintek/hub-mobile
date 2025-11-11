@@ -18,6 +18,7 @@ abstract class AppRoutes {
   static const kyc = _Paths.kyc;
   static const createProject = _Paths.createProject;
   static const projectDetails = _Paths.projectDetails;
+  static const projects = _Paths.projects;
 }
 
 abstract class _Paths {
@@ -36,4 +37,5 @@ abstract class _Paths {
   static const kyc = '/kyc';
   static const createProject = '/create-project';
   static const projectDetails = '/project-details';
+  static const projects = '/projects';
 }

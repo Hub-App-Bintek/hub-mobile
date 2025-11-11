@@ -4,10 +4,10 @@ import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
+import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
-import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
-import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 
 class MainBinding extends Bindings {
   @override
@@ -17,6 +17,7 @@ class MainBinding extends Bindings {
     Get.lazyPut(() => GetWalletBalanceUseCase(Get.find()));
     Get.lazyPut(() => GetConsultantsUseCase(Get.find<ConsultantRepository>()));
     Get.lazyPut(() => GetProjectsUseCase(Get.find<ProjectRepository>()));
+
     Get.lazyPut(
       () => HomeController(
         Get.find<UserStorage>(),
@@ -25,6 +26,12 @@ class MainBinding extends Bindings {
         Get.find<GetConsultantsUseCase>(),
       ),
     );
-    Get.lazyPut(() => ProjectsController(Get.find<GetProjectsUseCase>()));
+
+    final args = Get.arguments;
+    String? status;
+    if (args is Map<String, dynamic>) {
+      status = args['status'] as String?;
+    }
+    ProjectsBinding.register(tag: ProjectsBinding.mainTag, status: status);
   }
 }

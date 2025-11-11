@@ -9,6 +9,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
+import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 
 import 'app/navigation/app_pages.dart';
@@ -58,8 +59,12 @@ Future<void> startApp({required String flavor}) async {
             }
             break;
           case 1:
-            if (Get.isRegistered<ProjectsController>()) {
-              Get.find<ProjectsController>().refreshProjects();
+            if (Get.isRegistered<ProjectsController>(
+              tag: ProjectsBinding.mainTag,
+            )) {
+              Get.find<ProjectsController>(
+                tag: ProjectsBinding.mainTag,
+              ).refreshProjects();
             }
             break;
           default:

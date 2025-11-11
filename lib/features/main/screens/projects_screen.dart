@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 
 class ProjectsScreen extends GetView<ProjectsController> {
-  const ProjectsScreen({super.key});
+  const ProjectsScreen({super.key, this.controllerTag});
+
+  final String? controllerTag;
+
+  @override
+  String? get tag => controllerTag;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +55,14 @@ class ProjectsScreen extends GetView<ProjectsController> {
     }
 
     return Scaffold(
+      appBar: PkpAppBar(
+        title: "Proyek Anda",
+        onLeadingPressed: () {
+          if (controller.status != null) {
+            Get.back();
+          }
+        },
+      ),
       body: SafeArea(
         child: Obx(() {
           if (controller.isLoading.value && controller.projects.isEmpty) {

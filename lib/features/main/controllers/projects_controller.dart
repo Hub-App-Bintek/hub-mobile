@@ -11,7 +11,13 @@ import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
 class ProjectsController extends BaseController with WidgetsBindingObserver {
   final GetProjectsUseCase getProjectsUseCase;
+  final String? status;
+
   Worker? _mainTabWorker;
+
+  final RxnString _statusFilter = RxnString();
+
+  String? get statusFilter => _statusFilter.value;
 
   var isLoading = false.obs;
   var error = Rxn<Failure>();
@@ -21,7 +27,11 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   final int pageSize = 100;
   bool hasMore = true;
 
-  ProjectsController(this.getProjectsUseCase);
+  ProjectsController(this.getProjectsUseCase, this.status) {
+    if (status != null) {
+      _statusFilter.value = status;
+    }
+  }
 
   @override
   void onInit() {
@@ -67,11 +77,12 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     if (isLoading.value) return;
     isLoading.value = true;
     error.value = null;
+    final resolvedStatus = status ?? _statusFilter.value;
     final request = GetProjectsRequest(
       page: page,
       size: size,
       type: type,
-      status: status,
+      status: resolvedStatus,
     );
     await handleAsync<GetProjectsResponse>(
       () => getProjectsUseCase(request),
@@ -97,7 +108,28 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     currentPage = 0;
     hasMore = true;
     // Do not clear here to avoid touching a potentially unmodifiable list.
-    await fetchProjectList(page: currentPage, size: pageSize, isRefresh: true);
+    if (status != null) {
+      await fetchProjectList(
+        page: currentPage,
+        size: pageSize,
+        isRefresh: true,
+        status: status,
+      );
+    } else {
+      await fetchProjectList(
+        page: currentPage,
+        size: pageSize,
+        isRefresh: true,
+      );
+    }
+  }
+
+  void updateStatusFilter(String? status, {bool refresh = true}) {
+    if (_statusFilter.value == status) return;
+    _statusFilter.value = status;
+    if (refresh) {
+      refreshProjects();
+    }
   }
 
   Future<void> loadMoreProjects() async {

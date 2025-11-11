@@ -5,6 +5,7 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/features/main/screens/home_screen.dart';
 import 'package:pkp_hub/features/main/screens/profile_screen.dart';
+import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 
 class MainController extends BaseController {
@@ -32,7 +33,7 @@ class MainController extends BaseController {
 
   final List<Widget> pages = const [
     HomeScreen(),
-    ProjectsScreen(),
+    ProjectsScreen(controllerTag: ProjectsBinding.mainTag),
     ProfileScreen(),
   ];
 
