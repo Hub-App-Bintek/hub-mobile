@@ -1,16 +1,21 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/features/kyc/controllers/kyc_controller.dart';
 
-class KycScreen extends StatelessWidget {
+// Convert to GetView to get easy access to the controller
+class KycScreen extends GetView<KycController> {
   const KycScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = Theme
+        .of(context)
+        .textTheme;
 
     return Scaffold(
       appBar: PkpAppBar(
@@ -54,7 +59,12 @@ class KycScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            _buildUploadPlaceholder(),
+            // Use Obx to listen for changes to the ktpImage
+            Obx(() =>
+                _buildUploadWidget(
+                  file: controller.ktpImage.value,
+                  onTap: () => controller.pickKtpImage(),
+                )),
             const SizedBox(height: 24),
             Text(
               AppStrings.kycUploadSelfieKtpLabel,
@@ -63,7 +73,12 @@ class KycScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            _buildUploadPlaceholder(),
+            // Use Obx to listen for changes to the selfieKtpImage
+            Obx(() =>
+                _buildUploadWidget(
+                  file: controller.selfieKtpImage.value,
+                  onTap: () => controller.pickSelfieKtpImage(),
+                )),
           ],
         ),
       ),
@@ -73,7 +88,8 @@ class KycScreen extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton(
             onPressed: () {
-              // No action specified
+              // Call the controller method
+              controller.submitKyc();
             },
             child: const Text(AppStrings.continueButton),
           ),
@@ -82,15 +98,32 @@ class KycScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildUploadPlaceholder() {
-    return Container(
-      height: 120,
-      width: 120,
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
+  // Refactored upload widget to be reusable
+  Widget _buildUploadWidget(
+      {required File? file, required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 120,
+        width: 120,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[300]!),
+        ),
+        // Display the selected image or a placeholder icon
+        child: file != null
+            ? ClipRRect(
+          borderRadius: BorderRadius.circular(11),
+          child: Image.file(
+            file,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        )
+            : Icon(Icons.camera_alt, size: 48, color: Colors.grey[400]),
       ),
-      child: Icon(Icons.image, size: 48, color: Colors.grey[400]),
     );
   }
 }

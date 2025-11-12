@@ -33,6 +33,24 @@ class _ProjectReviewScreenState extends State<ProjectReviewScreen> {
       icon: Icons.description,
     ),
     _ProjectReviewStep(
+      title: 'Material',
+      description:
+      'Pembelian material berdasarkan hasil konsultasi atau dilakukan mandiri.',
+      icon: Icons.inventory_2_outlined,
+    ),
+    _ProjectReviewStep(
+      title: 'Konstruksi',
+      description:
+      'Sewa jasa tenaga konstruksi rumah.',
+      icon: Icons.construction_outlined,
+    ),
+    _ProjectReviewStep(
+      title: 'Pembiayaan',
+      description:
+      'Pengajuan pembiayaan kepada Bank dan Lembaga keuangan lain.',
+      icon: Icons.account_balance_wallet_outlined,
+    ),
+    _ProjectReviewStep(
       title: 'Pengawasan',
       description:
           'Susun jadwal pengawasan dan pastikan progres lapangan terlaporkan.',
@@ -86,7 +104,7 @@ class _ProjectReviewScreenState extends State<ProjectReviewScreen> {
       body: SafeArea(
         child: Stepper(
           type: StepperType.vertical,
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           currentStep: _currentStep,
           onStepTapped: (index) {
             setState(() => _currentStep = index);
