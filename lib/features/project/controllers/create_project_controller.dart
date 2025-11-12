@@ -17,6 +17,7 @@ import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
+import 'package:pkp_hub/features/consultant/controllers/consultants_controller.dart';
 
 class CreateProjectController extends BaseController {
   final CreateProjectUseCase _createProjectUseCase;
@@ -310,6 +311,9 @@ class CreateProjectController extends BaseController {
   }
 
   void _navigateToConsultants(String projectId) {
+    if (Get.isRegistered<ConsultantsController>()) {
+      Get.delete<ConsultantsController>();
+    }
     navigateOff(
       AppRoutes.consultants,
       arguments: {

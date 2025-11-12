@@ -12,13 +12,15 @@ class ConsultantListBinding extends Bindings {
 
     Get.lazyPut<ConsultantsController>(() {
       final args = Get.arguments as Map<String, dynamic>?;
+      final projectIdArg = args?['projectId'];
+      final projectId = projectIdArg?.toString() ?? '';
       return ConsultantsController(
         Get.find<GetConsultantsUseCase>(),
-        args?['projectId'] ?? '',
+        projectId,
         (args?['lat'] as num?)?.toDouble() ?? 0.0,
         (args?['long'] as num?)?.toDouble() ?? 0.0,
         args?['sortBy'] as String?,
       )..selectedSort.value = (args?['sortBy'] as String?) ?? '';
-    });
+    }, fenix: true);
   }
 }
