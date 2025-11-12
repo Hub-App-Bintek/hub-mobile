@@ -374,23 +374,42 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
         if (controller.shouldShowPaymentButtons) {
           return SafeArea(
             minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Lakukan Pembayaran',
-              isLoading: controller.approvePaymentLoading.value,
-              enabled: !controller.approvePaymentLoading.value,
-              onPressed: controller.approvePaymentLoading.value
-                  ? null
-                  : () async {
+            child: Row(
+              children: [
+                Expanded(
+                  child: PkpOutlinedButton(
+                    text: 'Simulasi Pembayaran',
+                    isLoading: controller.approvePaymentLoading.value,
+                    enabled: !controller.approvePaymentLoading.value,
+                    onPressed: controller.approvePaymentLoading.value
+                        ? null
+                        : () {
+                      controller.goToPaymentPage();
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12,),
+                Expanded(
+                  child: PkpElevatedButton(
+                    text: 'Lakukan Pembayaran',
+                    isLoading: controller.approvePaymentLoading.value,
+                    enabled: !controller.approvePaymentLoading.value,
+                    onPressed: controller.approvePaymentLoading.value
+                        ? null
+                        : () async {
                       controller.showConfirmationDialog(
                         title: 'Konfirmasi Pembayaran',
                         message:
-                            'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
+                        'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
                         confirmText: 'Ya',
                         onConfirm: controller.approvePayment,
                         cancelText: 'Batal',
                         onCancel: () {},
                       );
-                    },
+                          },
+                  ),
+                ),
+              ],
             ),
           );
         }

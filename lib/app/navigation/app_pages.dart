@@ -11,6 +11,10 @@ import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
+import 'package:pkp_hub/features/payment/bindings/payment_binding.dart';
+import 'package:pkp_hub/features/payment/screens/payment_qr_screen.dart';
+import 'package:pkp_hub/features/payment/screens/payment_receipt_screen.dart';
+import 'package:pkp_hub/features/payment/screens/payment_screen.dart';
 import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
 import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
 import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
@@ -99,6 +103,21 @@ class AppPages {
       name: _Paths.chat,
       page: () => const ChatScreen(),
       binding: ChatBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.payment,
+      page: () => const PaymentScreen(),
+      binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.paymentQr,
+      page: () => const PaymentQrScreen(),
+      binding: PaymentBinding(), // Use the same binding to access the same controller instance
+    ),
+    GetPage(
+      name: AppRoutes.paymentReceipt,
+      page: () => const PaymentReceiptScreen(),
+      binding: PaymentBinding(),
     ),
   ];
 }

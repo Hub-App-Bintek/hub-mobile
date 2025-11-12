@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
@@ -1252,6 +1253,16 @@ class ProjectDetailsController extends BaseController {
     } finally {
       requestPaymentLoading.value = false;
     }
+  }
+
+  void goToPaymentPage()  {
+    final requiredAmount =
+        consultationHistory.firstOrNull?.metadata?.totalPaymentAmount ?? 2000000;
+    // Example of how to call the payment page
+    Get.toNamed(
+      AppRoutes.payment,
+      arguments: {'amount': requiredAmount}, // The amount to be paid
+    );
   }
 
   Future<void> approvePayment() async {
