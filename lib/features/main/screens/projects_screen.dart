@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
@@ -126,31 +128,38 @@ class ProjectsScreen extends GetView<ProjectsController> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 12,
-        alignment: WrapAlignment.spaceBetween,
-        children: options.map((option) {
-          final isSelected = controller.statusFilter == option.status;
-          final backgroundColor = isSelected
-              ? AppColors.primaryDarkest.withValues(alpha: 0.08)
-              : AppColors.primaryLightest;
-          return SizedBox(
-            width: cardWidth,
-            child: FeatureCircleCard(
-              label: option.label,
-              icon: option.icon,
-              backgroundColor: backgroundColor,
-              iconColor: AppColors.primaryDarkest,
-              onTap: () {
-                if (!isSelected) {
-                  controller.updateStatusFilter(option.status);
-                }
-              },
-            ),
-          );
-        }).toList(),
-      ),
+      child: Obx(() {
+        return Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          alignment: WrapAlignment.spaceBetween,
+          children: options.map((option) {
+            final isSelected = controller.statusFilter == option.status;
+            final backgroundColor = isSelected
+                ? AppColors.primaryDarkest.withValues(alpha: 0.08)
+                : AppColors.primaryLightest;
+
+            final count = controller.projectCounts[option.status] ?? 0;
+
+            return SizedBox(
+              width: cardWidth,
+              child: FeatureCircleCard(
+                label: option.label,
+                icon: option.icon,
+                backgroundColor: backgroundColor,
+                iconColor: AppColors.primaryDarkest,
+                badgeValue: count.toString(),
+                showBadge: count > 0,
+                onTap: () {
+                  if (!isSelected) {
+                    controller.updateStatusFilter(option.status);
+                  }
+                },
+              ),
+            );
+          }).toList(),
+        );
+      }),
     );
   }
 }

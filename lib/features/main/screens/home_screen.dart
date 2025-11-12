@@ -166,7 +166,7 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildFeatureGrid() {
     final featureItems = [];
     final role = controller.userRole.value;
-    if (role == UserRole.homeowner) {
+    if (role == UserRole.homeowner || role == null || role == UserRole.unknown) {
       featureItems.add(
         const _FeatureItem(
           id: 'consultation',

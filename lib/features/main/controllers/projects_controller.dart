@@ -23,6 +23,10 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   var error = Rxn<Failure>();
   var projects = <Project>[].obs;
 
+  final RxMap<String, int> projectCounts = <String, int>{}.obs;
+
+  final _allProjects = <Project>[].obs;
+
   int currentPage = 0;
   final int pageSize = 100;
   bool hasMore = true;
@@ -59,6 +63,20 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     }
   }
 
+  void _updateProjectCounts() {
+    final counts = <String, int>{
+      'ACTIVE': 0,
+      'PENDING': 0,
+      'COMPLETED': 0,
+    };
+    for (var project in _allProjects) {
+      if (counts.containsKey(project.status)) {
+        counts[project.status!] = counts[project.status]! + 1;
+      }
+    }
+    projectCounts.assignAll(counts);
+  }
+
   void _listenToMainTabChanges() {
     if (!Get.isRegistered<MainController>()) return;
     final mainController = Get.find<MainController>();
@@ -84,19 +102,25 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
       page: page,
       size: size,
       type: type,
-      status: resolvedStatus,
+      // status: resolvedStatus,
     );
     await handleAsync<GetProjectsResponse>(
       () => getProjectsUseCase(request),
       onSuccess: (data) {
         if (isRefresh) {
           // Ensure we replace with a mutable list to avoid unmodifiable list issues
-          projects.value = List<Project>.from(data.projects);
+          _allProjects.value = List<Project>.from(data.projects);
         } else {
-          projects.addAll(data.projects);
+          _allProjects.addAll(data.projects);
         }
+
+        projects.value = _allProjects
+            .where((p) => p.status == resolvedStatus)
+            .toList();
+
         hasMore = data.projects.length == size;
         isLoading.value = false;
+        _updateProjectCounts();
       },
       onFailure: (failure) {
         error.value = failure;

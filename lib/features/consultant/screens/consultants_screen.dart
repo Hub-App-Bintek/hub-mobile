@@ -126,7 +126,7 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
         'Selesai',
         Icons.check_circle_outline,
         onTap: () {
-          _navigateToProjectsWithStatus('DONE');
+          _navigateToProjectsWithStatus('COMPLETED');
         },
       ),
     ];

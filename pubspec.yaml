@@ -2,7 +2,7 @@ name: pkp_hub
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.1.0+1
 
 environment:
   sdk: '>=3.9.0 <4.0.0'
@@ -58,6 +58,7 @@ dependencies:
   url_launcher: ^6.3.0
   path_provider: ^2.1.4
   file_saver: ^0.2.13
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:

@@ -164,6 +164,7 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     },
                   ),
                 ),
+                const SizedBox(width: 12),
                 Expanded(
                   child: PkpElevatedButton(
                     text: 'Ajukan Jadwal Survey',
