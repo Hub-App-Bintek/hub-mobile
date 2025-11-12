@@ -1255,9 +1255,10 @@ class ProjectDetailsController extends BaseController {
     }
   }
 
-  void goToPaymentPage()  {
+  void goToPaymentPage() {
     final requiredAmount =
-        consultationHistory.firstOrNull?.metadata?.totalPaymentAmount ?? 2000000;
+        consultationHistory.firstOrNull?.metadata?.totalPaymentAmount ??
+        2000000;
     // Example of how to call the payment page
     Get.toNamed(
       AppRoutes.payment,

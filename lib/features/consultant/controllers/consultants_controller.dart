@@ -9,14 +9,14 @@ import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart
 
 class ConsultantsController extends BaseController {
   final GetConsultantsUseCase _getConsultantsUseCase;
-  final String _projectId;
+  final String projectId;
   final double _lat;
   final double _long;
   final RxString selectedSort = ''.obs;
 
   ConsultantsController(
     this._getConsultantsUseCase,
-    this._projectId,
+    this.projectId,
     this._lat,
     this._long,
     String? initialSort,
@@ -113,7 +113,7 @@ class ConsultantsController extends BaseController {
       AppRoutes.consultantPortfolio,
       arguments: {
         'consultantId': consultantId,
-        'projectId': _projectId,
+        'projectId': projectId,
         'isPaidConsultation': price > 0.0,
       },
     );

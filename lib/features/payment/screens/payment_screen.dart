@@ -59,11 +59,10 @@ class PaymentScreen extends GetView<PaymentController> {
             children: [
               Text('Total Amount', style: AppTextStyles.bodyM),
               Obx(
-                    () =>
-                    Text(
-                      Formatters.currency(controller.amount.value),
-                      style: AppTextStyles.h3,
-                    ),
+                () => Text(
+                  Formatters.currency(controller.amount.value),
+                  style: AppTextStyles.h3,
+                ),
               ),
             ],
           ),
@@ -73,31 +72,32 @@ class PaymentScreen extends GetView<PaymentController> {
   }
 
   Widget _buildPaymentMethodList() {
-    return Obx(() =>
-        Column(
-          children: [
-            _buildPaymentMethodTile(
-              title: 'QRIS',
-              icon: Icons.qr_code_2,
-              method: PaymentMethod.qris,
-            ),
-            _buildPaymentMethodTile(
-              title: 'Debit Card',
-              icon: Icons.credit_card,
-              method: PaymentMethod.debit,
-            ),
-            _buildPaymentMethodTile(
-              title: 'Credit Card',
-              icon: Icons.credit_card_outlined,
-              method: PaymentMethod.credit,
-            ),
-            _buildPaymentMethodTile(
-              title: 'Virtual Account',
-              icon: Icons.account_balance_wallet,
-              method: PaymentMethod.va,
-            ),
-          ],
-        ));
+    return Obx(
+      () => Column(
+        children: [
+          _buildPaymentMethodTile(
+            title: 'QRIS',
+            icon: Icons.qr_code_2,
+            method: PaymentMethod.qris,
+          ),
+          _buildPaymentMethodTile(
+            title: 'Debit Card',
+            icon: Icons.credit_card,
+            method: PaymentMethod.debit,
+          ),
+          _buildPaymentMethodTile(
+            title: 'Credit Card',
+            icon: Icons.credit_card_outlined,
+            method: PaymentMethod.credit,
+          ),
+          _buildPaymentMethodTile(
+            title: 'Virtual Account',
+            icon: Icons.account_balance_wallet,
+            method: PaymentMethod.va,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildPaymentMethodTile({

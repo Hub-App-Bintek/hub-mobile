@@ -18,6 +18,10 @@ abstract class AppRoutes {
   static const kyc = _Paths.kyc;
   static const createProject = _Paths.createProject;
   static const projectDetails = _Paths.projectDetails;
+  static const projectContracts = _Paths.projectContracts;
+  static const projectDraftDesign = _Paths.projectDraftDesign;
+  static const projectFinalDesign = _Paths.projectFinalDesign;
+  static const projectInvoice = _Paths.projectInvoice;
   static const projectReview = _Paths.projectReview;
   static const projects = _Paths.projects;
   static const payment = _Paths.payment;
@@ -42,6 +46,10 @@ abstract class _Paths {
   static const createProject = '/create-project';
   static const projectDetails = '/project-details';
   static const projectReview = '/project-review';
+  static const projectContracts = '/project-contracts';
+  static const projectDraftDesign = '/project-draft-design';
+  static const projectFinalDesign = '/project-final-design';
+  static const projectInvoice = '/project-invoice';
   static const projects = '/projects';
   static const payment = '/payment';
   static const paymentQr = '/payment/qr';

@@ -28,8 +28,11 @@ class PaymentQrScreen extends GetView<PaymentController> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.neutralLight),
               ),
-              child: const Icon(Icons.qr_code_scanner,
-                  size: 250, color: AppColors.neutralDarkest),
+              child: const Icon(
+                Icons.qr_code_scanner,
+                size: 250,
+                color: AppColors.neutralDarkest,
+              ),
             ),
             const SizedBox(height: 24),
             _buildTimerCard(),
@@ -59,12 +62,10 @@ class PaymentQrScreen extends GetView<PaymentController> {
         children: [
           Text('Time Limit', style: AppTextStyles.bodyM),
           Obx(
-                () =>
-                Text(
-                  controller.formattedTime,
-                  style: AppTextStyles.h3.copyWith(
-                      color: AppColors.warningDark),
-                ),
+            () => Text(
+              controller.formattedTime,
+              style: AppTextStyles.h3.copyWith(color: AppColors.warningDark),
+            ),
           ),
         ],
       ),

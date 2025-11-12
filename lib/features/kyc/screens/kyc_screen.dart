@@ -13,9 +13,7 @@ class KycScreen extends GetView<KycController> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme
-        .of(context)
-        .textTheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
       appBar: PkpAppBar(
@@ -60,11 +58,12 @@ class KycScreen extends GetView<KycController> {
             ),
             const SizedBox(height: 8),
             // Use Obx to listen for changes to the ktpImage
-            Obx(() =>
-                _buildUploadWidget(
-                  file: controller.ktpImage.value,
-                  onTap: () => controller.pickKtpImage(),
-                )),
+            Obx(
+              () => _buildUploadWidget(
+                file: controller.ktpImage.value,
+                onTap: () => controller.pickKtpImage(),
+              ),
+            ),
             const SizedBox(height: 24),
             Text(
               AppStrings.kycUploadSelfieKtpLabel,
@@ -74,11 +73,12 @@ class KycScreen extends GetView<KycController> {
             ),
             const SizedBox(height: 8),
             // Use Obx to listen for changes to the selfieKtpImage
-            Obx(() =>
-                _buildUploadWidget(
-                  file: controller.selfieKtpImage.value,
-                  onTap: () => controller.pickSelfieKtpImage(),
-                )),
+            Obx(
+              () => _buildUploadWidget(
+                file: controller.selfieKtpImage.value,
+                onTap: () => controller.pickSelfieKtpImage(),
+              ),
+            ),
           ],
         ),
       ),
@@ -99,8 +99,10 @@ class KycScreen extends GetView<KycController> {
   }
 
   // Refactored upload widget to be reusable
-  Widget _buildUploadWidget(
-      {required File? file, required VoidCallback onTap}) {
+  Widget _buildUploadWidget({
+    required File? file,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -114,14 +116,14 @@ class KycScreen extends GetView<KycController> {
         // Display the selected image or a placeholder icon
         child: file != null
             ? ClipRRect(
-          borderRadius: BorderRadius.circular(11),
-          child: Image.file(
-            file,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        )
+                borderRadius: BorderRadius.circular(11),
+                child: Image.file(
+                  file,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+              )
             : Icon(Icons.camera_alt, size: 48, color: Colors.grey[400]),
       ),
     );

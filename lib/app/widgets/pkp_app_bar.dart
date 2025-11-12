@@ -39,21 +39,55 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(title, style: appBarTheme.titleTextStyle ?? AppTextStyles.h4),
       leading: showNavigation ? effectiveLeading : null,
-      actions: actions
-          ?.map(
-            (action) => IconButton(
-              icon: Icon(
+      actions: actions?.map((action) {
+        final badgeCount = action.badgeCount ?? 0;
+        final badgeText = badgeCount > 99 ? '99+' : badgeCount.toString();
+        final iconChild = badgeCount > 0
+            ? Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Icon(
+                    action.icon,
+                    size: 24,
+                    color: action.color ?? AppColors.primaryDarkest,
+                  ),
+                  Positioned(
+                    top: -4,
+                    right: -6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.errorDark,
+                        borderRadius: BorderRadius.circular(99),
+                      ),
+                      child: Text(
+                        badgeText,
+                        style: AppTextStyles.bodyXS.copyWith(
+                          color: AppColors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : Icon(
                 action.icon,
                 size: 24,
                 color: action.color ?? AppColors.primaryDarkest,
-              ),
-              onPressed: action.onPressed,
-              tooltip:
-                  action.tooltip ??
-                  MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
-          )
-          .toList(),
+              );
+
+        return IconButton(
+          icon: iconChild,
+          onPressed: action.onPressed,
+          tooltip:
+              action.tooltip ??
+              MaterialLocalizations.of(context).openAppDrawerTooltip,
+        );
+      }).toList(),
       backgroundColor:
           backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
       elevation: elevation ?? appBarTheme.elevation ?? 0,
@@ -80,10 +114,12 @@ class PkpAppBarAction {
     this.onPressed,
     this.tooltip,
     this.color,
+    this.badgeCount,
   });
 
   final IconData icon;
   final VoidCallback? onPressed;
   final String? tooltip;
   final Color? color;
+  final int? badgeCount;
 }

@@ -28,6 +28,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
 
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
+  final RxInt chatBadgeCount = 3.obs;
 
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
@@ -103,25 +104,31 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   Future<void> init() async {
     userRole.value = await _userStorage.getRole();
     _token = await _userStorage.getToken();
-    if (userRole.value != UserRole.consultant) {
-      final coords = await _determineUserLocation();
-      _currentLat = coords.$1;
-      _currentLong = coords.$2;
-    } else {
-      _currentLat = 0;
-      _currentLong = 0;
-    }
+    // if (userRole.value != UserRole.consultant) {
+    //   final coords = await _determineUserLocation();
+    //   _currentLat = coords.$1;
+    //   _currentLong = coords.$2;
+    // } else {
+    //   _currentLat = 0;
+    //   _currentLong = 0;
+    // }
 
     if (_isLoggedIn) {
-      await Future.wait([
-        _fetchBalance(),
-        fetchProjects('PENDING'),
-        _fetchConsultants(),
-      ]);
-    } else {
-      projects.clear();
-      await _fetchConsultants();
+      _fetchBalance();
+      // await Future.wait([
+      //   fetchProjects('PENDING'),
+      //   _fetchConsultants(),
+      // ]);
     }
+
+    if (userRole.value == UserRole.consultant) {
+      projects.clear();
+      fetchProjects('PENDING');
+    }
+    // else {
+    //   projects.clear();
+    //   await _fetchConsultants();
+    // }
   }
 
   bool get _isLoggedIn => _token?.isNotEmpty ?? false;
@@ -236,13 +243,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
 
   void onSeeAllConsultants() {
     () async {
-      if (_currentLat == 0 &&
-          _currentLong == 0 &&
-          userRole.value != UserRole.consultant) {
-        final coords = await _determineUserLocation();
-        _currentLat = coords.$1;
-        _currentLong = coords.$2;
-      }
+      // if (_currentLat == 0 &&
+      //     _currentLong == 0 &&
+      //     userRole.value != UserRole.consultant) {
+      //   final coords = await _determineUserLocation();
+      //   _currentLat = coords.$1;
+      //   _currentLong = coords.$2;
+      // }
       navigateTo(
         AppRoutes.consultants,
         arguments: {

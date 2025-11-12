@@ -67,12 +67,12 @@ class PaymentController extends BaseController {
       }
     });
   }
+
   void completePayment() {
     _timer?.cancel();
 
     Get.toNamed(AppRoutes.paymentReceipt);
   }
-
 
   /// Formats remaining time into MM:SS format
   String get formattedTime {

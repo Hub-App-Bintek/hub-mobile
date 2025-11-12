@@ -64,11 +64,7 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   }
 
   void _updateProjectCounts() {
-    final counts = <String, int>{
-      'ACTIVE': 0,
-      'PENDING': 0,
-      'COMPLETED': 0,
-    };
+    final counts = <String, int>{'ACTIVE': 0, 'PENDING': 0, 'COMPLETED': 0};
     for (var project in _allProjects) {
       if (counts.containsKey(project.status)) {
         counts[project.status!] = counts[project.status]! + 1;

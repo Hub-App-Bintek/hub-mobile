@@ -26,20 +26,15 @@ class PaymentReceiptScreen extends GetView<PaymentController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.check_circle,
-              color: AppColors.success,
-              size: 80,
-            ),
+            const Icon(Icons.check_circle, color: AppColors.success, size: 80),
             const SizedBox(height: 16),
-            Text(
-              'Transaksi Berhasil',
-              style: AppTextStyles.h2,
-            ),
+            Text('Transaksi Berhasil', style: AppTextStyles.h2),
             const SizedBox(height: 8),
             Text(
               'Pembayaran telah berhasil diproses',
-              style: AppTextStyles.bodyM.copyWith(color: AppColors.neutralMedium),
+              style: AppTextStyles.bodyM.copyWith(
+                color: AppColors.neutralMedium,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -51,7 +46,9 @@ class PaymentReceiptScreen extends GetView<PaymentController> {
         padding: const EdgeInsets.all(16),
         child: ElevatedButton(
           onPressed: () {
-            Get.until((route) => route.settings.name == AppRoutes.projectDetails);
+            Get.until(
+              (route) => route.settings.name == AppRoutes.projectDetails,
+            );
           },
           child: const Text('Done'),
         ),

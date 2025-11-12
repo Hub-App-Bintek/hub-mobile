@@ -59,7 +59,11 @@ class ConsultantsScreen extends GetView<ConsultantsController> {
             slivers: [
               SliverPadding(
                 padding: const EdgeInsets.all(16),
-                sliver: SliverToBoxAdapter(child: _buildFeatureMenu()),
+                sliver: SliverToBoxAdapter(
+                  child: controller.projectId.isNotEmpty
+                      ? const SizedBox.shrink()
+                      : _buildFeatureMenu(),
+                ),
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(16),

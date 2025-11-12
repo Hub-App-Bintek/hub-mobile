@@ -33,13 +33,13 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
               controller.navigateTo(AppRoutes.chat);
             },
           ),
-          PkpAppBarAction(
-            icon: Icons.cancel,
-            onPressed: () {
-              // TODO: Cancel project
-              Get.back();
-            },
-          ),
+          // PkpAppBarAction(
+          //   icon: Icons.cancel,
+          //   onPressed: () {
+          //     // TODO: Cancel project
+          //     Get.back();
+          //   },
+          // ),
         ],
       ),
       body: SafeArea(
@@ -384,11 +384,11 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     onPressed: controller.approvePaymentLoading.value
                         ? null
                         : () {
-                      controller.goToPaymentPage();
-                    },
+                            controller.goToPaymentPage();
+                          },
                   ),
                 ),
-                const SizedBox(width: 12,),
+                const SizedBox(width: 12),
                 Expanded(
                   child: PkpElevatedButton(
                     text: 'Lakukan Pembayaran',
@@ -397,15 +397,15 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
                     onPressed: controller.approvePaymentLoading.value
                         ? null
                         : () async {
-                      controller.showConfirmationDialog(
-                        title: 'Konfirmasi Pembayaran',
-                        message:
-                        'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
-                        confirmText: 'Ya',
-                        onConfirm: controller.approvePayment,
-                        cancelText: 'Batal',
-                        onCancel: () {},
-                      );
+                            controller.showConfirmationDialog(
+                              title: 'Konfirmasi Pembayaran',
+                              message:
+                                  'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
+                              confirmText: 'Ya',
+                              onConfirm: controller.approvePayment,
+                              cancelText: 'Batal',
+                              onCancel: () {},
+                            );
                           },
                   ),
                 ),
@@ -503,55 +503,83 @@ class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
   Widget _buildStepper(ProjectDetailsResponse? details) {
     final steps = <_StepInfo>[];
 
-    if (details?.consultation != null) {
-      steps.add(
-        _StepInfo(
-          label: AppStrings.menuConsultation,
-          isCompleted: details?.consultation?.status == 'COMPLETED',
-        ),
-      );
-    }
+    // if (details?.consultation != null) {
+    steps.add(
+      _StepInfo(
+        label: AppStrings.menuConsultation,
+        isCompleted: details?.consultation?.status == 'COMPLETED',
+      ),
+    );
+    // }
 
-    if (details?.permit != null) {
-      steps.add(
-        _StepInfo(
-          label: AppStrings.menuLicensing,
-          isCompleted: (details?.permit?.isNotEmpty ?? false),
-        ),
-      );
-    }
+    // if (details?.permit != null) {
+    steps.add(
+      _StepInfo(
+        label: AppStrings.menuLicensing,
+        isCompleted: (details?.permit?.isNotEmpty ?? false),
+      ),
+    );
+    // }
 
-    if (details?.monitoring != null) {
-      steps.add(
-        _StepInfo(
-          label: AppStrings.menuMonitoring,
-          isCompleted: details?.monitoring != null,
-        ),
-      );
-    }
+    // if (details?.monitoring != null) {
+    steps.add(
+      _StepInfo(
+        label: AppStrings.menuMonitoring,
+        isCompleted: details?.monitoring != null,
+      ),
+    );
+    // }
 
     final firstIncompleteIndex = steps.indexWhere((step) => !step.isCompleted);
     final activeIndex = firstIncompleteIndex == -1
         ? steps.length - 1
         : firstIncompleteIndex;
 
+    final stepChildren = <Widget>[];
+    const stepFlex = 3;
+    const connectorFlex = 1;
+    for (var entry in steps.asMap().entries) {
+      final index = entry.key;
+      final step = entry.value;
+      final isActive = index == activeIndex;
+      stepChildren.add(
+        Expanded(
+          flex: stepFlex,
+          child: _StepIndicator(
+            index: index,
+            label: step.label,
+            isCompleted: step.isCompleted,
+            isActive: isActive,
+          ),
+        ),
+      );
+      if (index < steps.length - 1) {
+        stepChildren.add(
+          Expanded(
+            flex: connectorFlex,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 24),
+              child: Center(
+                child: Container(
+                  height: 1.2,
+                  color: AppColors.neutralLight,
+                  // margin: const EdgeInsets.symmetric(horizontal: 4),
+                ),
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
     return Container(
       color: AppColors.white,
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        children: steps.asMap().entries.map((entry) {
-          final index = entry.key;
-          final step = entry.value;
-          final isActive = index == activeIndex;
-          return Expanded(
-            child: _StepIndicator(
-              index: index,
-              label: step.label,
-              isCompleted: step.isCompleted,
-              isActive: isActive,
-            ),
-          );
-        }).toList(),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: stepChildren,
+        ),
       ),
     );
   }
@@ -684,10 +712,10 @@ class _StepIndicator extends StatelessWidget {
         ),
       );
     } else {
-      circleColor = AppColors.neutralLightest;
+      circleColor = AppColors.neutralLighter;
       icon = Text(
         '${index + 1}',
-        style: AppTextStyles.bodyS.copyWith(color: AppColors.neutralMedium),
+        style: AppTextStyles.bodyS.copyWith(color: AppColors.white),
       );
     }
 

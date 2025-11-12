@@ -4,6 +4,7 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
+import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
@@ -17,6 +18,16 @@ class HomeScreen extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PkpAppBar(
+        title: AppStrings.bottomNavHome,
+        actions: [
+          PkpAppBarAction(
+            icon: Icons.chat_bubble_outline,
+            badgeCount: controller.chatBadgeCount.value,
+            onPressed: controller.onNotificationTapped,
+          ),
+        ],
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: controller.refresh,
@@ -166,7 +177,9 @@ class HomeScreen extends GetView<HomeController> {
   Widget _buildFeatureGrid() {
     final featureItems = [];
     final role = controller.userRole.value;
-    if (role == UserRole.homeowner || role == null || role == UserRole.unknown) {
+    if (role == UserRole.homeowner ||
+        role == null ||
+        role == UserRole.unknown) {
       featureItems.add(
         const _FeatureItem(
           id: 'consultation',
@@ -210,15 +223,6 @@ class HomeScreen extends GetView<HomeController> {
           iconData: Icons.visibility_outlined,
         ),
       );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'chat',
-          title: AppStrings.homeFeatureChat,
-          iconData: Icons.chat_bubble_outline,
-          badgeValue: '99+',
-          showBadge: true,
-        ),
-      );
     } else {
       featureItems.add(
         const _FeatureItem(
@@ -232,15 +236,6 @@ class HomeScreen extends GetView<HomeController> {
           id: 'get_active_projects',
           title: AppStrings.homeProjectsActiveTitle,
           iconData: Icons.pending_actions_rounded,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'chat',
-          title: AppStrings.homeFeatureChat,
-          iconData: Icons.chat_bubble_outline,
-          badgeValue: '99+',
-          showBadge: true,
         ),
       );
     }

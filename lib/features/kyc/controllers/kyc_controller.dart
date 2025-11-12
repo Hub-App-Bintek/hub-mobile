@@ -40,9 +40,7 @@ class KycController extends BaseController {
 
   /// Picks an image from the gallery using file_picker.
   Future<File?> _pickImageFromGallery() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
+    final result = await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null && result.files.single.path != null) {
       return File(result.files.single.path!);

@@ -23,6 +23,10 @@ import 'package:pkp_hub/features/consultant/screens/consultants_screen.dart';
 import 'package:pkp_hub/features/consultant/bindings/consultant_portfolio_binding.dart';
 import 'package:pkp_hub/features/consultant/screens/consultant_portfolios_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
+import 'package:pkp_hub/features/project/screens/contracts_screen.dart';
+import 'package:pkp_hub/features/project/screens/draft_design_screen.dart';
+import 'package:pkp_hub/features/project/screens/final_design_screen.dart';
+import 'package:pkp_hub/features/project/screens/invoice_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_review_screen.dart';
 import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
 import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
@@ -82,6 +86,16 @@ class AppPages {
       name: _Paths.projectReview,
       page: () => const ProjectReviewScreen(),
     ),
+    GetPage(name: _Paths.projectContracts, page: () => const ContractsScreen()),
+    GetPage(
+      name: _Paths.projectDraftDesign,
+      page: () => const DraftDesignScreen(),
+    ),
+    GetPage(
+      name: _Paths.projectFinalDesign,
+      page: () => const FinalDesignScreen(),
+    ),
+    GetPage(name: _Paths.projectInvoice, page: () => const InvoiceScreen()),
     // Consultant portfolio screen
     GetPage(
       name: _Paths.consultantPortfolio,
@@ -112,7 +126,8 @@ class AppPages {
     GetPage(
       name: AppRoutes.paymentQr,
       page: () => const PaymentQrScreen(),
-      binding: PaymentBinding(), // Use the same binding to access the same controller instance
+      binding:
+          PaymentBinding(), // Use the same binding to access the same controller instance
     ),
     GetPage(
       name: AppRoutes.paymentReceipt,
