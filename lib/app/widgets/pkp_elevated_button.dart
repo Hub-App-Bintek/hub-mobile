@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_button_size.dart';
 
@@ -25,11 +26,13 @@ class PkpElevatedButton extends StatelessWidget {
       : size == PkpButtonSize.medium
       ? 32
       : 52;
+
   double get _spinnerSize => size == PkpButtonSize.small
       ? 12
       : size == PkpButtonSize.medium
       ? 16
       : 26;
+
   EdgeInsetsGeometry get _padding => size == PkpButtonSize.small
       ? const EdgeInsets.symmetric(horizontal: 8)
       : const EdgeInsets.symmetric(horizontal: 12);
@@ -45,13 +48,17 @@ class PkpElevatedButton extends StatelessWidget {
           minimumSize: Size(0, _effectiveHeight),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.compact,
+          backgroundColor: AppColors.primaryDark,
+          foregroundColor: AppColors.white,
+          disabledBackgroundColor: AppColors.inputBorder,
+          disabledForegroundColor: AppColors.neutralMedium,
         ),
         child: isLoading
             ? SizedBox(
                 height: _spinnerSize,
                 width: _spinnerSize,
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                child: const CircularProgressIndicator(
+                  color: AppColors.krem,
                   strokeWidth: 2.5,
                 ),
               )

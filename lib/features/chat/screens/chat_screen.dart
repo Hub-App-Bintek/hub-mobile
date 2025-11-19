@@ -11,7 +11,6 @@ class ChatScreen extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
       appBar: const PkpAppBar(title: 'Consultant Name'),
       body: Column(
         children: [

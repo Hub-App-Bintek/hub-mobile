@@ -7,8 +7,9 @@ abstract class AppRoutes {
   static const register = _Paths.register;
   static const verifyOtp = _Paths.verifyOtp;
   static const main = _Paths.main;
+  static const consultation = _Paths.consultation;
+  static const consultantDetails = _Paths.consultantDetails;
   static const consultants = _Paths.consultants;
-  static const consultantPortfolio = _Paths.consultantPortfolio;
   static const inbox = _Paths.inbox;
   static const chat = _Paths.chat;
   static const licensing = _Paths.licensing;
@@ -24,6 +25,9 @@ abstract class AppRoutes {
   static const projectInvoice = _Paths.projectInvoice;
   static const projectReview = _Paths.projectReview;
   static const projects = _Paths.projects;
+  static const designType = _Paths.designType;
+  static const prototypeDesigns = _Paths.prototypeDesigns;
+  static const prototypeDesignDetails = _Paths.prototypeDesignDetails;
   static const payment = _Paths.payment;
   static const paymentQr = _Paths.paymentQr;
   static const paymentReceipt = _Paths.paymentReceipt;
@@ -34,8 +38,9 @@ abstract class _Paths {
   static const register = '/register';
   static const verifyOtp = '/verify-otp';
   static const main = '/main';
+  static const consultation = '/consultation';
+  static const consultantDetails = '/consultation-details';
   static const consultants = '/consultants';
-  static const consultantPortfolio = '/consultant-portfolio';
   static const inbox = '/inbox';
   static const chat = '/chat';
   static const licensing = '/licensing';
@@ -51,6 +56,9 @@ abstract class _Paths {
   static const projectFinalDesign = '/project-final-design';
   static const projectInvoice = '/project-invoice';
   static const projects = '/projects';
+  static const designType = '/design-type';
+  static const prototypeDesigns = '/prototype-designs';
+  static const prototypeDesignDetails = '/prototype-design-details';
   static const payment = '/payment';
   static const paymentQr = '/payment/qr';
   static const paymentReceipt = '/payment/receipt';

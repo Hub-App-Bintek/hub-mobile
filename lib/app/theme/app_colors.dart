@@ -4,28 +4,36 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._(); // This class is not meant to be instantiated.
 
+  // --- Brand Palette --- //
+
+  // Anchored to the provided palette chips.
+  static const Color krem = Color(0xFFF2EEDF);
+  static const Color khaki = Color(0xFFD5C58A);
+  static const Color darkAqua = Color(0xFF0E5B73);
+  static const Color midnightGreen = Color(0xFF084C61);
+
   // --- Core Palette --- //
 
   // Primary (Highlight)
-  static const Color primaryDarkest = Color(0xFF006FFD); // D66FFD
-  static const Color primaryDark = Color(0xFF2887FF); // 2887FF
-  static const Color primary = Color(0xFF6FB6FF); // 6FB6FF
-  static const Color primaryLight = Color(0xFFB6D8FF); // B6D8FF
-  static const Color primaryLightest = Color(0xFFEAF2FF); // EAF2FF
+  static const Color primaryDarkest = midnightGreen;
+  static const Color primaryDark = darkAqua;
+  static const Color primary = Color(0xFF2F7486); // mid teal from brand ramp
+  static const Color primaryLight = Color(0xFF5E97A4);
+  static const Color primaryLightest = Color(0xFFD9E6EA);
 
   // Neutral
   // Dark
-  static const Color neutralDarkest = Color(0xFF1F2024); // 1F2024
-  static const Color neutralDark = Color(0xFF2F3036); // 2F3036
-  static const Color neutralMediumDark = Color(0xFF404A50); // 404A50
-  static const Color neutralMedium = Color(0xFF71727A); // 71727A
-  static const Color neutralMediumLight = Color(0xFFBFD0D8); // BFD0D8
+  static const Color neutralDarkest = Color(0xFF0B2530);
+  static const Color neutralDark = Color(0xFF123946);
+  static const Color neutralMediumDark = Color(0xFF1C5060);
+  static const Color neutralMedium = Color(0xFF2E6A7B);
+  static const Color neutralMediumLight = Color(0xFF538A99);
   // Light
-  static const Color neutralLight = Color(0xFFC5D6DD); // C5D6DD
-  static const Color neutralLighter = Color(0xFFD4D6DD); // D4D6DD
-  static const Color neutralLightAlt = Color(0xFFE0E0F1); // E0E0F1
-  static const Color neutralLightest = Color(0xFFF8F9FE); // F8F9FE
-  static const Color white = Color(0xFFFFFFFF); // FFFFFF
+  static const Color neutralLight = khaki;
+  static const Color neutralLighter = Color(0xFFDFCFA5);
+  static const Color neutralLightAlt = Color(0xFFECE2C5);
+  static const Color neutralLightest = krem;
+  static const Color white = Color(0xFFFFFFFF);
 
   // --- Support Palette --- //
 
@@ -43,4 +51,8 @@ class AppColors {
   static const Color errorDark = Color(0xFFED3241); // ED3241
   static const Color error = Color(0xFFFF618D); // FF618D
   static const Color errorLight = Color(0xFFFFF2F5); // FFF2F5
+
+  // Controls / Inputs
+  static const Color inputSurface = Color(0xFFF8F9FE);
+  static const Color inputBorder = Color(0xFFC5C6CC);
 }

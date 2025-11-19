@@ -3,23 +3,32 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 
-class ConsultantsController extends BaseController {
+class ConsultationController extends BaseController {
   final GetConsultantsUseCase _getConsultantsUseCase;
+  final UserStorage _userStorage;
   final String projectId;
   final double _lat;
   final double _long;
   final RxString selectedSort = ''.obs;
+  final bool showCreateCta;
+  final bool requireLoginForAction;
+  final String designTypeId;
 
-  ConsultantsController(
+  ConsultationController(
     this._getConsultantsUseCase,
+    this._userStorage,
     this.projectId,
     this._lat,
     this._long,
     String? initialSort,
+    this.showCreateCta,
+    this.requireLoginForAction,
+    this.designTypeId,
   );
 
   // Reactive state
@@ -108,15 +117,50 @@ class ConsultantsController extends BaseController {
     isLoading.value = false;
   }
 
-  void goToPortfolio(String consultantId, double price) {
-    navigateTo(
-      AppRoutes.consultantPortfolio,
+  void goToPortfolio(Consultant consultant) {
+    final consultantId = consultant.id ?? '';
+    () async {
+      if (requireLoginForAction) {
+        final loggedIn = await _ensureLoggedIn();
+        if (!loggedIn) return;
+      }
+      navigateTo(
+        AppRoutes.consultantDetails,
+        arguments: {
+          'consultantId': consultantId,
+          'projectId': projectId,
+          'isPaidConsultation': (consultant.packageCost ?? 0) > 0.0,
+          'consultation': consultant,
+          'requireLoginForAction': requireLoginForAction,
+        },
+      );
+    }();
+  }
+
+  void onCreatePressed() {
+    () async {
+      final loggedIn = await _ensureLoggedIn();
+      if (!loggedIn) return;
+      navigateTo(AppRoutes.createProject, arguments: {'type': designTypeId});
+    }();
+  }
+
+  Future<bool> _ensureLoggedIn() async {
+    final token = await _userStorage.getToken();
+    if (token != null && token.isNotEmpty) {
+      return true;
+    }
+
+    await navigateToForResult<dynamic>(
+      AppRoutes.login,
       arguments: {
-        'consultantId': consultantId,
-        'projectId': projectId,
-        'isPaidConsultation': price > 0.0,
+        'fromRoute': Get.currentRoute,
+        'returnArguments': Get.arguments,
       },
     );
+
+    final refreshedToken = await _userStorage.getToken();
+    return refreshedToken != null && refreshedToken.isNotEmpty;
   }
 
   @override
@@ -130,5 +174,9 @@ class ConsultantsController extends BaseController {
     if (selectedSort.value == sortKey) return;
     selectedSort.value = sortKey;
     refreshList();
+  }
+
+  void onSeeAllConsultants() {
+    navigateTo(AppRoutes.consultants);
   }
 }

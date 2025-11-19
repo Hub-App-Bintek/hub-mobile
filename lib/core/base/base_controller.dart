@@ -211,11 +211,13 @@ abstract class BaseController extends GetxController {
 
   /// Navigates to the specified named route.
   void navigateTo(String route, {dynamic arguments}) {
+    _logger.i('navigateTo -> $route args: $arguments');
     Get.toNamed(route, arguments: arguments);
   }
 
   /// Navigates to a named route and awaits a result.
   Future<T?> navigateToForResult<T>(String route, {dynamic arguments}) async {
+    _logger.i('navigateToForResult -> $route args: $arguments');
     final result = await Get.toNamed(route, arguments: arguments);
     if (result is T) return result;
     return null;
@@ -224,17 +226,20 @@ abstract class BaseController extends GetxController {
   /// Navigates back to the previous screen.
   /// You can optionally provide a [result] to the previous screen.
   void goBack<T>({T? result}) {
+    _logger.i('goBack result: $result');
     Get.back(result: result);
   }
 
   /// Navigates to a new screen and removes all previous screens from the stack.
   /// Useful for post-login or logout flows.
   void navigateOffAll(String route, {dynamic arguments}) {
+    _logger.i('navigateOffAll -> $route args: $arguments');
     Get.offAllNamed(route, arguments: arguments);
   }
 
   /// Navigates to a new screen and removes the current screen from the stack.
   void navigateOff(String route, {dynamic arguments}) {
+    _logger.i('navigateOff -> $route args: $arguments');
     Get.offNamed(route, arguments: arguments);
   }
 
@@ -249,6 +254,9 @@ abstract class BaseController extends GetxController {
     required String untilRoute,
     dynamic arguments,
   }) {
+    _logger.i(
+      'navigateAndClearUntil -> $route until: $untilRoute args: $arguments',
+    );
     Get.offNamedUntil(
       route,
       (route) => route.settings.name == untilRoute,

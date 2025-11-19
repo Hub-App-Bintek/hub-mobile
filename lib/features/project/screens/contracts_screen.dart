@@ -3,14 +3,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_button_size.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
-import 'package:pkp_hub/core/constants/app_strings.dart';
 
 class ContractsScreen extends StatelessWidget {
   const ContractsScreen({super.key});

@@ -3,16 +3,15 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/features/inbox/controllers/inbox_controller.dart';
+import 'package:pkp_hub/features/chat/controllers/chats_controller.dart';
 
-class InboxScreen extends GetView<InboxController> {
-  const InboxScreen({super.key});
+class ChatsScreen extends GetView<ChatsController> {
+  const ChatsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PkpAppBar(title: 'Inbox'),
+      appBar: const PkpAppBar(title: 'Chat'),
       body: Obx(
         () => ListView.separated(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

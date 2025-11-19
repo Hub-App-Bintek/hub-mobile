@@ -15,95 +15,154 @@ class LoginScreen extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: const PkpAppBar(leading: Icons.close_rounded),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        // Use a LayoutBuilder and SingleChildScrollView to create a scrollable
-        // view that also keeps content centered vertically. This robustly
-        // prevents pixel overflows when the keyboard appears.
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: IntrinsicHeight(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    // The invalid 'spacing' property is removed. Spacing is now
-                    // handled by explicit SizedBox widgets for clarity and correctness.
-                    children: <Widget>[
-                      const Spacer(),
-                      Text(
-                        AppStrings.loginPageTitle,
-                        textAlign: TextAlign.center,
-                        style: AppTextStyles.h2,
-                      ),
-                      const SizedBox(height: 48),
-                      Obx(
-                        () => PkpTextFormField(
-                          controller: controller.emailController,
-                          labelText: AppStrings.emailAddressLabel,
-                          hintText: AppStrings.emailAddressHint,
-                          type: PkpTextFormFieldType.email,
-                          errorText: controller.emailError.value,
-                        ),
-                      ),
-                      const SizedBox(height: 16), // Explicit spacing
-                      Obx(
-                        () => PkpTextFormField(
-                          controller: controller.passwordController,
-                          labelText: AppStrings.passwordLabel,
-                          hintText: AppStrings.passwordHint,
-                          type: PkpTextFormFieldType.password,
-                          errorText: controller.passwordError.value,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () {
-                            // TODO: Redirect to forgot password screen
-                          },
-                          child: const Text(AppStrings.forgotPasswordButton),
-                        ),
-                      ),
-                      const SizedBox(height: 16), // Explicit spacing
-                      Obx(() {
-                        final isEnabled =
-                            controller.isFormValid.value &&
-                            !controller.isRequesting.value;
-                        return PkpElevatedButton(
-                          onPressed: isEnabled
-                              ? () {
-                                  controller.login();
-                                }
-                              : null,
-                          text: AppStrings.loginButton,
-                          isLoading: controller.isRequesting.value,
-                          enabled: controller.isFormValid.value,
-                        );
-                      }),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(AppStrings.notAMemberPrompt),
-                          TextButton(
-                            onPressed: () {
-                              controller.navigateTo(AppRoutes.register);
-                            },
-                            child: const Text(AppStrings.registerNowButton),
-                          ),
-                        ],
-                      ),
-                    ],
+      appBar: const PkpAppBar(
+        leading: Icons.close_rounded,
+        backgroundColor: AppColors.white,
+        leadingColor: AppColors.primaryDark,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 72),
+              Text(
+                AppStrings.loginPageTitle,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.h1.copyWith(
+                  color: AppColors.neutralDarkest,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Obx(
+                () => PkpTextFormField(
+                  controller: controller.emailController,
+                  labelText: AppStrings.emailAddressLabel,
+                  hintText: AppStrings.emailAddressHint,
+                  type: PkpTextFormFieldType.email,
+                  errorText: controller.emailError.value,
+                  filled: true,
+                  fillColor: AppColors.inputSurface,
+                  borderColor: AppColors.inputBorder,
+                  borderWidth: 0.8,
+                  hintStyle: AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralMedium.withValues(alpha: 0.6),
+                  ),
+                  labelStyle: AppTextStyles.bodyS.copyWith(
+                    color: AppColors.neutralDarkest,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-            );
-          },
+              const SizedBox(height: 16),
+              Obx(
+                () => PkpTextFormField(
+                  controller: controller.passwordController,
+                  labelText: AppStrings.passwordLabel,
+                  hintText: AppStrings.passwordHint,
+                  type: PkpTextFormFieldType.password,
+                  errorText: controller.passwordError.value,
+                  filled: true,
+                  fillColor: AppColors.inputSurface,
+                  borderColor: AppColors.inputBorder,
+                  borderWidth: 0.8,
+                  hintStyle: AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralMedium.withValues(alpha: 0.6),
+                  ),
+                  labelStyle: AppTextStyles.bodyS.copyWith(
+                    color: AppColors.neutralDarkest,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // TODO: Redirect to forgot password screen
+                  },
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 32),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Text(
+                    AppStrings.forgotPasswordButton,
+                    style: AppTextStyles.bodyS.copyWith(
+                      color: AppColors.midnightGreen,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Obx(() {
+                final isEnabled =
+                    controller.isFormValid.value &&
+                    !controller.isRequesting.value;
+                return PkpElevatedButton(
+                  onPressed: isEnabled ? controller.login : null,
+                  text: AppStrings.loginButton,
+                  isLoading: controller.isRequesting.value,
+                  enabled: controller.isFormValid.value,
+                );
+              }),
+              const SizedBox(height: 32),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Divider(color: AppColors.inputBorder, thickness: 1),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'atau',
+                      style: AppTextStyles.bodyXS.copyWith(
+                        color: AppColors.neutralMedium.withValues(alpha: 0.7),
+                      ),
+                    ),
+                  ),
+                  const Expanded(
+                    child: Divider(color: AppColors.inputBorder, thickness: 1),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppStrings.notAMemberPrompt,
+                    style: AppTextStyles.bodyM.copyWith(
+                      color: AppColors.neutralMedium.withValues(alpha: 0.7),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () {
+                      controller.navigateTo(AppRoutes.register);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      minimumSize: const Size(0, 32),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: Text(
+                      AppStrings.registerNowButton,
+                      style: AppTextStyles.bodyL.copyWith(
+                        color: AppColors.midnightGreen,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

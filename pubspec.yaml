@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.0.10+1
 
   # --- Pinned Dependencies for Stability ---
   dio: ^5.5.0+1
@@ -83,6 +84,7 @@ flutter:
     - .env.development
     - .env.staging
     - .env.production
+    - assets/icons/
 
 dependency_overrides:
   geolocator_android: ^5.0.2
