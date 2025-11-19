@@ -12,106 +12,157 @@ class ConsultantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final card = Container(
+    final price = consultant.packageCost ?? consultant.hourlyRate;
+    final hasRating = consultant.rating != null;
+    final hasPrice = price != null;
+
+    Widget content = Container(
       width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       decoration: BoxDecoration(
-        color: AppColors.primaryLightest,
+        color: AppColors.inputSurface,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(12),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 4),
-          _Avatar(avatarUrl: consultant.avatarUrl),
-          const Spacer(),
+          _Avatar(avatarUrl: consultant.avatarUrl, name: consultant.fullName),
+          const SizedBox(height: 12),
           Text(
-            consultant.fullName ?? '',
+            consultant.fullName ?? '-',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.bodyM.copyWith(
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bodyL.copyWith(
+              color: AppColors.neutralDarkest,
               fontWeight: FontWeight.w600,
-              color: AppColors.neutralDarkest,
             ),
           ),
           const SizedBox(height: 4),
           Text(
-            Formatters.currency(consultant.packageCost ?? 0),
-            style: AppTextStyles.bodyS.copyWith(
-              color: AppColors.neutralDarkest,
-            ),
+            consultant.specialty ?? '-',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bodyL.copyWith(color: AppColors.neutralMedium),
           ),
-          const SizedBox(height: 4),
-          Text(
-            consultant.location ?? '-',
-            style: AppTextStyles.bodyS.copyWith(
-              color: AppColors.neutralDarkest,
-            ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                size: 16,
+                color: AppColors.neutralMedium,
+              ),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(
+                  consultant.location ?? consultant.address ?? '-',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralMedium,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            mainAxisAlignment: hasRating && hasPrice
+                ? MainAxisAlignment.spaceBetween
+                : MainAxisAlignment.center,
+            children: [
+              if (hasRating) _Rating(value: consultant.rating!),
+              if (hasRating && hasPrice) const Spacer(),
+              if (hasPrice)
+                Text(
+                  Formatters.currency(price),
+                  style: AppTextStyles.bodyL.copyWith(
+                    color: AppColors.neutralDarkest,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+            ],
           ),
         ],
       ),
     );
 
-    final badge = consultant.rating != null
-        ? Positioned(
-            top: 10,
-            right: 10,
-            child: _RatingBadge(rating: consultant.rating!),
-          )
-        : null;
-
-    Widget content = SizedBox(
-      width: double.infinity,
-      child: Stack(children: [card, if (badge != null) badge]),
-    );
-
     if (onTap != null) {
-      content = GestureDetector(onTap: onTap, child: content);
+      content = InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: content,
+      );
     }
     return content;
   }
 }
 
 class _Avatar extends StatelessWidget {
-  const _Avatar({this.avatarUrl});
+  const _Avatar({this.avatarUrl, this.name});
 
   final String? avatarUrl;
+  final String? name;
 
   @override
   Widget build(BuildContext context) {
     final hasImage = avatarUrl?.trim().isNotEmpty == true;
+    final initials = (name ?? '').trim().isNotEmpty ? name!.trim()[0] : '';
+
     return CircleAvatar(
-      radius: 48,
-      backgroundColor: AppColors.primaryLight,
+      radius: 32,
+      backgroundColor: AppColors.primaryLightest,
       backgroundImage: hasImage ? NetworkImage(avatarUrl!) : null,
       child: hasImage
           ? null
-          : const Icon(Icons.person, color: AppColors.primaryDarkest),
+          : Text(
+              initials,
+              style: AppTextStyles.h4.copyWith(
+                color: AppColors.primaryDarkest,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
     );
   }
 }
 
-class _RatingBadge extends StatelessWidget {
-  const _RatingBadge({required this.rating});
+class _Rating extends StatelessWidget {
+  const _Rating({required this.value});
 
-  final double rating;
+  final double value;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.primaryDarkest,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star, size: 14, color: AppColors.white),
+          const Icon(
+            Icons.star_rounded,
+            size: 16,
+            color: AppColors.warningDark,
+          ),
           const SizedBox(width: 4),
           Text(
-            rating.toStringAsFixed(1),
-            style: AppTextStyles.actionS.copyWith(color: AppColors.white),
+            value.toStringAsFixed(1),
+            style: AppTextStyles.bodyM.copyWith(
+              color: AppColors.neutralDarkest,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),

@@ -133,11 +133,11 @@ class ProjectDetailsController extends BaseController {
   final RxBool approveLoading = false.obs;
   final RxBool rejectLoading = false.obs;
 
-  // Loading flags for consultant confirmation actions
+  // Loading flags for consultation confirmation actions
   final RxBool acceptConsultationLoading = false.obs;
   final RxBool rejectConsultationLoading = false.obs;
 
-  // Loading flag for consultant marking survey as done
+  // Loading flag for consultation marking survey as done
   final RxBool completeSurveyLoading = false.obs;
 
   // Loading flags for contract actions
@@ -548,7 +548,7 @@ class ProjectDetailsController extends BaseController {
     );
   }
 
-  // Handle reschedule submission by consultant when last schedule is REJECTED
+  // Handle reschedule submission by consultation when last schedule is REJECTED
   Future<void> submitRescheduleSurvey(
     CreateSurveyScheduleRequest request,
   ) async {
@@ -647,7 +647,7 @@ class ProjectDetailsController extends BaseController {
     }
   }
 
-  // Mark survey as completed by consultant
+  // Mark survey as completed by consultation
   Future<void> completeSurvey() async {
     final consultationId = details.value?.consultation?.consultationId;
     if (consultationId == null || consultationId.isEmpty) {
@@ -1373,14 +1373,14 @@ class ProjectDetailsController extends BaseController {
         status == 'MENUNGGU_APPROVAL_JADWAL';
   }
 
-  /// Visibility rule for consultant to mark survey as done
+  /// Visibility rule for consultation to mark survey as done
   bool get shouldShowCompleteSurveyButton {
     final status = details.value?.consultation?.status?.toUpperCase();
     return userRole.value == UserRole.consultant &&
         status == 'SURVEY_DIJADWALKAN';
   }
 
-  /// Visibility rules for consultant contract actions (download & upload)
+  /// Visibility rules for consultation contract actions (download & upload)
   bool get shouldShowContractActions {
     final status = details.value?.consultation?.status?.toUpperCase();
     return userRole.value == UserRole.consultant &&
@@ -1406,7 +1406,7 @@ class ProjectDetailsController extends BaseController {
   /// Visibility rule for "Tanda Tangan Kontrak" button
   /// Shows when status is MENUNGGU_TANDA_TANGAN_KONTRAK with additional role-based rules:
   /// - If state is CONSULTANT_SIGNED => show only for homeowner
-  /// - If state is HOMEOWNER_SIGNED => show only for consultant
+  /// - If state is HOMEOWNER_SIGNED => show only for consultation
   bool get shouldShowSignContractButton {
     final status = details.value?.consultation?.status?.toUpperCase();
     if (status != 'MENUNGGU_TANDA_TANGAN_KONTRAK') return false;
@@ -1426,7 +1426,7 @@ class ProjectDetailsController extends BaseController {
   }
 
   /// Visibility rule for showing "Request Payment" action
-  /// Shown when consultation status is MENUNGGU_REQUEST_PAYMENT and user is consultant
+  /// Shown when consultation status is MENUNGGU_REQUEST_PAYMENT and user is consultation
   bool get shouldShowRequestPaymentButton {
     final status = details.value?.consultation?.status?.toUpperCase();
     return userRole.value == UserRole.consultant &&
@@ -1441,8 +1441,8 @@ class ProjectDetailsController extends BaseController {
         status == 'MENUNGGU_PEMBAYARAN';
   }
 
-  /// Visibility rule for consultant to upload documents when consultation is active
-  /// Show when user is consultant, consultation.status == 'AKTIF', and
+  /// Visibility rule for consultation to upload documents when consultation is active
+  /// Show when user is consultation, consultation.status == 'AKTIF', and
   /// the first consultation history item (from the detail response order)
   /// has state == 'STARTED' or 'REVISION_REQUESTED' .
   bool get shouldShowUploadDocumentsButton {

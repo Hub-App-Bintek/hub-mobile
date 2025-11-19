@@ -52,6 +52,14 @@ abstract class AppStrings {
   static const landLocationTitle = 'Lokasi Lahan';
   static const projectNameLabel = 'Nama Proyek*';
   static const projectNameHint = 'Masukkan Nama Proyek';
+  static const provinceLabel = 'Provinsi*';
+  static const provinceHint = 'Pilih Provinsi';
+  static const cityLabel = 'Kabupaten/Kota*';
+  static const cityHint = 'Pilih Kabupaten/Kota';
+  static const subdistrictLabel = 'Kecamatan*';
+  static const subdistrictHint = 'Pilih Kecamatan';
+  static const villageLabel = 'Kelurahan*';
+  static const villageHint = 'Pilih Kelurahan';
   static const locationDetailsLabel = 'Detail Lokasi*';
   static const locationDetailsHint = 'Masukkan Detail Lokasi';
   static const typeLabel = 'Tipe*';
@@ -67,6 +75,10 @@ abstract class AppStrings {
 
   // Create Project Validation
   static const projectNameRequired = 'Nama proyek wajib diisi';
+  static const provinceRequired = 'Provinsi wajib dipilih';
+  static const cityRequired = 'Kabupaten/Kota wajib dipilih';
+  static const subdistrictRequired = 'Kecamatan wajib dipilih';
+  static const villageRequired = 'Kelurahan wajib dipilih';
   static const locationDetailsRequired = 'Detail lokasi wajib diisi';
   static const landAreaRequired = 'Luas lahan wajib diisi';
 
@@ -83,8 +95,18 @@ abstract class AppStrings {
 
   // --- Bottom Navigation ---
   static const bottomNavHome = 'Beranda';
-  static const bottomNavProject = 'Proyek';
+  static const bottomNavProject = 'Proyek Saya';
   static const bottomNavProfile = 'Profil';
+  static const designTypeTitle = 'Konsultasi Desain';
+  static const designTypeNonPrototypeTitle = 'Desain Non Prototype';
+  static const designTypePrototypeTitle = 'Desain Prototype';
+  static const designTypeNonPrototypeSubtitle =
+      'Melakukan konsultasi desain dengan arsitek';
+  static const designTypePrototypeSubtitle =
+      'Desain prototype untuk tipe rumah <36m2';
+
+  static const prototypeDesignsTitle = 'Desain Prorotype';
+  static const prototypeDesignsCta = 'Download Dokumen';
 
   // Error Messages
   static const errorTitle = 'Terjadi Kesalahan';
@@ -107,6 +129,13 @@ abstract class AppStrings {
   static const homeFeatureMonitoring = 'Monitoring';
   static const homeFeatureSupervision = 'Pengawasan';
   static const homeFeatureChat = 'Chat';
+  static const homeFeatureDesignConsultation = 'Konsultasi Desain';
+  static const homeFeatureLicensingFacilities = 'Fasilitas Perizinan';
+  static const homeFeatureConstructionLabor = 'Tenaga Konstruksi';
+  static const homeFeatureStoreMaterial = 'Toko & Material';
+  static const homeFeatureFinancingFacilities = 'Fasilitas Pembiayaan';
+  static const homeFeatureConstructionSupervision = 'Pengawasan Konstruksi';
+  static const homeWelcomeTitle = 'Selamat Datang!';
 
   // HomeScreen Bottom Sheet
   static const chooseProjectTitle = 'Pilih Project';
@@ -165,4 +194,6 @@ abstract class AppStrings {
 
   // Consultant list
   static const consultantSortLabel = 'Urutkan berdasarkan';
+  static const createConsultationCta = 'Buat Konsultasi';
+  static const recommendationTitle = 'Rekomendasi Konsultan';
 }

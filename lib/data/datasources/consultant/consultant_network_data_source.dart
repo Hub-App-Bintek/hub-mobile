@@ -69,7 +69,7 @@ class ConsultantNetworkDataSourceImpl implements ConsultantNetworkDataSource {
     } catch (e) {
       return Error(
         ServerFailure(
-          message: 'Failed to parse consultant portfolios response: $e',
+          message: 'Failed to parse consultation portfolios response: $e',
         ),
       );
     }

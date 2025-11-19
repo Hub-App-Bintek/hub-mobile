@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_button_size.dart';
 
@@ -25,37 +26,42 @@ class PkpOutlinedButton extends StatelessWidget {
       : size == PkpButtonSize.medium
       ? 32
       : 52;
+
   double get _spinnerSize => size == PkpButtonSize.small
       ? 12
       : size == PkpButtonSize.medium
       ? 16
       : 26;
+
   EdgeInsetsGeometry get _padding => size == PkpButtonSize.small
       ? const EdgeInsets.symmetric(horizontal: 8)
       : const EdgeInsets.symmetric(horizontal: 12);
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    // const primary = AppColors.primaryDarkest;
 
     return SizedBox(
       height: _effectiveHeight,
       child: OutlinedButton(
         onPressed: (!enabled || isLoading) ? null : onPressed,
         style: OutlinedButton.styleFrom(
-          side: BorderSide(color: primary),
-          foregroundColor: primary,
+          side: const BorderSide(color: AppColors.primaryDark),
+          backgroundColor: AppColors.white,
+          foregroundColor: AppColors.primaryDark,
           padding: _padding,
           minimumSize: Size(0, _effectiveHeight),
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           visualDensity: VisualDensity.compact,
+          disabledBackgroundColor: AppColors.white,
+          disabledForegroundColor: AppColors.neutralMedium,
         ),
         child: isLoading
             ? SizedBox(
                 height: _spinnerSize,
                 width: _spinnerSize,
-                child: CircularProgressIndicator(
-                  color: primary,
+                child: const CircularProgressIndicator(
+                  color: AppColors.primaryDark,
                   strokeWidth: 2.5,
                 ),
               )

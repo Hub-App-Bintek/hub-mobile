@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,24 +18,29 @@ import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
-import 'package:pkp_hub/features/consultant/controllers/consultants_controller.dart';
 
-class CreateProjectController extends BaseController {
+class LocationDetailsController extends BaseController {
   final CreateProjectUseCase _createProjectUseCase;
   final CreateConsultationUseCase _createConsultationUseCase;
   final String? _consultantId;
   final bool _isPaidConsultation;
+  final String? _initialProjectTypeId;
 
-  CreateProjectController(
+  LocationDetailsController(
     this._createProjectUseCase,
     this._createConsultationUseCase,
     this._consultantId,
     this._isPaidConsultation,
+    this._initialProjectTypeId,
   );
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController projectNameController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController subdistrictController = TextEditingController();
+  final TextEditingController villageController = TextEditingController();
   final TextEditingController locationDetailsController =
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
@@ -46,12 +52,20 @@ class CreateProjectController extends BaseController {
   RxBool isLocationError = false.obs;
   RxnString locationErrorMessage = RxnString();
   RxBool isProjectNameValid = false.obs;
+  RxBool isProvinceValid = false.obs;
+  RxBool isCityValid = false.obs;
+  RxBool isSubdistrictValid = false.obs;
+  RxBool isVillageValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
   RxBool isLandAreaValid = false.obs;
   RxBool isIncomeValid = false.obs;
 
   Rxn<LatLng> selectedLocation = Rxn<LatLng>();
   RxnString projectNameError = RxnString();
+  RxnString provinceError = RxnString();
+  RxnString cityError = RxnString();
+  RxnString subdistrictError = RxnString();
+  RxnString villageError = RxnString();
   RxnString locationDetailsError = RxnString();
   RxnString landAreaError = RxnString();
   RxnString incomeError = RxnString();
@@ -63,6 +77,34 @@ class CreateProjectController extends BaseController {
   bool get isFormValid => _isFormValid.value;
 
   RxBool isRequesting = false.obs;
+  final List<String> provinceOptions = const [
+    'DKI Jakarta',
+    'Jawa Barat',
+    'Jawa Tengah',
+    'Jawa Timur',
+  ];
+  final List<String> cityOptions = const [
+    'Jakarta Selatan',
+    'Jakarta Barat',
+    'Jakarta Timur',
+    'Jakarta Utara',
+  ];
+  final List<String> subdistrictOptions = const [
+    'Kebayoran Baru',
+    'Kebayoran Lama',
+    'Menteng',
+    'Cilandak',
+  ];
+  final List<String> villageOptions = const [
+    'Gandaria Utara',
+    'Senayan',
+    'Pulo',
+    'Kemang',
+  ];
+  RxnString selectedProvince = RxnString();
+  RxnString selectedCity = RxnString();
+  RxnString selectedSubdistrict = RxnString();
+  RxnString selectedVillage = RxnString();
 
   // Debounce timer for map position updates
   Timer? _positionUpdateTimer;
@@ -78,10 +120,26 @@ class CreateProjectController extends BaseController {
   void onInit() {
     super.onInit();
     _getUserLocation();
+    _hydrateInitialType();
     projectNameController.addListener(_validateProjectName);
+    provinceController.addListener(_validateProvince);
+    cityController.addListener(_validateCity);
+    subdistrictController.addListener(_validateSubdistrict);
+    villageController.addListener(_validateVillage);
     locationDetailsController.addListener(_validateLocationDetails);
     landAreaController.addListener(_validateLandArea);
     incomeController.addListener(_validateIncome);
+  }
+
+  void _hydrateInitialType() {
+    if (_initialProjectTypeId == null || _initialProjectTypeId.isEmpty) {
+      return;
+    }
+    final match = projectTypeList.firstWhere(
+      (type) => type.id.toUpperCase() == _initialProjectTypeId.toUpperCase(),
+      orElse: () => prototype,
+    );
+    selectedProjectType.value = match;
   }
 
   void _validateProjectName() {
@@ -91,6 +149,36 @@ class CreateProjectController extends BaseController {
         : null;
     isProjectNameValid.value = value.isNotEmpty;
 
+    _updateFormValidity();
+  }
+
+  void _validateProvince() {
+    final value = provinceController.text.trim();
+    provinceError.value = value.isEmpty ? AppStrings.provinceRequired : null;
+    isProvinceValid.value = value.isNotEmpty;
+    _updateFormValidity();
+  }
+
+  void _validateCity() {
+    final value = cityController.text.trim();
+    cityError.value = value.isEmpty ? AppStrings.cityRequired : null;
+    isCityValid.value = value.isNotEmpty;
+    _updateFormValidity();
+  }
+
+  void _validateSubdistrict() {
+    final value = subdistrictController.text.trim();
+    subdistrictError.value = value.isEmpty
+        ? AppStrings.subdistrictRequired
+        : null;
+    isSubdistrictValid.value = value.isNotEmpty;
+    _updateFormValidity();
+  }
+
+  void _validateVillage() {
+    final value = villageController.text.trim();
+    villageError.value = value.isEmpty ? AppStrings.villageRequired : null;
+    isVillageValid.value = value.isNotEmpty;
     _updateFormValidity();
   }
 
@@ -123,6 +211,10 @@ class CreateProjectController extends BaseController {
     _isFormValid.value =
         selectedLocation.value != null &&
         isProjectNameValid.value &&
+        isProvinceValid.value &&
+        isCityValid.value &&
+        isSubdistrictValid.value &&
+        isVillageValid.value &&
         isLocationDetailsValid.value &&
         selectedProjectType.value != null &&
         isLandAreaValid.value &&
@@ -135,6 +227,10 @@ class CreateProjectController extends BaseController {
   @override
   void onClose() {
     projectNameController.dispose();
+    provinceController.dispose();
+    cityController.dispose();
+    subdistrictController.dispose();
+    villageController.dispose();
     locationDetailsController.dispose();
     landAreaController.dispose();
     incomeController.removeListener(_validateIncome);
@@ -250,11 +346,50 @@ class CreateProjectController extends BaseController {
     selectedProjectType.value = value;
   }
 
+  void selectProvince(String? value) {
+    if (value == null || value.isEmpty) return;
+    selectedProvince.value = value;
+    provinceController.text = value;
+    _validateProvince();
+  }
+
+  void selectCity(String? value) {
+    if (value == null || value.isEmpty) return;
+    selectedCity.value = value;
+    cityController.text = value;
+    _validateCity();
+  }
+
+  void selectSubdistrict(String? value) {
+    if (value == null || value.isEmpty) return;
+    selectedSubdistrict.value = value;
+    subdistrictController.text = value;
+    _validateSubdistrict();
+  }
+
+  void selectVillage(String? value) {
+    if (value == null || value.isEmpty) return;
+    selectedVillage.value = value;
+    villageController.text = value;
+    _validateVillage();
+  }
+
   void onIncomeProofSelected(File file) {
     incomeProofFile.value = file;
     incomeProofFileName.value = file.uri.pathSegments.isNotEmpty
         ? file.uri.pathSegments.last
         : '';
+  }
+
+  Future<void> pickIncomeProof() async {
+    final picked = await FilePicker.platform.pickFiles(
+      allowMultiple: false,
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+    );
+    final path = picked?.files.single.path;
+    if (path == null) return;
+    onIncomeProofSelected(File(path));
   }
 
   bool get _shouldCreateConsultation =>
@@ -263,10 +398,22 @@ class CreateProjectController extends BaseController {
   Future<void> createProject() async {
     if (!isFormValid) {
       _validateProjectName();
+      _validateProvince();
+      _validateCity();
+      _validateSubdistrict();
+      _validateVillage();
       _validateLocationDetails();
       _validateLandArea();
       return;
     }
+
+    final combinedLocationDetail = [
+      locationDetailsController.text.trim(),
+      villageController.text.trim(),
+      subdistrictController.text.trim(),
+      cityController.text.trim(),
+      provinceController.text.trim(),
+    ].where((value) => value.isNotEmpty).join(', ');
 
     isRequesting.value = true;
     CreateProjectResponse? createdProject;
@@ -276,7 +423,7 @@ class CreateProjectController extends BaseController {
           CreateProjectParams(
             request: CreateProjectRequest(
               name: projectNameController.text.trim(),
-              locationDetail: locationDetailsController.text.trim(),
+              locationDetail: combinedLocationDetail,
               landArea: double.tryParse(landAreaController.text.trim()) ?? 0.0,
               income:
                   double.tryParse(
@@ -311,24 +458,13 @@ class CreateProjectController extends BaseController {
   }
 
   void _navigateToConsultants(String projectId) {
-    if (Get.isRegistered<ConsultantsController>()) {
-      Get.delete<ConsultantsController>();
-    }
-    navigateOff(
-      AppRoutes.consultants,
-      arguments: {
-        'projectId': projectId,
-        'lat': selectedLocation.value?.latitude ?? 0.0,
-        'long': selectedLocation.value?.longitude ?? 0.0,
-        'type': selectedProjectType.value?.id ?? '',
-      },
-    );
+    navigateOff(AppRoutes.consultation);
   }
 
   Future<void> _createConsultationForProject(String projectId) async {
     final consultantId = int.tryParse(_consultantId ?? '');
     if (consultantId == null) {
-      showError(const ServerFailure(message: 'Invalid consultant id.'));
+      showError(const ServerFailure(message: 'Invalid consultation id.'));
       _navigateToConsultants(projectId);
       return;
     }

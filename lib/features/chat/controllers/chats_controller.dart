@@ -9,7 +9,7 @@ class InboxItem {
   final String preview;
 }
 
-class InboxController extends BaseController {
+class ChatsController extends BaseController {
   final items = <InboxItem>[
     InboxItem(name: 'Haley James', preview: 'Stand up for what you believe in'),
     InboxItem(

@@ -29,12 +29,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
   final RxInt chatBadgeCount = 3.obs;
+  final RxInt notificationBadgeCount = 5.obs;
 
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
   Timer? _carouselTimer;
-  double _currentLat = 0;
-  double _currentLong = 0;
+  final double _currentLat = 0;
+  final double _currentLong = 0;
 
   final List<String> carouselImages = [
     'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=400&fit=crop',
@@ -104,7 +105,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   Future<void> init() async {
     userRole.value = await _userStorage.getRole();
     _token = await _userStorage.getToken();
-    // if (userRole.value != UserRole.consultant) {
+    // if (userRole.value != UserRole.consultation) {
     //   final coords = await _determineUserLocation();
     //   _currentLat = coords.$1;
     //   _currentLong = coords.$2;
@@ -177,17 +178,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     navigateTo(AppRoutes.inbox);
   }
 
+  void onChatTapped() {
+    navigateTo(AppRoutes.inbox);
+  }
+
   void onSelectProject(Project project) {
     if (project.status == "CREATED") {
-      navigateTo(
-        AppRoutes.consultants,
-        arguments: {
-          'projectId': project.projectId,
-          'lat': project.location?.latitude ?? 0.0,
-          'long': project.location?.longitude ?? 0.0,
-          'type': project.projectId,
-        },
-      );
+      navigateTo(AppRoutes.consultation);
     } else {
       navigateTo(
         AppRoutes.projectDetails,
@@ -202,21 +199,8 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     }
   }
 
-  void onNewProjectFromSheet() {
-    navigateTo(AppRoutes.createProject);
-  }
-
-  void onConsultantCardTapped(Consultant consultant) {
-    final consultantId = consultant.id;
-    if (consultantId == null || consultantId.isEmpty) return;
-
-    navigateTo(
-      AppRoutes.consultantPortfolio,
-      arguments: {
-        'consultantId': consultantId,
-        'isPaidConsultation': (consultant.hourlyRate ?? 0) > 0,
-      },
-    );
+  void onConsultationFeatureTapped() {
+    navigateTo(AppRoutes.designType);
   }
 
   Future<void> onFeatureTapped(VoidCallback onHaveProjects) async {
@@ -239,27 +223,6 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     // } else if (permissionGranted && projects.isNotEmpty) {
     //   onHaveProjects();
     // }
-  }
-
-  void onSeeAllConsultants() {
-    () async {
-      // if (_currentLat == 0 &&
-      //     _currentLong == 0 &&
-      //     userRole.value != UserRole.consultant) {
-      //   final coords = await _determineUserLocation();
-      //   _currentLat = coords.$1;
-      //   _currentLong = coords.$2;
-      // }
-      navigateTo(
-        AppRoutes.consultants,
-        arguments: {
-          'projectId': '',
-          'lat': _currentLat,
-          'long': _currentLong,
-          'type': '',
-        },
-      );
-    }();
   }
 
   void _startCarouselTimer() {

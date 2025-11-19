@@ -5,6 +5,11 @@ import 'package:pkp_hub/features/auth/bindings/verify_otp_binding.dart';
 import 'package:pkp_hub/features/auth/screens/login_screen.dart';
 import 'package:pkp_hub/features/auth/screens/register_screen.dart';
 import 'package:pkp_hub/features/auth/screens/verify_otp_screen.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultant_details_binding.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultation_binding.dart';
+import 'package:pkp_hub/features/consultation/screens/consultant_details_screen.dart';
+import 'package:pkp_hub/features/consultation/screens/consultation_screen.dart';
+import 'package:pkp_hub/features/consultation/screens/consultants_screen.dart';
 import 'package:pkp_hub/features/kyc/bindings/kyc_binding.dart';
 import 'package:pkp_hub/features/kyc/screens/kyc_screen.dart';
 import 'package:pkp_hub/features/main/bindings/main_binding.dart';
@@ -15,21 +20,23 @@ import 'package:pkp_hub/features/payment/bindings/payment_binding.dart';
 import 'package:pkp_hub/features/payment/screens/payment_qr_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_receipt_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_screen.dart';
-import 'package:pkp_hub/features/project/bindings/create_project_binding.dart';
+import 'package:pkp_hub/features/project/bindings/location_details_binding.dart';
+import 'package:pkp_hub/features/project/bindings/design_type_binding.dart';
 import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
-import 'package:pkp_hub/features/project/screens/create_project_screen.dart';
-import 'package:pkp_hub/features/consultant/bindings/consultant_list_binding.dart';
-import 'package:pkp_hub/features/consultant/screens/consultants_screen.dart';
-import 'package:pkp_hub/features/consultant/bindings/consultant_portfolio_binding.dart';
-import 'package:pkp_hub/features/consultant/screens/consultant_portfolios_screen.dart';
+import 'package:pkp_hub/features/project/bindings/prototype_designs_binding.dart';
+import 'package:pkp_hub/features/project/bindings/prototype_design_details_binding.dart';
+import 'package:pkp_hub/features/project/screens/location_details_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
 import 'package:pkp_hub/features/project/screens/contracts_screen.dart';
 import 'package:pkp_hub/features/project/screens/draft_design_screen.dart';
 import 'package:pkp_hub/features/project/screens/final_design_screen.dart';
 import 'package:pkp_hub/features/project/screens/invoice_screen.dart';
+import 'package:pkp_hub/features/project/screens/prototype_design_details_screen.dart';
+import 'package:pkp_hub/features/project/screens/prototype_designs_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_review_screen.dart';
-import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
-import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
+import 'package:pkp_hub/features/project/screens/design_type_screen.dart';
+import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
+import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
 
@@ -68,19 +75,39 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.createProject,
-      page: () => const CreateProjectScreen(),
-      binding: CreateProjectBinding(),
+      page: () => const LocationDetailsScreen(),
+      binding: LocationDetailsBinding(),
     ),
     // Consultants list screen
     GetPage(
+      name: _Paths.consultation,
+      page: () => const ConsultationScreen(),
+      binding: ConsultationBinding(),
+    ),
+    GetPage(
       name: _Paths.consultants,
       page: () => const ConsultantsScreen(),
-      binding: ConsultantListBinding(),
+      binding: ConsultationBinding(),
     ),
     GetPage(
       name: _Paths.projects,
       page: () => const ProjectsScreen(controllerTag: ProjectsBinding.routeTag),
       binding: ProjectsBinding(),
+    ),
+    GetPage(
+      name: _Paths.designType,
+      page: () => const DesignTypeScreen(),
+      binding: DesignTypeBinding(),
+    ),
+    GetPage(
+      name: _Paths.prototypeDesigns,
+      page: () => const PrototypeDesignsScreen(),
+      binding: PrototypeDesignsBinding(),
+    ),
+    GetPage(
+      name: _Paths.prototypeDesignDetails,
+      page: () => const PrototypeDesignDetailsScreen(),
+      binding: PrototypeDesignDetailsBinding(),
     ),
     GetPage(
       name: _Paths.projectReview,
@@ -98,9 +125,9 @@ class AppPages {
     GetPage(name: _Paths.projectInvoice, page: () => const InvoiceScreen()),
     // Consultant portfolio screen
     GetPage(
-      name: _Paths.consultantPortfolio,
-      page: () => const ConsultantPortfoliosScreen(),
-      binding: ConsultantPortfolioBinding(),
+      name: _Paths.consultantDetails,
+      page: () => const ConsultantDetailsScreen(),
+      binding: ConsultantDetailsBinding(),
     ),
     // Project details screen
     GetPage(
@@ -110,8 +137,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.inbox,
-      page: () => const InboxScreen(),
-      binding: InboxBinding(),
+      page: () => const ChatsScreen(),
+      binding: ChatsBinding(),
     ),
     GetPage(
       name: _Paths.chat,

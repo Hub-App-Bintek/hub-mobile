@@ -25,7 +25,7 @@ CreateSurveyScheduleRequest _$CreateSurveyScheduleRequestFromJson(
 mixin _$CreateSurveyScheduleRequest {
   /// Unified payload for both create and reschedule
   /// - proposedDateTime: ISO 8601 (UTC), e.g., 2025-10-29T10:00:00Z
-  /// - surveyCost: optional (consultant may set during create; omitted for reschedule)
+  /// - surveyCost: optional (consultation may set during create; omitted for reschedule)
   /// - notes: optional
   String get proposedDateTime => throw _privateConstructorUsedError;
   double? get surveyCost => throw _privateConstructorUsedError;
@@ -158,7 +158,7 @@ class _$CreateSurveyScheduleRequestImpl
 
   /// Unified payload for both create and reschedule
   /// - proposedDateTime: ISO 8601 (UTC), e.g., 2025-10-29T10:00:00Z
-  /// - surveyCost: optional (consultant may set during create; omitted for reschedule)
+  /// - surveyCost: optional (consultation may set during create; omitted for reschedule)
   /// - notes: optional
   @override
   final String proposedDateTime;
@@ -218,7 +218,7 @@ abstract class _CreateSurveyScheduleRequest
   @override
   /// Unified payload for both create and reschedule
   /// - proposedDateTime: ISO 8601 (UTC), e.g., 2025-10-29T10:00:00Z
-  /// - surveyCost: optional (consultant may set during create; omitted for reschedule)
+  /// - surveyCost: optional (consultation may set during create; omitted for reschedule)
   /// - notes: optional
   String get proposedDateTime;
   @override

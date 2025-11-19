@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 
 /// An enum to define the behavior and appearance of the text form field.
@@ -30,6 +31,14 @@ class PkpTextFormField extends StatefulWidget {
     this.firstDate,
     this.lastDate,
     this.initialDate,
+    this.filled,
+    this.fillColor,
+    this.borderColor,
+    this.borderWidth,
+    this.borderRadius = 12,
+    this.hintStyle,
+    this.labelStyle,
+    this.contentPadding,
   });
 
   final TextEditingController? controller;
@@ -43,6 +52,14 @@ class PkpTextFormField extends StatefulWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final DateTime? initialDate;
+  final bool? filled;
+  final Color? fillColor;
+  final Color? borderColor;
+  final double? borderWidth;
+  final double borderRadius;
+  final TextStyle? hintStyle;
+  final TextStyle? labelStyle;
+  final EdgeInsetsGeometry? contentPadding;
 
   @override
   State<PkpTextFormField> createState() => _PkpTextFormFieldState();
@@ -88,15 +105,31 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       suffixIcon = _buildPercentSuffix();
     }
 
+    final theme = Theme.of(context);
+    final effectiveBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(widget.borderRadius),
+      borderSide: widget.borderColor == null && widget.borderWidth == null
+          ? const BorderSide(color: AppColors.inputBorder)
+          : BorderSide(
+              color:
+                  widget.borderColor ??
+                  theme.inputDecorationTheme.enabledBorder?.borderSide.color ??
+                  AppColors.inputBorder,
+              width: widget.borderWidth ?? 1,
+            ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.labelText != null) ...[
           Text(
             widget.labelText!,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style:
+                widget.labelStyle ??
+                theme.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 8),
         ],
@@ -131,6 +164,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
           minLines: isMultiline ? 3 : 1,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: widget.hintStyle,
             suffixIcon: suffixIcon,
             prefixIcon: isCurrency
                 ? SizedBox(
@@ -140,9 +174,22 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                     ),
                   )
                 : null,
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+            filled: widget.filled,
+            fillColor: widget.fillColor,
+            border: effectiveBorder,
+            enabledBorder: effectiveBorder,
+            focusedBorder: effectiveBorder.copyWith(
+              borderSide:
+                  widget.borderColor == null && widget.borderWidth == null
+                  ? const BorderSide(color: AppColors.inputBorder)
+                  : BorderSide(
+                      color: widget.borderColor ?? theme.colorScheme.primary,
+                      width: widget.borderWidth ?? 1.1,
+                    ),
             ),
+            contentPadding:
+                widget.contentPadding ??
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             errorText: widget.errorText,
           ),
           onTap: widget.enabled

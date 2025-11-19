@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 
@@ -8,49 +9,66 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title = '',
     this.showNavigation = true,
     this.leading,
+    this.leadingColor,
     this.onLeadingPressed,
     this.actions,
     this.backgroundColor,
     this.elevation,
+    this.centerTitle = true,
+    this.titleTextColor,
+    this.height,
+    this.leadingSize = 24,
   });
 
   final String title;
   final bool showNavigation;
+  final bool centerTitle;
   final IconData? leading;
+  final Color? leadingColor;
   final VoidCallback? onLeadingPressed;
   final List<PkpAppBarAction>? actions;
   final Color? backgroundColor;
   final double? elevation;
+  final Color? titleTextColor;
+  final double? height;
+  final double leadingSize;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appBarTheme = theme.appBarTheme;
     final Widget effectiveLeading = IconButton(
       icon: Icon(
         leading ?? Icons.chevron_left_rounded,
-        size: 24,
-        color: AppColors.primaryDarkest,
+        size: leadingSize,
+        color: leadingColor ?? AppColors.white,
       ),
-      onPressed: onLeadingPressed ?? () => Navigator.of(context).maybePop(),
+      onPressed: onLeadingPressed ?? () => Get.back(),
       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
     );
 
     return AppBar(
-      title: Text(title, style: appBarTheme.titleTextStyle ?? AppTextStyles.h4),
+      title: Text(
+        title,
+        style: AppTextStyles.h3.copyWith(
+          color: titleTextColor ?? AppColors.white,
+        ),
+      ),
       leading: showNavigation ? effectiveLeading : null,
       actions: actions?.map((action) {
         final badgeCount = action.badgeCount ?? 0;
         final badgeText = badgeCount > 99 ? '99+' : badgeCount.toString();
+        final baseIcon =
+            action.iconWidget ??
+            Icon(
+              action.icon,
+              size: 24,
+              color: action.color ?? AppColors.primaryDarkest,
+            );
+
         final iconChild = badgeCount > 0
             ? Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Icon(
-                    action.icon,
-                    size: 24,
-                    color: action.color ?? AppColors.primaryDarkest,
-                  ),
+                  baseIcon,
                   Positioned(
                     top: -4,
                     right: -6,
@@ -74,11 +92,7 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
               )
-            : Icon(
-                action.icon,
-                size: 24,
-                color: action.color ?? AppColors.primaryDarkest,
-              );
+            : baseIcon;
 
         return IconButton(
           icon: iconChild,
@@ -88,24 +102,25 @@ class PkpAppBar extends StatelessWidget implements PreferredSizeWidget {
               MaterialLocalizations.of(context).openAppDrawerTooltip,
         );
       }).toList(),
-      backgroundColor:
-          backgroundColor ?? appBarTheme.backgroundColor ?? AppColors.white,
-      elevation: elevation ?? appBarTheme.elevation ?? 0,
+      backgroundColor: backgroundColor ?? AppColors.primaryDark,
+      elevation: elevation ?? 0,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,
-      centerTitle: true,
-      iconTheme: (appBarTheme.iconTheme ?? const IconThemeData()).copyWith(
+      centerTitle: centerTitle,
+      iconTheme: const IconThemeData().copyWith(
+        color: leadingColor ?? AppColors.white,
+      ),
+      actionsIconTheme: const IconThemeData().copyWith(
         color: AppColors.primaryDarkest,
       ),
-      actionsIconTheme: (appBarTheme.actionsIconTheme ?? const IconThemeData())
-          .copyWith(color: AppColors.primaryDarkest),
+      toolbarHeight: height,
     );
   }
 
   /// The preferred height of the AppBar.
   /// Defaults to [kToolbarHeight].
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(height ?? kToolbarHeight);
 }
 
 class PkpAppBarAction {
@@ -115,6 +130,7 @@ class PkpAppBarAction {
     this.tooltip,
     this.color,
     this.badgeCount,
+    this.iconWidget,
   });
 
   final IconData icon;
@@ -122,4 +138,5 @@ class PkpAppBarAction {
   final String? tooltip;
   final Color? color;
   final int? badgeCount;
+  final Widget? iconWidget;
 }

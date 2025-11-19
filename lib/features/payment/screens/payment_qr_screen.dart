@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/payment/controllers/payment_controller.dart';
 
 class PaymentQrScreen extends GetView<PaymentController> {

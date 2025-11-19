@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
-import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
+import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
@@ -17,30 +19,37 @@ class HomeScreen extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PkpAppBar(
-        title: AppStrings.bottomNavHome,
-        actions: [
-          PkpAppBarAction(
-            icon: Icons.chat_bubble_outline,
-            badgeCount: controller.chatBadgeCount.value,
-            onPressed: controller.onNotificationTapped,
-          ),
-        ],
+    final children = <Widget>[
+      _buildCarouselBanner(),
+      const SizedBox(height: 16),
+      if (_shouldShowBalanceCard) ...[
+        _buildBalanceCard(),
+        const SizedBox(height: 24),
+      ],
+      _buildFeatureGrid(),
+      _buildRoleSpecificSection(),
+    ];
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light.copyWith(
+        statusBarColor: AppColors.primaryDark,
+        statusBarIconBrightness: Brightness.light,
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: controller.refresh,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              spacing: 16,
-              children: [
-                _buildCarouselBanner(),
-                _buildBalanceCard(),
-                _buildFeatureGrid(),
-                _buildRoleSpecificSection(),
-              ],
+      child: Scaffold(
+        backgroundColor: AppColors.white,
+        appBar: _buildAppBar(),
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: controller.refresh,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children,
+                ),
+              ),
             ),
           ),
         ),
@@ -48,9 +57,61 @@ class HomeScreen extends GetView<HomeController> {
     );
   }
 
+  PreferredSizeWidget _buildAppBar() {
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(kToolbarHeight),
+      child: Obx(() {
+        final chatCount = controller.chatBadgeCount.value;
+        final notificationCount = controller.notificationBadgeCount.value;
+        final loggedIn = controller.isLoggedIn;
+
+        return PkpAppBar(
+          title: loggedIn ? 'Hai! User' : AppStrings.homeWelcomeTitle,
+          showNavigation: false,
+          centerTitle: false,
+          backgroundColor: AppColors.primaryDark,
+          actions: loggedIn
+              ? [
+                  PkpAppBarAction(
+                    icon: Icons.notifications_none_outlined,
+                    badgeCount: notificationCount,
+                    onPressed: controller.onNotificationTapped,
+                    color: AppColors.white,
+                    iconWidget: SvgPicture.asset(
+                      AppIcons.notification,
+                      width: 24,
+                      height: 24,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                  PkpAppBarAction(
+                    icon: Icons.chat_bubble_outline,
+                    badgeCount: chatCount,
+                    onPressed: controller.onChatTapped,
+                    color: AppColors.white,
+                    iconWidget: SvgPicture.asset(
+                      AppIcons.chat,
+                      width: 24,
+                      height: 24,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ]
+              : null,
+        );
+      }),
+    );
+  }
+
   Widget _buildCarouselBanner() {
     return SizedBox(
-      height: 200,
+      height: 220,
       child: Stack(
         children: [
           PageView.builder(
@@ -60,19 +121,22 @@ class HomeScreen extends GetView<HomeController> {
             },
             itemCount: controller.carouselImages.length,
             itemBuilder: (context, index) {
-              return Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(controller.carouselImages[index]),
-                    fit: BoxFit.cover,
+              return ClipRect(
+                child: SizedBox.expand(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(controller.carouselImages[index]),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
               );
             },
           ),
           Positioned(
-            bottom: 16,
+            bottom: 12,
             left: 0,
             right: 0,
             child: _buildCarouselIndicator(),
@@ -83,25 +147,27 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildCarouselIndicator() {
-    return Obx(
-      () => Row(
+    return Obx(() {
+      final activeIndex = controller.currentCarouselIndex.value;
+      return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(
-          controller.carouselImages.length,
-          (index) => Container(
-            width: 8,
+        children: List.generate(controller.carouselImages.length, (index) {
+          final isActive = index == activeIndex;
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: isActive ? 24 : 8,
             height: 8,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: controller.currentCarouselIndex.value == index
-                  ? AppColors.primaryDarkest
-                  : AppColors.primaryLight,
+              color: isActive
+                  ? AppColors.white
+                  : AppColors.white.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(99),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+        }),
+      );
+    });
   }
 
   Widget _buildBalanceCard() {
@@ -113,46 +179,73 @@ class HomeScreen extends GetView<HomeController> {
 
       return Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
-          color: AppColors.primaryLightest,
+          color: AppColors.primaryDark,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.neutralDarkest.withValues(alpha: 0.05),
-              spreadRadius: 0,
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
         ),
         child: Row(
           children: [
-            const Icon(
-              Icons.account_balance_wallet_outlined,
-              color: AppColors.primaryDarkest,
-              size: 24,
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                Formatters.currency(controller.balance.value),
-                style: AppTextStyles.h3.copyWith(
-                  color: AppColors.neutralDarkest,
+            Container(
+              width: 48,
+              height: 48,
+              decoration: const BoxDecoration(
+                color: AppColors.primaryDarkest,
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  AppIcons.wallet,
+                  width: 24,
+                  height: 24,
+                  colorFilter: const ColorFilter.mode(
+                    AppColors.white,
+                    BlendMode.srcIn,
+                  ),
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                role == UserRole.homeowner
-                    ? Icons.add_circle_outline
-                    : Icons.archive_rounded,
-                color: AppColors.primaryDarkest,
-                size: 24,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Saldo Dompet',
+                    style: AppTextStyles.bodyL.copyWith(color: AppColors.white),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    Formatters.currency(controller.balance.value),
+                    style: AppTextStyles.h3.copyWith(color: AppColors.white),
+                  ),
+                ],
               ),
-              onPressed: () {
-                // TODO: Implement top-up functionality
-              },
+            ),
+            Material(
+              color: AppColors.primaryDarkest,
+              shape: const CircleBorder(),
+              child: InkWell(
+                onTap: () {
+                  // TODO: Implement top-up functionality
+                },
+                customBorder: const CircleBorder(),
+                child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      AppIcons.add,
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(
+                        AppColors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
@@ -160,11 +253,15 @@ class HomeScreen extends GetView<HomeController> {
     });
   }
 
+  bool get _shouldShowBalanceCard {
+    final role = controller.userRole.value;
+    if (!controller.isLoggedIn) return false;
+    return role != null && role != UserRole.unknown;
+  }
+
   Widget _buildRoleSpecificSection() {
     return Obx(() {
       final role = controller.userRole.value;
-      final consultants = controller.consultants.toList();
-      final isConsultantLoading = controller.isConsultantLoading.value;
 
       if (role == UserRole.consultant) {
         return _buildConsultantSection();
@@ -175,165 +272,148 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildFeatureGrid() {
-    final featureItems = [];
-    final role = controller.userRole.value;
-    if (role == UserRole.homeowner ||
-        role == null ||
-        role == UserRole.unknown) {
-      featureItems.add(
-        const _FeatureItem(
-          id: 'consultation',
-          title: AppStrings.menuConsultation,
-          iconData: Icons.pending_actions_rounded,
-        ),
-      );
-
-      featureItems.add(
-        const _FeatureItem(
-          id: 'licensing',
-          title: AppStrings.menuLicensing,
-          iconData: Icons.receipt_long,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'material',
-          title: AppStrings.menuMaterial,
-          iconData: Icons.inventory_2_outlined,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'financing',
-          title: AppStrings.menuFinancing,
-          iconData: Icons.account_balance_wallet_outlined,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'construction',
-          title: AppStrings.menuConstruction,
-          iconData: Icons.construction_outlined,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'supervision',
-          title: AppStrings.homeFeatureSupervision,
-          iconData: Icons.visibility_outlined,
-        ),
-      );
-    } else {
-      featureItems.add(
-        const _FeatureItem(
-          id: 'get_pending_projects',
-          title: AppStrings.homeProjectsPendingTitle,
-          iconData: Icons.pending_actions_rounded,
-        ),
-      );
-      featureItems.add(
-        const _FeatureItem(
-          id: 'get_active_projects',
-          title: AppStrings.homeProjectsActiveTitle,
-          iconData: Icons.pending_actions_rounded,
-        ),
-      );
-    }
-
-    const crossAxisSpacing = 16.0;
-    const mainAxisSpacing = 12.0;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.builder(
-        padding: EdgeInsets.zero,
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: featureItems.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: 1,
-        ),
-        itemBuilder: (context, index) {
-          final item = featureItems[index];
-          return Center(
-            child: FeatureCircleCard(
-              label: item.title,
-              icon: item.iconData,
-              showBadge: item.showBadge,
-              badgeValue: item.badgeValue,
+      child: Obx(() {
+        final role = controller.userRole.value;
+        final List<_FeatureItem> featureItems = [];
+
+        if (role == UserRole.homeowner ||
+            role == null ||
+            role == UserRole.unknown) {
+          featureItems.add(
+            _FeatureItem(
+              id: 'consultation',
+              title: AppStrings.homeFeatureDesignConsultation,
+              iconData: Icons.chat_outlined,
+              iconAsset: AppIcons.consultation,
               onTap: () {
-                if (item.id == 'consultation') {
-                  controller.onSeeAllConsultants();
-                } else if (item.id == 'get_pending_projects') {
-                  controller.fetchProjects('PENDING');
-                } else if (item.id == 'get_active_projects') {
-                  controller.fetchProjects('ACTIVE');
-                } else if (item.id == 'chat') {
-                  controller.onNotificationTapped();
-                }
-                // controller.onFeatureTapped(() {
-                //
-                // });
+                controller.onConsultationFeatureTapped();
               },
             ),
           );
-        },
-      ),
-    );
-  }
-
-  Widget _buildConsultantGridSection({
-    required bool isLoading,
-    required List consultants,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  AppStrings.homeConsultantSectionTitle,
-                  style: AppTextStyles.h2,
-                ),
-              ),
-              TextButton(
-                onPressed: controller.onSeeAllConsultants,
-                child: const Text(AppStrings.homeConsultantSeeAll),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (isLoading)
-            const Center(child: CircularProgressIndicator())
-          else if (consultants.isEmpty)
-            _buildEmptyState(AppStrings.homeConsultantEmpty)
-          else
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.92,
-              ),
-              itemCount: consultants.length,
-              itemBuilder: (context, index) {
-                final consultant = consultants[index];
-                return ConsultantCard(
-                  consultant: consultant,
-                  onTap: () => controller.onConsultantCardTapped(consultant),
-                );
+          featureItems.add(
+            _FeatureItem(
+              id: 'licensing',
+              title: AppStrings.homeFeatureLicensingFacilities,
+              iconData: Icons.description_outlined,
+              iconAsset: AppIcons.licensing,
+              onTap: () {
+                // TODO: Navigate to LicensingScreen
               },
             ),
-        ],
-      ),
+          );
+          featureItems.add(
+            _FeatureItem(
+              id: 'construction',
+              title: AppStrings.homeFeatureConstructionLabor,
+              iconData: Icons.handyman_outlined,
+              iconAsset: AppIcons.construction,
+              onTap: () {
+                // TODO: Show dialog
+              },
+            ),
+          );
+          featureItems.add(
+            _FeatureItem(
+              id: 'material',
+              title: AppStrings.homeFeatureStoreMaterial,
+              iconData: Icons.inventory_2_outlined,
+              iconAsset: AppIcons.material,
+              onTap: () {
+                // TODO: Show dialog
+              },
+            ),
+          );
+          featureItems.add(
+            _FeatureItem(
+              id: 'financing',
+              title: AppStrings.homeFeatureFinancingFacilities,
+              iconData: Icons.savings_outlined,
+              iconAsset: AppIcons.financing,
+              onTap: () {
+                // TODO: Show dialog
+              },
+            ),
+          );
+          featureItems.add(
+            _FeatureItem(
+              id: 'supervision',
+              title: AppStrings.homeFeatureConstructionSupervision,
+              iconData: Icons.remove_red_eye_outlined,
+              iconAsset: AppIcons.supervision,
+              onTap: () {
+                // TODO: Navigate to MonitoringScreen
+              },
+            ),
+          );
+        } else {
+          featureItems.add(
+            _FeatureItem(
+              id: 'get_pending_projects',
+              title: AppStrings.homeProjectsPendingTitle,
+              iconData: Icons.pending_actions_rounded,
+              onTap: () {
+                controller.fetchProjects('PENDING');
+              },
+            ),
+          );
+          featureItems.add(
+            _FeatureItem(
+              id: 'get_active_projects',
+              title: AppStrings.homeProjectsActiveTitle,
+              iconData: Icons.pending_actions_rounded,
+              onTap: () {
+                controller.fetchProjects('ACTIVE');
+              },
+            ),
+          );
+        }
+
+        const crossAxisSpacing = 24.0;
+        const mainAxisSpacing = 20.0;
+
+        return GridView.builder(
+          padding: EdgeInsets.zero,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: featureItems.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: crossAxisSpacing,
+            mainAxisSpacing: mainAxisSpacing,
+            childAspectRatio: 0.92,
+          ),
+          itemBuilder: (context, index) {
+            final item = featureItems[index];
+            return Center(
+              child: FeatureCircleCard(
+                label: item.title,
+                icon: item.iconData,
+                iconWidget: item.iconAsset == null
+                    ? null
+                    : SvgPicture.asset(
+                        item.iconAsset!,
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                labelOutside: true,
+                backgroundColor: AppColors.primaryDark,
+                iconColor: AppColors.white,
+                labelStyle: AppTextStyles.bodyL.copyWith(
+                  color: AppColors.neutralDarkest,
+                  height: 1.25,
+                ),
+                onTap: item.onTap,
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
@@ -436,13 +516,13 @@ class _FeatureItem {
     required this.id,
     required this.title,
     required this.iconData,
-    this.badgeValue,
-    this.showBadge = false,
+    this.iconAsset,
+    required this.onTap,
   });
 
   final String id;
   final String title;
   final IconData iconData;
-  final String? badgeValue;
-  final bool showBadge;
+  final String? iconAsset;
+  final VoidCallback onTap;
 }

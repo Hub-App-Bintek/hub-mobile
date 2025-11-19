@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/payment/controllers/payment_controller.dart';
-
-import '../../../app/navigation/app_pages.dart';
 
 class PaymentReceiptScreen extends GetView<PaymentController> {
   const PaymentReceiptScreen({super.key});
@@ -14,11 +13,7 @@ class PaymentReceiptScreen extends GetView<PaymentController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.white,
-        elevation: 0,
-        centerTitle: true,
         automaticallyImplyLeading: false,
-        // Remove back button
         title: Text('Pembayaran Sukses', style: AppTextStyles.h3),
       ),
       body: SingleChildScrollView(

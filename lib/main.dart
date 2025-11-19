@@ -7,13 +7,13 @@ import 'package:pkp_hub/app/theme/app_theme.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:pkp_hub/features/main/controllers/home_controller.dart';
-import 'package:pkp_hub/features/main/controllers/main_controller.dart';
-import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
-import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 
 import 'app/navigation/app_pages.dart';
 import 'app/theme/app_colors.dart';
+import 'features/main/bindings/projects_binding.dart';
+import 'features/main/controllers/home_controller.dart';
+import 'features/main/controllers/main_controller.dart';
+import 'features/main/controllers/projects_controller.dart';
 
 Future<void> startApp({required String flavor}) async {
   WidgetsFlutterBinding.ensureInitialized();

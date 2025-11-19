@@ -8,30 +8,36 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/portfolio.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
+import 'package:pkp_hub/data/models/response/consultant_on_portfolios.dart';
 import 'package:pkp_hub/data/models/response/consultant_portfolios_response.dart';
 import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 
-class ConsultantPortfoliosController extends BaseController {
+class ConsultantDetailsController extends BaseController {
   final String _consultantId;
   final String _projectId;
   final bool _isPaidConsultation;
   final UserStorage _userStorage;
   final GetConsultantPortfoliosUseCase _getPortfolioListUseCase;
+  final Consultant? _consultant;
+  final bool _requireLoginForAction;
 
   // Inject create consultation use case
   final CreateConsultationUseCase _createConsultationUseCase;
 
-  ConsultantPortfoliosController(
+  ConsultantDetailsController(
     this._consultantId,
     this._projectId,
     this._isPaidConsultation,
     this._userStorage,
     this._getPortfolioListUseCase,
     this._createConsultationUseCase,
+    this._consultant,
+    this._requireLoginForAction,
   );
 
   // Reactive state
@@ -41,6 +47,15 @@ class ConsultantPortfoliosController extends BaseController {
 
   // Busy state for creating consultation
   final isCreatingConsultation = false.obs;
+
+  // Consultant detail state
+  final RxnString consultantName = RxnString();
+  final RxnString consultantSpeciality = RxnString();
+  final RxnDouble consultantRating = RxnDouble();
+  final RxnDouble consultantPrice = RxnDouble();
+  final RxnString consultantAvatarUrl = RxnString();
+  final RxnString consultantLocation = RxnString();
+  final RxString consultantAbout = ''.obs;
 
   // Scroll
   final scrollController = ScrollController();
@@ -57,6 +72,7 @@ class ConsultantPortfoliosController extends BaseController {
   Future<void> onInit() async {
     super.onInit();
     scrollController.addListener(_onScroll);
+    _hydrateConsultantFromArgument();
     await refreshList(); // fetch first page
   }
 
@@ -110,6 +126,7 @@ class ConsultantPortfoliosController extends BaseController {
           }
         }
 
+        _updateConsultantFromResponse(response.consultant);
         hasMore.value = !_done;
       },
       onFailure: (failure) {
@@ -125,7 +142,7 @@ class ConsultantPortfoliosController extends BaseController {
 
     final consultantId = int.tryParse(_consultantId);
     if (consultantId == null) {
-      showError(const ServerFailure(message: 'Invalid consultant id.'));
+      showError(const ServerFailure(message: 'Invalid consultation id.'));
       return;
     }
 
@@ -161,7 +178,7 @@ class ConsultantPortfoliosController extends BaseController {
     isCreatingConsultation.value = false;
   }
 
-  // Public: create consultation for this consultant
+  // Public: create consultation for this consultation
   Future<void> onChatPressed() async {
     final loggedIn = await _ensureLoggedIn();
     if (!loggedIn) return;
@@ -205,6 +222,12 @@ class ConsultantPortfoliosController extends BaseController {
   }
 
   Future<bool> _ensureLoggedIn() async {
+    if (!_requireLoginForAction) {
+      final token = await _userStorage.getToken();
+      if (token == null || token.isEmpty) {
+        return true;
+      }
+    }
     final token = await _userStorage.getToken();
     if (token != null && token.isNotEmpty) {
       return true;
@@ -225,6 +248,31 @@ class ConsultantPortfoliosController extends BaseController {
   void _navigateToConsultantChat() {
     navigateTo(AppRoutes.chat);
   }
+
+  void _hydrateConsultantFromArgument() {
+    if (_consultant == null) return;
+    consultantName.value = _consultant.fullName ?? '';
+    consultantSpeciality.value = _consultant.specialty;
+    consultantRating.value = _consultant.rating;
+    consultantPrice.value = _consultant.hourlyRate;
+    consultantAvatarUrl.value = _consultant.avatarUrl;
+    consultantLocation.value =
+        _consultant.location ?? _consultant.address ?? '-';
+    if ((_consultant.address ?? '').isNotEmpty) {
+      consultantAbout.value = _consultant.address!;
+    }
+  }
+
+  void _updateConsultantFromResponse(ConsultantOnPortfolios consultantData) {
+    consultantName.value = consultantData.name;
+    consultantSpeciality.value = consultantData.specialization;
+  }
+
+  int get completedProjectsCount => portfolios.length;
+
+  String get experienceText => _consultant?.experienceLevel?.isNotEmpty == true
+      ? _consultant!.experienceLevel!
+      : '-';
 
   @override
   void onClose() {
