@@ -31,6 +31,10 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
   final int pageSize = 100;
   bool hasMore = true;
 
+  final RxString _selectedCategory = 'Konsultasi'.obs;
+
+  String get selectedCategory => _selectedCategory.value;
+
   ProjectsController(this.getProjectsUseCase, this.status) {
     if (status != null) {
       _statusFilter.value = status;
@@ -152,6 +156,11 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     if (refresh) {
       refreshProjects();
     }
+  }
+
+  void updateCategory(String category) {
+    if (_selectedCategory.value == category) return;
+    _selectedCategory.value = category;
   }
 
   Future<void> loadMoreProjects() async {
