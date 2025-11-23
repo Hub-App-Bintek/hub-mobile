@@ -10,6 +10,7 @@ import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_details_controller.dart';
 
 class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
@@ -595,65 +596,96 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
 
   Widget _buildInvoiceCard(ConsultationInvoiceItem item) {
     final isPaid = item.status == InvoiceStatus.paid;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.inputSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.title,
-                      style: AppTextStyles.h4.copyWith(
-                        color: AppColors.neutralDarkest,
+
+    return GestureDetector(
+      onTap: () {
+        if (isPaid) {
+          controller.navigateTo(
+            AppRoutes.paymentReceipt,
+            arguments: PaymentArgs(amount: item.amount, method: item.method),
+          );
+        } else {
+          controller.navigateTo(
+            AppRoutes.payment,
+            arguments: PaymentArgs(amount: item.amount, method: item.method),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.inputSurface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.inputBorder),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.title,
+                        style: AppTextStyles.h4.copyWith(
+                          color: AppColors.neutralDarkest,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item.dateLabel,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralMediumLight,
+                      const SizedBox(height: 8),
+                      Text(
+                        item.dateLabel,
+                        style: AppTextStyles.bodyS.copyWith(
+                          color: AppColors.neutralMediumLight,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        Formatters.currency(item.amount),
+                        style: AppTextStyles.bodyM.copyWith(
+                          color: AppColors.neutralDarkest,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.file_download_outlined),
-                color: AppColors.primaryDarkest,
-                onPressed: () {},
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isPaid ? AppColors.successLight : AppColors.warningLight,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              child: Text(
-                isPaid ? 'Sudah Dibayar' : 'Belum Dibayar',
-                style: AppTextStyles.bodyS.copyWith(
-                  color: isPaid ? AppColors.successDark : AppColors.warningDark,
-                  fontWeight: FontWeight.w600,
+                IconButton(
+                  icon: const Icon(Icons.file_download_outlined),
+                  color: AppColors.primaryDarkest,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: isPaid
+                      ? AppColors.successLight
+                      : AppColors.warningLight,
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Text(
+                  isPaid ? 'Sudah Dibayar' : 'Belum Dibayar',
+                  style: AppTextStyles.bodyS.copyWith(
+                    color: isPaid
+                        ? AppColors.successDark
+                        : AppColors.warningDark,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

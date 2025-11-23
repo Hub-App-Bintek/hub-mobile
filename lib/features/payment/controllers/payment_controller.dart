@@ -10,9 +10,11 @@ enum PaymentMethod { qris, debit, credit, va }
 class PaymentController extends BaseController {
   // State for the payment amount, injected from arguments
   final amount = 0.0.obs;
+  final paymentMethod = ''.obs;
 
   // State for the selected payment method, defaults to QRIS
   final selectedMethod = PaymentMethod.qris.obs;
+  final selectedBank = RxnString();
 
   // State for the countdown timer on the QR page
   final remainingTime = 180.obs; // 3 minutes in seconds
@@ -25,8 +27,10 @@ class PaymentController extends BaseController {
     final args = Get.arguments;
     if (args is PaymentArgs) {
       amount.value = args.amount;
+      paymentMethod.value = args.method ?? 'QRIS';
     } else if (args is Map<String, dynamic>) {
       amount.value = (args['amount'] as num?)?.toDouble() ?? 0.0;
+      paymentMethod.value = args['method'] as String? ?? 'QRIS';
     }
   }
 
@@ -40,22 +44,15 @@ class PaymentController extends BaseController {
   /// Updates the selected payment method
   void selectPaymentMethod(PaymentMethod method) {
     selectedMethod.value = method;
+    if (method != PaymentMethod.debit && method != PaymentMethod.va) {
+      selectedBank.value = null;
+    }
   }
 
   /// Navigates to the QR payment screen and starts the countdown
   void proceedToQrPayment() {
-    // For now, we only handle QRIS as requested
-    if (selectedMethod.value == PaymentMethod.qris) {
-      Get.toNamed(AppRoutes.paymentQr);
-      startTimer();
-    } else {
-      // Show a snackbar for unimplemented methods
-      Get.snackbar(
-        'Not Implemented',
-        'This payment method is not available yet.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
+    Get.toNamed(AppRoutes.paymentQr);
+    startTimer();
   }
 
   /// Starts the 3-minute countdown timer
@@ -80,10 +77,30 @@ class PaymentController extends BaseController {
     Get.toNamed(AppRoutes.paymentReceipt);
   }
 
+  void downloadReceipt() {
+    Get.snackbar(
+      'Unduh',
+      'Kwitansi sedang disiapkan untuk diunduh.',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+
+  void shareReceipt() {
+    Get.snackbar(
+      'Bagikan',
+      'Tautan kwitansi siap dibagikan.',
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+
   /// Formats remaining time into MM:SS format
   String get formattedTime {
     final minutes = (remainingTime.value ~/ 60).toString().padLeft(2, '0');
     final seconds = (remainingTime.value % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
+  }
+
+  void selectBank(String bank) {
+    selectedBank.value = bank;
   }
 }

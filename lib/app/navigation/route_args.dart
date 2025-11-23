@@ -13,9 +13,10 @@ class ChatArgs {
 }
 
 class PaymentArgs {
-  const PaymentArgs({required this.amount});
+  const PaymentArgs({required this.amount, this.method});
 
   final double amount;
+  final String? method;
 }
 
 class VerifyOtpArgs {

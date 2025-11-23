@@ -92,11 +92,15 @@ class ConsultationInvoiceItem {
     required this.title,
     required this.dateLabel,
     required this.status,
+    required this.amount,
+    required this.method,
   });
 
   final String title;
   final String dateLabel;
   final InvoiceStatus status;
+  final double amount;
+  final String method;
 }
 
 ConsultationContractItem _contractItem(
@@ -127,8 +131,16 @@ ConsultationInvoiceItem _invoiceItem(
   String title,
   InvoiceStatus status, {
   String date = '10 Des 2025',
+  double amount = 5000000,
+  String method = 'QRIS',
 }) {
-  return ConsultationInvoiceItem(title: title, dateLabel: date, status: status);
+  return ConsultationInvoiceItem(
+    title: title,
+    dateLabel: date,
+    status: status,
+    amount: amount,
+    method: method,
+  );
 }
 
 extension on ConsultationDetailsController {
@@ -239,30 +251,75 @@ extension on ConsultationDetailsController {
       case 'A14':
         _applyMockScenario('A13');
         invoices.add(
-          _invoiceItem('Invoice 1', InvoiceStatus.unpaid, date: '10 Des 2025'),
+          _invoiceItem(
+            'Invoice 1',
+            InvoiceStatus.unpaid,
+            date: '10 Des 2025',
+            amount: 5000000,
+          ),
         );
         break;
       case 'A15':
         _applyMockScenario('A13');
         invoices.addAll([
-          _invoiceItem('Invoice 1', InvoiceStatus.paid, date: '10 Des 2025'),
-          _invoiceItem('Invoice 2', InvoiceStatus.unpaid, date: '20 Des 2025'),
+          _invoiceItem(
+            'Invoice 1',
+            InvoiceStatus.paid,
+            date: '10 Des 2025',
+            amount: 5000000,
+          ),
+          _invoiceItem(
+            'Invoice 2',
+            InvoiceStatus.unpaid,
+            date: '20 Des 2025',
+            amount: 3500000,
+          ),
         ]);
         break;
       case 'A16':
         _applyMockScenario('A13');
         invoices.addAll([
-          _invoiceItem('Invoice 1', InvoiceStatus.paid, date: '10 Des 2025'),
-          _invoiceItem('Invoice 2', InvoiceStatus.paid, date: '20 Des 2025'),
-          _invoiceItem('Invoice 3', InvoiceStatus.unpaid, date: '30 Des 2025'),
+          _invoiceItem(
+            'Invoice 1',
+            InvoiceStatus.paid,
+            date: '10 Des 2025',
+            amount: 5000000,
+          ),
+          _invoiceItem(
+            'Invoice 2',
+            InvoiceStatus.paid,
+            date: '20 Des 2025',
+            amount: 3500000,
+          ),
+          _invoiceItem(
+            'Invoice 3',
+            InvoiceStatus.unpaid,
+            date: '30 Des 2025',
+            amount: 2500000,
+          ),
         ]);
         break;
       case 'A17':
         _applyMockScenario('A13');
         invoices.addAll([
-          _invoiceItem('Invoice 1', InvoiceStatus.paid, date: '10 Des 2025'),
-          _invoiceItem('Invoice 2', InvoiceStatus.paid, date: '20 Des 2025'),
-          _invoiceItem('Invoice 3', InvoiceStatus.paid, date: '30 Des 2025'),
+          _invoiceItem(
+            'Invoice 1',
+            InvoiceStatus.paid,
+            date: '10 Des 2025',
+            amount: 5000000,
+          ),
+          _invoiceItem(
+            'Invoice 2',
+            InvoiceStatus.paid,
+            date: '20 Des 2025',
+            amount: 3500000,
+          ),
+          _invoiceItem(
+            'Invoice 3',
+            InvoiceStatus.paid,
+            date: '30 Des 2025',
+            amount: 2500000,
+          ),
         ]);
         break;
       default:
