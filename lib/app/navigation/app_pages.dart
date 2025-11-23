@@ -26,7 +26,7 @@ import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_designs_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_design_details_binding.dart';
 import 'package:pkp_hub/features/project/screens/location_details_screen.dart';
-import 'package:pkp_hub/features/project/screens/project_details_screen.dart';
+import 'package:pkp_hub/features/project/screens/project_history_screen.dart';
 import 'package:pkp_hub/features/project/screens/contracts_screen.dart';
 import 'package:pkp_hub/features/project/screens/draft_design_screen.dart';
 import 'package:pkp_hub/features/project/screens/final_design_screen.dart';
@@ -35,10 +35,14 @@ import 'package:pkp_hub/features/project/screens/prototype_design_details_screen
 import 'package:pkp_hub/features/project/screens/prototype_designs_screen.dart';
 import 'package:pkp_hub/features/project/screens/project_review_screen.dart';
 import 'package:pkp_hub/features/project/screens/design_type_screen.dart';
-import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
-import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
+import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
+import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
+import 'package:pkp_hub/features/consultation/screens/consultation_details_screen.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultation_details_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
+import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
+import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 
 part 'app_routes.dart';
 
@@ -129,14 +133,24 @@ class AppPages {
       page: () => const ConsultantDetailsScreen(),
       binding: ConsultantDetailsBinding(),
     ),
+    GetPage(
+      name: _Paths.consultationDetails,
+      page: () => const ConsultationDetailsScreen(),
+      binding: ConsultationDetailsBinding(),
+    ),
     // Project details screen
     GetPage(
-      name: _Paths.projectDetails,
-      page: () => const ProjectDetailsScreen(),
+      name: _Paths.projectHistory,
+      page: () => const ProjectHistoryScreen(),
       binding: ProjectDetailsBinding(),
     ),
     GetPage(
       name: _Paths.inbox,
+      page: () => const InboxScreen(),
+      binding: InboxBinding(),
+    ),
+    GetPage(
+      name: _Paths.chats,
       page: () => const ChatsScreen(),
       binding: ChatsBinding(),
     ),

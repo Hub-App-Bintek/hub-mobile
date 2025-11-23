@@ -12,8 +12,7 @@ part of 'projects_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ProjectsResponse _$ProjectsResponseFromJson(Map<String, dynamic> json) {
   return _ProjectsResponse.fromJson(json);
@@ -32,9 +31,8 @@ mixin _$ProjectsResponse {
 /// @nodoc
 abstract class $ProjectsResponseCopyWith<$Res> {
   factory $ProjectsResponseCopyWith(
-    ProjectsResponse value,
-    $Res Function(ProjectsResponse) then,
-  ) = _$ProjectsResponseCopyWithImpl<$Res, ProjectsResponse>;
+          ProjectsResponse value, $Res Function(ProjectsResponse) then) =
+      _$ProjectsResponseCopyWithImpl<$Res, ProjectsResponse>;
   @useResult
   $Res call({List<Project> data});
 }
@@ -51,26 +49,24 @@ class _$ProjectsResponseCopyWithImpl<$Res, $Val extends ProjectsResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? data = null}) {
-    return _then(
-      _value.copyWith(
-            data: null == data
-                ? _value.data
-                : data // ignore: cast_nullable_to_non_nullable
-                      as List<Project>,
-          )
-          as $Val,
-    );
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_value.copyWith(
+      data: null == data
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Project>,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ProjectsResponseImplCopyWith<$Res>
     implements $ProjectsResponseCopyWith<$Res> {
-  factory _$$ProjectsResponseImplCopyWith(
-    _$ProjectsResponseImpl value,
-    $Res Function(_$ProjectsResponseImpl) then,
-  ) = __$$ProjectsResponseImplCopyWithImpl<$Res>;
+  factory _$$ProjectsResponseImplCopyWith(_$ProjectsResponseImpl value,
+          $Res Function(_$ProjectsResponseImpl) then) =
+      __$$ProjectsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<Project> data});
@@ -80,22 +76,21 @@ abstract class _$$ProjectsResponseImplCopyWith<$Res>
 class __$$ProjectsResponseImplCopyWithImpl<$Res>
     extends _$ProjectsResponseCopyWithImpl<$Res, _$ProjectsResponseImpl>
     implements _$$ProjectsResponseImplCopyWith<$Res> {
-  __$$ProjectsResponseImplCopyWithImpl(
-    _$ProjectsResponseImpl _value,
-    $Res Function(_$ProjectsResponseImpl) _then,
-  ) : super(_value, _then);
+  __$$ProjectsResponseImplCopyWithImpl(_$ProjectsResponseImpl _value,
+      $Res Function(_$ProjectsResponseImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? data = null}) {
-    return _then(
-      _$ProjectsResponseImpl(
-        data: null == data
-            ? _value._data
-            : data // ignore: cast_nullable_to_non_nullable
-                  as List<Project>,
-      ),
-    );
+  $Res call({
+    Object? data = null,
+  }) {
+    return _then(_$ProjectsResponseImpl(
+      data: null == data
+          ? _value._data
+          : data // ignore: cast_nullable_to_non_nullable
+              as List<Project>,
+    ));
   }
 }
 
@@ -103,7 +98,7 @@ class __$$ProjectsResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProjectsResponseImpl implements _ProjectsResponse {
   const _$ProjectsResponseImpl({required final List<Project> data})
-    : _data = data;
+      : _data = data;
 
   factory _$ProjectsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectsResponseImplFromJson(json);
@@ -139,13 +134,13 @@ class _$ProjectsResponseImpl implements _ProjectsResponse {
   @pragma('vm:prefer-inline')
   _$$ProjectsResponseImplCopyWith<_$ProjectsResponseImpl> get copyWith =>
       __$$ProjectsResponseImplCopyWithImpl<_$ProjectsResponseImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ProjectsResponseImplToJson(this);
+    return _$$ProjectsResponseImplToJson(
+      this,
+    );
   }
 }
 

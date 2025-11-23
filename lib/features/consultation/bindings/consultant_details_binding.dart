@@ -5,6 +5,7 @@ import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 
 import '../controllers/consultant_details_controller.dart';
 
@@ -21,16 +22,30 @@ class ConsultantDetailsBinding extends Bindings {
     );
 
     Get.lazyPut<ConsultantDetailsController>(() {
-      final args = Get.arguments as Map<String, dynamic>?;
+      final rawArgs = Get.arguments;
+      ConsultantDetailsArgs? args;
+      if (rawArgs is ConsultantDetailsArgs) {
+        args = rawArgs;
+      } else if (rawArgs is Map<String, dynamic>) {
+        args = ConsultantDetailsArgs(
+          consultantId: rawArgs['consultantId'] ?? '',
+          projectId: rawArgs['projectId'] ?? '',
+          isPaidConsultation: rawArgs['isPaidConsultation'] ?? false,
+          consultation: rawArgs['consultation'],
+          requireLoginForAction:
+              rawArgs['requireLoginForAction'] as bool? ?? false,
+        );
+      }
+      args ??= const ConsultantDetailsArgs(consultantId: '', projectId: '');
       return ConsultantDetailsController(
-        args?['consultantId'] ?? '',
-        args?['projectId'] ?? '',
-        args?['isPaidConsultation'] ?? false,
+        args.consultantId,
+        args.projectId,
+        args.isPaidConsultation,
         Get.find<UserStorage>(),
         Get.find<GetConsultantPortfoliosUseCase>(),
         Get.find<CreateConsultationUseCase>(),
-        args?['consultation'] as Consultant?,
-        args?['requireLoginForAction'] as bool? ?? false,
+        args.consultation as Consultant?,
+        args.requireLoginForAction,
       );
     });
   }

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pkp_hub/data/models/consultation_info.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
 
 part 'project.freezed.dart';
@@ -14,10 +15,7 @@ class Project with _$Project {
     ProjectLocation? location,
     double? landArea,
     DateTime? createdAt,
-    int? homeOwnerId,
-    String? homeOwnerName,
-    int? consultantId,
-    String? consultantName,
+    ConsultationInfo? consultationInfo,
   }) = _Project;
 
   factory Project.fromJson(Map<String, dynamic> json) =>

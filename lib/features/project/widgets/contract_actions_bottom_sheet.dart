@@ -8,7 +8,7 @@ import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
 import 'package:pkp_hub/data/models/installment.dart';
-import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
+import 'package:pkp_hub/features/project/controllers/project_history_controller.dart';
 
 class ContractActionsBottomSheet extends StatefulWidget {
   final bool isDownload; // if true show download button, else upload button
@@ -21,8 +21,8 @@ class ContractActionsBottomSheet extends StatefulWidget {
 
 class _ContractActionsBottomSheetState
     extends State<ContractActionsBottomSheet> {
-  final ProjectDetailsController controller =
-      Get.find<ProjectDetailsController>();
+  final ProjectHistoryController controller =
+      Get.find<ProjectHistoryController>();
 
   File? _selectedFile;
 

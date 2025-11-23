@@ -28,8 +28,9 @@ class ProjectsScreen extends GetView<ProjectsController> {
         : 0;
 
     Widget buildProjectCard(Project project) {
-      final consultantName = project.consultantName?.trim().isNotEmpty == true
-          ? project.consultantName!
+      final consultantName =
+          project.consultationInfo?.consultantName?.trim().isNotEmpty == true
+          ? project.consultationInfo?.consultantName!
           : 'Konsultan belum ditentukan';
       final location = project.location?.address?.trim().isNotEmpty == true
           ? project.location!.address!
@@ -37,68 +38,82 @@ class ProjectsScreen extends GetView<ProjectsController> {
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.inputSurface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.inputBorder),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 12,
-            children: [
-              Text(
-                project.name ?? '',
-                style: AppTextStyles.h4.copyWith(
-                  color: AppColors.neutralDarkest,
-                ),
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.person_outline,
-                    size: 16,
-                    color: AppColors.primaryDarkest,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: () {
+            final status = project.status ?? '';
+            if (controller.selectedCategory == 'Konsultasi' &&
+                (status == 'ACTIVE' || status == 'COMPLETED')) {
+              controller.openConsultationDetails(project);
+            } else {
+              controller.openProjectReview(project);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.inputSurface,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: AppColors.inputBorder),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 12,
+              children: [
+                Text(
+                  project.name ?? '',
+                  style: AppTextStyles.h4.copyWith(
+                    color: AppColors.neutralDarkest,
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      consultantName,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralDarkest,
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.person_outline,
+                      size: 16,
+                      color: AppColors.primaryDarkest,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        consultantName ?? '',
+                        style: AppTextStyles.bodyS.copyWith(
+                          color: AppColors.neutralDarkest,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.location_on_outlined,
-                    size: 16,
-                    color: AppColors.neutralMediumLight,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      location,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralMediumLight,
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 16,
+                      color: AppColors.neutralMediumLight,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        location,
+                        style: AppTextStyles.bodyS.copyWith(
+                          color: AppColors.neutralMediumLight,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: PkpElevatedButton(
-                  text: 'Tanya Konsultan',
-                  onPressed: () => controller.openProjectReview(project),
-                  size: PkpButtonSize.medium,
+                  ],
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: double.infinity,
+                  child: PkpElevatedButton(
+                    text: 'Tanya Konsultan',
+                    onPressed: () {
+                      controller.openChatWithConsultant(project);
+                    },
+                    size: PkpButtonSize.medium,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -139,9 +154,12 @@ class ProjectsScreen extends GetView<ProjectsController> {
             if (controller.isLoading.value && controller.projects.isEmpty) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (controller.error.value != null) {
+            if (controller.error.value != null && controller.projects.isEmpty) {
               return Center(child: Text(controller.error.value?.message ?? ''));
             }
+
+            final projects = controller.projects;
+
             final heading = buildHeading(controller.statusFilter);
 
             return Column(
@@ -167,8 +185,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
                             ),
                           ),
                         ),
-                        if (controller.projects.isEmpty &&
-                            !controller.isLoading.value)
+                        if (projects.isEmpty && !controller.isLoading.value)
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Text(
@@ -178,7 +195,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
                               ),
                             ),
                           ),
-                        ...controller.projects.map(buildProjectCard),
+                        ...projects.map(buildProjectCard),
                         if (controller.hasMore && controller.isLoading.value)
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16),

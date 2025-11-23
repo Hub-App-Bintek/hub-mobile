@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
-import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
+import 'package:pkp_hub/features/project/controllers/project_history_controller.dart';
 
 class UploadDesignDocumentsBottomSheet extends StatefulWidget {
   const UploadDesignDocumentsBottomSheet({super.key});
@@ -17,8 +17,8 @@ class UploadDesignDocumentsBottomSheet extends StatefulWidget {
 
 class _UploadDesignDocumentsBottomSheetState
     extends State<UploadDesignDocumentsBottomSheet> {
-  final ProjectDetailsController controller =
-      Get.find<ProjectDetailsController>();
+  final ProjectHistoryController controller =
+      Get.find<ProjectHistoryController>();
 
   File? _dedFile;
   File? _rabFile;

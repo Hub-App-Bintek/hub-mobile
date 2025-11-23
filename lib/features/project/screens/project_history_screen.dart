@@ -12,14 +12,14 @@ import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project_history.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
-import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
+import 'package:pkp_hub/features/project/controllers/project_history_controller.dart';
 import 'package:pkp_hub/features/project/widgets/contract_actions_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/project_information_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/survey_schedule_bottom_sheet.dart';
 import 'package:pkp_hub/features/project/widgets/upload_design_documents_bottom_sheet.dart';
 
-class ProjectDetailsScreen extends GetView<ProjectDetailsController> {
-  const ProjectDetailsScreen({super.key});
+class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
+  const ProjectHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

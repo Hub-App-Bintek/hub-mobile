@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
@@ -126,13 +127,13 @@ class ConsultationController extends BaseController {
       }
       navigateTo(
         AppRoutes.consultantDetails,
-        arguments: {
-          'consultantId': consultantId,
-          'projectId': projectId,
-          'isPaidConsultation': (consultant.packageCost ?? 0) > 0.0,
-          'consultation': consultant,
-          'requireLoginForAction': requireLoginForAction,
-        },
+        arguments: ConsultantDetailsArgs(
+          consultantId: consultantId,
+          projectId: projectId,
+          isPaidConsultation: (consultant.packageCost ?? 0) > 0.0,
+          consultation: consultant,
+          requireLoginForAction: requireLoginForAction,
+        ),
       );
     }();
   }
@@ -153,10 +154,10 @@ class ConsultationController extends BaseController {
 
     await navigateToForResult<dynamic>(
       AppRoutes.login,
-      arguments: {
-        'fromRoute': Get.currentRoute,
-        'returnArguments': Get.arguments,
-      },
+      arguments: LoginArgs(
+        fromRoute: Get.currentRoute,
+        returnArguments: Get.arguments,
+      ),
     );
 
     final refreshedToken = await _userStorage.getToken();

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 
@@ -40,6 +41,6 @@ class ChatsController extends BaseController {
   ].obs;
 
   void openChat(InboxItem item) {
-    navigateTo(AppRoutes.chat, arguments: {'name': item.name});
+    navigateTo(AppRoutes.chat, arguments: ChatArgs(name: item.name));
   }
 }

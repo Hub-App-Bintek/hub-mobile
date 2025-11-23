@@ -8,6 +8,7 @@ import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart'
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class MainBinding extends Bindings {
   @override
@@ -29,7 +30,9 @@ class MainBinding extends Bindings {
 
     final args = Get.arguments;
     String? status;
-    if (args is Map<String, dynamic>) {
+    if (args is ProjectsRouteArgs) {
+      status = args.status;
+    } else if (args is Map<String, dynamic>) {
       status = args['status'] as String?;
     }
     ProjectsBinding.register(tag: ProjectsBinding.mainTag, status: status);

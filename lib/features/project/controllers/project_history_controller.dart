@@ -52,7 +52,7 @@ import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.d
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ProjectDetailsController extends BaseController {
+class ProjectHistoryController extends BaseController {
   final String projectId;
   final int? _initialHomeOwnerId;
   final String? _initialHomeOwnerName;
@@ -87,7 +87,7 @@ class ProjectDetailsController extends BaseController {
   final RequestPaymentUseCase _requestPaymentUseCase;
   final ApprovePaymentUseCase _approvePaymentUseCase;
 
-  ProjectDetailsController(
+  ProjectHistoryController(
     this.projectId,
     this._initialHomeOwnerId,
     this._initialHomeOwnerName,

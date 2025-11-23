@@ -19,10 +19,10 @@ _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
-      homeOwnerId: (json['homeOwnerId'] as num?)?.toInt(),
-      homeOwnerName: json['homeOwnerName'] as String?,
-      consultantId: (json['consultantId'] as num?)?.toInt(),
-      consultantName: json['consultantName'] as String?,
+      consultationInfo: json['consultationInfo'] == null
+          ? null
+          : ConsultationInfo.fromJson(
+              json['consultationInfo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$ProjectImplToJson(_$ProjectImpl instance) =>
@@ -34,8 +34,5 @@ Map<String, dynamic> _$$ProjectImplToJson(_$ProjectImpl instance) =>
       'location': instance.location,
       'landArea': instance.landArea,
       'createdAt': instance.createdAt?.toIso8601String(),
-      'homeOwnerId': instance.homeOwnerId,
-      'homeOwnerName': instance.homeOwnerName,
-      'consultantId': instance.consultantId,
-      'consultantName': instance.consultantName,
+      'consultationInfo': instance.consultationInfo,
     };

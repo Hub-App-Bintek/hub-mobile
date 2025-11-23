@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 
 // Enum to manage payment methods
@@ -21,7 +22,12 @@ class PaymentController extends BaseController {
   void onInit() {
     super.onInit();
     // Retrieve the amount from the page arguments
-    amount.value = Get.arguments['amount'] ?? 0.0;
+    final args = Get.arguments;
+    if (args is PaymentArgs) {
+      amount.value = args.amount;
+    } else if (args is Map<String, dynamic>) {
+      amount.value = (args['amount'] as num?)?.toDouble() ?? 0.0;
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
@@ -20,7 +21,9 @@ class _ProjectReviewScreenState extends State<ProjectReviewScreen> {
   void initState() {
     super.initState();
     final args = Get.arguments;
-    if (args is Map<String, dynamic>) {
+    if (args is ProjectReviewArgs) {
+      _project = args.project;
+    } else if (args is Map<String, dynamic>) {
       _project = args['project'] as Project?;
     } else {
       _project = null;
@@ -31,18 +34,24 @@ class _ProjectReviewScreenState extends State<ProjectReviewScreen> {
     final project = _project;
     if (project == null) return;
     Get.toNamed(
-      AppRoutes.projectDetails,
-      arguments: _projectArguments(project),
+      AppRoutes.projectHistory,
+      arguments: ProjectDetailsArgs(
+        projectId: project.projectId ?? '',
+        homeOwnerId: project.consultationInfo?.homeOwnerId,
+        homeOwnerName: project.consultationInfo?.homeOwnerName,
+        consultantId: project.consultationInfo?.consultantId,
+        consultantName: project.consultationInfo?.consultantName,
+      ),
     );
   }
 
   Map<String, dynamic> _projectArguments(Project project) {
     return {
       'projectId': project.projectId,
-      'homeOwnerId': project.homeOwnerId,
-      'homeOwnerName': project.homeOwnerName,
-      'consultantId': project.consultantId,
-      'consultantName': project.consultantName,
+      'homeOwnerId': project.consultationInfo?.homeOwnerId,
+      'homeOwnerName': project.consultationInfo?.homeOwnerName,
+      'consultantId': project.consultationInfo?.consultantId,
+      'consultantName': project.consultationInfo?.consultantName,
     };
   }
 
