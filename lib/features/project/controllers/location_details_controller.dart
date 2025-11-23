@@ -480,7 +480,7 @@ class LocationDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         navigateAndClearUntil(
-          AppRoutes.projectDetails,
+          AppRoutes.projectHistory,
           untilRoute: AppRoutes.main,
           arguments: {
             'projectId': projectId,

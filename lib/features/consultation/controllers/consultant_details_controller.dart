@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -158,7 +159,7 @@ class ConsultantDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         navigateAndClearUntil(
-          AppRoutes.projectDetails,
+          AppRoutes.projectHistory,
           untilRoute: AppRoutes.main,
           arguments: {
             'projectId': _projectId,
@@ -235,10 +236,10 @@ class ConsultantDetailsController extends BaseController {
 
     await navigateToForResult<dynamic>(
       AppRoutes.login,
-      arguments: {
-        'fromRoute': Get.currentRoute,
-        'returnArguments': Get.arguments,
-      },
+      arguments: LoginArgs(
+        fromRoute: Get.currentRoute,
+        returnArguments: Get.arguments,
+      ),
     );
 
     final refreshedToken = await _userStorage.getToken();

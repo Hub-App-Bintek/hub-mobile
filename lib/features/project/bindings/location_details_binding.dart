@@ -4,6 +4,7 @@ import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/location_details_controller.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class LocationDetailsBinding extends Bindings {
   @override
@@ -17,13 +18,25 @@ class LocationDetailsBinding extends Bindings {
     );
 
     Get.lazyPut<LocationDetailsController>(() {
-      final args = Get.arguments as Map<String, dynamic>?;
+      final rawArgs = Get.arguments;
+      LocationDetailsArgs args;
+      if (rawArgs is LocationDetailsArgs) {
+        args = rawArgs;
+      } else if (rawArgs is Map<String, dynamic>) {
+        args = LocationDetailsArgs(
+          consultantId: rawArgs['consultantId'] as String?,
+          isPaidConsultation: rawArgs['isPaidConsultation'] as bool? ?? false,
+          type: rawArgs['type'] as String?,
+        );
+      } else {
+        args = const LocationDetailsArgs();
+      }
       return LocationDetailsController(
         Get.find<CreateProjectUseCase>(),
         Get.find<CreateConsultationUseCase>(),
-        args?['consultantId'] as String?,
-        args?['isPaidConsultation'] as bool? ?? false,
-        args?['type'] as String?,
+        args.consultantId,
+        args.isPaidConsultation,
+        args.type,
       );
     });
   }

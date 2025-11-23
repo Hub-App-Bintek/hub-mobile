@@ -30,7 +30,8 @@ import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
-import 'package:pkp_hub/features/project/controllers/project_details_controller.dart';
+import 'package:pkp_hub/features/project/controllers/project_history_controller.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class ProjectDetailsBinding extends Bindings {
   @override
@@ -110,7 +111,7 @@ class ProjectDetailsBinding extends Bindings {
       () => ApprovePaymentUseCase(Get.find<PaymentRepository>()),
     );
 
-    Get.lazyPut<ProjectDetailsController>(() {
+    Get.lazyPut<ProjectHistoryController>(() {
       int? asInt(dynamic value) {
         if (value == null) return null;
         if (value is int) return value;
@@ -119,18 +120,27 @@ class ProjectDetailsBinding extends Bindings {
         return null;
       }
 
-      final args = Get.arguments as Map<String, dynamic>?;
-      final projectId = args?['projectId'] as String? ?? '';
-      final homeOwnerId = asInt(args?['homeOwnerId']);
-      final homeOwnerName = args?['homeOwnerName'] as String?;
-      final consultantId = asInt(args?['consultantId']);
-      final consultantName = args?['consultantName'] as String?;
-      return ProjectDetailsController(
-        projectId,
-        homeOwnerId,
-        homeOwnerName,
-        consultantId,
-        consultantName,
+      final rawArgs = Get.arguments;
+      ProjectDetailsArgs args;
+      if (rawArgs is ProjectDetailsArgs) {
+        args = rawArgs;
+      } else if (rawArgs is Map<String, dynamic>) {
+        args = ProjectDetailsArgs(
+          projectId: rawArgs['projectId'] as String? ?? '',
+          homeOwnerId: asInt(rawArgs['homeOwnerId']),
+          homeOwnerName: rawArgs['homeOwnerName'] as String?,
+          consultantId: asInt(rawArgs['consultantId']),
+          consultantName: rawArgs['consultantName'] as String?,
+        );
+      } else {
+        args = const ProjectDetailsArgs(projectId: '');
+      }
+      return ProjectHistoryController(
+        args.projectId,
+        args.homeOwnerId,
+        args.homeOwnerName,
+        args.consultantId,
+        args.consultantName,
         Get.find<GetProjectDetailsUseCase>(),
         Get.find<UserStorage>(),
         Get.find<AcceptConsultationUseCase>(),

@@ -42,7 +42,7 @@ class PaymentReceiptScreen extends GetView<PaymentController> {
         child: ElevatedButton(
           onPressed: () {
             Get.until(
-              (route) => route.settings.name == AppRoutes.projectDetails,
+              (route) => route.settings.name == AppRoutes.projectHistory,
             );
           },
           child: const Text('Done'),

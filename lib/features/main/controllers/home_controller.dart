@@ -179,7 +179,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   }
 
   void onChatTapped() {
-    navigateTo(AppRoutes.inbox);
+    navigateTo(AppRoutes.chats);
   }
 
   void onSelectProject(Project project) {
@@ -187,13 +187,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
       navigateTo(AppRoutes.consultation);
     } else {
       navigateTo(
-        AppRoutes.projectDetails,
+        AppRoutes.projectHistory,
         arguments: {
           'projectId': project.projectId,
-          'homeOwnerId': project.homeOwnerId,
-          'homeOwnerName': project.homeOwnerName,
-          'consultantId': project.consultantId,
-          'consultantName': project.consultantName,
+          'homeOwnerId': project.consultationInfo?.homeOwnerId,
+          'homeOwnerName': project.consultationInfo?.homeOwnerName,
+          'consultantId': project.consultationInfo?.consultantId,
+          'consultantName': project.consultationInfo?.consultantName,
         },
       );
     }

@@ -6,6 +6,7 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/utils/form_validators.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class LoginController extends BaseController {
   // Dependencies
@@ -14,10 +15,19 @@ class LoginController extends BaseController {
   // Constructor
   LoginController(this._loginUseCase);
 
-  Map<String, dynamic>? get _navigationArgs =>
-      Get.arguments is Map<String, dynamic>
-      ? Get.arguments as Map<String, dynamic>?
-      : null;
+  Map<String, dynamic>? get _navigationArgs {
+    final args = Get.arguments;
+    if (args is LoginArgs) {
+      return {
+        'fromRoute': args.fromRoute,
+        'returnArguments': args.returnArguments,
+      };
+    }
+    if (args is Map<String, dynamic>) {
+      return args;
+    }
+    return null;
+  }
 
   bool get _shouldReturnToCaller {
     final route = _navigationArgs?['fromRoute'];

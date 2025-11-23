@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/features/chat/controllers/chat_controller.dart';
 
 class ChatScreen extends GetView<ChatController> {
@@ -10,8 +11,18 @@ class ChatScreen extends GetView<ChatController> {
 
   @override
   Widget build(BuildContext context) {
+    final args = Get.arguments;
+    String? chatTitle;
+    if (args is ChatArgs) {
+      chatTitle = args.name?.trim();
+    } else if (args is Map<String, dynamic>) {
+      chatTitle = (args['name'] as String?)?.trim();
+    }
+
     return Scaffold(
-      appBar: const PkpAppBar(title: 'Consultant Name'),
+      appBar: PkpAppBar(
+        title: chatTitle?.isNotEmpty == true ? chatTitle! : 'Chat',
+      ),
       body: Column(
         children: [
           Expanded(
