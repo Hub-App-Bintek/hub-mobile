@@ -17,14 +17,11 @@ import 'package:pkp_hub/data/models/response/wallet_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
-import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
-class HomeController extends BaseController with WidgetsBindingObserver {
+class HomeController extends BaseController {
   final UserStorage _userStorage;
   final GetProjectsUseCase _getProjectListUseCase;
   final GetWalletBalanceUseCase _getWalletBalanceUseCase;
-  final GetConsultantsUseCase _getConsultantsUseCase;
-  Worker? _mainTabWorker;
 
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
@@ -34,8 +31,6 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
   Timer? _carouselTimer;
-  final double _currentLat = 0;
-  final double _currentLong = 0;
 
   final List<String> carouselImages = [
     'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=400&fit=crop',
@@ -47,6 +42,7 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   final RxBool isProjectLoading = false.obs;
   final RxList<Consultant> consultants = <Consultant>[].obs;
   final RxBool isConsultantLoading = false.obs;
+  final RxString userDisplayName = ''.obs;
 
   String? _token;
 
@@ -54,57 +50,40 @@ class HomeController extends BaseController with WidgetsBindingObserver {
     this._userStorage,
     this._getProjectListUseCase,
     this._getWalletBalanceUseCase,
-    this._getConsultantsUseCase,
   );
 
-  @override
-  void onInit() {
-    super.onInit();
-    // Register for app lifecycle events so we can refresh when the app resumes.
-    WidgetsBinding.instance.addObserver(this);
-    _listenToMainTabChanges();
-    init();
-  }
-
-  // Expose a public refresh method to allow views or other controllers
-  // (e.g., MainController) to force a data reload when Home becomes visible.
   @override
   Future<void> refresh() async {
     await init();
   }
 
   @override
+  void onInit() {
+    super.onInit();
+    init();
+  }
+
+  @override
   void onClose() {
-    // Unregister lifecycle observer and clean up resources.
-    WidgetsBinding.instance.removeObserver(this);
-    _mainTabWorker?.dispose();
     carouselController.dispose();
     _carouselTimer?.cancel();
     super.onClose();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      // When the app resumes, reload token and refresh relevant data.
-      init();
-    }
+  void onResumed() {
+    super.onResumed();
+    init();
   }
 
-  void _listenToMainTabChanges() {
-    if (!Get.isRegistered<MainController>()) return;
-    final mainController = Get.find<MainController>();
-    _mainTabWorker = ever<int>(mainController.selectedIndex, (index) {
-      if (index == 0) {
-        refresh();
-      }
-    });
+  void onPageVisible() {
+    init();
   }
 
   Future<void> init() async {
     userRole.value = await _userStorage.getRole();
     _token = await _userStorage.getToken();
+    await _loadUserName();
     // if (userRole.value != UserRole.consultation) {
     //   final coords = await _determineUserLocation();
     //   _currentLat = coords.$1;
@@ -135,6 +114,13 @@ class HomeController extends BaseController with WidgetsBindingObserver {
   bool get _isLoggedIn => _token?.isNotEmpty ?? false;
 
   bool get isLoggedIn => _isLoggedIn;
+
+  Future<void> _loadUserName() async {
+    final user = await _userStorage.getUser();
+    userDisplayName.value = user?.fullName?.isNotEmpty == true
+        ? user!.fullName!
+        : 'User';
+  }
 
   @override
   void onReady() {
@@ -217,12 +203,6 @@ class HomeController extends BaseController with WidgetsBindingObserver {
       }
       permissionGranted = status.isGranted;
     }
-
-    // if (permissionGranted && projects.isEmpty) {
-    //   navigateTo(AppRoutes.createProject);
-    // } else if (permissionGranted && projects.isNotEmpty) {
-    //   onHaveProjects();
-    // }
   }
 
   void _startCarouselTimer() {
@@ -241,49 +221,5 @@ class HomeController extends BaseController with WidgetsBindingObserver {
         curve: Curves.easeInOut,
       );
     });
-  }
-
-  Future<void> _fetchConsultants({double? lat, double? long}) async {
-    isConsultantLoading.value = true;
-    final targetLat = lat ?? _currentLat;
-    final targetLong = long ?? _currentLong;
-    await handleAsync<ConsultantsResponse>(
-      () => _getConsultantsUseCase(
-        lat: targetLat,
-        long: targetLong,
-        page: 0,
-        size: 10,
-      ),
-      onSuccess: (response) {
-        consultants.value = response.consultants;
-      },
-      onFailure: (failure) {
-        showError(failure);
-        consultants.clear();
-      },
-    );
-    isConsultantLoading.value = false;
-  }
-
-  Future<(double, double)> _determineUserLocation() async {
-    double lat = 0;
-    double long = 0;
-    try {
-      var status = await Permission.location.status;
-      if (!status.isGranted) {
-        status = await Permission.location.request();
-      }
-      if (!status.isGranted) {
-        return (lat, long);
-      }
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.low,
-      );
-      lat = position.latitude;
-      long = position.longitude;
-    } catch (_) {
-      // Ignore and fallback to 0.0 for both coordinates
-    }
-    return (lat, long);
   }
 }

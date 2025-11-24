@@ -15,8 +15,12 @@ class ProfileController extends BaseController {
   final RxBool isVerified = false.obs;
 
   @override
-  void onInit() {
-    super.onInit();
+  void onResumed() {
+    super.onResumed();
+    _loadUser();
+  }
+
+  void onPageVisible() {
     _loadUser();
   }
 

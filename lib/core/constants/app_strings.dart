@@ -129,11 +129,11 @@ abstract class AppStrings {
   static const homeFeatureMonitoring = 'Monitoring';
   static const homeFeatureSupervision = 'Pengawasan';
   static const homeFeatureChat = 'Chat';
-  static const homeFeatureDesignConsultation = 'Konsultasi Desain';
+  static const homeFeatureDesignConsultation = 'Perencanaan Desain';
   static const homeFeatureLicensingFacilities = 'Fasilitas Perizinan';
-  static const homeFeatureConstructionLabor = 'Tenaga Konstruksi';
-  static const homeFeatureStoreMaterial = 'Toko & Material';
-  static const homeFeatureFinancingFacilities = 'Fasilitas Pembiayaan';
+  static const homeFeatureConstructionLabor = 'Fasilitasi Tenaga Konstruksi';
+  static const homeFeatureStoreMaterial = 'Fasilitasi Toko & Material';
+  static const homeFeatureFinancingFacilities = 'Fasilitasi Pembiayaan';
   static const homeFeatureConstructionSupervision = 'Pengawasan Konstruksi';
   static const homeWelcomeTitle = 'Selamat Datang!';
 

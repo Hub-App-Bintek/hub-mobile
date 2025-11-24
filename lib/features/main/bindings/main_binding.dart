@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
@@ -9,7 +10,6 @@ import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 import 'package:pkp_hub/features/main/controllers/profile_controller.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class MainBinding extends Bindings {
   @override
@@ -25,7 +25,6 @@ class MainBinding extends Bindings {
         Get.find<UserStorage>(),
         Get.find<GetProjectsUseCase>(),
         Get.find<GetWalletBalanceUseCase>(),
-        Get.find<GetConsultantsUseCase>(),
       ),
     );
     Get.lazyPut(() => ProfileController(Get.find<UserStorage>()));

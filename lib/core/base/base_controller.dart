@@ -18,7 +18,7 @@ import 'package:pkp_hub/core/network/network_manager.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
 
-abstract class BaseController extends GetxController {
+abstract class BaseController extends SuperController<dynamic> {
   final _logger = Logger();
 
   NetworkManager get _networkManager => Get.find<NetworkManager>();
@@ -678,4 +678,20 @@ abstract class BaseController extends GetxController {
     final safeExt = _sanitizePathSegment(ext);
     return '$safeBase.$safeExt';
   }
+
+  // --- SuperController lifecycle hooks ---
+  @override
+  void onDetached() {}
+
+  @override
+  void onInactive() {}
+
+  @override
+  void onPaused() {}
+
+  @override
+  void onResumed() {}
+
+  @override
+  void onHidden() {}
 }

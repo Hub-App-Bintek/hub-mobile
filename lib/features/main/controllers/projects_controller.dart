@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
@@ -8,13 +7,10 @@ import 'package:pkp_hub/data/models/consultation_info.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
-import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
-class ProjectsController extends BaseController with WidgetsBindingObserver {
+class ProjectsController extends BaseController {
   final GetProjectsUseCase getProjectsUseCase;
-  final String? status;
-
-  Worker? _mainTabWorker;
+  final String? projectStatus;
 
   final RxnString _statusFilter = RxnString();
 
@@ -36,40 +32,31 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
 
   String get selectedCategory => _selectedCategory.value;
 
-  ProjectsController(this.getProjectsUseCase, this.status) {
-    if (status != null) {
-      _statusFilter.value = status;
+  ProjectsController(this.getProjectsUseCase, this.projectStatus) {
+    if (projectStatus != null) {
+      _statusFilter.value = projectStatus;
     } else {
       _statusFilter.value = 'ACTIVE';
     }
   }
 
   @override
-  void onInit() {
-    super.onInit();
-    WidgetsBinding.instance.addObserver(this);
-    _listenToMainTabChanges();
+  void onResumed() {
+    super.onResumed();
+    _seedMockProjects();
+    projects.value = _allProjects
+        .where((p) => p.status == _statusFilter.value)
+        .toList();
+    // refreshProjects();
+    _updateProjectCounts();
+  }
+
+  void onPageVisible() {
     _seedMockProjects();
     projects.value = _allProjects
         .where((p) => p.status == _statusFilter.value)
         .toList();
     _updateProjectCounts();
-  }
-
-  @override
-  void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _mainTabWorker?.dispose();
-    super.onClose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.resumed) {
-      // Refresh when app comes back to foreground and this tab may be visible
-      refreshProjects();
-    }
   }
 
   void _updateProjectCounts() {
@@ -82,16 +69,6 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     projectCounts.assignAll(counts);
   }
 
-  void _listenToMainTabChanges() {
-    if (!Get.isRegistered<MainController>()) return;
-    final mainController = Get.find<MainController>();
-    _mainTabWorker = ever<int>(mainController.selectedIndex, (index) {
-      if (index == 1) {
-        refreshProjects();
-      }
-    });
-  }
-
   Future<void> fetchProjectList({
     required int page,
     required int size,
@@ -100,7 +77,7 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     bool isRefresh = false,
   }) async {
     // API temporarily bypassed: always use mock projects.
-    if (isRefresh || _allProjects.isEmpty) {
+    if (isRefresh) {
       _seedMockProjects();
     }
     projects.value = _allProjects
@@ -115,12 +92,12 @@ class ProjectsController extends BaseController with WidgetsBindingObserver {
     currentPage = 0;
     hasMore = true;
     // Do not clear here to avoid touching a potentially unmodifiable list.
-    if (status != null) {
+    if (projectStatus != null) {
       await fetchProjectList(
         page: currentPage,
         size: pageSize,
         isRefresh: true,
-        status: status,
+        status: projectStatus,
       );
     } else {
       await fetchProjectList(

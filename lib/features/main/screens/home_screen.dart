@@ -64,9 +64,10 @@ class HomeScreen extends GetView<HomeController> {
         final chatCount = controller.chatBadgeCount.value;
         final notificationCount = controller.notificationBadgeCount.value;
         final loggedIn = controller.isLoggedIn;
+        final userName = controller.userDisplayName.value;
 
         return PkpAppBar(
-          title: loggedIn ? 'Hai! User' : AppStrings.homeWelcomeTitle,
+          title: loggedIn ? 'Hai! $userName' : AppStrings.homeWelcomeTitle,
           showNavigation: false,
           centerTitle: false,
           backgroundColor: AppColors.primaryDark,
@@ -373,43 +374,44 @@ class HomeScreen extends GetView<HomeController> {
         const crossAxisSpacing = 24.0;
         const mainAxisSpacing = 20.0;
 
-        return GridView.builder(
-          padding: EdgeInsets.zero,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: featureItems.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            crossAxisSpacing: crossAxisSpacing,
-            mainAxisSpacing: mainAxisSpacing,
-            childAspectRatio: 0.92,
-          ),
-          itemBuilder: (context, index) {
-            final item = featureItems[index];
-            return Center(
-              child: FeatureCircleCard(
-                label: item.title,
-                icon: item.iconData,
-                iconWidget: item.iconAsset == null
-                    ? null
-                    : SvgPicture.asset(
-                        item.iconAsset!,
-                        width: 24,
-                        height: 24,
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.white,
-                          BlendMode.srcIn,
-                        ),
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final maxWidth = constraints.maxWidth;
+            final itemWidth = (maxWidth - (crossAxisSpacing * 2)) / 3;
+
+            return Wrap(
+              spacing: crossAxisSpacing,
+              runSpacing: mainAxisSpacing,
+              children: featureItems.map((item) {
+                return SizedBox(
+                  width: itemWidth,
+                  child: Center(
+                    child: FeatureCircleCard(
+                      label: item.title,
+                      icon: item.iconData,
+                      iconWidget: item.iconAsset == null
+                          ? null
+                          : SvgPicture.asset(
+                              item.iconAsset!,
+                              width: 24,
+                              height: 24,
+                              colorFilter: const ColorFilter.mode(
+                                AppColors.white,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                      labelOutside: true,
+                      backgroundColor: AppColors.primaryDark,
+                      iconColor: AppColors.white,
+                      labelStyle: AppTextStyles.bodyL.copyWith(
+                        color: AppColors.neutralDarkest,
+                        height: 1.25,
                       ),
-                labelOutside: true,
-                backgroundColor: AppColors.primaryDark,
-                iconColor: AppColors.white,
-                labelStyle: AppTextStyles.bodyL.copyWith(
-                  color: AppColors.neutralDarkest,
-                  height: 1.25,
-                ),
-                onTap: item.onTap,
-              ),
+                      onTap: item.onTap,
+                    ),
+                  ),
+                );
+              }).toList(),
             );
           },
         );

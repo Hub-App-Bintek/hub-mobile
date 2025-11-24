@@ -15,8 +15,7 @@ class ProfileScreen extends GetView<ProfileController> {
       backgroundColor: AppColors.white,
       appBar: const PkpAppBar(
         title: AppStrings.profileScreenTitle,
-        backgroundColor: AppColors.primaryDark,
-        leadingColor: AppColors.white,
+        showNavigation: false,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -91,8 +90,8 @@ class _ProfileHeader extends StatelessWidget {
             width: 96,
             height: 96,
             decoration: BoxDecoration(
-              color: const Color(0xFF006FFD),
-              borderRadius: BorderRadius.circular(999),
+              color: AppColors.primaryDark,
+              borderRadius: BorderRadius.circular(90),
             ),
             child: const Icon(
               Icons.person_outline,

@@ -141,10 +141,10 @@ class ProjectsScreen extends GetView<ProjectsController> {
       child: Scaffold(
         appBar: PkpAppBar(
           title: 'Proyek Saya',
-          showNavigation: controller.status != null,
+          showNavigation: controller.projectStatus != null,
           backgroundColor: AppColors.primaryDark,
           onLeadingPressed: () {
-            if (controller.status != null) {
+            if (controller.projectStatus != null) {
               Get.back();
             }
           },
@@ -165,7 +165,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
             return Column(
               children: [
                 _buildCategoryTabsSection(categories),
-                if (controller.status == null) ...[
+                if (controller.projectStatus == null) ...[
                   const SizedBox(height: 16),
                   _buildStatusMenu(context),
                 ],
