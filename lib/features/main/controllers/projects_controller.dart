@@ -7,8 +7,6 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/consultation_info.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
-import 'package:pkp_hub/data/models/request/get_projects_request.dart';
-import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 

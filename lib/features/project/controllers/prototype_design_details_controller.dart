@@ -1,4 +1,8 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/core/utils/location_permission_helper.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/data/models/project_type.dart';
 import 'package:pkp_hub/features/project/models/prototype_design.dart';
 
 class PrototypeDesignDetailsController extends GetxController {
@@ -29,6 +33,15 @@ class PrototypeDesignDetailsController extends GetxController {
   }
 
   void onSelectDesign() {
-    Get.back(result: design);
+    () async {
+      final hasPermission =
+          await LocationPermissionHelper.ensureLocationPermission();
+      if (!hasPermission) return;
+
+      Get.toNamed(
+        AppRoutes.createProject,
+        arguments: LocationDetailsArgs(type: prototype.id),
+      );
+    }();
   }
 }

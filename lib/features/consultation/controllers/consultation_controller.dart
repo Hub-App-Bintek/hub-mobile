@@ -5,6 +5,7 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/core/utils/location_permission_helper.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
@@ -142,6 +143,9 @@ class ConsultationController extends BaseController {
     () async {
       final loggedIn = await _ensureLoggedIn();
       if (!loggedIn) return;
+      final hasPermission =
+          await LocationPermissionHelper.ensureLocationPermission();
+      if (!hasPermission) return;
       navigateTo(AppRoutes.createProject, arguments: {'type': designTypeId});
     }();
   }

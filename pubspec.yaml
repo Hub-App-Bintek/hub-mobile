@@ -41,9 +41,9 @@ dependencies:
   # Caching
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  flutter_cache_manager: ^3.3.1
+  flutter_cache_manager: ^3.3.2
   cached_network_image: ^3.3.0
-  file: ^6.1.4
+  file: ^7.0.0
 
   # Utils
   logger: ^2.0.2+1
@@ -51,6 +51,7 @@ dependencies:
   package_info_plus: ^8.0.2
   flutter_dotenv: ^5.1.0
   google_maps_flutter: ^2.5.0
+  google_places_flutter: ^2.1.1
   permission_handler: ^11.3.0
   geolocator: ^10.1.0
   talker: ^3.2.0

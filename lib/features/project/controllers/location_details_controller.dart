@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/project_type.dart';
@@ -45,20 +46,21 @@ class LocationDetailsController extends BaseController {
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
-  final Rxn<File> incomeProofFile = Rxn<File>();
-  final RxnString incomeProofFileName = RxnString();
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode searchFocusNode = FocusNode();
 
   RxBool isLoadingLocation = true.obs;
   RxBool isLocationError = false.obs;
   RxnString locationErrorMessage = RxnString();
-  RxBool isProjectNameValid = false.obs;
+  RxBool isProjectNameValid = true.obs;
   RxBool isProvinceValid = false.obs;
   RxBool isCityValid = false.obs;
   RxBool isSubdistrictValid = false.obs;
   RxBool isVillageValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
-  RxBool isLandAreaValid = false.obs;
-  RxBool isIncomeValid = false.obs;
+  RxBool isLandAreaValid = true.obs;
+  RxBool isIncomeValid = true.obs;
+  RxnString incomeProofPath = RxnString();
 
   Rxn<LatLng> selectedLocation = Rxn<LatLng>();
   RxnString projectNameError = RxnString();
@@ -115,20 +117,21 @@ class LocationDetailsController extends BaseController {
 
   // Default location fallback (Jakarta center as default)
   static const LatLng _defaultLocation = LatLng(-6.2088, 106.8456);
+  GoogleMapController? _mapController;
 
   @override
   void onInit() {
     super.onInit();
     _getUserLocation();
     _hydrateInitialType();
-    projectNameController.addListener(_validateProjectName);
     provinceController.addListener(_validateProvince);
     cityController.addListener(_validateCity);
     subdistrictController.addListener(_validateSubdistrict);
     villageController.addListener(_validateVillage);
     locationDetailsController.addListener(_validateLocationDetails);
-    landAreaController.addListener(_validateLandArea);
-    incomeController.addListener(_validateIncome);
+    projectNameController.text = 'Proyek Baru';
+    landAreaController.text = '0';
+    incomeController.text = '0';
   }
 
   void _hydrateInitialType() {
@@ -142,14 +145,63 @@ class LocationDetailsController extends BaseController {
     selectedProjectType.value = match;
   }
 
+  Future<void> pickIncomeProof() async {
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: const ['pdf'],
+      );
+      if (result != null && result.files.isNotEmpty) {
+        final path = result.files.single.path;
+        if (path != null) {
+          incomeProofPath.value = path;
+          Get.snackbar(
+            'Berhasil',
+            'Bukti pendapatan berhasil dipilih',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
+          );
+        }
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Gagal',
+        'Tidak dapat memilih bukti pendapatan',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+        colorText: AppColors.white,
+      );
+    }
+  }
+
   void _validateProjectName() {
-    final value = projectNameController.text.trim();
-    projectNameError.value = value.isEmpty
-        ? AppStrings.projectNameRequired
-        : null;
-    isProjectNameValid.value = value.isNotEmpty;
+    projectNameError.value = null;
+    isProjectNameValid.value = true;
 
     _updateFormValidity();
+  }
+
+  void searchLocationByLatLng(String input) {
+    final parts = input.split(',');
+    if (parts.length != 2) {
+      _showSnack('Format tidak valid', 'Gunakan format: -6.2,106.8');
+      return;
+    }
+    final lat = double.tryParse(parts[0].trim());
+    final lng = double.tryParse(parts[1].trim());
+    if (lat == null || lng == null) {
+      _showSnack('Format tidak valid', 'Gunakan format: -6.2,106.8');
+      return;
+    }
+    final target = LatLng(lat, lng);
+    selectedLocation.value = target;
+    updatePosition(target);
+  }
+
+  void _showSnack(String title, String message) {
+    Get.snackbar(title, message, snackPosition: SnackPosition.BOTTOM);
   }
 
   void _validateProvince() {
@@ -193,32 +245,27 @@ class LocationDetailsController extends BaseController {
   }
 
   void _validateLandArea() {
-    final value = landAreaController.text.trim();
-    landAreaError.value = value.isEmpty ? AppStrings.landAreaRequired : null;
-    isLandAreaValid.value = value.isNotEmpty;
+    landAreaError.value = null;
+    isLandAreaValid.value = true;
 
     _updateFormValidity();
   }
 
   void _validateIncome() {
-    final value = incomeController.text.trim();
-    incomeError.value = value.isEmpty ? AppStrings.incomeRequired : null;
-    isIncomeValid.value = value.isNotEmpty;
+    incomeError.value = null;
+    isIncomeValid.value = true;
     _updateFormValidity();
   }
 
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
-        isProjectNameValid.value &&
         isProvinceValid.value &&
         isCityValid.value &&
         isSubdistrictValid.value &&
         isVillageValid.value &&
         isLocationDetailsValid.value &&
         selectedProjectType.value != null &&
-        isLandAreaValid.value &&
-        isIncomeValid.value &&
         !isLoadingLocation.value;
 
     debugPrint('Form validity updated: $_isFormValid');
@@ -233,13 +280,14 @@ class LocationDetailsController extends BaseController {
     villageController.dispose();
     locationDetailsController.dispose();
     landAreaController.dispose();
-    incomeController.removeListener(_validateIncome);
     incomeController.dispose();
-    incomeProofFile.value = null;
-    incomeProofFileName.value = null;
+    searchController.dispose();
+    searchFocusNode.dispose();
     _positionUpdateTimer?.cancel();
     super.onClose();
   }
+
+  String get googleApiKey => Environment.instance.apiKey;
 
   Future<void> _getUserLocation() async {
     isLoadingLocation.value = true;
@@ -326,6 +374,22 @@ class LocationDetailsController extends BaseController {
     );
   }
 
+  void onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
+
+  Future<void> _animateTo(LatLng target) async {
+    try {
+      await _mapController?.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: target, zoom: 16),
+        ),
+      );
+    } catch (e) {
+      debugPrint('Failed to animate map: $e');
+    }
+  }
+
   void updatePosition(LatLng location) {
     // Don't update position while location is still loading to prevent state issues
     if (isLoadingLocation.value) {
@@ -340,6 +404,24 @@ class LocationDetailsController extends BaseController {
       selectedLocation.value = location;
       _updateFormValidity();
     });
+  }
+
+  Future<void> onPlaceSelected(Prediction prediction) async {
+    final lat = double.tryParse(prediction.lat ?? '');
+    final lng = double.tryParse(prediction.lng ?? '');
+    if (lat == null || lng == null) {
+      _showSnack(
+        AppStrings.unableToFetchLocation,
+        'Koordinat lokasi tidak ditemukan.',
+      );
+      return;
+    }
+
+    final target = LatLng(lat, lng);
+    selectedLocation.value = target;
+    isLoadingLocation.value = false;
+    await _animateTo(target);
+    _updateFormValidity();
   }
 
   void updateProjectType(ProjectType? value) {
@@ -374,38 +456,26 @@ class LocationDetailsController extends BaseController {
     _validateVillage();
   }
 
-  void onIncomeProofSelected(File file) {
-    incomeProofFile.value = file;
-    incomeProofFileName.value = file.uri.pathSegments.isNotEmpty
-        ? file.uri.pathSegments.last
-        : '';
-  }
-
-  Future<void> pickIncomeProof() async {
-    final picked = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: const ['pdf'],
-    );
-    final path = picked?.files.single.path;
-    if (path == null) return;
-    onIncomeProofSelected(File(path));
-  }
-
   bool get _shouldCreateConsultation =>
       _consultantId != null && _consultantId.isNotEmpty;
 
   Future<void> createProject() async {
     if (!isFormValid) {
-      _validateProjectName();
       _validateProvince();
       _validateCity();
       _validateSubdistrict();
       _validateVillage();
       _validateLocationDetails();
-      _validateLandArea();
       return;
     }
+
+    final projectName = projectNameController.text.trim().isNotEmpty
+        ? projectNameController.text.trim()
+        : 'Proyek Baru';
+    final landArea = double.tryParse(landAreaController.text.trim()) ?? 0.0;
+    final income =
+        double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
+        0.0;
 
     final combinedLocationDetail = [
       locationDetailsController.text.trim(),
@@ -422,19 +492,14 @@ class LocationDetailsController extends BaseController {
         () => _createProjectUseCase(
           CreateProjectParams(
             request: CreateProjectRequest(
-              name: projectNameController.text.trim(),
+              name: projectName,
               locationDetail: combinedLocationDetail,
-              landArea: double.tryParse(landAreaController.text.trim()) ?? 0.0,
-              income:
-                  double.tryParse(
-                    incomeController.text.trim().replaceAll('.', ''),
-                  ) ??
-                  0.0,
+              landArea: landArea,
+              income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
               type: selectedProjectType.value?.id ?? '',
             ),
-            incomeProofFile: incomeProofFile.value,
           ),
         ),
         onSuccess: (response) {

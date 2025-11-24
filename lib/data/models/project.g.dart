@@ -22,7 +22,8 @@ _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
       consultationInfo: json['consultationInfo'] == null
           ? null
           : ConsultationInfo.fromJson(
-              json['consultationInfo'] as Map<String, dynamic>),
+              json['consultationInfo'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$$ProjectImplToJson(_$ProjectImpl instance) =>

@@ -32,6 +32,7 @@ abstract class AppRoutes {
   static const prototypeDesignDetails = _Paths.prototypeDesignDetails;
   static const payment = _Paths.payment;
   static const paymentQr = _Paths.paymentQr;
+  static const paymentVa = _Paths.paymentVa;
   static const paymentReceipt = _Paths.paymentReceipt;
 }
 
@@ -65,5 +66,6 @@ abstract class _Paths {
   static const prototypeDesignDetails = '/prototype-design-details';
   static const payment = '/payment';
   static const paymentQr = '/payment/qr';
+  static const paymentVa = '/payment/va';
   static const paymentReceipt = '/payment/receipt';
 }

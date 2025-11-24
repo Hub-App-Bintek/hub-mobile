@@ -49,9 +49,13 @@ class PaymentController extends BaseController {
     }
   }
 
-  /// Navigates to the QR payment screen and starts the countdown
-  void proceedToQrPayment() {
-    Get.toNamed(AppRoutes.paymentQr);
+  /// Navigates to the selected payment flow and starts the countdown
+  void proceedToPayment() {
+    final destination = selectedMethod.value == PaymentMethod.va
+        ? AppRoutes.paymentVa
+        : AppRoutes.paymentQr;
+
+    Get.toNamed(destination);
     startTimer();
   }
 

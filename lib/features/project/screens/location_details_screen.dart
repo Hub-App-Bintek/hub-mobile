@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
+import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
@@ -14,160 +16,94 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PkpAppBar(title: AppStrings.landLocationTitle),
+      backgroundColor: AppColors.white,
+      appBar: const PkpAppBar(
+        title: 'Detail Lokasi',
+        backgroundColor: AppColors.primaryDark,
+      ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Obx(() {
-              if (controller.isLoadingLocation.value) {
-                return const SizedBox(
-                  height: 240,
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (controller.selectedLocation.value == null) {
-                return const SizedBox(
-                  height: 240,
-                  child: Center(child: Text(AppStrings.unableToFetchLocation)),
-                );
-              }
-              return SizedBox(
-                height: 240,
-                width: double.infinity,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: controller.selectedLocation.value!,
-                        zoom: 16,
-                      ),
-                      onCameraMove: (position) {
-                        controller.updatePosition(position.target);
-                      },
-                      myLocationEnabled: true,
-                      zoomControlsEnabled: false,
-                      padding: EdgeInsets.zero,
-                      markers: const {},
-                    ),
-                    IgnorePointer(
-                      child: Transform.translate(
-                        offset: const Offset(0, -16), // align tip to map center
-                        child: const Icon(
-                          Icons.location_on,
-                          size: 40,
-                          color: AppColors.primaryDark,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-            Obx(() {
-              if (!(controller.isLocationError.value) ||
-                  controller.locationErrorMessage.value == null) {
-                return const SizedBox.shrink();
-              }
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Text(
-                  controller.locationErrorMessage.value ?? '',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: Colors.red.shade700),
-                ),
-              );
-            }),
+            _buildMap(context),
             Expanded(
               child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                  child: Obx(
-                    () => IgnorePointer(
-                      ignoring: controller.isLoadingLocation.value,
-                      child: Opacity(
-                        opacity: controller.isLoadingLocation.value ? 0.6 : 1.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 24),
-                            PkpTextFormField(
-                              labelText: AppStrings.projectNameLabel,
-                              hintText: AppStrings.projectNameHint,
-                              type: PkpTextFormFieldType.text,
-                              controller: controller.projectNameController,
-                              errorText: controller.projectNameError.value,
-                            ),
-                            const SizedBox(height: 16),
-                            _LocationDropdown(
-                              label: AppStrings.provinceLabel,
-                              hint: AppStrings.provinceHint,
-                              options: controller.provinceOptions,
-                              value: controller.selectedProvince.value,
-                              errorText: controller.provinceError.value,
-                              onChanged: controller.selectProvince,
-                            ),
-                            const SizedBox(height: 16),
-                            _LocationDropdown(
-                              label: AppStrings.cityLabel,
-                              hint: AppStrings.cityHint,
-                              options: controller.cityOptions,
-                              value: controller.selectedCity.value,
-                              errorText: controller.cityError.value,
-                              onChanged: controller.selectCity,
-                            ),
-                            const SizedBox(height: 16),
-                            _LocationDropdown(
-                              label: AppStrings.subdistrictLabel,
-                              hint: AppStrings.subdistrictHint,
-                              options: controller.subdistrictOptions,
-                              value: controller.selectedSubdistrict.value,
-                              errorText: controller.subdistrictError.value,
-                              onChanged: controller.selectSubdistrict,
-                            ),
-                            const SizedBox(height: 16),
-                            _LocationDropdown(
-                              label: AppStrings.villageLabel,
-                              hint: AppStrings.villageHint,
-                              options: controller.villageOptions,
-                              value: controller.selectedVillage.value,
-                              errorText: controller.villageError.value,
-                              onChanged: controller.selectVillage,
-                            ),
-                            const SizedBox(height: 16),
-                            PkpTextFormField(
-                              labelText: AppStrings.locationDetailsLabel,
-                              hintText: AppStrings.locationDetailsHint,
-                              type: PkpTextFormFieldType.multiline,
-                              controller: controller.locationDetailsController,
-                              errorText: controller.locationDetailsError.value,
-                            ),
-                            const SizedBox(height: 16),
-                            PkpTextFormField(
-                              labelText: AppStrings.landAreaLabel,
-                              hintText: AppStrings.landAreaHint,
-                              type: PkpTextFormFieldType.number,
-                              controller: controller.landAreaController,
-                              errorText: controller.landAreaError.value,
-                            ),
-                            const SizedBox(height: 16),
-                            PkpTextFormField(
-                              labelText: AppStrings.incomeLabel,
-                              hintText: AppStrings.incomeHint,
-                              type: PkpTextFormFieldType.currency,
-                              controller: controller.incomeController,
-                              errorText: controller.incomeError.value,
-                            ),
-                            const SizedBox(height: 16),
-                            _IncomeProofPicker(controller: controller),
-                            const SizedBox(height: 24),
-                          ],
-                        ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Obx(
+                  () => IgnorePointer(
+                    ignoring: controller.isLoadingLocation.value,
+                    child: Opacity(
+                      opacity: controller.isLoadingLocation.value ? 0.6 : 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          _dropdownField(
+                            label: 'Provinsi*',
+                            hint: 'Pilih Provinsi',
+                            options: controller.provinceOptions,
+                            controller: controller.provinceController,
+                            errorText: controller.provinceError.value,
+                            onChanged: controller.selectProvince,
+                          ),
+                          const SizedBox(height: 16),
+                          _dropdownField(
+                            label: 'Kabupaten/Kota*',
+                            hint: 'Pilih Kabupaten/Kota',
+                            options: controller.cityOptions,
+                            controller: controller.cityController,
+                            errorText: controller.cityError.value,
+                            onChanged: controller.selectCity,
+                          ),
+                          const SizedBox(height: 16),
+                          _dropdownField(
+                            label: 'Kecamatan*',
+                            hint: 'Pilih Kecamatan',
+                            options: controller.subdistrictOptions,
+                            controller: controller.subdistrictController,
+                            errorText: controller.subdistrictError.value,
+                            onChanged: controller.selectSubdistrict,
+                          ),
+                          const SizedBox(height: 16),
+                          _dropdownField(
+                            label: 'Kelurahan*',
+                            hint: 'Pilih Kelurahan',
+                            options: controller.villageOptions,
+                            controller: controller.villageController,
+                            errorText: controller.villageError.value,
+                            onChanged: controller.selectVillage,
+                          ),
+                          const SizedBox(height: 16),
+                          PkpTextFormField(
+                            controller: controller.locationDetailsController,
+                            labelText: 'Detail Lokasi*',
+                            hintText: 'Masukkan detail alamat lokasi proyek',
+                            type: PkpTextFormFieldType.multiline,
+                            errorText: controller.locationDetailsError.value,
+                          ),
+                          const SizedBox(height: 16),
+                          PkpTextFormField(
+                            controller: controller.landAreaController,
+                            labelText: 'Luas Lahan (m²)*',
+                            hintText: 'Masukkan luas lahan',
+                            type: PkpTextFormFieldType.number,
+                            errorText: controller.landAreaError.value,
+                          ),
+                          const SizedBox(height: 16),
+                          PkpTextFormField(
+                            controller: controller.incomeController,
+                            labelText: 'Pendapatan (Rp)*',
+                            hintText: 'Masukkan pendapatan',
+                            type: PkpTextFormFieldType.currency,
+                            errorText: controller.incomeError.value,
+                          ),
+                          const SizedBox(height: 16),
+                          _uploadField(
+                            label: 'Bukti Pendapatan',
+                            hint: 'Pilih file PDF',
+                            onTap: controller.pickIncomeProof,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                       ),
                     ),
                   ),
@@ -177,145 +113,168 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
           ],
         ),
       ),
-      bottomNavigationBar: Obx(
-        () => Container(
-          color: Colors.white,
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-          child: PkpElevatedButton(
-            text: AppStrings.continueButton,
-            isLoading: controller.isRequesting.value,
-            onPressed:
-                (controller.isFormValid &&
-                    !controller.isLoadingLocation.value &&
-                    !controller.isRequesting.value)
-                ? controller.createProject
-                : null,
-            enabled:
-                controller.isFormValid &&
-                !controller.isLoadingLocation.value &&
-                !controller.isRequesting.value,
+      bottomNavigationBar: Obx(() {
+        final enabled =
+            controller.isFormValid &&
+            !controller.isLoadingLocation.value &&
+            !controller.isRequesting.value;
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            border: Border(
+              top: BorderSide(color: AppColors.inputBorder, width: 0.616),
+            ),
           ),
-        ),
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: double.infinity,
+            child: PkpElevatedButton(
+              text: 'Lanjutkan',
+              onPressed: enabled ? controller.createProject : null,
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildMap(BuildContext context) {
+    return SizedBox(
+      height: 240,
+      width: double.infinity,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Obx(() {
+            if (controller.isLoadingLocation.value ||
+                controller.selectedLocation.value == null) {
+              return Container(color: AppColors.white);
+            }
+            return GoogleMap(
+              onMapCreated: controller.onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: controller.selectedLocation.value!,
+                zoom: 16,
+              ),
+              onCameraMove: (pos) => controller.updatePosition(pos.target),
+              myLocationEnabled: true,
+              zoomControlsEnabled: false,
+              padding: EdgeInsets.zero,
+              markers: const <Marker>{},
+            );
+          }),
+          Positioned(
+            top: 12,
+            left: 16,
+            right: 16,
+            child: _buildSearchField(context),
+          ),
+          Transform.translate(
+            offset: const Offset(0, -16),
+            child: const Icon(
+              Icons.location_on,
+              size: 40,
+              color: AppColors.primaryDark,
+            ),
+          ),
+        ],
       ),
     );
   }
-}
 
-class _LocationDropdown extends StatelessWidget {
-  const _LocationDropdown({
-    required this.label,
-    required this.hint,
-    required this.options,
-    required this.onChanged,
-    this.value,
-    this.errorText,
-  });
-
-  final String label;
-  final String hint;
-  final List<String> options;
-  final String? value;
-  final String? errorText;
-  final ValueChanged<String?> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    const border = OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(12)),
-      borderSide: BorderSide(color: AppColors.inputBorder),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+  Widget _buildSearchField(BuildContext context) {
+    return GooglePlaceAutoCompleteTextField(
+      textEditingController: controller.searchController,
+      googleAPIKey: controller.googleApiKey,
+      countries: const ['id'],
+      isLatLngRequired: true,
+      showError: false,
+      focusNode: controller.searchFocusNode,
+      boxDecoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.inputBorder, width: 0.6),
+      ),
+      inputDecoration: InputDecoration(
+        hintText: AppStrings.searchLocationHint,
+        hintStyle: AppTextStyles.bodyS,
+        labelStyle: AppTextStyles.bodyS,
+        prefixIcon: const Icon(Icons.search, color: AppColors.primaryDark),
+        border: InputBorder.none,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
         ),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          initialValue: value?.isNotEmpty == true ? value : null,
-          decoration: const InputDecoration(
-            hintText: '',
-            border: border,
-            enabledBorder: border,
-            focusedBorder: border,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-          ).copyWith(hintText: hint, errorText: errorText),
-          items: options
-              .map(
-                (option) => DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(option),
-                ),
-              )
-              .toList(),
-          onChanged: onChanged,
-        ),
-      ],
+      ),
+      textStyle: AppTextStyles.bodyS,
+      itemClick: (prediction) {
+        final description = prediction.description ?? '';
+        controller.searchController.text = description;
+        controller.searchController.selection = TextSelection.fromPosition(
+          TextPosition(offset: description.length),
+        );
+      },
+      getPlaceDetailWithLatLng: controller.onPlaceSelected,
     );
   }
-}
 
-class _IncomeProofPicker extends StatelessWidget {
-  const _IncomeProofPicker({required this.controller});
+  Widget _dropdownField({
+    required String label,
+    required String hint,
+    required List<String> options,
+    required TextEditingController controller,
+    required ValueChanged<String?> onChanged,
+    String? errorText,
+  }) {
+    return PkpTextFormField(
+      controller: controller,
+      labelText: label,
+      hintText: hint,
+      type: PkpTextFormFieldType.dropdown,
+      options: options,
+      errorText: errorText,
+      filled: true,
+      labelStyle: AppTextStyles.bodyS,
+      hintStyle: AppTextStyles.bodyM,
+      onChanged: onChanged,
+    );
+  }
 
-  final LocationDetailsController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final fileName = controller.incomeProofFileName.value;
-    final hasFile = fileName != null && fileName.isNotEmpty;
-
+  Widget _uploadField({
+    required String label,
+    required String hint,
+    required VoidCallback onTap,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          AppStrings.incomeProofLabel,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(label, style: AppTextStyles.bodyS),
         const SizedBox(height: 8),
         InkWell(
-          onTap: controller.isLoadingLocation.value
-              ? null
-              : controller.pickIncomeProof,
+          onTap: onTap,
           borderRadius: BorderRadius.circular(12),
-          child: Ink(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+          child: Container(
+            height: 46.218,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color: AppColors.inputSurface,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.inputBorder),
+              border: Border.all(color: AppColors.inputBorder, width: 0.616),
             ),
             child: Row(
               children: [
-                const Icon(Icons.upload_file, color: AppColors.primaryDarkest),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    hasFile ? fileName : 'Pilih file PDF',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: hasFile
-                          ? AppColors.neutralDarkest
-                          : AppColors.neutralMedium,
-                    ),
-                    overflow: TextOverflow.ellipsis,
+                const Icon(
+                  Icons.upload_file,
+                  size: 18,
+                  color: AppColors.neutralDarkest,
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  hint,
+                  style: AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralMediumLight,
+                    height: 21 / 14,
                   ),
                 ),
-                if (hasFile) ...[
-                  const SizedBox(width: 8),
-                  const Icon(
-                    Icons.check_circle,
-                    color: AppColors.successDark,
-                    size: 20,
-                  ),
-                ],
               ],
             ),
           ),
