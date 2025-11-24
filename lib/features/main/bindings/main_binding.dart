@@ -8,6 +8,7 @@ import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart'
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/controllers/main_controller.dart';
+import 'package:pkp_hub/features/main/controllers/profile_controller.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class MainBinding extends Bindings {
@@ -27,6 +28,7 @@ class MainBinding extends Bindings {
         Get.find<GetConsultantsUseCase>(),
       ),
     );
+    Get.lazyPut(() => ProfileController(Get.find<UserStorage>()));
 
     final args = Get.arguments;
     String? status;

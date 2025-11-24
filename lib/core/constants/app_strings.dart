@@ -200,6 +200,15 @@ abstract class AppStrings {
 
   // Profile
   static const profileScreenTitle = 'Profil';
+  static const profilePlaceholderName = '<User Name>';
+  static const profilePlaceholderEmail = '<user email>';
+  static const accountInformation = 'Informasi Akun';
+  static const verifyProfile = 'Verifikasi Profil';
+  static const verificationPending = 'Belum Diverifikasi';
+  static const verificationCompleted = 'Terverifikasi';
+  static const emailLabel = 'Email';
+  static const otherActions = 'Lainnya';
+  static const logout = 'Keluar';
 
   // Consultant list
   static const consultantSortLabel = 'Urutkan berdasarkan';
