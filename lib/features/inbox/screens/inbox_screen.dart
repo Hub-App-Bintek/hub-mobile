@@ -41,7 +41,7 @@ class _InboxCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         color: cardColor,
-        border: Border(
+        border: const Border(
           bottom: BorderSide(color: AppColors.inputBorder, width: 0.6),
         ),
       ),

@@ -17,7 +17,7 @@
         android:label="PKP Hub">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB1lhYRnDeVfN7xWoLiWL-4HHTC3C7Q5iY" />
+            android:value="AIzaSyB_vNsaMF8tJ28gKREs8HMLMVvDqnw_FHY" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

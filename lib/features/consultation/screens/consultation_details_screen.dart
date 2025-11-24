@@ -163,9 +163,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                       : AppColors.inputSurface,
                   onTap: () => onStateSelected(item.step),
                   showBadge: (item.badge ?? 0) > 0,
-                  badgeValue: item.badge != null && item.badge! > 0
-                      ? '${item.badge}'
-                      : null,
+                  badgeValue: item.badge > 0 ? '${item.badge}' : null,
                 ),
               ),
             ),

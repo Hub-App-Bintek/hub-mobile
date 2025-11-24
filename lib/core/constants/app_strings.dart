@@ -49,7 +49,7 @@ abstract class AppStrings {
   static const kycUploadSelfieKtpLabel = 'Upload Selfie KTP';
 
   // Create Project Screen
-  static const landLocationTitle = 'Lokasi Lahan';
+  static const landLocationTitle = 'Detail Lokasi';
   static const projectNameLabel = 'Nama Proyek*';
   static const projectNameHint = 'Masukkan Nama Proyek';
   static const provinceLabel = 'Provinsi*';
@@ -154,7 +154,16 @@ abstract class AppStrings {
       'Belum ada proyek aktif atau menunggu konfirmasi.';
 
   // Permissions
-  static const permissionDenied = 'Izin Ditolak';
+  static const locationPermissionTitle = 'Izinkan Akses Lokasi';
+  static const locationPermissionDescription =
+      'Kami memerlukan akses lokasi untuk menampilkan detail lokasi proyek Anda.';
+  static const locationPermissionSettingsTitle = 'Aktifkan Izin Lokasi';
+  static const locationPermissionSettingsDescription =
+      'Anda menolak izin lokasi sebelumnya. Buka pengaturan untuk mengaktifkannya agar dapat melanjutkan.';
+  static const allowPermission = 'Izinkan';
+  static const searchLocation = 'Cari Lokasi';
+  static const searchLocationHint = 'Masukkan alamat atau nama tempat';
+  static const permissionDenied = 'Tolak';
   static const permissionPermanentlyDenied =
       'Anda telah menolak izin secara permanen. Silakan buka pengaturan aplikasi untuk mengaktifkannya.';
   static const cancel = 'Batal';

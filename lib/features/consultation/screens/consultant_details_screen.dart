@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
@@ -40,7 +41,7 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
                     isLoading: controller.isCreatingConsultation.value,
                     onPressed: controller.isCreatingConsultation.value
                         ? null
-                        : controller.onConsultPressed,
+                        : () => _showConsultConfirmation(context),
                   ),
                 ),
               ),
@@ -131,6 +132,17 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
           );
         }),
       ),
+    );
+  }
+
+  Future<void> _showConsultConfirmation(BuildContext context) async {
+    final consultantName = controller.consultantName.value ?? 'konsultan ini';
+
+    return PkpConfirmationDialog.show(
+      title: 'Konfirmasi Konsultasi',
+      message: 'Mulai konsultasi dengan $consultantName?',
+      onConfirm: controller.onConsultPressed,
+      barrierDismissible: false,
     );
   }
 }

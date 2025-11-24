@@ -115,7 +115,7 @@ class PaymentScreen extends GetView<PaymentController> {
                 width: double.infinity,
                 child: PkpElevatedButton(
                   text: 'Bayar',
-                  onPressed: controller.proceedToQrPayment,
+                  onPressed: controller.proceedToPayment,
                 ),
               ),
             ],

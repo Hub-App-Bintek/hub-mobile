@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/core/utils/location_permission_helper.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/portfolio.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
@@ -192,7 +191,8 @@ class ConsultantDetailsController extends BaseController {
     if (!loggedIn) return;
 
     if (_projectId.isEmpty) {
-      final hasPermission = await _ensureLocationPermission();
+      final hasPermission =
+          await LocationPermissionHelper.ensureLocationPermission();
       if (!hasPermission) return;
 
       navigateTo(
@@ -206,20 +206,6 @@ class ConsultantDetailsController extends BaseController {
     }
 
     await _createConsultation(channel: 'CHAT');
-  }
-
-  Future<bool> _ensureLocationPermission() async {
-    var status = await Permission.location.status;
-    if (status.isGranted) return true;
-
-    status = await Permission.location.request();
-    if (status.isGranted) return true;
-
-    final message = status.isPermanentlyDenied
-        ? AppStrings.permissionPermanentlyDenied
-        : AppStrings.permissionDenied;
-    showError(ServerFailure(message: message));
-    return false;
   }
 
   Future<bool> _ensureLoggedIn() async {

@@ -14,6 +14,7 @@ enum PkpTextFormFieldType {
   number,
   currency,
   percentage,
+  dropdown,
 }
 
 /// A reusable and configurable text form field widget for the app,
@@ -28,6 +29,7 @@ class PkpTextFormField extends StatefulWidget {
     this.errorText,
     this.onChanged,
     this.enabled = true,
+    this.options = const [],
     this.firstDate,
     this.lastDate,
     this.initialDate,
@@ -35,7 +37,7 @@ class PkpTextFormField extends StatefulWidget {
     this.fillColor,
     this.borderColor,
     this.borderWidth,
-    this.borderRadius = 12,
+    this.borderRadius = 16,
     this.hintStyle,
     this.labelStyle,
     this.contentPadding,
@@ -48,6 +50,7 @@ class PkpTextFormField extends StatefulWidget {
   final String? errorText;
   final ValueChanged<String>? onChanged;
   final bool enabled;
+  final List<String>? options;
   // New: optional constraints for datetime picker
   final DateTime? firstDate;
   final DateTime? lastDate;
@@ -91,6 +94,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     final isNumber = widget.type == PkpTextFormFieldType.number;
     final isCurrency = widget.type == PkpTextFormFieldType.currency;
     final isPercentage = widget.type == PkpTextFormFieldType.percentage;
+    final isDropdown = widget.type == PkpTextFormFieldType.dropdown;
     final keyboardType = _getKeyboardType();
     final obscureText = isPassword && !_isPasswordVisible;
 
@@ -123,84 +127,148 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.labelText != null) ...[
-          Text(
-            widget.labelText!,
-            style:
-                widget.labelStyle ??
-                theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 8),
+          Text(widget.labelText!, style: AppTextStyles.bodyS),
+          const SizedBox(height: 4),
         ],
-        TextFormField(
-          controller: widget.controller,
-          enabled: widget.enabled,
-          obscureText: obscureText,
-          keyboardType: keyboardType,
-          readOnly: isDateTime || isTime,
-          onChanged: (value) {
-            if (!widget.enabled) return; // ignore changes when disabled
-            if (isNumber || isCurrency) {
-              final formatted = _formatCurrency(value);
-              widget.controller?.value = TextEditingValue(
-                text: formatted,
-                selection: TextSelection.collapsed(offset: formatted.length),
-              );
-              widget.onChanged?.call(formatted);
-            } else if (isPercentage) {
-              final digits = _formatPercentage(value);
-              widget.controller?.value = TextEditingValue(
-                text: digits,
-                selection: TextSelection.collapsed(offset: digits.length),
-              );
-              widget.onChanged?.call(digits);
-            } else {
-              widget.onChanged?.call(value);
-            }
-          },
-          // Allow multiple lines for multiline type, otherwise 1.
-          maxLines: isMultiline ? null : 1,
-          minLines: isMultiline ? 3 : 1,
-          decoration: InputDecoration(
-            hintText: widget.hintText,
-            hintStyle: widget.hintStyle,
-            suffixIcon: suffixIcon,
-            prefixIcon: isCurrency
-                ? SizedBox(
-                    width: 40,
-                    child: Center(
-                      child: Text('Rp', style: AppTextStyles.bodyL),
-                    ),
-                  )
-                : null,
-            filled: widget.filled,
-            fillColor: widget.fillColor,
-            border: effectiveBorder,
-            enabledBorder: effectiveBorder,
-            focusedBorder: effectiveBorder.copyWith(
-              borderSide:
-                  widget.borderColor == null && widget.borderWidth == null
-                  ? const BorderSide(color: AppColors.inputBorder)
-                  : BorderSide(
-                      color: widget.borderColor ?? theme.colorScheme.primary,
-                      width: widget.borderWidth ?? 1.1,
-                    ),
+        if (isDropdown)
+          _buildDropdownField(context)
+        else
+          TextFormField(
+            controller: widget.controller,
+            enabled: widget.enabled,
+            obscureText: obscureText,
+            keyboardType: keyboardType,
+            readOnly: isDateTime || isTime,
+            onChanged: (value) {
+              if (!widget.enabled) return; // ignore changes when disabled
+              if (isNumber || isCurrency) {
+                final formatted = _formatCurrency(value);
+                widget.controller?.value = TextEditingValue(
+                  text: formatted,
+                  selection: TextSelection.collapsed(offset: formatted.length),
+                );
+                widget.onChanged?.call(formatted);
+              } else if (isPercentage) {
+                final digits = _formatPercentage(value);
+                widget.controller?.value = TextEditingValue(
+                  text: digits,
+                  selection: TextSelection.collapsed(offset: digits.length),
+                );
+                widget.onChanged?.call(digits);
+              } else {
+                widget.onChanged?.call(value);
+              }
+            },
+            // Allow multiple lines for multiline type, otherwise 1.
+            maxLines: isMultiline ? null : 1,
+            minLines: isMultiline ? 3 : 1,
+            decoration: InputDecoration(
+              hintText: widget.hintText,
+              hintStyle:
+                  widget.hintStyle ??
+                  AppTextStyles.bodyS.copyWith(
+                    color: AppColors.neutralMediumLight,
+                  ),
+              suffixIcon: suffixIcon,
+              prefixIcon: isCurrency
+                  ? SizedBox(
+                      width: 40,
+                      child: Center(
+                        child: Text('Rp', style: AppTextStyles.bodyS),
+                      ),
+                    )
+                  : null,
+              filled: widget.filled,
+              fillColor: widget.fillColor,
+              border: effectiveBorder,
+              enabledBorder: effectiveBorder,
+              focusedBorder: effectiveBorder.copyWith(
+                borderSide:
+                    widget.borderColor == null && widget.borderWidth == null
+                    ? const BorderSide(color: AppColors.inputBorder)
+                    : BorderSide(
+                        color: widget.borderColor ?? theme.colorScheme.primary,
+                        width: widget.borderWidth ?? 1,
+                      ),
+              ),
+              contentPadding:
+                  widget.contentPadding ??
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              errorText: widget.errorText,
             ),
-            contentPadding:
-                widget.contentPadding ??
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            errorText: widget.errorText,
+            onTap: widget.enabled
+                ? (isDateTime
+                      ? () => _selectDate(context)
+                      : isTime
+                      ? () => _selectTime(context)
+                      : null)
+                : null,
           ),
-          onTap: widget.enabled
-              ? (isDateTime
-                    ? () => _selectDate(context)
-                    : isTime
-                    ? () => _selectTime(context)
-                    : null)
+      ],
+    );
+  }
+
+  Widget _buildDropdownField(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: widget.fillColor ?? Colors.transparent,
+        borderRadius: BorderRadius.circular(widget.borderRadius),
+        border: Border.all(
+          color: widget.borderColor ?? AppColors.inputBorder,
+          width: widget.borderWidth ?? 0.616,
+        ),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: widget.controller?.text.isNotEmpty == true
+              ? widget.controller?.text
+              : null,
+          icon: const Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: Icon(Icons.expand_more, color: AppColors.neutralMediumLight),
+          ),
+          isExpanded: true,
+          hint: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Text(
+              widget.hintText ?? '',
+              style:
+                  widget.hintStyle ??
+                  AppTextStyles.bodyM.copyWith(
+                    color: AppColors.neutralMediumLight,
+                    height: 21 / 14,
+                  ),
+            ),
+          ),
+          items: (widget.options ?? [])
+              .map(
+                (opt) => DropdownMenuItem<String>(
+                  value: opt,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    child: Text(
+                      opt,
+                      style: AppTextStyles.bodyS.copyWith(
+                        color: AppColors.neutralDarkest,
+                      ),
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+          onChanged: widget.enabled
+              ? (val) {
+                  if (val == null) return;
+                  widget.controller?.text = val;
+                  widget.onChanged?.call(val);
+                  setState(() {});
+                }
               : null,
         ),
-      ],
+      ),
     );
   }
 
@@ -221,6 +289,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.percentage => const TextInputType.numberWithOptions(
         decimal: false,
       ),
+      PkpTextFormFieldType.dropdown => TextInputType.text,
     };
   }
 

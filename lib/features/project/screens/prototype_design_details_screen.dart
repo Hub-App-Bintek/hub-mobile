@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/features/project/controllers/prototype_design_details_controller.dart';
@@ -122,7 +123,7 @@ class PrototypeDesignDetailsScreen
                   Expanded(
                     child: PkpElevatedButton(
                       text: 'Pilih Desain',
-                      onPressed: controller.onSelectDesign,
+                      onPressed: () => _showSelectConfirmation(context),
                     ),
                   ),
                 ],
@@ -131,6 +132,15 @@ class PrototypeDesignDetailsScreen
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _showSelectConfirmation(BuildContext context) {
+    return PkpConfirmationDialog.show(
+      title: 'Konfirmasi',
+      message: 'Apakah Anda yakin ingin memilih desain ini?',
+      onConfirm: controller.onSelectDesign,
+      barrierDismissible: false,
     );
   }
 }

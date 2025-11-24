@@ -19,6 +19,7 @@ import 'package:pkp_hub/features/main/screens/projects_screen.dart';
 import 'package:pkp_hub/features/payment/bindings/payment_binding.dart';
 import 'package:pkp_hub/features/payment/screens/payment_qr_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_receipt_screen.dart';
+import 'package:pkp_hub/features/payment/screens/payment_va_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_screen.dart';
 import 'package:pkp_hub/features/project/bindings/location_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/design_type_binding.dart';
@@ -169,6 +170,11 @@ class AppPages {
       page: () => const PaymentQrScreen(),
       binding:
           PaymentBinding(), // Use the same binding to access the same controller instance
+    ),
+    GetPage(
+      name: AppRoutes.paymentVa,
+      page: () => const PaymentVAScreen(),
+      binding: PaymentBinding(),
     ),
     GetPage(
       name: AppRoutes.paymentReceipt,
