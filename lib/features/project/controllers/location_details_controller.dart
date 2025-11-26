@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:geolocator/geolocator.dart';
@@ -145,7 +146,7 @@ class LocationDetailsController extends BaseController {
     selectedProjectType.value = match;
   }
 
-  Future<void> pickIncomeProof() async {
+  Future<File?> pickIncomeProof() async {
     try {
       final result = await FilePicker.platform.pickFiles(
         allowMultiple: false,
@@ -155,6 +156,7 @@ class LocationDetailsController extends BaseController {
       if (result != null && result.files.isNotEmpty) {
         final path = result.files.single.path;
         if (path != null) {
+          final file = File(path);
           incomeProofPath.value = path;
           Get.snackbar(
             'Berhasil',
@@ -163,6 +165,7 @@ class LocationDetailsController extends BaseController {
             backgroundColor: AppColors.successDark,
             colorText: AppColors.white,
           );
+          return file;
         }
       }
     } catch (e) {
@@ -174,6 +177,7 @@ class LocationDetailsController extends BaseController {
         colorText: AppColors.white,
       );
     }
+    return null;
   }
 
   void _validateProjectName() {
@@ -523,7 +527,7 @@ class LocationDetailsController extends BaseController {
   }
 
   void _navigateToConsultants(String projectId) {
-    navigateOff(AppRoutes.consultation);
+    navigateOff(AppRoutes.consultants, arguments: {'projectId': projectId});
   }
 
   Future<void> _createConsultationForProject(String projectId) async {
@@ -545,15 +549,13 @@ class LocationDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         navigateAndClearUntil(
-          AppRoutes.projectHistory,
+          AppRoutes.consultationDetails,
           untilRoute: AppRoutes.main,
           arguments: {
             'projectId': projectId,
-            'homeOwnerId': response.homeOwnerId,
-            'homeOwnerName': response.homeOwnerName,
-            'consultantId':
-                response.consultantId ?? int.tryParse(_consultantId ?? ''),
-            'consultantName': response.consultantName,
+            'projectName': projectNameController.text.trim().isNotEmpty
+                ? projectNameController.text.trim()
+                : 'Proyek Baru',
           },
         );
       },

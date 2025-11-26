@@ -4,8 +4,8 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_button_size.dart';
-import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
@@ -91,40 +91,19 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
       ),
       bottomNavigationBar: Obx(() {
         if (controller.shouldShowConsultationConfirmationButtons) {
+          final isBusy =
+              controller.rejectConsultationLoading.value ||
+              controller.acceptConsultationLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Tolak Konsultasi',
-                    isLoading: controller.rejectConsultationLoading.value,
-                    enabled:
-                        !(controller.rejectConsultationLoading.value ||
-                            controller.acceptConsultationLoading.value),
-                    onPressed:
-                        (controller.rejectConsultationLoading.value ||
-                            controller.acceptConsultationLoading.value)
-                        ? null
-                        : controller.rejectConsultation,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Terima Konsultasi',
-                    isLoading: controller.acceptConsultationLoading.value,
-                    enabled:
-                        !(controller.acceptConsultationLoading.value ||
-                            controller.rejectConsultationLoading.value),
-                    onPressed:
-                        (controller.acceptConsultationLoading.value ||
-                            controller.rejectConsultationLoading.value)
-                        ? null
-                        : controller.acceptConsultation,
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Tolak Konsultasi',
+              onSecondaryPressed: controller.rejectConsultation,
+              secondaryEnabled: !isBusy,
+              secondaryLoading: controller.rejectConsultationLoading.value,
+              primaryText: 'Terima Konsultasi',
+              onPrimaryPressed: controller.acceptConsultation,
+              primaryEnabled: !isBusy,
+              primaryLoading: controller.acceptConsultationLoading.value,
             ),
           );
         }
@@ -132,11 +111,9 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // Consultant reschedules when the latest proposed schedule was rejected
         if (controller.shouldShowRescheduleButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Ajukan Ulang Jadwal',
-              enabled: true,
-              onPressed: () {
+            child: PkpBottomActions(
+              primaryText: 'Ajukan Ulang Jadwal',
+              onPrimaryPressed: () {
                 controller.showBottomSheet(
                   SurveyScheduleBottomSheet(
                     onButtonPressed: (request) {
@@ -152,75 +129,37 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // Consultant proposes schedule
         if (controller.shouldShowScheduleButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Lanjut Tanpa Survey',
-                    enabled: true,
-                    onPressed: () {
-                      /// TODO: Do nothing
+            child: PkpBottomActions(
+              secondaryText: 'Lanjut Tanpa Survey',
+              onSecondaryPressed: () {},
+              primaryText: 'Ajukan Jadwal Survey',
+              onPrimaryPressed: () {
+                controller.showBottomSheet(
+                  SurveyScheduleBottomSheet(
+                    onButtonPressed: (request) {
+                      controller.submitSurveySchedule(request);
                     },
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Ajukan Jadwal Survey',
-                    enabled: true,
-                    onPressed: () {
-                      controller.showBottomSheet(
-                        SurveyScheduleBottomSheet(
-                          onButtonPressed: (request) {
-                            controller.submitSurveySchedule(request);
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
+                );
+              },
             ),
           );
         }
 
         // Homeowner approves/rejects schedule
         if (controller.shouldShowSurveyScheduleApprovalButtons) {
+          final isBusy =
+              controller.rejectLoading.value || controller.approveLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Tolak Jadwal',
-                    isLoading: controller.rejectLoading.value,
-                    enabled:
-                        !(controller.rejectLoading.value ||
-                            controller.approveLoading.value),
-                    onPressed:
-                        (controller.rejectLoading.value ||
-                            controller.approveLoading.value)
-                        ? null
-                        : () => controller.rejectSurveySchedule(),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Setuju',
-                    isLoading: controller.approveLoading.value,
-                    enabled:
-                        !(controller.approveLoading.value ||
-                            controller.rejectLoading.value),
-                    onPressed:
-                        (controller.approveLoading.value ||
-                            controller.rejectLoading.value)
-                        ? null
-                        : controller.approveSurveySchedule,
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Tolak Jadwal',
+              onSecondaryPressed: controller.rejectSurveySchedule,
+              secondaryEnabled: !isBusy,
+              secondaryLoading: controller.rejectLoading.value,
+              primaryText: 'Setuju',
+              onPrimaryPressed: controller.approveSurveySchedule,
+              primaryEnabled: !isBusy,
+              primaryLoading: controller.approveLoading.value,
             ),
           );
         }
@@ -228,104 +167,55 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // Consultant marks survey as completed
         if (controller.shouldShowCompleteSurveyButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Selesaikan Survey',
-              isLoading: controller.completeSurveyLoading.value,
-              enabled: !controller.completeSurveyLoading.value,
-              onPressed: controller.completeSurveyLoading.value
-                  ? null
-                  : controller.completeSurvey,
+            child: PkpBottomActions(
+              primaryText: 'Selesaikan Survey',
+              primaryEnabled: !controller.completeSurveyLoading.value,
+              primaryLoading: controller.completeSurveyLoading.value,
+              onPrimaryPressed: controller.completeSurvey,
             ),
           );
         }
 
         // Consultant contract actions: download template & upload contract
         if (controller.shouldShowContractActions) {
+          final isBusy =
+              controller.downloadTemplateLoading.value ||
+              controller.uploadContractLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Unduh Template',
-                    isLoading: controller.downloadTemplateLoading.value,
-                    enabled:
-                        !(controller.downloadTemplateLoading.value ||
-                            controller.uploadContractLoading.value),
-                    onPressed:
-                        (controller.downloadTemplateLoading.value ||
-                            controller.uploadContractLoading.value)
-                        ? null
-                        : () {
-                            controller.showBottomSheet(
-                              const ContractActionsBottomSheet(
-                                isDownload: true,
-                              ),
-                            );
-                          },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Unggah Kontrak',
-                    isLoading: controller.uploadContractLoading.value,
-                    enabled:
-                        !(controller.uploadContractLoading.value ||
-                            controller.downloadTemplateLoading.value),
-                    onPressed:
-                        (controller.uploadContractLoading.value ||
-                            controller.downloadTemplateLoading.value)
-                        ? null
-                        : () {
-                            controller.showBottomSheet(
-                              const ContractActionsBottomSheet(),
-                            );
-                          },
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Unduh Template',
+              onSecondaryPressed: () {
+                controller.showBottomSheet(
+                  const ContractActionsBottomSheet(isDownload: true),
+                );
+              },
+              secondaryEnabled: !isBusy,
+              secondaryLoading: controller.downloadTemplateLoading.value,
+              primaryText: 'Unggah Kontrak',
+              onPrimaryPressed: () {
+                controller.showBottomSheet(const ContractActionsBottomSheet());
+              },
+              primaryEnabled: !isBusy,
+              primaryLoading: controller.uploadContractLoading.value,
             ),
           );
         }
 
         // Homeowner approve/reject contract
         if (controller.shouldShowContractApprovalButtons) {
+          final isBusy =
+              controller.contractRejectLoading.value ||
+              controller.contractApproveLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Minta Revisi',
-                    isLoading: controller.contractRejectLoading.value,
-                    enabled:
-                        !(controller.contractRejectLoading.value ||
-                            controller.contractApproveLoading.value),
-                    onPressed:
-                        (controller.contractRejectLoading.value ||
-                            controller.contractApproveLoading.value)
-                        ? null
-                        : controller.rejectContract,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Setujui Kontrak',
-                    isLoading: controller.contractApproveLoading.value,
-                    enabled:
-                        !(controller.contractApproveLoading.value ||
-                            controller.contractRejectLoading.value),
-                    onPressed:
-                        (controller.contractApproveLoading.value ||
-                            controller.contractRejectLoading.value)
-                        ? null
-                        : controller.approveContract,
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Minta Revisi',
+              onSecondaryPressed: controller.rejectContract,
+              secondaryEnabled: !isBusy,
+              secondaryLoading: controller.contractRejectLoading.value,
+              primaryText: 'Setujui Kontrak',
+              onPrimaryPressed: controller.approveContract,
+              primaryEnabled: !isBusy,
+              primaryLoading: controller.contractApproveLoading.value,
             ),
           );
         }
@@ -333,14 +223,11 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // New: Sign contract button for both roles depending on partial sign state
         if (controller.shouldShowSignContractButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Tanda Tangan Kontrak',
-              isLoading: controller.signContractLoading.value,
-              enabled: !controller.signContractLoading.value,
-              onPressed: controller.signContractLoading.value
-                  ? null
-                  : controller.signContract,
+            child: PkpBottomActions(
+              primaryText: 'Tanda Tangan Kontrak',
+              primaryEnabled: !controller.signContractLoading.value,
+              primaryLoading: controller.signContractLoading.value,
+              onPrimaryPressed: controller.signContract,
             ),
           );
         }
@@ -348,108 +235,66 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // Consultant request payment action
         if (controller.shouldShowRequestPaymentButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Minta Pembayaran',
-              isLoading: controller.requestPaymentLoading.value,
-              enabled: !controller.requestPaymentLoading.value,
-              onPressed: controller.requestPaymentLoading.value
-                  ? null
-                  : () async {
-                      controller.showConfirmationDialog(
-                        title: 'Konfirmasi',
-                        message:
-                            'Apakah Anda yakin ingin meminta pembayaran ke pemilik lahan?',
-                        confirmText: 'Ya',
-                        onConfirm: controller.requestPayment,
-                        cancelText: 'Batal',
-                        onCancel: () {},
-                      );
-                    },
+            child: PkpBottomActions(
+              primaryText: 'Minta Pembayaran',
+              primaryEnabled: !controller.requestPaymentLoading.value,
+              primaryLoading: controller.requestPaymentLoading.value,
+              onPrimaryPressed: () async {
+                controller.showConfirmationDialog(
+                  title: 'Konfirmasi',
+                  message:
+                      'Apakah Anda yakin ingin meminta pembayaran ke pemilik lahan?',
+                  confirmText: 'Ya',
+                  onConfirm: controller.requestPayment,
+                  cancelText: 'Batal',
+                  onCancel: () {},
+                );
+              },
             ),
           );
         }
 
         // Homeowner payment actions (approve / pay)
         if (controller.shouldShowPaymentButtons) {
+          final isBusy = controller.approvePaymentLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Simulasi Pembayaran',
-                    isLoading: controller.approvePaymentLoading.value,
-                    enabled: !controller.approvePaymentLoading.value,
-                    onPressed: controller.approvePaymentLoading.value
-                        ? null
-                        : () {
-                            controller.goToPaymentPage();
-                          },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Lakukan Pembayaran',
-                    isLoading: controller.approvePaymentLoading.value,
-                    enabled: !controller.approvePaymentLoading.value,
-                    onPressed: controller.approvePaymentLoading.value
-                        ? null
-                        : () async {
-                            controller.showConfirmationDialog(
-                              title: 'Konfirmasi Pembayaran',
-                              message:
-                                  'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
-                              confirmText: 'Ya',
-                              onConfirm: controller.approvePayment,
-                              cancelText: 'Batal',
-                              onCancel: () {},
-                            );
-                          },
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Simulasi Pembayaran',
+              onSecondaryPressed: controller.goToPaymentPage,
+              secondaryEnabled: !isBusy,
+              primaryText: 'Lakukan Pembayaran',
+              primaryEnabled: !isBusy,
+              primaryLoading: isBusy,
+              onPrimaryPressed: () async {
+                controller.showConfirmationDialog(
+                  title: 'Konfirmasi Pembayaran',
+                  message:
+                      'Apakah Anda ingin melakukan pembayaran? Saldo anda akan ditahan sampai proses konsultasi selesai.',
+                  confirmText: 'Ya',
+                  onConfirm: controller.approvePayment,
+                  cancelText: 'Batal',
+                  onCancel: () {},
+                );
+              },
             ),
           );
         }
 
         // Homeowner design approval/revision actions when requested
         if (controller.shouldShowDesignApprovalButtons) {
+          final isBusy =
+              controller.designRejectLoading.value ||
+              controller.designApproveLoading.value;
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(
-                    text: 'Minta Revisi',
-                    isLoading: controller.designRejectLoading.value,
-                    enabled:
-                        !(controller.designRejectLoading.value ||
-                            controller.designApproveLoading.value),
-                    onPressed:
-                        (controller.designRejectLoading.value ||
-                            controller.designApproveLoading.value)
-                        ? null
-                        : () => controller.askDesignRevision(),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    text: 'Setujui Desain',
-                    isLoading: controller.designApproveLoading.value,
-                    enabled:
-                        !(controller.designApproveLoading.value ||
-                            controller.designRejectLoading.value),
-                    onPressed:
-                        (controller.designApproveLoading.value ||
-                            controller.designRejectLoading.value)
-                        ? null
-                        : controller.approveDesignDocuments,
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Minta Revisi',
+              onSecondaryPressed: controller.askDesignRevision,
+              secondaryEnabled: !isBusy,
+              secondaryLoading: controller.designRejectLoading.value,
+              primaryText: 'Setujui Desain',
+              onPrimaryPressed: controller.approveDesignDocuments,
+              primaryEnabled: !isBusy,
+              primaryLoading: controller.designApproveLoading.value,
             ),
           );
         }
@@ -458,39 +303,26 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
         // the first consultation history state is STARTED
         if (controller.shouldShowUploadDocumentsButton) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: PkpElevatedButton(
-              text: 'Unggah Dokumen',
-              isLoading: controller.uploadDesignDocumentsLoading.value,
-              enabled: !controller.uploadDesignDocumentsLoading.value,
-              onPressed: controller.uploadDesignDocumentsLoading.value
-                  ? null
-                  : () {
-                      controller.showBottomSheet(
-                        const UploadDesignDocumentsBottomSheet(),
-                      );
-                    },
+            child: PkpBottomActions(
+              primaryText: 'Unggah Dokumen',
+              primaryEnabled: !controller.uploadDesignDocumentsLoading.value,
+              primaryLoading: controller.uploadDesignDocumentsLoading.value,
+              onPrimaryPressed: () {
+                controller.showBottomSheet(
+                  const UploadDesignDocumentsBottomSheet(),
+                );
+              },
             ),
           );
         }
 
         if (controller.shouldShowFinalizeActions) {
           return SafeArea(
-            minimum: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: PkpOutlinedButton(text: 'Selesai', onPressed: () {}),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: PkpElevatedButton(
-                    enabled: true,
-                    text: 'Lanjut Perizinan',
-                    onPressed: () {},
-                  ),
-                ),
-              ],
+            child: PkpBottomActions(
+              secondaryText: 'Selesai',
+              onSecondaryPressed: () {},
+              primaryText: 'Lanjut Perizinan',
+              onPrimaryPressed: () {},
             ),
           );
         }

@@ -34,6 +34,7 @@ abstract class AppRoutes {
   static const paymentQr = _Paths.paymentQr;
   static const paymentVa = _Paths.paymentVa;
   static const paymentReceipt = _Paths.paymentReceipt;
+  static const consultationConfirmation = _Paths.consultationConfirmation;
 }
 
 abstract class _Paths {
@@ -68,4 +69,5 @@ abstract class _Paths {
   static const paymentQr = '/payment/qr';
   static const paymentVa = '/payment/va';
   static const paymentReceipt = '/payment/receipt';
+  static const consultationConfirmation = '/consultation-confirmation';
 }

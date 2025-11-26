@@ -44,6 +44,8 @@ import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
+import 'package:pkp_hub/features/consultation/screens/consultation_confirmation_screen.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultation_confirmation_binding.dart';
 
 part 'app_routes.dart';
 
@@ -180,6 +182,11 @@ class AppPages {
       name: AppRoutes.paymentReceipt,
       page: () => const PaymentReceiptScreen(),
       binding: PaymentBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.consultationConfirmation,
+      page: () => const ConsultationConfirmationScreen(),
+      binding: ConsultationConfirmationBinding(),
     ),
   ];
 }

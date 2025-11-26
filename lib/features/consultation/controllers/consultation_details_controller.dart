@@ -50,7 +50,15 @@ class ConsultationDetailsController extends BaseController {
     if (args is ConsultationDetailsArgs) {
       project = args.project;
     } else if (args is Map<String, dynamic>) {
-      project = args['project'] as Project? ?? const Project();
+      final mapProject = args['project'] as Project?;
+      final projectId = args['projectId'] as String?;
+      project =
+          mapProject ??
+          Project(
+            projectId: projectId,
+            name: args['projectName'] as String?,
+            location: null,
+          );
     } else {
       project = const Project();
     }
@@ -60,6 +68,20 @@ class ConsultationDetailsController extends BaseController {
 
   void selectStep(ConsultationDetailStep step) {
     selectedStep.value = step;
+  }
+
+  // --- Mocked download helpers ---
+
+  Future<void> downloadContract(ConsultationContractItem item) async {
+    _showDownloadSnack('Dokumen kontrak "${item.title}" diunduh (mock)');
+  }
+
+  Future<void> downloadDesign(ConsultationDocumentItem item) async {
+    _showDownloadSnack('Dokumen desain "${item.title}" diunduh (mock)');
+  }
+
+  void _showDownloadSnack(String message) {
+    Get.snackbar('Unduh Dokumen', message, snackPosition: SnackPosition.BOTTOM);
   }
 }
 

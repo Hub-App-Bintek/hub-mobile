@@ -6,30 +6,19 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/app/widgets/pkp_card.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
+import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
 
 class HomeScreen extends GetView<HomeController> {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final children = <Widget>[
-      _buildCarouselBanner(),
-      const SizedBox(height: 16),
-      if (_shouldShowBalanceCard) ...[
-        _buildBalanceCard(),
-        const SizedBox(height: 24),
-      ],
-      _buildFeatureGrid(),
-      _buildRoleSpecificSection(),
-    ];
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light.copyWith(
         statusBarColor: AppColors.primaryDark,
@@ -41,20 +30,72 @@ class HomeScreen extends GetView<HomeController> {
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: controller.refresh,
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: children,
+            child: Obx(() {
+              final isConsultant =
+                  controller.userRole.value == UserRole.consultant;
+              final children = isConsultant
+                  ? _buildConsultantHome()
+                  : _buildDefaultHome();
+
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: children,
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildConsultantHome() {
+    return [
+      _buildCarouselBanner(),
+      const SizedBox(height: 16),
+      _buildBalanceCard(),
+      const SizedBox(height: 24),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _consultantStatusPill(
+              label: 'Menunggu Konfirmasi',
+              badgeCount: 3,
+              icon: Icons.schedule,
+              onTap: () => controller.fetchProjects('PENDING'),
+            ),
+            _consultantStatusPill(
+              label: 'Sedang Berjalan',
+              badgeCount: 3,
+              icon: Icons.work_outline,
+              onTap: () => controller.fetchProjects('ACTIVE'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 16),
+      _buildConsultantSection(),
+    ];
+  }
+
+  List<Widget> _buildDefaultHome() {
+    return [
+      _buildCarouselBanner(),
+      const SizedBox(height: 16),
+      if (_shouldShowBalanceCard) ...[
+        _buildBalanceCard(),
+        const SizedBox(height: 24),
+      ],
+      _buildFeatureGrid(),
+      _buildRoleSpecificSection(),
+    ];
   }
 
   PreferredSizeWidget _buildAppBar() {
@@ -65,6 +106,7 @@ class HomeScreen extends GetView<HomeController> {
         final notificationCount = controller.notificationBadgeCount.value;
         final loggedIn = controller.isLoggedIn;
         final userName = controller.userDisplayName.value;
+        final isConsultant = controller.userRole.value == UserRole.consultant;
 
         return PkpAppBar(
           title: loggedIn ? 'Hai! $userName' : AppStrings.homeWelcomeTitle,
@@ -252,6 +294,26 @@ class HomeScreen extends GetView<HomeController> {
         ),
       );
     });
+  }
+
+  Widget _consultantStatusPill({
+    required String label,
+    required int badgeCount,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return FeatureCircleCard(
+      label: label,
+      icon: icon,
+      labelOutside: true,
+      labelStyle: AppTextStyles.bodyM.copyWith(color: AppColors.neutralDarkest),
+      backgroundColor: AppColors.primaryDark,
+      iconColor: AppColors.white,
+      badgeValue: badgeCount.toString(),
+      showBadge: badgeCount > 0,
+      badgeColor: AppColors.errorDark,
+      onTap: onTap,
+    );
   }
 
   bool get _shouldShowBalanceCard {
@@ -479,7 +541,6 @@ class HomeScreen extends GetView<HomeController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: AppTextStyles.h2),
-        const SizedBox(height: 12),
         ...projects.map(_buildProjectCard),
       ],
     );
@@ -487,11 +548,21 @@ class HomeScreen extends GetView<HomeController> {
 
   Widget _buildProjectCard(Project project) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: PkpCard(
+      padding: const EdgeInsets.only(top: 12),
+      child: ProjectInfoCard(
         title: project.name ?? '-',
-        subtitle: Formatters.formatTitle(project.status ?? ''),
-        suffixIcon: const Icon(Icons.chevron_right),
+        primaryLine: ProjectInfoLine(
+          icon: Icons.person_outline,
+          text:
+              project.consultationInfo?.consultantName ??
+              'Konsultan belum ditentukan',
+          color: AppColors.neutralDarkest,
+        ),
+        secondaryLine: ProjectInfoLine(
+          icon: Icons.calendar_today_outlined,
+          text: Formatters.formatTitle(project.status ?? ''),
+          color: AppColors.neutralMediumLight,
+        ),
         onTap: () => controller.onSelectProject(project),
       ),
     );

@@ -158,15 +158,12 @@ class ConsultantDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         navigateAndClearUntil(
-          AppRoutes.projectHistory,
+          AppRoutes.consultationDetails,
           untilRoute: AppRoutes.main,
           arguments: {
             'projectId': _projectId,
-            'homeOwnerId': response.homeOwnerId,
-            'homeOwnerName': response.homeOwnerName,
-            'consultantId':
-                response.consultantId ?? int.tryParse(_consultantId),
-            'consultantName': response.consultantName,
+            'consultationId': response.id,
+            'projectName': null,
           },
         );
       },

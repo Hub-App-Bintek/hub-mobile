@@ -3,9 +3,8 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
-import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
-import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultant_details_controller.dart';
@@ -19,33 +18,17 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
       appBar: const PkpAppBar(title: 'Detail Konsultan'),
       bottomNavigationBar: SafeArea(
         top: false,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Obx(
-                  () => PkpOutlinedButton(
-                    text: AppStrings.chatConsultant,
-                    onPressed: controller.isCreatingConsultation.value
-                        ? null
-                        : controller.onChatPressed,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Obx(
-                  () => PkpElevatedButton(
-                    text: AppStrings.askForConsultation,
-                    isLoading: controller.isCreatingConsultation.value,
-                    onPressed: controller.isCreatingConsultation.value
-                        ? null
-                        : () => _showConsultConfirmation(context),
-                  ),
-                ),
-              ),
-            ],
+        child: Obx(
+          () => PkpBottomActions(
+            primaryText: AppStrings.askForConsultation,
+            onPrimaryPressed: () => _showConsultConfirmation(context),
+            primaryEnabled: !controller.isCreatingConsultation.value,
+            primaryLoading: controller.isCreatingConsultation.value,
+            secondaryText: AppStrings.chatConsultant,
+            onSecondaryPressed: controller.isCreatingConsultation.value
+                ? null
+                : controller.onChatPressed,
+            secondaryEnabled: !controller.isCreatingConsultation.value,
           ),
         ),
       ),

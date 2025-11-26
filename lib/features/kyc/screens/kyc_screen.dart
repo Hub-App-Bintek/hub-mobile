@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
+import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/kyc/controllers/kyc_controller.dart';
 
@@ -13,8 +15,6 @@ class KycScreen extends GetView<KycController> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: PkpAppBar(
         title: AppStrings.kycScreenTitle,
@@ -50,81 +50,88 @@ class KycScreen extends GetView<KycController> {
               type: PkpTextFormFieldType.text,
             ),
             const SizedBox(height: 24),
-            Text(
-              AppStrings.kycUploadKtpLabel,
-              style: textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Use Obx to listen for changes to the ktpImage
             Obx(
-              () => _buildUploadWidget(
-                file: controller.ktpImage.value,
-                onTap: () => controller.pickKtpImage(),
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PkpUploadDocumentWidget(
+                    title: AppStrings.kycUploadKtpLabel,
+                    buttonText: 'Pilih Foto',
+                    allowedExtensions: const ['jpg', 'jpeg', 'png'],
+                    uploadStatus: controller.ktpImage.value != null
+                        ? PkpUploadStatus.success
+                        : PkpUploadStatus.none,
+                    selectedFileName: controller.ktpImage.value?.path
+                        .split('/')
+                        .last,
+                    customPickFile: controller.pickKtpImage,
+                    onFileSelected: (file) {
+                      controller.ktpImage.value = file;
+                    },
+                  ),
+                  if (controller.ktpImage.value != null) ...[
+                    const SizedBox(height: 12),
+                    _buildImagePreview(controller.ktpImage.value!),
+                  ],
+                ],
               ),
             ),
             const SizedBox(height: 24),
-            Text(
-              AppStrings.kycUploadSelfieKtpLabel,
-              style: textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Use Obx to listen for changes to the selfieKtpImage
             Obx(
-              () => _buildUploadWidget(
-                file: controller.selfieKtpImage.value,
-                onTap: () => controller.pickSelfieKtpImage(),
+              () => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PkpUploadDocumentWidget(
+                    title: AppStrings.kycUploadSelfieKtpLabel,
+                    buttonText: 'Pilih Foto',
+                    allowedExtensions: const ['jpg', 'jpeg', 'png'],
+                    uploadStatus: controller.selfieKtpImage.value != null
+                        ? PkpUploadStatus.success
+                        : PkpUploadStatus.none,
+                    selectedFileName: controller.selfieKtpImage.value?.path
+                        .split('/')
+                        .last,
+                    customPickFile: controller.pickSelfieKtpImage,
+                    onFileSelected: (file) {
+                      controller.selfieKtpImage.value = file;
+                    },
+                  ),
+                  if (controller.selfieKtpImage.value != null) ...[
+                    const SizedBox(height: 12),
+                    _buildImagePreview(controller.selfieKtpImage.value!),
+                  ],
+                ],
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              // Call the controller method
-              controller.submitKyc();
-            },
-            child: const Text(AppStrings.continueButton),
-          ),
+      bottomNavigationBar: SafeArea(
+        child: PkpBottomActions(
+          primaryText: AppStrings.continueButton,
+          onPrimaryPressed: controller.submitKyc,
         ),
       ),
     );
   }
 
-  // Refactored upload widget to be reusable
-  Widget _buildUploadWidget({
-    required File? file,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 120,
-        width: 120,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[300]!),
+  Widget _buildImagePreview(File file) {
+    return Container(
+      height: 120,
+      width: 120,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(11),
+        child: Image.file(
+          file,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
         ),
-        // Display the selected image or a placeholder icon
-        child: file != null
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(11),
-                child: Image.file(
-                  file,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
-              )
-            : Icon(Icons.camera_alt, size: 48, color: Colors.grey[400]),
       ),
     );
   }

@@ -5,8 +5,9 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
+import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/project/controllers/location_details_controller.dart';
 
@@ -97,10 +98,20 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             errorText: controller.incomeError.value,
                           ),
                           const SizedBox(height: 16),
-                          _uploadField(
-                            label: 'Bukti Pendapatan',
-                            hint: 'Pilih file PDF',
-                            onTap: controller.pickIncomeProof,
+                          PkpUploadDocumentWidget(
+                            title: 'Bukti Pendapatan',
+                            buttonText: 'Pilih File',
+                            selectedFileName: controller.incomeProofPath.value
+                                ?.split('/')
+                                .last,
+                            uploadStatus:
+                                controller.incomeProofPath.value != null
+                                ? PkpUploadStatus.success
+                                : PkpUploadStatus.none,
+                            customPickFile: controller.pickIncomeProof,
+                            onFileSelected: (file) {
+                              controller.incomeProofPath.value = file.path;
+                            },
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -118,20 +129,12 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
             controller.isFormValid &&
             !controller.isLoadingLocation.value &&
             !controller.isRequesting.value;
-        return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            border: Border(
-              top: BorderSide(color: AppColors.inputBorder, width: 0.616),
-            ),
-          ),
-          padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            width: double.infinity,
-            child: PkpElevatedButton(
-              text: 'Lanjutkan',
-              onPressed: enabled ? controller.createProject : null,
-            ),
+        return SafeArea(
+          child: PkpBottomActions(
+            primaryText: 'Lanjutkan',
+            primaryEnabled: enabled,
+            primaryLoading: controller.isRequesting.value,
+            onPrimaryPressed: controller.createProject,
           ),
         );
       }),
@@ -237,49 +240,6 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
       labelStyle: AppTextStyles.bodyS,
       hintStyle: AppTextStyles.bodyM,
       onChanged: onChanged,
-    );
-  }
-
-  Widget _uploadField({
-    required String label,
-    required String hint,
-    required VoidCallback onTap,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: AppTextStyles.bodyS),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            height: 46.218,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.inputBorder, width: 0.616),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.upload_file,
-                  size: 18,
-                  color: AppColors.neutralDarkest,
-                ),
-                const SizedBox(width: 16),
-                Text(
-                  hint,
-                  style: AppTextStyles.bodyM.copyWith(
-                    color: AppColors.neutralMediumLight,
-                    height: 21 / 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

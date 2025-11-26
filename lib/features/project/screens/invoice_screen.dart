@@ -4,7 +4,7 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_card.dart';
-import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 
 class InvoiceScreen extends StatelessWidget {
   const InvoiceScreen({super.key});
@@ -45,12 +45,11 @@ class InvoiceScreen extends StatelessWidget {
         },
       ),
       bottomNavigationBar: SafeArea(
-        minimum: const EdgeInsets.all(16),
-        child: PkpElevatedButton(
-          onPressed: () {
+        child: PkpBottomActions(
+          primaryText: 'Bayar Tagihan',
+          onPrimaryPressed: () {
             Get.toNamed(AppRoutes.payment);
           },
-          text: 'Bayar Tagihan',
         ),
       ),
     );

@@ -162,7 +162,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                       ? AppColors.primaryDark
                       : AppColors.inputSurface,
                   onTap: () => onStateSelected(item.step),
-                  showBadge: (item.badge ?? 0) > 0,
+                  showBadge: (item.badge) > 0,
                   badgeValue: item.badge > 0 ? '${item.badge}' : null,
                 ),
               ),
@@ -380,7 +380,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
               IconButton(
                 icon: const Icon(Icons.file_download_outlined),
                 color: AppColors.primaryDarkest,
-                onPressed: () {},
+                onPressed: () => controller.downloadContract(contract),
               ),
             ],
           ),
@@ -433,7 +433,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
               IconButton(
                 icon: const Icon(Icons.file_download_outlined),
                 color: AppColors.primaryDarkest,
-                onPressed: () {},
+                onPressed: () => controller.downloadDesign(item),
               ),
             ],
           ),

@@ -2,7 +2,9 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/consultation_info.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
@@ -11,8 +13,10 @@ import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 class ProjectsController extends BaseController {
   final GetProjectsUseCase getProjectsUseCase;
   final String? projectStatus;
+  final UserStorage _userStorage;
 
   final RxnString _statusFilter = RxnString();
+  final Rxn<UserRole> userRole = Rxn<UserRole>();
 
   String? get statusFilter => _statusFilter.value;
 
@@ -32,7 +36,11 @@ class ProjectsController extends BaseController {
 
   String get selectedCategory => _selectedCategory.value;
 
-  ProjectsController(this.getProjectsUseCase, this.projectStatus) {
+  ProjectsController(
+    this.getProjectsUseCase,
+    this.projectStatus,
+    this._userStorage,
+  ) {
     if (projectStatus != null) {
       _statusFilter.value = projectStatus;
     } else {
@@ -57,6 +65,16 @@ class ProjectsController extends BaseController {
         .where((p) => p.status == _statusFilter.value)
         .toList();
     _updateProjectCounts();
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadRole();
+  }
+
+  Future<void> _loadRole() async {
+    userRole.value = await _userStorage.getRole();
   }
 
   void _updateProjectCounts() {

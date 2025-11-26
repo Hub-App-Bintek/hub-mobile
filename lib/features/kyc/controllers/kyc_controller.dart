@@ -64,9 +64,9 @@ class KycController extends BaseController {
   // --- PUBLIC METHODS ---
 
   /// Method to pick the KTP image, allowing user to choose the source.
-  Future<void> pickKtpImage() async {
+  Future<File?> pickKtpImage() async {
     final source = await _showImageSourceDialog();
-    if (source == null) return;
+    if (source == null) return null;
 
     File? file;
     if (source == ImageSource.camera) {
@@ -78,12 +78,13 @@ class KycController extends BaseController {
     if (file != null) {
       ktpImage.value = file;
     }
+    return file;
   }
 
   /// Method to pick the Selfie+KTP image, allowing user to choose the source.
-  Future<void> pickSelfieKtpImage() async {
+  Future<File?> pickSelfieKtpImage() async {
     final source = await _showImageSourceDialog();
-    if (source == null) return;
+    if (source == null) return null;
 
     File? file;
     if (source == ImageSource.camera) {
@@ -95,6 +96,7 @@ class KycController extends BaseController {
     if (file != null) {
       selfieKtpImage.value = file;
     }
+    return file;
   }
 
   void submitKyc() {

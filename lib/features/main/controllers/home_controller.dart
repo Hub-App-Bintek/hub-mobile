@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
@@ -11,10 +10,8 @@ import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
-import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/data/models/response/wallet_response.dart';
-import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 
@@ -44,7 +41,7 @@ class HomeController extends BaseController {
   final RxBool isConsultantLoading = false.obs;
   final RxString userDisplayName = ''.obs;
 
-  String? _token;
+  final RxnString _token = RxnString();
 
   HomeController(
     this._userStorage,
@@ -82,7 +79,7 @@ class HomeController extends BaseController {
 
   Future<void> init() async {
     userRole.value = await _userStorage.getRole();
-    _token = await _userStorage.getToken();
+    _token.value = await _userStorage.getToken();
     await _loadUserName();
     // if (userRole.value != UserRole.consultation) {
     //   final coords = await _determineUserLocation();
@@ -111,7 +108,7 @@ class HomeController extends BaseController {
     // }
   }
 
-  bool get _isLoggedIn => _token?.isNotEmpty ?? false;
+  bool get _isLoggedIn => _token.value?.isNotEmpty ?? false;
 
   bool get isLoggedIn => _isLoggedIn;
 

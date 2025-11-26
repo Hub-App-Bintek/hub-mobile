@@ -10,13 +10,15 @@ import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 /// A reusable upload document section with a title, a "Pilih File" button,
 /// an optional selected file name preview, and an optional upload status
 /// indicator (success, failed, uploading).
-/// It internally invokes file_picker and returns the picked [File] via [onFileSelected].
+/// It internally invokes file_picker (or [customPickFile] if provided) and
+/// returns the picked [File] via [onFileSelected].
 class PkpUploadDocumentWidget extends StatelessWidget {
   const PkpUploadDocumentWidget({
     super.key,
     required this.title,
     required this.onFileSelected,
     this.selectedFileName,
+    this.customPickFile,
     this.enabled = true,
     this.isLoading = false,
     this.allowedExtensions = const ['pdf'],
@@ -26,6 +28,7 @@ class PkpUploadDocumentWidget extends StatelessWidget {
 
   final String title;
   final ValueChanged<File> onFileSelected;
+  final Future<File?> Function()? customPickFile;
   final String? selectedFileName;
   final bool enabled;
   final bool isLoading;
@@ -33,7 +36,7 @@ class PkpUploadDocumentWidget extends StatelessWidget {
   final String buttonText;
   final PkpUploadStatus uploadStatus;
 
-  Future<void> _pickFile(BuildContext context) async {
+  Future<File?> _defaultPickFile() async {
     final picked = await FilePicker.platform.pickFiles(
       allowMultiple: false,
       type: FileType.custom,
@@ -42,8 +45,18 @@ class PkpUploadDocumentWidget extends StatelessWidget {
     if (picked != null && picked.files.isNotEmpty) {
       final path = picked.files.single.path;
       if (path != null) {
-        onFileSelected(File(path));
+        return File(path);
       }
+    }
+    return null;
+  }
+
+  Future<void> _pickFile(BuildContext context) async {
+    final file = await (customPickFile != null
+        ? customPickFile!()
+        : _defaultPickFile());
+    if (file != null) {
+      onFileSelected(file);
     }
   }
 

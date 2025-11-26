@@ -53,21 +53,12 @@ class ConsultationScreen extends GetView<ConsultationController> {
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
                   sliver: SliverToBoxAdapter(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppStrings.recommendationTitle,
-                          style: AppTextStyles.h3.copyWith(
-                            color: AppColors.neutralDarkest,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: controller.onSeeAllConsultants,
-                          child: const Text('Lihat Lainnya'),
-                        ),
-                      ],
+                    child: Text(
+                      AppStrings.recommendationTitle,
+                      style: AppTextStyles.h3.copyWith(
+                        color: AppColors.neutralDarkest,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),

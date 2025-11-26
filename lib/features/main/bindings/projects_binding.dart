@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 
 class ProjectsBinding extends Bindings {
   ProjectsBinding();
@@ -12,7 +13,11 @@ class ProjectsBinding extends Bindings {
 
   static void register({required String tag, String? status}) {
     Get.lazyPut<ProjectsController>(
-      () => ProjectsController(Get.find<GetProjectsUseCase>(), status),
+      () => ProjectsController(
+        Get.find<GetProjectsUseCase>(),
+        status,
+        Get.find<UserStorage>(),
+      ),
       tag: tag,
     );
   }
