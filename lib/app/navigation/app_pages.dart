@@ -46,6 +46,12 @@ import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 import 'package:pkp_hub/features/consultation/screens/consultation_confirmation_screen.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultation_confirmation_binding.dart';
+import 'package:pkp_hub/features/licensing/screens/licensing_screen.dart';
+import 'package:pkp_hub/features/licensing/controllers/licensing_controller.dart';
+import 'package:pkp_hub/features/licensing/screens/licensing_location_details_screen.dart';
+import 'package:pkp_hub/features/licensing/controllers/licensing_location_details_controller.dart';
+import 'package:pkp_hub/features/licensing/screens/simbg_form_screen.dart';
+import 'package:pkp_hub/features/licensing/controllers/simbg_form_controller.dart';
 
 part 'app_routes.dart';
 
@@ -187,6 +193,23 @@ class AppPages {
       name: AppRoutes.consultationConfirmation,
       page: () => const ConsultationConfirmationScreen(),
       binding: ConsultationConfirmationBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.simbgForm,
+      page: () => const SIMBGFormScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => SIMBGFormController())),
+    ),
+    GetPage(
+      name: AppRoutes.licensing,
+      page: () => const LicensingScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => LicensingController())),
+    ),
+    GetPage(
+      name: AppRoutes.licensingLocation,
+      page: () => const LicensingLocationDetailsScreen(),
+      binding: BindingsBuilder(
+        () => Get.lazyPut(() => LicensingLocationDetailsController()),
+      ),
     ),
   ];
 }

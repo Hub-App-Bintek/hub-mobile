@@ -214,4 +214,22 @@ abstract class AppStrings {
   static const consultantSortLabel = 'Urutkan berdasarkan';
   static const createConsultationCta = 'Buat Konsultasi';
   static const recommendationTitle = 'Rekomendasi Konsultan';
+
+  // Consultation
+  static const consultationConfirmTitle = 'Konfirmasi Konsultasi';
+  static const consultationOwnerLabel = 'Pemilik Proyek';
+  static const consultationLocationLabel = 'Lokasi Proyek';
+  static const consultationDetailLabel = 'Detail Konsultasi';
+  static const consultationNoteTitle = 'CATATAN';
+  static const consultationNoteBody =
+      'Dengan menerima konsultasi ini, Anda setuju untuk melakukan survey lokasi (opsional) dan menyediakan proposal konsultasi dalam waktu 3-5 hari kerja.';
+  static const consultationSurveyQuestion = 'Apakah memerlukan survey lokasi?';
+  static const consultationSurveyNo = 'Tidak perlu survey';
+  static const consultationSurveyYes = 'Perlu survey';
+  static const consultationReject = 'Tolak Konsultasi';
+  static const consultationAccept = 'Terima Konsultasi';
+  static const consultationDownloadTitle = 'Unduh Dokumen';
+  static const consultationMaxRevisionTitle = 'Maksimal revisi';
+  static const consultationMaxRevisionBody =
+      'Anda sudah mencapai batas revisi (3x).';
 }

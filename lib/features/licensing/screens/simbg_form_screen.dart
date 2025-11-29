@@ -1,0 +1,388 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
+import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
+import 'package:pkp_hub/features/licensing/controllers/simbg_form_controller.dart';
+
+class SIMBGFormScreen extends GetView<SIMBGFormController> {
+  const SIMBGFormScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final subtitle = controller.isPrototype.value
+        ? 'Prototype'
+        : 'Non Prototype';
+    return Scaffold(
+      appBar: PkpAppBar(title: 'Formulir SIMBG ($subtitle)'),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Obx(
+            () => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: controller.isPrototype.value
+                  ? _buildPrototypeFields()
+                  : _buildNonPrototypeFields(),
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: PkpBottomActions(
+          primaryText: 'Lanjutkan',
+          onPrimaryPressed: () {},
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _buildPrototypeFields() {
+    return [
+      PkpTextFormField(
+        controller: controller.docPermitController,
+        labelText: 'Nomor Dokumen Izin Pemanfaatan Ruang*',
+        hintText: 'Masukkan nomor dokumen',
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.gsbController,
+        labelText: 'Garis Sempadan Bangunan (GSB)*',
+        hintText: 'Masukkan GSB',
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.kdbController,
+        labelText: 'Koefisien Dasar Bangunan (KDB)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.klbController,
+        labelText: 'Koefisien Lantai Bangunan (KLB)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.kdhController,
+        labelText: 'Koefisien Dasar Hijau (KDH)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.provinceController,
+        labelText: 'Provinsi',
+        hintText: 'Pilih provinsi',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.provinceOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.cityController,
+        labelText: 'Kabupaten/Kota',
+        hintText: 'Pilih kabupaten/kota',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.cityOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.subdistrictController,
+        labelText: 'Kecamatan',
+        hintText: 'Pilih kecamatan',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.subdistrictOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.villageController,
+        labelText: 'Kelurahan',
+        hintText: 'Pilih kelurahan',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.villageOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.addressController,
+        labelText: 'Alamat',
+        hintText: 'Masukkan alamat lengkap',
+        type: PkpTextFormFieldType.multiline,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.currentConditionController,
+        labelText: 'Kondisi Bangunan Saat Ini',
+        hintText: 'Pilih kondisi',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.conditionOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.pbgStatusController,
+        labelText: 'Apakah sudah memiliki PBG / IMB?',
+        hintText: 'Pilih jawaban',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.yesNoOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.unitCountController,
+        labelText: 'Jumlah Unit Dibangun',
+        hintText: 'Masukkan jumlah unit',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.designAdjustController,
+        labelText: 'Apakah anda akan menyesuaikan desain prototype ini?',
+        hintText: 'Pilih jawaban',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.yesNoOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.coordinateController,
+        labelText: 'Titik Koordinat',
+        hintText: 'Masukkan titik koordinat',
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.occupantCountController,
+        labelText: 'Jumlah Penghuni',
+        hintText: 'Masukkan jumlah penghuni',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: TextEditingController(),
+        labelText: 'Upload Peta Lokasi Bangunan',
+        hintText: 'Pilih file',
+        type: PkpTextFormFieldType.filePicker,
+        allowedFileLabel: 'Gambar (Maks 5MB)',
+        filePickerType: PkpFilePickerType.image,
+        filled: true,
+      ),
+    ];
+  }
+
+  List<Widget> _buildNonPrototypeFields() {
+    return [
+      PkpTextFormField(
+        controller: controller.docPermitController,
+        labelText: 'Nomor Dokumen Izin Pemanfaatan Ruang*',
+        hintText: 'Masukkan nomor dokumen',
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.gsbController,
+        labelText: 'Garis Sempadan Bangunan (GSB)*',
+        hintText: 'Masukkan GSB',
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.kdbController,
+        labelText: 'Koefisien Dasar Bangunan (KDB)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.klbController,
+        labelText: 'Koefisien Lantai Bangunan (KLB)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.kdhController,
+        labelText: 'Koefisien Dasar Hijau (KDH)',
+        hintText: 'Masukkan nilai',
+        type: PkpTextFormFieldType.selectUnit,
+        unitOptions: const ['Ratio', '%'],
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.provinceController,
+        labelText: 'Provinsi',
+        hintText: 'Pilih provinsi',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.provinceOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.cityController,
+        labelText: 'Kabupaten/Kota',
+        hintText: 'Pilih kabupaten/kota',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.cityOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.subdistrictController,
+        labelText: 'Kecamatan',
+        hintText: 'Pilih kecamatan',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.subdistrictOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.villageController,
+        labelText: 'Kelurahan',
+        hintText: 'Pilih kelurahan',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.villageOptions,
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.addressController,
+        labelText: 'Alamat',
+        hintText: 'Masukkan alamat lengkap',
+        type: PkpTextFormFieldType.multiline,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.currentConditionController,
+        labelText: 'Kondisi Bangunan Saat Ini',
+        hintText: 'Pilih kondisi',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.conditionOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.pbgStatusController,
+        labelText: 'Apakah sudah memiliki PBG / IMB?',
+        hintText: 'Pilih jawaban',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.yesNoOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.buildingCategoryController,
+        labelText: 'Apa Kategori Bangunan Anda?',
+        hintText: 'Pilih kategori',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.categoryOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.basementController,
+        labelText: 'Apakah Bangunan memiliki basement?',
+        hintText: 'Pilih jawaban',
+        type: PkpTextFormFieldType.dropdown,
+        options: controller.yesNoOptions,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.houseNameController,
+        labelText: 'Nama Rumah',
+        hintText: 'Masukkan nama rumah',
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.totalAreaController,
+        labelText: 'Luas Total Bangunan Per Unit (Selain Basement)',
+        hintText: 'Masukkan luas',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.buildingHeightController,
+        labelText: 'Tinggi Bangunan',
+        hintText: 'Masukkan tinggi',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.floorCountController,
+        labelText: 'Jumlah Lantai',
+        hintText: 'Masukkan jumlah lantai',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.unitTotalController,
+        labelText: 'Jumlah Unit',
+        hintText: 'Masukkan jumlah unit',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.occupantEstimateController,
+        labelText: 'Estimasi Jumlah Penghuni',
+        hintText: 'Masukkan estimasi penghuni',
+        type: PkpTextFormFieldType.number,
+        filled: true,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: controller.coordinateController,
+        labelText: 'Titik Koordinat',
+        hintText: 'Masukkan titik koordinat',
+        filled: true,
+        enabled: !controller.isLocationLocked,
+      ),
+      const SizedBox(height: 16),
+      PkpTextFormField(
+        controller: TextEditingController(),
+        labelText: 'Gambar Peta Lokasi Bangunan',
+        hintText: 'Pilih file',
+        type: PkpTextFormFieldType.filePicker,
+        allowedFileLabel: 'Gambar (Maks 5MB)',
+        filePickerType: PkpFilePickerType.image,
+        filled: true,
+      ),
+    ];
+  }
+}

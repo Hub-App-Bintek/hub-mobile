@@ -13,6 +13,7 @@ class ProjectInfoCard extends StatelessWidget {
     this.onTap,
     this.ctaLabel,
     this.onCtaTap,
+    this.isSelected,
   });
 
   final String title;
@@ -21,6 +22,7 @@ class ProjectInfoCard extends StatelessWidget {
   final VoidCallback? onTap;
   final String? ctaLabel;
   final VoidCallback? onCtaTap;
+  final bool? isSelected;
 
   bool get _hasCta => ctaLabel != null && ctaLabel!.isNotEmpty;
 
@@ -31,7 +33,11 @@ class ProjectInfoCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.inputSurface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
+        border: Border.all(
+          color: isSelected == true
+              ? AppColors.primaryDark
+              : AppColors.inputBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

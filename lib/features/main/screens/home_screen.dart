@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
@@ -362,7 +363,7 @@ class HomeScreen extends GetView<HomeController> {
               iconData: Icons.description_outlined,
               iconAsset: AppIcons.licensing,
               onTap: () {
-                // TODO: Navigate to LicensingScreen
+                controller.navigateTo(AppRoutes.licensing);
               },
             ),
           );

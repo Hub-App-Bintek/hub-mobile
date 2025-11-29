@@ -32,15 +32,13 @@ class PkpBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(
-          top: BorderSide(color: AppColors.inputBorder, width: 0.6),
-        ),
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(color: AppColors.white),
+        child: _hasSecondary ? _buildDualButtons() : _buildSingleButton(),
       ),
-      child: _hasSecondary ? _buildDualButtons() : _buildSingleButton(),
     );
   }
 

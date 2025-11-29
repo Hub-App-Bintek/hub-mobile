@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:file_picker/file_picker.dart';
 
 /// An enum to define the behavior and appearance of the text form field.
 enum PkpTextFormFieldType {
@@ -15,7 +16,11 @@ enum PkpTextFormFieldType {
   currency,
   percentage,
   dropdown,
+  selectUnit,
+  filePicker,
 }
+
+enum PkpFilePickerType { image, pdf, imageOrPdf }
 
 /// A reusable and configurable text form field widget for the app,
 /// which intelligently handles different input types.
@@ -41,6 +46,13 @@ class PkpTextFormField extends StatefulWidget {
     this.hintStyle,
     this.labelStyle,
     this.contentPadding,
+    this.unitOptions = const ['Ratio', '%'],
+    this.selectedUnit,
+    this.onUnitChanged,
+    this.onFilePicked,
+    this.allowedFileLabel,
+    this.allowedFileExtensions,
+    this.filePickerType = PkpFilePickerType.imageOrPdf,
   });
 
   final TextEditingController? controller;
@@ -63,6 +75,13 @@ class PkpTextFormField extends StatefulWidget {
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
   final EdgeInsetsGeometry? contentPadding;
+  final List<String> unitOptions;
+  final String? selectedUnit;
+  final ValueChanged<String>? onUnitChanged;
+  final ValueChanged<String>? onFilePicked;
+  final String? allowedFileLabel;
+  final List<String>? allowedFileExtensions;
+  final PkpFilePickerType filePickerType;
 
   @override
   State<PkpTextFormField> createState() => _PkpTextFormFieldState();
@@ -70,6 +89,50 @@ class PkpTextFormField extends StatefulWidget {
 
 class _PkpTextFormFieldState extends State<PkpTextFormField> {
   bool _isPasswordVisible = false;
+  late String _currentUnit;
+  List<String> get _effectiveUnitOptions =>
+      widget.unitOptions.isNotEmpty ? widget.unitOptions : const ['Ratio', '%'];
+  List<String> get _effectiveAllowedExtensions =>
+      widget.allowedFileExtensions ??
+      switch (widget.filePickerType) {
+        PkpFilePickerType.image => const ['jpg', 'jpeg', 'png', 'webp'],
+        PkpFilePickerType.pdf => const ['pdf'],
+        PkpFilePickerType.imageOrPdf => const [
+          'pdf',
+          'jpg',
+          'jpeg',
+          'png',
+          'webp',
+        ],
+      };
+
+  String get _effectiveAllowedLabel =>
+      widget.allowedFileLabel ??
+      switch (widget.filePickerType) {
+        PkpFilePickerType.image => 'Gambar (Maks 5MB)',
+        PkpFilePickerType.pdf => 'PDF (Maks 5MB)',
+        PkpFilePickerType.imageOrPdf => 'PDF atau Gambar (Maks 5MB)',
+      };
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUnit =
+        widget.selectedUnit ??
+        (_effectiveUnitOptions.isNotEmpty ? _effectiveUnitOptions.first : '');
+  }
+
+  @override
+  void didUpdateWidget(covariant PkpTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedUnit != null && widget.selectedUnit != _currentUnit) {
+      _currentUnit = widget.selectedUnit!;
+    } else if (oldWidget.unitOptions != widget.unitOptions &&
+        _effectiveUnitOptions.isNotEmpty &&
+        !_effectiveUnitOptions.contains(_currentUnit)) {
+      _currentUnit = _effectiveUnitOptions.first;
+    }
+  }
 
   String _formatCurrency(String value) {
     final cleaned = value.replaceAll(RegExp(r'[^0-9]'), '');
@@ -95,6 +158,8 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     final isCurrency = widget.type == PkpTextFormFieldType.currency;
     final isPercentage = widget.type == PkpTextFormFieldType.percentage;
     final isDropdown = widget.type == PkpTextFormFieldType.dropdown;
+    final isSelectUnit = widget.type == PkpTextFormFieldType.selectUnit;
+    final isFilePicker = widget.type == PkpTextFormFieldType.filePicker;
     final keyboardType = _getKeyboardType();
     final obscureText = isPassword && !_isPasswordVisible;
 
@@ -107,6 +172,8 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       suffixIcon = _buildTimeSuffixIcon(context);
     } else if (isPercentage) {
       suffixIcon = _buildPercentSuffix();
+    } else if (isSelectUnit) {
+      suffixIcon = _buildUnitDropdown();
     }
 
     final theme = Theme.of(context);
@@ -138,7 +205,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
             enabled: widget.enabled,
             obscureText: obscureText,
             keyboardType: keyboardType,
-            readOnly: isDateTime || isTime,
+            readOnly: isDateTime || isTime || isFilePicker,
             onChanged: (value) {
               if (!widget.enabled) return; // ignore changes when disabled
               if (isNumber || isCurrency) {
@@ -149,6 +216,13 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                 );
                 widget.onChanged?.call(formatted);
               } else if (isPercentage) {
+                final digits = _formatPercentage(value);
+                widget.controller?.value = TextEditingValue(
+                  text: digits,
+                  selection: TextSelection.collapsed(offset: digits.length),
+                );
+                widget.onChanged?.call(digits);
+              } else if (isSelectUnit) {
                 final digits = _formatPercentage(value);
                 widget.controller?.value = TextEditingValue(
                   text: digits,
@@ -169,7 +243,27 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                   AppTextStyles.bodyS.copyWith(
                     color: AppColors.neutralMediumLight,
                   ),
-              suffixIcon: suffixIcon,
+              suffixIcon: isFilePicker
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _effectiveAllowedLabel,
+                            style: AppTextStyles.caption.copyWith(
+                              color: AppColors.neutralMediumLight,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Icon(
+                            Icons.attach_file,
+                            color: AppColors.neutralMediumLight,
+                          ),
+                        ],
+                      ),
+                    )
+                  : suffixIcon,
               prefixIcon: isCurrency
                   ? SizedBox(
                       width: 40,
@@ -197,7 +291,9 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
               errorText: widget.errorText,
             ),
             onTap: widget.enabled
-                ? (isDateTime
+                ? (isFilePicker
+                      ? () => _pickFile()
+                      : isDateTime
                       ? () => _selectDate(context)
                       : isTime
                       ? () => _selectTime(context)
@@ -290,6 +386,10 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
         decimal: false,
       ),
       PkpTextFormFieldType.dropdown => TextInputType.text,
+      PkpTextFormFieldType.filePicker => TextInputType.none,
+      PkpTextFormFieldType.selectUnit => const TextInputType.numberWithOptions(
+        decimal: false,
+      ),
     };
   }
 
@@ -325,6 +425,57 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       width: 40,
       child: Center(child: Text('%', style: AppTextStyles.bodyL)),
     );
+  }
+
+  Widget _buildUnitDropdown() {
+    return DropdownButtonHideUnderline(
+      child: Padding(
+        padding: const EdgeInsets.only(right: 12),
+        child: DropdownButton<String>(
+          value: _currentUnit.isNotEmpty ? _currentUnit : null,
+          icon: const Icon(
+            Icons.expand_more,
+            color: AppColors.neutralMediumLight,
+          ),
+          onChanged: widget.enabled
+              ? (val) {
+                  if (val == null) return;
+                  setState(() {
+                    _currentUnit = val;
+                  });
+                  widget.onUnitChanged?.call(val);
+                }
+              : null,
+          items: _effectiveUnitOptions
+              .map(
+                (opt) => DropdownMenuItem<String>(
+                  value: opt,
+                  child: Text(
+                    opt,
+                    style: AppTextStyles.bodyS.copyWith(
+                      color: AppColors.neutralDarkest,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickFile() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: _effectiveAllowedExtensions,
+      allowMultiple: false,
+    );
+    if (result != null && result.files.isNotEmpty) {
+      final picked = result.files.first;
+      widget.controller?.text = picked.name;
+      widget.onFilePicked?.call(picked.path ?? picked.name);
+      setState(() {});
+    }
   }
 
   Future<void> _selectDate(BuildContext context) async {

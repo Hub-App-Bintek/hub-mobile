@@ -15,9 +15,11 @@ abstract class AppRoutes {
   static const chat = _Paths.chat;
   static const consultationDetails = _Paths.consultationDetails;
   static const licensing = _Paths.licensing;
+  static const simbgForm = _Paths.simbgForm;
   static const material = _Paths.material;
   static const construction = _Paths.construction;
   static const monitoring = _Paths.monitoring;
+  static const licensingLocation = _Paths.licensingLocation;
   static const kyc = _Paths.kyc;
   static const createProject = _Paths.createProject;
   static const projectHistory = _Paths.projectHistory;
@@ -50,9 +52,11 @@ abstract class _Paths {
   static const chat = '/chat';
   static const consultationDetails = '/consultation-details-screen';
   static const licensing = '/licensing';
+  static const simbgForm = '/licensing/simbg-form';
   static const material = '/material';
   static const construction = '/construction';
   static const monitoring = '/monitoring';
+  static const licensingLocation = '/licensing/location';
   static const kyc = '/kyc';
   static const createProject = '/create-project';
   static const projectHistory = '/project-history';

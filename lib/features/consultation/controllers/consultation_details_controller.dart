@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
+import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/project.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
@@ -20,6 +22,9 @@ class ConsultationDetailsController extends BaseController {
   late final Project project;
   final Rx<ConsultationDetailStep> selectedStep =
       ConsultationDetailStep.contract.obs;
+  final Rxn<UserRole> userRole = Rxn<UserRole>();
+  final RxBool hasUploadedContract = false.obs;
+  final UserStorage _userStorage;
 
   final RxList<ConsultationContractItem> contracts =
       <ConsultationContractItem>[].obs;
@@ -29,6 +34,8 @@ class ConsultationDetailsController extends BaseController {
       <ConsultationDocumentItem>[].obs;
   final RxList<ConsultationInvoiceItem> invoices =
       <ConsultationInvoiceItem>[].obs;
+
+  ConsultationDetailsController(this._userStorage);
 
   String sectionTitle(ConsultationDetailStep step) {
     switch (step) {
@@ -64,6 +71,11 @@ class ConsultationDetailsController extends BaseController {
     }
 
     _applyMockScenario(project.projectId);
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    userRole.value = await _userStorage.getRole() ?? UserRole.unknown;
   }
 
   void selectStep(ConsultationDetailStep step) {
@@ -82,6 +94,16 @@ class ConsultationDetailsController extends BaseController {
 
   void _showDownloadSnack(String message) {
     Get.snackbar('Unduh Dokumen', message, snackPosition: SnackPosition.BOTTOM);
+  }
+
+  bool get isConsultant => userRole.value == UserRole.consultant;
+
+  void downloadContractTemplate() {
+    _showDownloadSnack('Template kontrak diunduh (mock)');
+  }
+
+  void markContractUploaded() {
+    hasUploadedContract.value = true;
   }
 }
 

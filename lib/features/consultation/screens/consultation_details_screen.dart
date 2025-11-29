@@ -7,9 +7,11 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
+import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_details_controller.dart';
 
@@ -29,27 +31,6 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         child: Obx(() {
           final currentStep = selectedStep.value;
           final sectionTitle = controller.sectionTitle(currentStep);
-          final hasApprovedContract =
-              currentStep == ConsultationDetailStep.contract &&
-              controller.contracts.isNotEmpty &&
-              (controller.contracts.last.status ==
-                      ContractStatus.approvedNeedSign ||
-                  controller.contracts.last.status ==
-                      ContractStatus.approvedSigned);
-          final hasPendingApproval =
-              (currentStep == ConsultationDetailStep.contract &&
-                  controller.contracts.isNotEmpty &&
-                  controller.contracts.last.status ==
-                      ContractStatus.awaitingApproval) ||
-              (currentStep == ConsultationDetailStep.draftDesign &&
-                  controller.draftDesigns.isNotEmpty &&
-                  controller.draftDesigns.last.status ==
-                      DesignStatus.awaitingApproval);
-          final hasPendingSign =
-              (currentStep == ConsultationDetailStep.contract &&
-              controller.contracts.isNotEmpty &&
-              controller.contracts.last.status ==
-                  ContractStatus.approvedNeedSign);
           return Column(
             children: [
               Padding(
@@ -76,33 +57,11 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                   ),
                 ),
               ),
-              if (hasPendingSign)
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: PkpElevatedButton(
-                      onPressed: () {},
-                      text: 'Tandatangani Kontrak',
-                    ),
-                  ),
-                ),
-              if (hasPendingApproval)
-                _buildApprovalActions(
-                  onApprove: () {
-                    // TODO: Approve based on selected state
-                  },
-                  onReject: () {
-                    // TODO: Reject based on selected state
-                  },
-                ),
-              if (!hasApprovedContract &&
-                  currentStep == ConsultationDetailStep.contract)
-                _buildCancelConsultation(),
             ],
           );
         }),
       ),
+      bottomNavigationBar: _buildBottomBar(context),
     );
   }
 
@@ -555,38 +514,27 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     required VoidCallback onApprove,
     required VoidCallback onReject,
   }) {
-    return Container(
-      color: AppColors.white,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: PkpOutlinedButton(
-                text: 'Minta Revisi',
-                onPressed: onReject,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: PkpElevatedButton(text: 'Setujui', onPressed: onApprove),
-            ),
-          ],
-        ),
-      ),
+    return PkpBottomActions(
+      secondaryText: 'Minta Revisi',
+      onSecondaryPressed: onReject,
+      primaryText: 'Setujui',
+      onPrimaryPressed: onApprove,
     );
   }
 
   Widget _buildCancelConsultation() {
-    return SizedBox(
-      width: double.infinity,
-      child: TextButton(
-        onPressed: () {
-          // TODO: Cancel consultation
-        },
-        child: Text(
-          'Batalkan Konsultasi',
-          style: AppTextStyles.actionM.copyWith(color: AppColors.errorDark),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: TextButton(
+          onPressed: () {
+            // TODO: Cancel consultation
+          },
+          child: Text(
+            'Batalkan Konsultasi',
+            style: AppTextStyles.actionM.copyWith(color: AppColors.errorDark),
+          ),
         ),
       ),
     );
@@ -686,6 +634,188 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         ),
       ),
     );
+  }
+
+  Future<void> _showUploadContractSheet(BuildContext context) {
+    return showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryLightest,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(
+                  Icons.description_outlined,
+                  color: AppColors.primaryDark,
+                  size: 28,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Unggah Dokumen Kontrak',
+                style: AppTextStyles.h3.copyWith(
+                  color: AppColors.neutralDarkest,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Unggah kontrak untuk diajukan ke pemilik proyek.',
+                style: AppTextStyles.bodyM.copyWith(
+                  color: AppColors.neutralMediumLight,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              PkpElevatedButton(
+                text: 'Pilih Dokumen',
+                onPressed: () {
+                  controller.markContractUploaded();
+                  Get.back();
+                },
+              ),
+              const SizedBox(height: 8),
+              PkpOutlinedButton(text: 'Batal', onPressed: Get.back),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showUploadedContractSheet(BuildContext context) {
+    return showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Kontrak Diunggah',
+                style: AppTextStyles.h3.copyWith(
+                  color: AppColors.neutralDarkest,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.inputSurface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.inputBorder),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.picture_as_pdf_outlined,
+                      color: AppColors.primaryDark,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text('Kontrak.pdf', style: AppTextStyles.bodyM),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              PkpOutlinedButton(
+                text: 'Unduh Kontrak',
+                onPressed: () {
+                  controller.downloadContractTemplate();
+                },
+              ),
+              const SizedBox(height: 8),
+              PkpElevatedButton(
+                text: 'Unggah Ulang',
+                onPressed: () {
+                  controller.markContractUploaded();
+                  Get.back();
+                  _showUploadContractSheet(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomBar(BuildContext context) {
+    return Obx(() {
+      final isConsultant = controller.userRole.value == UserRole.consultant;
+      final step = controller.selectedStep.value;
+      final hasContracts = controller.contracts.isNotEmpty;
+      final lastContract = hasContracts ? controller.contracts.last : null;
+      final hasPendingContractApproval =
+          step == ConsultationDetailStep.contract &&
+          lastContract?.status == ContractStatus.awaitingApproval;
+      final hasPendingContractSign =
+          step == ConsultationDetailStep.contract &&
+          lastContract?.status == ContractStatus.approvedNeedSign;
+      final hasApprovedContract =
+          step == ConsultationDetailStep.contract &&
+          lastContract != null &&
+          (lastContract.status == ContractStatus.approvedNeedSign ||
+              lastContract.status == ContractStatus.approvedSigned);
+      final canCancel =
+          step == ConsultationDetailStep.contract &&
+          !hasApprovedContract &&
+          !isConsultant;
+
+      if (isConsultant && step == ConsultationDetailStep.contract) {
+        return PkpBottomActions(
+          secondaryText: 'Unduh Template',
+          onSecondaryPressed: controller.downloadContractTemplate,
+          primaryText: controller.hasUploadedContract.value
+              ? 'Lihat Kontrak'
+              : 'Unggah Kontrak',
+          onPrimaryPressed: () {
+            if (controller.hasUploadedContract.value) {
+              _showUploadedContractSheet(context);
+            } else {
+              _showUploadContractSheet(context);
+            }
+          },
+        );
+      }
+
+      if (hasPendingContractSign) {
+        return PkpBottomActions(
+          primaryText: 'Tandatangani Kontrak',
+          onPrimaryPressed: () {},
+        );
+      }
+
+      if (hasPendingContractApproval) {
+        return _buildApprovalActions(onApprove: () {}, onReject: () {});
+      }
+
+      if (canCancel) {
+        return _buildCancelConsultation();
+      }
+
+      return const SizedBox.shrink();
+    });
   }
 }
 
