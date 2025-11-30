@@ -144,6 +144,13 @@ class ProjectsController extends BaseController {
   void updateCategory(String category) {
     if (_selectedCategory.value == category) return;
     _selectedCategory.value = category;
+
+    final defaultStatus = _defaultStatusForCategory(category);
+    if (_statusFilter.value != defaultStatus) {
+      updateStatusFilter(defaultStatus);
+    } else {
+      refreshProjects();
+    }
   }
 
   Future<void> loadMoreProjects() async {
@@ -178,10 +185,23 @@ class ProjectsController extends BaseController {
     );
   }
 
+  void openLicensingDetails(Project project) {
+    navigateTo(AppRoutes.licensingDetails, arguments: {'project': project});
+  }
+
   void _seedMockProjects() {
     _allProjects
       ..clear()
       ..addAll(_mockProjects);
+  }
+
+  String? _defaultStatusForCategory(String category) {
+    switch (category) {
+      case 'Konstruksi':
+        return null;
+      default:
+        return 'ACTIVE';
+    }
   }
 }
 

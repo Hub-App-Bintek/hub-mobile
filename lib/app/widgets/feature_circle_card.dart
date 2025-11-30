@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Circle menu button with FAB scaffold, label, and optional badge.
 class FeatureCircleCard extends StatelessWidget {
@@ -8,6 +9,7 @@ class FeatureCircleCard extends StatelessWidget {
     super.key,
     required this.label,
     this.icon,
+    this.iconAsset,
     this.onTap,
     this.showBadge = false,
     this.badgeValue,
@@ -19,12 +21,13 @@ class FeatureCircleCard extends StatelessWidget {
     this.iconSize = 24,
     this.iconWidget,
   }) : assert(
-         icon != null || iconWidget != null,
-         'Provide either icon or iconWidget',
+         icon != null || iconWidget != null || iconAsset != null,
+         'Provide either icon, iconWidget, or iconAsset',
        );
 
   final String label;
   final IconData? icon;
+  final String? iconAsset;
   final VoidCallback? onTap;
   final bool showBadge;
   final String? badgeValue;
@@ -41,7 +44,16 @@ class FeatureCircleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconView = iconWidget ?? Icon(icon, size: iconSize, color: iconColor);
+    final iconView =
+        iconWidget ??
+        (iconAsset != null
+            ? SvgPicture.asset(
+                iconAsset!,
+                width: iconSize,
+                height: iconSize,
+                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              )
+            : Icon(icon, size: iconSize, color: iconColor));
 
     if (labelOutside) {
       return Column(

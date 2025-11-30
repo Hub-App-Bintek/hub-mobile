@@ -29,6 +29,8 @@ class ProjectsScreen extends GetView<ProjectsController> {
     final isConsultant = controller.userRole.value == UserRole.consultant;
 
     Widget buildProjectCard(Project project) {
+      final isConsultationCategory =
+          controller.selectedCategory == 'Konsultasi';
       final consultantName =
           project.consultationInfo?.consultantName?.trim().isNotEmpty == true
           ? project.consultationInfo?.consultantName!
@@ -51,13 +53,17 @@ class ProjectsScreen extends GetView<ProjectsController> {
             text: location,
             color: AppColors.neutralMediumLight,
           ),
-          ctaLabel: 'Tanya Konsultan',
-          onCtaTap: () => controller.openChatWithConsultant(project),
+          ctaLabel: isConsultationCategory ? 'Tanya Konsultan' : null,
+          onCtaTap: isConsultationCategory
+              ? () => controller.openChatWithConsultant(project)
+              : null,
           onTap: () {
             final status = project.status ?? '';
-            if (controller.selectedCategory == 'Konsultasi' &&
+            if (isConsultationCategory &&
                 (status == 'ACTIVE' || status == 'COMPLETED')) {
               controller.openConsultationDetails(project);
+            } else if (controller.selectedCategory == 'Perizinan') {
+              controller.openLicensingDetails(project);
             } else {
               controller.openProjectReview(project);
             }
@@ -103,52 +109,58 @@ class ProjectsScreen extends GetView<ProjectsController> {
           }
 
           final projects = controller.projects;
+          final category = controller.selectedCategory;
+          final statusOptions = _statusOptionsForCategory(category);
 
           final heading = buildHeading(controller.statusFilter);
 
           return Column(
             children: [
               if (!isConsultant) _buildCategoryTabsSection(categories),
-              if (controller.projectStatus == null) ...[
+              if (controller.projectStatus == null &&
+                  statusOptions.isNotEmpty) ...[
                 const SizedBox(height: 16),
-                _buildStatusMenu(context),
+                _buildStatusMenu(context, statusOptions),
               ],
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: controller.refreshProjects,
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Text(
-                          heading,
-                          style: AppTextStyles.h2.copyWith(
-                            color: AppColors.neutralDarkest,
-                          ),
-                        ),
-                      ),
-                      if (projects.isEmpty && !controller.isLoading.value)
+              if (category == 'Konstruksi')
+                Expanded(child: _buildFeatureUnavailable())
+              else
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: controller.refreshProjects,
+                    child: ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      children: [
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
-                            'Belum ada proyek untuk status ini.',
-                            style: AppTextStyles.bodyM.copyWith(
-                              color: AppColors.neutralMediumLight,
+                            heading,
+                            style: AppTextStyles.h2.copyWith(
+                              color: AppColors.neutralDarkest,
                             ),
                           ),
                         ),
-                      ...projects.map(buildProjectCard),
-                      if (controller.hasMore && controller.isLoading.value)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 16),
-                          child: Center(child: CircularProgressIndicator()),
-                        ),
-                    ],
+                        if (projects.isEmpty && !controller.isLoading.value)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(
+                              'Belum ada proyek untuk status ini.',
+                              style: AppTextStyles.bodyM.copyWith(
+                                color: AppColors.neutralMediumLight,
+                              ),
+                            ),
+                          ),
+                        ...projects.map(buildProjectCard),
+                        if (controller.hasMore && controller.isLoading.value)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           );
         }),
@@ -166,21 +178,10 @@ class ProjectsScreen extends GetView<ProjectsController> {
     );
   }
 
-  Widget _buildStatusMenu(BuildContext context) {
-    const options = [
-      _ProjectStatusOption(
-        'Sedang Berjalan',
-        'ACTIVE',
-        Icons.play_circle_outline,
-      ),
-      _ProjectStatusOption(
-        'Menunggu Konfirmasi',
-        'PENDING',
-        Icons.hourglass_top,
-      ),
-      _ProjectStatusOption('Selesai', 'COMPLETED', Icons.check_circle_outline),
-    ];
-
+  Widget _buildStatusMenu(
+    BuildContext context,
+    List<_ProjectStatusOption> options,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Obx(() {
@@ -191,6 +192,12 @@ class ProjectsScreen extends GetView<ProjectsController> {
           children: options.map((option) {
             final isSelected = controller.statusFilter == option.status;
             final count = controller.projectCounts[option.status] ?? 0;
+            final labelColor = isSelected
+                ? AppColors.neutralDarkest
+                : AppColors.inputBorder;
+            final iconColor = isSelected
+                ? AppColors.white
+                : AppColors.inputBorder;
 
             return SizedBox(
               width: (MediaQuery.of(context).size.width - 32) / options.length,
@@ -198,15 +205,11 @@ class ProjectsScreen extends GetView<ProjectsController> {
                 label: option.label,
                 icon: option.icon,
                 labelOutside: true,
-                labelStyle: AppTextStyles.bodyM.copyWith(
-                  color: AppColors.neutralDarkest,
-                ),
+                labelStyle: AppTextStyles.bodyS.copyWith(color: labelColor),
                 backgroundColor: isSelected
                     ? AppColors.primaryDark
                     : AppColors.primaryLightest,
-                iconColor: isSelected
-                    ? AppColors.white
-                    : AppColors.primaryDarkest,
+                iconColor: iconColor,
                 badgeColor: AppColors.errorDark,
                 badgeValue: count.toString(),
                 showBadge: count > 0,
@@ -224,7 +227,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
   }
 
   Widget _buildCategoryTabsSection(List<String> categories) {
-    return Material(
+    return Container(
       color: AppColors.primaryDark,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -232,17 +235,77 @@ class ProjectsScreen extends GetView<ProjectsController> {
           onTap: (index) => controller.updateCategory(categories[index]),
           indicator: const UnderlineTabIndicator(
             borderSide: BorderSide(color: AppColors.white, width: 2),
+            insets: EdgeInsets.symmetric(horizontal: 8),
           ),
           tabAlignment: TabAlignment.fill,
           indicatorSize: TabBarIndicatorSize.tab,
-          // indicatorPadding: const EdgeInsets.symmetric(horizontal: 12),
           isScrollable: false,
-          labelPadding: EdgeInsets.zero,
+          labelPadding: const EdgeInsets.symmetric(horizontal: 8),
           labelColor: AppColors.white,
-          unselectedLabelColor: AppColors.primaryLightest.withOpacity(0.6),
-          labelStyle: AppTextStyles.h4,
+          unselectedLabelColor: AppColors.white.withOpacity(0.6),
+          labelStyle: AppTextStyles.actionM,
           tabs: categories.map((label) => Tab(text: label)).toList(),
         ),
+      ),
+    );
+  }
+
+  List<_ProjectStatusOption> _statusOptionsForCategory(String category) {
+    switch (category) {
+      case 'Konsultasi':
+        return const [
+          _ProjectStatusOption('Sedang Berjalan', 'ACTIVE', Icons.schedule),
+          _ProjectStatusOption(
+            'Menunggu Konfirmasi',
+            'PENDING',
+            Icons.hourglass_top_outlined,
+          ),
+          _ProjectStatusOption(
+            'Selesai',
+            'COMPLETED',
+            Icons.check_circle_outline,
+          ),
+        ];
+      case 'Perizinan':
+      case 'Pengawasan':
+        return const [
+          _ProjectStatusOption('Sedang Berjalan', 'ACTIVE', Icons.schedule),
+          _ProjectStatusOption(
+            'Selesai',
+            'COMPLETED',
+            Icons.check_circle_outline,
+          ),
+        ];
+      case 'Konstruksi':
+      default:
+        return const [];
+    }
+  }
+
+  Widget _buildFeatureUnavailable() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.inputBorder),
+            ),
+            child: const Center(
+              child: Icon(Icons.close, color: AppColors.inputBorder),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Fitur belum tersedia',
+            style: AppTextStyles.bodyM.copyWith(
+              color: AppColors.neutralMediumLight,
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -16,6 +16,7 @@ abstract class AppRoutes {
   static const consultationDetails = _Paths.consultationDetails;
   static const licensing = _Paths.licensing;
   static const simbgForm = _Paths.simbgForm;
+  static const licensingDetails = _Paths.licensingDetails;
   static const material = _Paths.material;
   static const construction = _Paths.construction;
   static const monitoring = _Paths.monitoring;
@@ -53,6 +54,7 @@ abstract class _Paths {
   static const consultationDetails = '/consultation-details-screen';
   static const licensing = '/licensing';
   static const simbgForm = '/licensing/simbg-form';
+  static const licensingDetails = '/licensing/details';
   static const material = '/material';
   static const construction = '/construction';
   static const monitoring = '/monitoring';

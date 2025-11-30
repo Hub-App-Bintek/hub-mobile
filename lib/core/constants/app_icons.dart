@@ -10,6 +10,14 @@ abstract class AppIcons {
   static const chat = 'assets/icons/icon_chat.svg';
   static const wallet = 'assets/icons/icon_wallet.svg';
   static const add = 'assets/icons/icon_add.svg';
+  static const download = 'assets/icons/icon_download.svg';
+  static const clock = 'assets/icons/icon_clock.svg';
+  static const upload = 'assets/icons/icon_upload.svg';
+  static const documentFinal = 'assets/icons/icon_document_final.svg';
+  static const failedCircle = 'assets/icons/icon_failed_circle.svg';
+  static const hourglass = 'assets/icons/icon_hourglass.svg';
+  static const checkCircle = 'assets/icons/icon_check_circle.svg';
+  static const check = 'assets/icons/icon_check.svg';
 
   static const designType = 'assets/icons/icon_design_type.svg';
   static const designNonPrototype =

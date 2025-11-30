@@ -10,10 +10,12 @@ import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
+import 'package:pkp_hub/app/widgets/empty_placeholder.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_details_controller.dart';
+import 'package:pkp_hub/features/main/widgets/project_item.dart';
 
 class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   const ConsultationDetailsScreen({super.key});
@@ -296,138 +298,22 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     ConsultationContractItem contract,
     String consultantName,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.inputSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      contract.title,
-                      style: AppTextStyles.h4.copyWith(
-                        color: AppColors.neutralDarkest,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      consultantName,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralDarkest,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      contract.dateLabel,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralMediumLight,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.file_download_outlined),
-                color: AppColors.primaryDarkest,
-                onPressed: () => controller.downloadContract(contract),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: _buildContractStatus(contract.status),
-          ),
-        ],
-      ),
+    return ProjectItem(
+      title: contract.title,
+      content: consultantName,
+      date: contract.dateLabel,
+      status: _mapContractStatus(contract.status),
+      onDownloadTap: () => controller.downloadContract(contract),
     );
   }
 
   Widget _buildDesignCard(ConsultationDocumentItem item) {
-    final isAwaitingApproval = item.status == DesignStatus.awaitingApproval;
-    final isRevision = item.status == DesignStatus.needsRevision;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.inputSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.title,
-                      style: AppTextStyles.h4.copyWith(
-                        color: AppColors.neutralDarkest,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item.dateLabel,
-                      style: AppTextStyles.bodyS.copyWith(
-                        color: AppColors.neutralMediumLight,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.file_download_outlined),
-                color: AppColors.primaryDarkest,
-                onPressed: () => controller.downloadDesign(item),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isAwaitingApproval
-                    ? AppColors.warningLight
-                    : isRevision
-                    ? AppColors.errorLight
-                    : AppColors.successLight,
-                borderRadius: BorderRadius.circular(99),
-              ),
-              child: Text(
-                isAwaitingApproval
-                    ? 'Menunggu Persetujuan'
-                    : isRevision
-                    ? 'Perlu Revisi'
-                    : 'Disetujui',
-                style: AppTextStyles.bodyS.copyWith(
-                  color: isAwaitingApproval
-                      ? AppColors.warningDark
-                      : isRevision
-                      ? AppColors.errorDark
-                      : AppColors.successDark,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
+    return ProjectItem(
+      title: item.title,
+      content: 'Diupload ${item.dateLabel}',
+      date: item.dateLabel,
+      status: _mapDesignStatus(item.status),
+      onDownloadTap: () => controller.downloadDesign(item),
     );
   }
 
@@ -444,69 +330,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   Widget _buildEmptyState({required String message}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.insert_drive_file_outlined,
-              size: 48,
-              color: AppColors.neutralMediumLight,
-            ),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              style: AppTextStyles.bodyM.copyWith(
-                color: AppColors.neutralMediumLight,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContractStatus(ContractStatus status) {
-    late final String label;
-    late final Color textColor;
-    late final Color background;
-
-    switch (status) {
-      case ContractStatus.awaitingApproval:
-        label = 'Menunggu Persetujuan';
-        textColor = AppColors.warningDark;
-        background = AppColors.warningLight;
-        break;
-      case ContractStatus.needsRevision:
-        label = 'Perlu Revisi';
-        textColor = AppColors.errorDark;
-        background = AppColors.errorLight;
-        break;
-      case ContractStatus.approvedNeedSign:
-      case ContractStatus.approvedSigned:
-        label = 'Disetujui';
-        textColor = AppColors.successDark;
-        background = AppColors.successLight;
-        break;
-    }
-
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(99),
-        ),
-        child: Text(
-          label,
-          style: AppTextStyles.bodyS.copyWith(
-            color: textColor,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      child: Center(child: EmptyPlaceholder(message: message)),
     );
   }
 
@@ -543,7 +367,11 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   Widget _buildInvoiceCard(ConsultationInvoiceItem item) {
     final isPaid = item.status == InvoiceStatus.paid;
 
-    return GestureDetector(
+    return ProjectItem(
+      title: item.title,
+      content: Formatters.currency(item.amount),
+      date: item.dateLabel,
+      status: isPaid ? ProjectItemStatus.paid : ProjectItemStatus.unpaid,
       onTap: () {
         if (isPaid) {
           controller.navigateTo(
@@ -557,83 +385,31 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
           );
         }
       },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.inputSurface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.inputBorder),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.title,
-                        style: AppTextStyles.h4.copyWith(
-                          color: AppColors.neutralDarkest,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        item.dateLabel,
-                        style: AppTextStyles.bodyS.copyWith(
-                          color: AppColors.neutralMediumLight,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        Formatters.currency(item.amount),
-                        style: AppTextStyles.bodyM.copyWith(
-                          color: AppColors.neutralDarkest,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.file_download_outlined),
-                  color: AppColors.primaryDarkest,
-                  onPressed: () {},
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: isPaid
-                      ? AppColors.successLight
-                      : AppColors.warningLight,
-                  borderRadius: BorderRadius.circular(99),
-                ),
-                child: Text(
-                  isPaid ? 'Sudah Dibayar' : 'Belum Dibayar',
-                  style: AppTextStyles.bodyS.copyWith(
-                    color: isPaid
-                        ? AppColors.successDark
-                        : AppColors.warningDark,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
+  }
+
+  ProjectItemStatus _mapContractStatus(ContractStatus status) {
+    switch (status) {
+      case ContractStatus.awaitingApproval:
+        return ProjectItemStatus.awaitingApproval;
+      case ContractStatus.needsRevision:
+        return ProjectItemStatus.revisionRequired;
+      case ContractStatus.approvedNeedSign:
+        return ProjectItemStatus.approved;
+      case ContractStatus.approvedSigned:
+        return ProjectItemStatus.signed;
+    }
+  }
+
+  ProjectItemStatus _mapDesignStatus(DesignStatus status) {
+    switch (status) {
+      case DesignStatus.awaitingApproval:
+        return ProjectItemStatus.awaitingApproval;
+      case DesignStatus.needsRevision:
+        return ProjectItemStatus.revisionRequired;
+      case DesignStatus.approved:
+        return ProjectItemStatus.approved;
+    }
   }
 
   Future<void> _showUploadContractSheet(BuildContext context) {

@@ -37,18 +37,20 @@ class ProjectInfoCard extends StatelessWidget {
           color: isSelected == true
               ? AppColors.primaryDark
               : AppColors.inputBorder,
+          width: 0.8,
         ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 12,
+        spacing: 8,
         children: [
           Text(
             title,
-            style: AppTextStyles.h4.copyWith(color: AppColors.neutralDarkest),
+            style: AppTextStyles.h3.copyWith(color: AppColors.neutralDarkest),
           ),
           _InfoRow(line: primaryLine),
           _InfoRow(line: secondaryLine),
+          if (_hasCta) const SizedBox(height: 12),
           if (_hasCta)
             SizedBox(
               width: double.infinity,
@@ -99,7 +101,7 @@ class _InfoRow extends StatelessWidget {
           child: Text(
             line.text,
             style: AppTextStyles.bodyS.copyWith(
-              color: line.color ?? AppColors.neutralDarkest,
+              color: line.color ?? AppColors.neutralMediumLight,
             ),
           ),
         ),

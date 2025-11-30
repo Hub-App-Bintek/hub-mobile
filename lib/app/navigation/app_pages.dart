@@ -52,6 +52,8 @@ import 'package:pkp_hub/features/licensing/screens/licensing_location_details_sc
 import 'package:pkp_hub/features/licensing/controllers/licensing_location_details_controller.dart';
 import 'package:pkp_hub/features/licensing/screens/simbg_form_screen.dart';
 import 'package:pkp_hub/features/licensing/controllers/simbg_form_controller.dart';
+import 'package:pkp_hub/features/licensing/screens/licensing_details_screen.dart';
+import 'package:pkp_hub/features/licensing/controllers/licensing_details_controller.dart';
 
 part 'app_routes.dart';
 
@@ -193,6 +195,13 @@ class AppPages {
       name: AppRoutes.consultationConfirmation,
       page: () => const ConsultationConfirmationScreen(),
       binding: ConsultationConfirmationBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.licensingDetails,
+      page: () => const LicensingDetailsScreen(),
+      binding: BindingsBuilder(
+        () => Get.lazyPut(() => LicensingDetailsController()),
+      ),
     ),
     GetPage(
       name: AppRoutes.simbgForm,
