@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -13,17 +13,26 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/data/models/location/location_models.dart';
 import 'package:pkp_hub/data/models/project_type.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
+import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
+import 'package:pkp_hub/domain/usecases/location/get_provinces_use_case.dart';
+import 'package:pkp_hub/domain/usecases/location/get_regencies_use_case.dart';
+import 'package:pkp_hub/domain/usecases/location/get_villages_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 
 class LocationDetailsController extends BaseController {
   final CreateProjectUseCase _createProjectUseCase;
   final CreateConsultationUseCase _createConsultationUseCase;
+  final GetProvincesUseCase _getProvincesUseCase;
+  final GetRegenciesUseCase _getRegenciesUseCase;
+  final GetDistrictsUseCase _getDistrictsUseCase;
+  final GetVillagesUseCase _getVillagesUseCase;
   final String? _consultantId;
   final bool _isPaidConsultation;
   final String? _initialProjectTypeId;
@@ -31,6 +40,10 @@ class LocationDetailsController extends BaseController {
   LocationDetailsController(
     this._createProjectUseCase,
     this._createConsultationUseCase,
+    this._getProvincesUseCase,
+    this._getRegenciesUseCase,
+    this._getDistrictsUseCase,
+    this._getVillagesUseCase,
     this._consultantId,
     this._isPaidConsultation,
     this._initialProjectTypeId,
@@ -38,7 +51,6 @@ class LocationDetailsController extends BaseController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  final TextEditingController projectNameController = TextEditingController();
   final TextEditingController provinceController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController subdistrictController = TextEditingController();
@@ -47,13 +59,13 @@ class LocationDetailsController extends BaseController {
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
+  final TextEditingController incomeProofController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocusNode = FocusNode();
 
   RxBool isLoadingLocation = true.obs;
   RxBool isLocationError = false.obs;
   RxnString locationErrorMessage = RxnString();
-  RxBool isProjectNameValid = true.obs;
   RxBool isProvinceValid = false.obs;
   RxBool isCityValid = false.obs;
   RxBool isSubdistrictValid = false.obs;
@@ -64,7 +76,6 @@ class LocationDetailsController extends BaseController {
   RxnString incomeProofPath = RxnString();
 
   Rxn<LatLng> selectedLocation = Rxn<LatLng>();
-  RxnString projectNameError = RxnString();
   RxnString provinceError = RxnString();
   RxnString cityError = RxnString();
   RxnString subdistrictError = RxnString();
@@ -80,34 +91,29 @@ class LocationDetailsController extends BaseController {
   bool get isFormValid => _isFormValid.value;
 
   RxBool isRequesting = false.obs;
-  final List<String> provinceOptions = const [
-    'DKI Jakarta',
-    'Jawa Barat',
-    'Jawa Tengah',
-    'Jawa Timur',
-  ];
-  final List<String> cityOptions = const [
-    'Jakarta Selatan',
-    'Jakarta Barat',
-    'Jakarta Timur',
-    'Jakarta Utara',
-  ];
-  final List<String> subdistrictOptions = const [
-    'Kebayoran Baru',
-    'Kebayoran Lama',
-    'Menteng',
-    'Cilandak',
-  ];
-  final List<String> villageOptions = const [
-    'Gandaria Utara',
-    'Senayan',
-    'Pulo',
-    'Kemang',
-  ];
-  RxnString selectedProvince = RxnString();
-  RxnString selectedCity = RxnString();
-  RxnString selectedSubdistrict = RxnString();
-  RxnString selectedVillage = RxnString();
+  final RxList<Province> provinces = <Province>[].obs;
+  final RxList<Regency> regencies = <Regency>[].obs;
+  final RxList<District> districts = <District>[].obs;
+  final RxList<Village> villages = <Village>[].obs;
+
+  Rxn<Province> selectedProvince = Rxn<Province>();
+  Rxn<Regency> selectedCity = Rxn<Regency>();
+  Rxn<District> selectedSubdistrict = Rxn<District>();
+  Rxn<Village> selectedVillage = Rxn<Village>();
+
+  List<String> get provinceOptions =>
+      provinces.map((province) => province.name).toList();
+
+  List<String> get cityOptions =>
+      regencies.map((regency) => regency.name).toList();
+
+  List<String> get subdistrictOptions =>
+      districts.map((district) => district.name).toList();
+
+  List<String> get villageOptions =>
+      villages.map((village) => village.name).toList();
+
+  LatLng get mapTarget => selectedLocation.value ?? _defaultLocation;
 
   // Debounce timer for map position updates
   Timer? _positionUpdateTimer;
@@ -125,14 +131,15 @@ class LocationDetailsController extends BaseController {
     super.onInit();
     _getUserLocation();
     _hydrateInitialType();
+    _fetchProvinces();
     provinceController.addListener(_validateProvince);
     cityController.addListener(_validateCity);
     subdistrictController.addListener(_validateSubdistrict);
     villageController.addListener(_validateVillage);
     locationDetailsController.addListener(_validateLocationDetails);
-    projectNameController.text = 'Proyek Baru';
+    incomeController.addListener(_validateIncome);
     landAreaController.text = '0';
-    incomeController.text = '0';
+    incomeController.text = '';
   }
 
   void _hydrateInitialType() {
@@ -144,6 +151,70 @@ class LocationDetailsController extends BaseController {
       orElse: () => prototype,
     );
     selectedProjectType.value = match;
+  }
+
+  Future<void> _fetchProvinces() async {
+    await handleAsync<List<Province>>(
+      () => _getProvincesUseCase(),
+      onSuccess: provinces.assignAll,
+      onFailure: showError,
+    );
+  }
+
+  Future<void> _fetchRegencies(int provinceId) async {
+    _resetCitySelection();
+    await handleAsync<List<Regency>>(
+      () => _getRegenciesUseCase(provinceId),
+      onSuccess: regencies.assignAll,
+      onFailure: showError,
+    );
+  }
+
+  Future<void> _fetchDistricts(int regencyId) async {
+    _resetSubdistrictSelection();
+    await handleAsync<List<District>>(
+      () => _getDistrictsUseCase(regencyId),
+      onSuccess: districts.assignAll,
+      onFailure: showError,
+    );
+  }
+
+  Future<void> _fetchVillages(int districtId) async {
+    _resetVillageSelection();
+    await handleAsync<List<Village>>(
+      () => _getVillagesUseCase(districtId),
+      onSuccess: villages.assignAll,
+      onFailure: showError,
+    );
+  }
+
+  void _resetCitySelection() {
+    selectedCity.value = null;
+    cityController.clear();
+    cityError.value = null;
+    isCityValid.value = false;
+    regencies.clear();
+    _resetSubdistrictSelection();
+    _updateFormValidity();
+  }
+
+  void _resetSubdistrictSelection() {
+    selectedSubdistrict.value = null;
+    subdistrictController.clear();
+    subdistrictError.value = null;
+    isSubdistrictValid.value = false;
+    districts.clear();
+    _resetVillageSelection();
+    _updateFormValidity();
+  }
+
+  void _resetVillageSelection() {
+    selectedVillage.value = null;
+    villageController.clear();
+    villageError.value = null;
+    isVillageValid.value = false;
+    villages.clear();
+    _updateFormValidity();
   }
 
   Future<File?> pickIncomeProof() async {
@@ -180,61 +251,57 @@ class LocationDetailsController extends BaseController {
     return null;
   }
 
-  void _validateProjectName() {
-    projectNameError.value = null;
-    isProjectNameValid.value = true;
-
-    _updateFormValidity();
+  void onIncomeProofPicked(String path) {
+    incomeProofPath.value = path;
+    incomeProofController.text = path.split(Platform.pathSeparator).last;
+    Get.snackbar(
+      'Berhasil',
+      'Bukti pendapatan berhasil dipilih',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.successDark,
+      colorText: AppColors.white,
+    );
   }
 
-  void searchLocationByLatLng(String input) {
-    final parts = input.split(',');
-    if (parts.length != 2) {
-      _showSnack('Format tidak valid', 'Gunakan format: -6.2,106.8');
-      return;
-    }
-    final lat = double.tryParse(parts[0].trim());
-    final lng = double.tryParse(parts[1].trim());
-    if (lat == null || lng == null) {
-      _showSnack('Format tidak valid', 'Gunakan format: -6.2,106.8');
-      return;
-    }
-    final target = LatLng(lat, lng);
-    selectedLocation.value = target;
-    updatePosition(target);
-  }
-
-  void _showSnack(String title, String message) {
-    Get.snackbar(title, message, snackPosition: SnackPosition.BOTTOM);
-  }
+  void _showSnack(String title, String message) {}
 
   void _validateProvince() {
     final value = provinceController.text.trim();
-    provinceError.value = value.isEmpty ? AppStrings.provinceRequired : null;
-    isProvinceValid.value = value.isNotEmpty;
+    final hasSelection = selectedProvince.value != null;
+    provinceError.value = value.isEmpty || !hasSelection
+        ? AppStrings.provinceRequired
+        : null;
+    isProvinceValid.value = value.isNotEmpty && hasSelection;
     _updateFormValidity();
   }
 
   void _validateCity() {
     final value = cityController.text.trim();
-    cityError.value = value.isEmpty ? AppStrings.cityRequired : null;
-    isCityValid.value = value.isNotEmpty;
+    final hasSelection = selectedCity.value != null;
+    cityError.value = value.isEmpty || !hasSelection
+        ? AppStrings.cityRequired
+        : null;
+    isCityValid.value = value.isNotEmpty && hasSelection;
     _updateFormValidity();
   }
 
   void _validateSubdistrict() {
     final value = subdistrictController.text.trim();
-    subdistrictError.value = value.isEmpty
+    final hasSelection = selectedSubdistrict.value != null;
+    subdistrictError.value = value.isEmpty || !hasSelection
         ? AppStrings.subdistrictRequired
         : null;
-    isSubdistrictValid.value = value.isNotEmpty;
+    isSubdistrictValid.value = value.isNotEmpty && hasSelection;
     _updateFormValidity();
   }
 
   void _validateVillage() {
     final value = villageController.text.trim();
-    villageError.value = value.isEmpty ? AppStrings.villageRequired : null;
-    isVillageValid.value = value.isNotEmpty;
+    final hasSelection = selectedVillage.value != null;
+    villageError.value = value.isEmpty || !hasSelection
+        ? AppStrings.villageRequired
+        : null;
+    isVillageValid.value = value.isNotEmpty && hasSelection;
     _updateFormValidity();
   }
 
@@ -248,16 +315,10 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
-  void _validateLandArea() {
-    landAreaError.value = null;
-    isLandAreaValid.value = true;
-
-    _updateFormValidity();
-  }
-
   void _validateIncome() {
-    incomeError.value = null;
-    isIncomeValid.value = true;
+    final value = incomeController.text.trim();
+    incomeError.value = value.isEmpty ? AppStrings.incomeRequired : null;
+    isIncomeValid.value = value.isNotEmpty;
     _updateFormValidity();
   }
 
@@ -269,6 +330,7 @@ class LocationDetailsController extends BaseController {
         isSubdistrictValid.value &&
         isVillageValid.value &&
         isLocationDetailsValid.value &&
+        isIncomeValid.value &&
         selectedProjectType.value != null &&
         !isLoadingLocation.value;
 
@@ -277,7 +339,6 @@ class LocationDetailsController extends BaseController {
 
   @override
   void onClose() {
-    projectNameController.dispose();
     provinceController.dispose();
     cityController.dispose();
     subdistrictController.dispose();
@@ -285,6 +346,7 @@ class LocationDetailsController extends BaseController {
     locationDetailsController.dispose();
     landAreaController.dispose();
     incomeController.dispose();
+    incomeProofController.dispose();
     searchController.dispose();
     searchFocusNode.dispose();
     _positionUpdateTimer?.cancel();
@@ -414,9 +476,12 @@ class LocationDetailsController extends BaseController {
     final lat = double.tryParse(prediction.lat ?? '');
     final lng = double.tryParse(prediction.lng ?? '');
     if (lat == null || lng == null) {
-      _showSnack(
+      Get.snackbar(
         AppStrings.unableToFetchLocation,
         'Koordinat lokasi tidak ditemukan.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+        colorText: AppColors.white,
       );
       return;
     }
@@ -428,35 +493,85 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
+  Province? _findProvinceByName(String value) {
+    final query = value.trim().toLowerCase();
+    return provinces.firstWhereOrNull(
+      (province) => province.name.toLowerCase() == query,
+    );
+  }
+
+  Regency? _findRegencyByName(String value) {
+    final query = value.trim().toLowerCase();
+    return regencies.firstWhereOrNull(
+      (regency) => regency.name.toLowerCase() == query,
+    );
+  }
+
+  District? _findDistrictByName(String value) {
+    final query = value.trim().toLowerCase();
+    return districts.firstWhereOrNull(
+      (district) => district.name.toLowerCase() == query,
+    );
+  }
+
+  Village? _findVillageByName(String value) {
+    final query = value.trim().toLowerCase();
+    return villages.firstWhereOrNull(
+      (village) => village.name.toLowerCase() == query,
+    );
+  }
+
   void updateProjectType(ProjectType? value) {
     selectedProjectType.value = value;
   }
 
-  void selectProvince(String? value) {
+  void selectProvince(String? value) async {
     if (value == null || value.isEmpty) return;
-    selectedProvince.value = value;
-    provinceController.text = value;
+    final province = _findProvinceByName(value);
+    selectedProvince.value = province;
+    provinceController.text = province?.name ?? value;
     _validateProvince();
+    final provinceId = province?.id;
+    if (provinceId != null) {
+      await _fetchRegencies(provinceId);
+    } else {
+      _resetCitySelection();
+    }
   }
 
-  void selectCity(String? value) {
+  void selectCity(String? value) async {
     if (value == null || value.isEmpty) return;
-    selectedCity.value = value;
-    cityController.text = value;
+    final regency = _findRegencyByName(value);
+    selectedCity.value = regency;
+    cityController.text = regency?.name ?? value;
     _validateCity();
+    final regencyId = regency?.id;
+    if (regencyId != null) {
+      await _fetchDistricts(regencyId);
+    } else {
+      _resetSubdistrictSelection();
+    }
   }
 
-  void selectSubdistrict(String? value) {
+  void selectSubdistrict(String? value) async {
     if (value == null || value.isEmpty) return;
-    selectedSubdistrict.value = value;
-    subdistrictController.text = value;
+    final district = _findDistrictByName(value);
+    selectedSubdistrict.value = district;
+    subdistrictController.text = district?.name ?? value;
     _validateSubdistrict();
+    final districtId = district?.id;
+    if (districtId != null) {
+      await _fetchVillages(districtId);
+    } else {
+      _resetVillageSelection();
+    }
   }
 
   void selectVillage(String? value) {
     if (value == null || value.isEmpty) return;
-    selectedVillage.value = value;
-    villageController.text = value;
+    final village = _findVillageByName(value);
+    selectedVillage.value = village;
+    villageController.text = village?.name ?? value;
     _validateVillage();
   }
 
@@ -470,12 +585,10 @@ class LocationDetailsController extends BaseController {
       _validateSubdistrict();
       _validateVillage();
       _validateLocationDetails();
+      _validateIncome();
       return;
     }
 
-    final projectName = projectNameController.text.trim().isNotEmpty
-        ? projectNameController.text.trim()
-        : 'Proyek Baru';
     final landArea = double.tryParse(landAreaController.text.trim()) ?? 0.0;
     final income =
         double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
@@ -496,7 +609,6 @@ class LocationDetailsController extends BaseController {
         () => _createProjectUseCase(
           CreateProjectParams(
             request: CreateProjectRequest(
-              name: projectName,
               locationDetail: combinedLocationDetail,
               landArea: landArea,
               income: income,
@@ -551,12 +663,7 @@ class LocationDetailsController extends BaseController {
         navigateAndClearUntil(
           AppRoutes.consultationDetails,
           untilRoute: AppRoutes.main,
-          arguments: {
-            'projectId': projectId,
-            'projectName': projectNameController.text.trim().isNotEmpty
-                ? projectNameController.text.trim()
-                : 'Proyek Baru',
-          },
+          arguments: {'projectId': projectId},
         );
       },
       onFailure: (failure) {

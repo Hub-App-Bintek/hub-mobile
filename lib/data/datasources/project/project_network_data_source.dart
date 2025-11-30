@@ -39,7 +39,6 @@ class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
   }) async {
     try {
       final formData = FormData.fromMap({
-        'name': request.name,
         'longitude': request.longitude.toString(),
         'latitude': request.latitude.toString(),
         'locationDetail': request.locationDetail,

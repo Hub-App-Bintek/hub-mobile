@@ -7,6 +7,7 @@ import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/location_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
@@ -23,6 +24,7 @@ import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.d
 import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
 import 'package:pkp_hub/data/datasources/design_document/design_document_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/location/location_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/revision/revision_network_data_source.dart'
@@ -54,6 +56,13 @@ class DataSourceInjection {
       () => ProjectNetworkDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<ProjectApiService>(),
+      ),
+      fenix: true,
+    );
+    Get.lazyPut<LocationNetworkDataSource>(
+      () => LocationNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<LocationApiService>(),
       ),
       fenix: true,
     );

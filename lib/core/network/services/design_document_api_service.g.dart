@@ -9,7 +9,11 @@ part of 'design_document_api_service.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element
 
 class _DesignDocumentApiService implements DesignDocumentApiService {
-  _DesignDocumentApiService(this._dio, {this.baseUrl, this.errorLogger});
+  _DesignDocumentApiService(
+    this._dio, {
+    this.baseUrl,
+    this.errorLogger,
+  });
 
   final Dio _dio;
 
@@ -28,49 +32,48 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = FormData();
-    _data.fields.add(MapEntry('consultationId', consultationId));
-    _data.files.add(
-      MapEntry(
-        'fileDed',
-        MultipartFile.fromFileSync(
-          fileDed.path,
-          filename: fileDed.path.split(Platform.pathSeparator).last,
-        ),
+    _data.fields.add(MapEntry(
+      'consultationId',
+      consultationId,
+    ));
+    _data.files.add(MapEntry(
+      'fileDed',
+      MultipartFile.fromFileSync(
+        fileDed.path,
+        filename: fileDed.path.split(Platform.pathSeparator).last,
       ),
-    );
-    _data.files.add(
-      MapEntry(
-        'fileRab',
-        MultipartFile.fromFileSync(
-          fileRab.path,
-          filename: fileRab.path.split(Platform.pathSeparator).last,
-        ),
+    ));
+    _data.files.add(MapEntry(
+      'fileRab',
+      MultipartFile.fromFileSync(
+        fileRab.path,
+        filename: fileRab.path.split(Platform.pathSeparator).last,
       ),
-    );
-    _data.files.add(
-      MapEntry(
-        'fileBoq',
-        MultipartFile.fromFileSync(
-          fileBoq.path,
-          filename: fileBoq.path.split(Platform.pathSeparator).last,
-        ),
+    ));
+    _data.files.add(MapEntry(
+      'fileBoq',
+      MultipartFile.fromFileSync(
+        fileBoq.path,
+        filename: fileBoq.path.split(Platform.pathSeparator).last,
       ),
-    );
-    final _options = _setStreamType<DesignDocument>(
-      Options(
-            method: 'POST',
-            headers: _headers,
-            extra: _extra,
-            contentType: 'multipart/form-data',
-          )
-          .compose(
-            _dio.options,
-            '/api/design-documents/upload',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    ));
+    final _options = _setStreamType<DesignDocument>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+        .compose(
+          _dio.options,
+          '/api/design-documents/upload',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
     late DesignDocument _value;
     try {
@@ -88,16 +91,22 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/design-documents/${designDocumentId}/approve',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options = _setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/design-documents/${designDocumentId}/approve',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     await _dio.fetch<void>(_options);
   }
 
@@ -111,16 +120,22 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<void>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/design-documents/${designDocumentId}/revision-request',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options = _setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/design-documents/${designDocumentId}/revision-request',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
     await _dio.fetch<void>(_options);
   }
 
@@ -137,7 +152,10 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
     return requestOptions;
   }
 
-  String _combineBaseUrls(String dioBaseUrl, String? baseUrl) {
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
     if (baseUrl == null || baseUrl.trim().isEmpty) {
       return dioBaseUrl;
     }

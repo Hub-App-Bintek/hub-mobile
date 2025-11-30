@@ -12,8 +12,7 @@ part of 'create_project_request.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 CreateProjectRequest _$CreateProjectRequestFromJson(Map<String, dynamic> json) {
   return _CreateProjectRequest.fromJson(json);
@@ -21,7 +20,6 @@ CreateProjectRequest _$CreateProjectRequestFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CreateProjectRequest {
-  String get name => throw _privateConstructorUsedError;
   double get longitude => throw _privateConstructorUsedError;
   double get latitude => throw _privateConstructorUsedError;
   String get locationDetail => throw _privateConstructorUsedError;
@@ -38,27 +36,22 @@ mixin _$CreateProjectRequest {
 
 /// @nodoc
 abstract class $CreateProjectRequestCopyWith<$Res> {
-  factory $CreateProjectRequestCopyWith(
-    CreateProjectRequest value,
-    $Res Function(CreateProjectRequest) then,
-  ) = _$CreateProjectRequestCopyWithImpl<$Res, CreateProjectRequest>;
+  factory $CreateProjectRequestCopyWith(CreateProjectRequest value,
+          $Res Function(CreateProjectRequest) then) =
+      _$CreateProjectRequestCopyWithImpl<$Res, CreateProjectRequest>;
   @useResult
-  $Res call({
-    String name,
-    double longitude,
-    double latitude,
-    String locationDetail,
-    String type,
-    double landArea,
-    double income,
-  });
+  $Res call(
+      {double longitude,
+      double latitude,
+      String locationDetail,
+      String type,
+      double landArea,
+      double income});
 }
 
 /// @nodoc
-class _$CreateProjectRequestCopyWithImpl<
-  $Res,
-  $Val extends CreateProjectRequest
->
+class _$CreateProjectRequestCopyWithImpl<$Res,
+        $Val extends CreateProjectRequest>
     implements $CreateProjectRequestCopyWith<$Res> {
   _$CreateProjectRequestCopyWithImpl(this._value, this._then);
 
@@ -70,7 +63,6 @@ class _$CreateProjectRequestCopyWithImpl<
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
     Object? longitude = null,
     Object? latitude = null,
     Object? locationDetail = null,
@@ -78,75 +70,63 @@ class _$CreateProjectRequestCopyWithImpl<
     Object? landArea = null,
     Object? income = null,
   }) {
-    return _then(
-      _value.copyWith(
-            name: null == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
-                      as String,
-            longitude: null == longitude
-                ? _value.longitude
-                : longitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            latitude: null == latitude
-                ? _value.latitude
-                : latitude // ignore: cast_nullable_to_non_nullable
-                      as double,
-            locationDetail: null == locationDetail
-                ? _value.locationDetail
-                : locationDetail // ignore: cast_nullable_to_non_nullable
-                      as String,
-            type: null == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
-                      as String,
-            landArea: null == landArea
-                ? _value.landArea
-                : landArea // ignore: cast_nullable_to_non_nullable
-                      as double,
-            income: null == income
-                ? _value.income
-                : income // ignore: cast_nullable_to_non_nullable
-                      as double,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationDetail: null == locationDetail
+          ? _value.locationDetail
+          : locationDetail // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      landArea: null == landArea
+          ? _value.landArea
+          : landArea // ignore: cast_nullable_to_non_nullable
+              as double,
+      income: null == income
+          ? _value.income
+          : income // ignore: cast_nullable_to_non_nullable
+              as double,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$CreateProjectRequestImplCopyWith<$Res>
     implements $CreateProjectRequestCopyWith<$Res> {
-  factory _$$CreateProjectRequestImplCopyWith(
-    _$CreateProjectRequestImpl value,
-    $Res Function(_$CreateProjectRequestImpl) then,
-  ) = __$$CreateProjectRequestImplCopyWithImpl<$Res>;
+  factory _$$CreateProjectRequestImplCopyWith(_$CreateProjectRequestImpl value,
+          $Res Function(_$CreateProjectRequestImpl) then) =
+      __$$CreateProjectRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    String name,
-    double longitude,
-    double latitude,
-    String locationDetail,
-    String type,
-    double landArea,
-    double income,
-  });
+  $Res call(
+      {double longitude,
+      double latitude,
+      String locationDetail,
+      String type,
+      double landArea,
+      double income});
 }
 
 /// @nodoc
 class __$$CreateProjectRequestImplCopyWithImpl<$Res>
     extends _$CreateProjectRequestCopyWithImpl<$Res, _$CreateProjectRequestImpl>
     implements _$$CreateProjectRequestImplCopyWith<$Res> {
-  __$$CreateProjectRequestImplCopyWithImpl(
-    _$CreateProjectRequestImpl _value,
-    $Res Function(_$CreateProjectRequestImpl) _then,
-  ) : super(_value, _then);
+  __$$CreateProjectRequestImplCopyWithImpl(_$CreateProjectRequestImpl _value,
+      $Res Function(_$CreateProjectRequestImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? name = null,
     Object? longitude = null,
     Object? latitude = null,
     Object? locationDetail = null,
@@ -154,59 +134,49 @@ class __$$CreateProjectRequestImplCopyWithImpl<$Res>
     Object? landArea = null,
     Object? income = null,
   }) {
-    return _then(
-      _$CreateProjectRequestImpl(
-        name: null == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
-                  as String,
-        longitude: null == longitude
-            ? _value.longitude
-            : longitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        latitude: null == latitude
-            ? _value.latitude
-            : latitude // ignore: cast_nullable_to_non_nullable
-                  as double,
-        locationDetail: null == locationDetail
-            ? _value.locationDetail
-            : locationDetail // ignore: cast_nullable_to_non_nullable
-                  as String,
-        type: null == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
-                  as String,
-        landArea: null == landArea
-            ? _value.landArea
-            : landArea // ignore: cast_nullable_to_non_nullable
-                  as double,
-        income: null == income
-            ? _value.income
-            : income // ignore: cast_nullable_to_non_nullable
-                  as double,
-      ),
-    );
+    return _then(_$CreateProjectRequestImpl(
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationDetail: null == locationDetail
+          ? _value.locationDetail
+          : locationDetail // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      landArea: null == landArea
+          ? _value.landArea
+          : landArea // ignore: cast_nullable_to_non_nullable
+              as double,
+      income: null == income
+          ? _value.income
+          : income // ignore: cast_nullable_to_non_nullable
+              as double,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CreateProjectRequestImpl implements _CreateProjectRequest {
-  const _$CreateProjectRequestImpl({
-    required this.name,
-    required this.longitude,
-    required this.latitude,
-    required this.locationDetail,
-    required this.type,
-    required this.landArea,
-    required this.income,
-  });
+  const _$CreateProjectRequestImpl(
+      {required this.longitude,
+      required this.latitude,
+      required this.locationDetail,
+      required this.type,
+      required this.landArea,
+      required this.income});
 
   factory _$CreateProjectRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$CreateProjectRequestImplFromJson(json);
 
-  @override
-  final String name;
   @override
   final double longitude;
   @override
@@ -215,7 +185,7 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
   final String locationDetail;
   @override
   final String type;
-  // 'PROTOTYPE' or 'NON_PROTOTYPE'
+// 'PROTOTYPE' or 'NON_PROTOTYPE'
   @override
   final double landArea;
   @override
@@ -223,7 +193,7 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
 
   @override
   String toString() {
-    return 'CreateProjectRequest(name: $name, longitude: $longitude, latitude: $latitude, locationDetail: $locationDetail, type: $type, landArea: $landArea, income: $income)';
+    return 'CreateProjectRequest(longitude: $longitude, latitude: $latitude, locationDetail: $locationDetail, type: $type, landArea: $landArea, income: $income)';
   }
 
   @override
@@ -231,7 +201,6 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CreateProjectRequestImpl &&
-            (identical(other.name, name) || other.name == name) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
             (identical(other.latitude, latitude) ||
@@ -247,48 +216,36 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    name,
-    longitude,
-    latitude,
-    locationDetail,
-    type,
-    landArea,
-    income,
-  );
+      runtimeType, longitude, latitude, locationDetail, type, landArea, income);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CreateProjectRequestImplCopyWith<_$CreateProjectRequestImpl>
-  get copyWith =>
-      __$$CreateProjectRequestImplCopyWithImpl<_$CreateProjectRequestImpl>(
-        this,
-        _$identity,
-      );
+      get copyWith =>
+          __$$CreateProjectRequestImplCopyWithImpl<_$CreateProjectRequestImpl>(
+              this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateProjectRequestImplToJson(this);
+    return _$$CreateProjectRequestImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _CreateProjectRequest implements CreateProjectRequest {
-  const factory _CreateProjectRequest({
-    required final String name,
-    required final double longitude,
-    required final double latitude,
-    required final String locationDetail,
-    required final String type,
-    required final double landArea,
-    required final double income,
-  }) = _$CreateProjectRequestImpl;
+  const factory _CreateProjectRequest(
+      {required final double longitude,
+      required final double latitude,
+      required final String locationDetail,
+      required final String type,
+      required final double landArea,
+      required final double income}) = _$CreateProjectRequestImpl;
 
   factory _CreateProjectRequest.fromJson(Map<String, dynamic> json) =
       _$CreateProjectRequestImpl.fromJson;
 
-  @override
-  String get name;
   @override
   double get longitude;
   @override
@@ -304,5 +261,5 @@ abstract class _CreateProjectRequest implements CreateProjectRequest {
   @override
   @JsonKey(ignore: true)
   _$$CreateProjectRequestImplCopyWith<_$CreateProjectRequestImpl>
-  get copyWith => throw _privateConstructorUsedError;
+      get copyWith => throw _privateConstructorUsedError;
 }

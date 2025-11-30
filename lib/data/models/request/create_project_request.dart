@@ -6,7 +6,6 @@ part 'create_project_request.g.dart';
 @freezed
 class CreateProjectRequest with _$CreateProjectRequest {
   const factory CreateProjectRequest({
-    required String name,
     required double longitude,
     required double latitude,
     required String locationDetail,
