@@ -1,4 +1,5 @@
 import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/data/models/prototype_design.dart';
 
 class ConsultationDetailsArgs {
   const ConsultationDetailsArgs({required this.project});
@@ -90,13 +91,10 @@ class ProjectDetailsArgs {
 }
 
 class PrototypeDesignDetailsArgs {
-  const PrototypeDesignDetailsArgs({
-    required this.design,
-    required this.imageUrl,
-  });
+  const PrototypeDesignDetailsArgs({required this.designId, this.design});
 
-  final dynamic design; // PrototypeDesign
-  final String imageUrl;
+  final PrototypeDesign? design;
+  final String designId;
 }
 
 class LocationDetailsArgs {

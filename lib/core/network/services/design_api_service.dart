@@ -11,4 +11,14 @@ abstract class DesignApiService {
 
   @GET(ApiEndpoints.prototypeDesigns)
   Future<List<PrototypeDesign>> getPrototypeDesigns();
+
+  @GET(ApiEndpoints.prototypeDesignById)
+  Future<PrototypeDesign> getPrototypeDesignById(@Path('id') String id);
+
+  // Download prototype design files as ZIP.
+  @DioResponseType(ResponseType.bytes)
+  @GET(ApiEndpoints.prototypeDesignDownload)
+  Future<HttpResponse<List<int>>> downloadPrototypeDesign(
+    @Path('id') String id,
+  );
 }

@@ -6,8 +6,8 @@ import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
 import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
+import 'package:pkp_hub/data/models/prototype_design.dart';
 import 'package:pkp_hub/features/project/controllers/prototype_design_details_controller.dart';
-import 'package:pkp_hub/features/project/models/prototype_design.dart';
 
 class PrototypeDesignDetailsScreen
     extends GetView<PrototypeDesignDetailsController> {
@@ -15,123 +15,141 @@ class PrototypeDesignDetailsScreen
 
   @override
   Widget build(BuildContext context) {
-    final design = controller.design;
-
     return Scaffold(
       backgroundColor: AppColors.white,
-      appBar: const PkpAppBar(
-        title: 'Detail Desain',
-        backgroundColor: AppColors.primaryDark,
-        leadingColor: AppColors.white,
-        titleTextColor: AppColors.white,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _HeaderImage(imageUrl: controller.imageUrl),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 20,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          design.title,
-                          style: AppTextStyles.h1.copyWith(
-                            color: AppColors.neutralDarkest,
-                            fontSize: 24,
-                          ),
-                        ),
-                        const SizedBox(height: 18),
-                        _StatRow(design: design),
-                        const SizedBox(height: 18),
-                        const Divider(color: AppColors.inputBorder, height: 1),
-                        const SizedBox(height: 18),
-                        const _SectionTitle('Deskripsi'),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Desain rumah minimalis untuk lahan terbatas. '
-                          'Cocok untuk pasangan muda atau single yang '
-                          'menginginkan hunian efisien dengan budget terjangkau. '
-                          'Layout yang kompak namun tetap fungsional.',
-                          style: AppTextStyles.bodyM.copyWith(
-                            color: AppColors.neutralMedium,
-                            height: 1.4,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        const _SectionTitle('Fitur Utama'),
-                        const SizedBox(height: 12),
-                        ...controller.features.map(
-                          (item) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.check_circle_outline,
-                                  color: AppColors.successDark,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Text(
-                                    item,
-                                    style: AppTextStyles.bodyM.copyWith(
-                                      color: AppColors.neutralMedium,
-                                    ),
-                                  ),
-                                ),
-                              ],
+      appBar: const PkpAppBar(title: 'Detail Desain'),
+      body: Obx(() {
+        final design = controller.design.value;
+        final features = controller.features;
+        final specs = controller.specs;
+
+        if (controller.isLoading.value && design == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (design == null) {
+          return const Center(child: Text('Desain tidak ditemukan.'));
+        }
+
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _HeaderImage(imageUrls: controller.imageUrls),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            design.name ?? '-',
+                            style: AppTextStyles.h1.copyWith(
+                              color: AppColors.neutralDarkest,
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 24),
-                        const _SectionTitle('Spesifikasi'),
-                        const SizedBox(height: 12),
-                        _SpecsCard(specs: controller.specs),
-                      ],
+                          const SizedBox(height: 16),
+                          _StatRow(design: design),
+                          const SizedBox(height: 16),
+                          const Divider(
+                            color: AppColors.inputBorder,
+                            height: 1,
+                          ),
+                          const SizedBox(height: 16),
+                          const _SectionTitle('Deskripsi'),
+                          const SizedBox(height: 8),
+                          Text(
+                            design.description ??
+                                'Deskripsi desain belum tersedia.',
+                            style: AppTextStyles.bodyM.copyWith(
+                              color: AppColors.neutralMedium,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          const _SectionTitle('Fitur Utama'),
+                          const SizedBox(height: 8),
+                          if (features.isEmpty)
+                            Text(
+                              'Fitur belum tersedia.',
+                              style: AppTextStyles.bodyM.copyWith(
+                                color: AppColors.neutralMedium,
+                              ),
+                            )
+                          else
+                            ...features.map(
+                              (item) => Row(
+                                children: [
+                                  const Icon(
+                                    Icons.check_circle_outline,
+                                    color: AppColors.successDark,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      item,
+                                      style: AppTextStyles.bodyM.copyWith(
+                                        color: AppColors.neutralMedium,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          const SizedBox(height: 24),
+                          const _SectionTitle('Spesifikasi'),
+                          const SizedBox(height: 12),
+                          specs.isEmpty
+                              ? Text(
+                                  'Spesifikasi belum tersedia.',
+                                  style: AppTextStyles.bodyM.copyWith(
+                                    color: AppColors.neutralMedium,
+                                  ),
+                                )
+                              : _SpecsCard(specs: specs),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            top: false,
-            child: Container(
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                border: Border(top: BorderSide(color: AppColors.inputBorder)),
-              ),
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: PkpOutlinedButton(
-                      text: 'Unduh Dokumen',
-                      onPressed: controller.onDownloadPressed,
+            SafeArea(
+              top: false,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: AppColors.white,
+                  border: Border(top: BorderSide(color: AppColors.inputBorder)),
+                ),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: PkpOutlinedButton(
+                        text: 'Unduh Dokumen',
+                        isLoading: controller.downloadLoading.value,
+                        onPressed: controller.onDownloadPressed,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: PkpElevatedButton(
-                      text: 'Pilih Desain',
-                      onPressed: () => _showSelectConfirmation(context),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: PkpElevatedButton(
+                        text: 'Pilih Desain',
+                        onPressed: () => _showSelectConfirmation(context),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 
@@ -145,19 +163,38 @@ class PrototypeDesignDetailsScreen
   }
 }
 
-class _HeaderImage extends StatelessWidget {
-  const _HeaderImage({required this.imageUrl});
+class _HeaderImage extends StatefulWidget {
+  const _HeaderImage({required this.imageUrls});
 
-  final String imageUrl;
+  final List<String> imageUrls;
+
+  @override
+  State<_HeaderImage> createState() => _HeaderImageState();
+}
+
+class _HeaderImageState extends State<_HeaderImage> {
+  late final PageController _pageController;
+  int _page = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 393 / 256,
-      child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => Container(
+    final urls = widget.imageUrls;
+    if (urls.isEmpty) {
+      return AspectRatio(
+        aspectRatio: 393 / 256,
+        child: Container(
           color: AppColors.inputSurface,
           child: const Icon(
             Icons.image_not_supported_outlined,
@@ -165,7 +202,57 @@ class _HeaderImage extends StatelessWidget {
             size: 36,
           ),
         ),
-      ),
+      );
+    }
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AspectRatio(
+          aspectRatio: 393 / 256,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: urls.length,
+            onPageChanged: (idx) => setState(() => _page = idx),
+            itemBuilder: (context, index) {
+              final url = urls[index];
+              return Image.network(
+                url,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: AppColors.inputSurface,
+                  child: const Icon(
+                    Icons.image_not_supported_outlined,
+                    color: AppColors.neutralMedium,
+                    size: 36,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        if (urls.length > 1)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(urls.length, (index) {
+                final active = index == _page;
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: active ? 10 : 6,
+                  height: active ? 10 : 6,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: active
+                        ? AppColors.primaryDark
+                        : AppColors.neutralMedium.withValues(alpha: 0.4),
+                  ),
+                );
+              }),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -178,10 +265,10 @@ class _StatRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stats = [
-      (value: design.buildingArea, label: 'Luas Bangunan'),
-      (value: design.landArea, label: 'Luas Tanah'),
-      (value: '1', label: 'Kamar Tidur'),
-      (value: '1', label: 'Kamar Mandi'),
+      (value: _formatArea(design.buildingArea), label: 'Luas Bangunan'),
+      (value: _formatArea(design.landArea), label: 'Luas Tanah'),
+      (value: _formatCount(design.bedrooms), label: 'Kamar Tidur'),
+      (value: _formatCount(design.bathrooms), label: 'Kamar Mandi'),
     ];
 
     return Row(
@@ -190,7 +277,7 @@ class _StatRow extends StatelessWidget {
           .map(
             (item) => Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     item.value,
@@ -212,6 +299,17 @@ class _StatRow extends StatelessWidget {
           .toList(),
     );
   }
+
+  String _formatArea(num? value) {
+    if (value == null) return '-';
+    final text = value % 1 == 0 ? value.toInt().toString() : value.toString();
+    return '${text}m²';
+  }
+
+  String _formatCount(int? value) {
+    if (value == null) return '-';
+    return value.toString();
+  }
 }
 
 class _SectionTitle extends StatelessWidget {
@@ -230,7 +328,7 @@ class _SectionTitle extends StatelessWidget {
 class _SpecsCard extends StatelessWidget {
   const _SpecsCard({required this.specs});
 
-  final Map<String, String> specs;
+  final List<MapEntry<String, String>> specs;
 
   @override
   Widget build(BuildContext context) {
@@ -243,19 +341,22 @@ class _SpecsCard extends StatelessWidget {
         border: Border.all(color: AppColors.inputBorder),
       ),
       child: Column(
-        children: specs.entries
+        children: specs
             .map(
               (entry) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      entry.key,
-                      style: AppTextStyles.bodyM.copyWith(
-                        color: AppColors.neutralMedium,
+                    Expanded(
+                      child: Text(
+                        entry.key,
+                        style: AppTextStyles.bodyM.copyWith(
+                          color: AppColors.neutralMedium,
+                        ),
                       ),
                     ),
+                    const SizedBox(width: 12),
                     Text(
                       entry.value,
                       style: AppTextStyles.bodyM.copyWith(

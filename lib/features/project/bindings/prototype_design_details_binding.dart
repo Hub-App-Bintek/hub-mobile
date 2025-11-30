@@ -1,31 +1,41 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/domain/repositories/design_repository.dart';
+import 'package:pkp_hub/domain/usecases/design/download_prototype_design_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design/get_prototype_design_detail_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/prototype_design_details_controller.dart';
-import 'package:pkp_hub/features/project/models/prototype_design.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/data/models/prototype_design.dart';
 
 class PrototypeDesignDetailsBinding extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut<GetPrototypeDesignDetailUseCase>(
+      () => GetPrototypeDesignDetailUseCase(Get.find<DesignRepository>()),
+    );
+    Get.lazyPut<DownloadPrototypeDesignUseCase>(
+      () => DownloadPrototypeDesignUseCase(Get.find<DesignRepository>()),
+    );
+
     Get.lazyPut<PrototypeDesignDetailsController>(() {
       final rawArgs = Get.arguments;
       PrototypeDesign? design;
-      String? imageUrl;
+      String designId = '';
+
       if (rawArgs is PrototypeDesignDetailsArgs) {
-        design = rawArgs.design as PrototypeDesign?;
-        imageUrl = rawArgs.imageUrl;
+        design = rawArgs.design;
+        designId = rawArgs.designId;
       } else if (rawArgs is Map<String, dynamic>) {
         design = rawArgs['design'] as PrototypeDesign?;
-        imageUrl = rawArgs['imageUrl'] as String?;
+        designId = (rawArgs['designId'] ?? rawArgs['id'] ?? '').toString();
       }
-      design ??= const PrototypeDesign(
-        title: 'Tipe 22/72',
-        landArea: '72m²',
-        buildingArea: '22m²',
-        subtitle: 'Desain rumah minimalis untuk lahan terbatas',
+      designId = designId.isEmpty ? (design?.id ?? '') : designId;
+
+      return PrototypeDesignDetailsController(
+        Get.find<GetPrototypeDesignDetailUseCase>(),
+        Get.find<DownloadPrototypeDesignUseCase>(),
+        designId,
+        initialDesign: design,
       );
-      imageUrl ??=
-          'https://www.figma.com/api/mcp/asset/d8f0086a-3cb3-4e51-a574-1dac309704c5';
-      return PrototypeDesignDetailsController(design, imageUrl);
     });
   }
 }
