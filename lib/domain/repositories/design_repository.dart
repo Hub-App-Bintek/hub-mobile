@@ -4,9 +4,14 @@ import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
 import 'package:pkp_hub/data/models/prototype_design.dart';
+import 'package:retrofit/dio.dart';
 
 abstract class DesignRepository {
   Future<Result<List<PrototypeDesign>, Failure>> getPrototypeDesigns();
+  Future<Result<PrototypeDesign, Failure>> getPrototypeDesignById(String id);
+  Future<Result<HttpResponse<List<int>>, Failure>> downloadPrototypeDesign(
+    String id,
+  );
 }
 
 class DesignRepositoryImpl implements DesignRepository {
@@ -16,4 +21,13 @@ class DesignRepositoryImpl implements DesignRepository {
   @override
   Future<Result<List<PrototypeDesign>, Failure>> getPrototypeDesigns() =>
       _ds.getPrototypeDesigns();
+
+  @override
+  Future<Result<PrototypeDesign, Failure>> getPrototypeDesignById(String id) =>
+      _ds.getPrototypeDesignById(id);
+
+  @override
+  Future<Result<HttpResponse<List<int>>, Failure>> downloadPrototypeDesign(
+    String id,
+  ) => _ds.downloadPrototypeDesign(id);
 }

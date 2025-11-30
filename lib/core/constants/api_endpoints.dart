@@ -9,7 +9,7 @@ abstract class ApiEndpoints {
   static const String verifyOtp = '/api/auth/verify-otp';
   // TODO: Update this later since it doesn't exist in the backend yet.
   static const String resendOtp = '/api/auth/resend-otp';
-  static const projects = '/api/projects';
+  static const projects = '/api/projects/v2';
 
   // --- User ---
   static const String consultants = '/api/users/consultants';
@@ -95,7 +95,9 @@ abstract class ApiEndpoints {
       '/api/design-documents/{designDocumentId}/revision-request';
 
   // --- Prototype Designs (Catalog) ---
-  static const String prototypeDesigns = '/api/consultations/designs';
+  static const String prototypeDesigns = '/api/prototypes';
+  static const String prototypeDesignById = '/api/prototypes/{id}';
+  static const String prototypeDesignDownload = '/api/prototypes/{id}/download';
 
   // --- Wallet ---
   static const String walletBalance = '/api/wallet/balance';
