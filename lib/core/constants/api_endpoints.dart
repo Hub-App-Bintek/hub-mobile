@@ -72,6 +72,12 @@ abstract class ApiEndpoints {
   static const String chatLatest =
       '/api/v1/chats/{consultationId}/messages/latest';
 
+  // --- Locations ---
+  static const String locationsProvince = '/api/locations/province';
+  static const String locationsRegency = '/api/locations/regency/{provinceId}';
+  static const String locationsDistrict = '/api/locations/district/{regencyId}';
+  static const String locationsVillage = '/api/locations/village/{districtId}';
+
   // --- Revisions ---
   static const String revisions = '/api/revisions';
 

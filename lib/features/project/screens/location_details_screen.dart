@@ -7,7 +7,6 @@ import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
-import 'package:pkp_hub/app/widgets/pkp_upload_document_widget.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/project/controllers/location_details_controller.dart';
 
@@ -43,6 +42,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             hint: 'Pilih Provinsi',
                             options: controller.provinceOptions,
                             controller: controller.provinceController,
+                            enabled: controller.provinces.isNotEmpty,
                             errorText: controller.provinceError.value,
                             onChanged: controller.selectProvince,
                           ),
@@ -52,6 +52,9 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             hint: 'Pilih Kabupaten/Kota',
                             options: controller.cityOptions,
                             controller: controller.cityController,
+                            enabled:
+                                controller.selectedProvince.value != null &&
+                                controller.regencies.isNotEmpty,
                             errorText: controller.cityError.value,
                             onChanged: controller.selectCity,
                           ),
@@ -61,6 +64,9 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             hint: 'Pilih Kecamatan',
                             options: controller.subdistrictOptions,
                             controller: controller.subdistrictController,
+                            enabled:
+                                controller.selectedCity.value != null &&
+                                controller.districts.isNotEmpty,
                             errorText: controller.subdistrictError.value,
                             onChanged: controller.selectSubdistrict,
                           ),
@@ -70,6 +76,9 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             hint: 'Pilih Kelurahan',
                             options: controller.villageOptions,
                             controller: controller.villageController,
+                            enabled:
+                                controller.selectedSubdistrict.value != null &&
+                                controller.villages.isNotEmpty,
                             errorText: controller.villageError.value,
                             onChanged: controller.selectVillage,
                           ),
@@ -98,20 +107,14 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             errorText: controller.incomeError.value,
                           ),
                           const SizedBox(height: 16),
-                          PkpUploadDocumentWidget(
-                            title: 'Bukti Pendapatan',
-                            buttonText: 'Pilih File',
-                            selectedFileName: controller.incomeProofPath.value
-                                ?.split('/')
-                                .last,
-                            uploadStatus:
-                                controller.incomeProofPath.value != null
-                                ? PkpUploadStatus.success
-                                : PkpUploadStatus.none,
-                            customPickFile: controller.pickIncomeProof,
-                            onFileSelected: (file) {
-                              controller.incomeProofPath.value = file.path;
-                            },
+                          PkpTextFormField(
+                            controller: controller.incomeProofController,
+                            labelText: AppStrings.incomeProofLabel,
+                            hintText: 'Pilih file PDF',
+                            type: PkpTextFormFieldType.filePicker,
+                            filePickerType: PkpFilePickerType.pdf,
+                            onFilePicked: controller.onIncomeProofPicked,
+                            filled: true,
                           ),
                           const SizedBox(height: 16),
                         ],
@@ -156,7 +159,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
             return GoogleMap(
               onMapCreated: controller.onMapCreated,
               initialCameraPosition: CameraPosition(
-                target: controller.selectedLocation.value!,
+                target: controller.mapTarget,
                 zoom: 16,
               ),
               onCameraMove: (pos) => controller.updatePosition(pos.target),
@@ -190,7 +193,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
       textEditingController: controller.searchController,
       googleAPIKey: controller.googleApiKey,
       countries: const ['id'],
-      isLatLngRequired: true,
+      isLatLngRequired: false,
       showError: false,
       focusNode: controller.searchFocusNode,
       boxDecoration: BoxDecoration(
@@ -217,7 +220,13 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
           TextPosition(offset: description.length),
         );
       },
-      getPlaceDetailWithLatLng: controller.onPlaceSelected,
+      getPlaceDetailWithLatLng: (prediction) async {
+        if (prediction.lat == null || prediction.lng == null) {
+          controller.selectedLocation.value = controller.mapTarget;
+          return;
+        }
+        await controller.onPlaceSelected(prediction);
+      },
     );
   }
 
@@ -227,6 +236,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
     required List<String> options,
     required TextEditingController controller,
     required ValueChanged<String?> onChanged,
+    bool enabled = true,
     String? errorText,
   }) {
     return PkpTextFormField(
@@ -237,6 +247,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
       options: options,
       errorText: errorText,
       filled: true,
+      enabled: enabled,
       labelStyle: AppTextStyles.bodyS,
       hintStyle: AppTextStyles.bodyM,
       onChanged: onChanged,
