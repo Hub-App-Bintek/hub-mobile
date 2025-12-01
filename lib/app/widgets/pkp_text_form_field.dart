@@ -13,6 +13,7 @@ enum PkpTextFormFieldType {
   text,
   multiline,
   number,
+  phone,
   currency,
   percentage,
   dropdown,
@@ -46,10 +47,12 @@ class PkpTextFormField extends StatefulWidget {
     this.hintStyle,
     this.labelStyle,
     this.contentPadding,
+    this.countryCodePrefix = '+62',
     this.unitOptions = const ['Ratio', '%'],
     this.selectedUnit,
     this.onUnitChanged,
     this.onFilePicked,
+    this.customPickFile,
     this.allowedFileLabel,
     this.allowedFileExtensions,
     this.filePickerType = PkpFilePickerType.imageOrPdf,
@@ -75,10 +78,12 @@ class PkpTextFormField extends StatefulWidget {
   final TextStyle? hintStyle;
   final TextStyle? labelStyle;
   final EdgeInsetsGeometry? contentPadding;
+  final String countryCodePrefix;
   final List<String> unitOptions;
   final String? selectedUnit;
   final ValueChanged<String>? onUnitChanged;
   final ValueChanged<String>? onFilePicked;
+  final Future<String?> Function()? customPickFile;
   final String? allowedFileLabel;
   final List<String>? allowedFileExtensions;
   final PkpFilePickerType filePickerType;
@@ -156,6 +161,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     final isMultiline = widget.type == PkpTextFormFieldType.multiline;
     final isNumber = widget.type == PkpTextFormFieldType.number;
     final isCurrency = widget.type == PkpTextFormFieldType.currency;
+    final isPhone = widget.type == PkpTextFormFieldType.phone;
     final isPercentage = widget.type == PkpTextFormFieldType.percentage;
     final isDropdown = widget.type == PkpTextFormFieldType.dropdown;
     final isSelectUnit = widget.type == PkpTextFormFieldType.selectUnit;
@@ -271,6 +277,11 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
                         child: Text('Rp', style: AppTextStyles.bodyS),
                       ),
                     )
+                  : isPhone
+                  ? _buildPhonePrefix()
+                  : null,
+              prefixIconConstraints: isPhone
+                  ? const BoxConstraints(minWidth: 0, minHeight: 0)
                   : null,
               filled: widget.filled,
               fillColor: widget.fillColor,
@@ -292,7 +303,7 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
             ),
             onTap: widget.enabled
                 ? (isFilePicker
-                      ? () => _pickFile()
+                      ? () => _handleFilePick()
                       : isDateTime
                       ? () => _selectDate(context)
                       : isTime
@@ -379,6 +390,9 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       PkpTextFormFieldType.number => const TextInputType.numberWithOptions(
         decimal: false,
       ),
+      PkpTextFormFieldType.phone => const TextInputType.numberWithOptions(
+        decimal: false,
+      ),
       PkpTextFormFieldType.currency => const TextInputType.numberWithOptions(
         decimal: false,
       ),
@@ -424,6 +438,26 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
     return SizedBox(
       width: 40,
       child: Center(child: Text('%', style: AppTextStyles.bodyL)),
+    );
+  }
+
+  Widget _buildPhonePrefix() {
+    return Container(
+      margin: const EdgeInsets.only(left: 12, right: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      decoration: BoxDecoration(
+        color: widget.fillColor ?? Colors.transparent,
+        border: Border(
+          right: BorderSide(
+            color: widget.borderColor ?? AppColors.inputBorder,
+            width: widget.borderWidth ?? 0.8,
+          ),
+        ),
+      ),
+      child: Text(
+        widget.countryCodePrefix,
+        style: AppTextStyles.bodyM.copyWith(color: AppColors.neutralDarkest),
+      ),
     );
   }
 
@@ -476,6 +510,19 @@ class _PkpTextFormFieldState extends State<PkpTextFormField> {
       widget.onFilePicked?.call(picked.path ?? picked.name);
       setState(() {});
     }
+  }
+
+  Future<void> _handleFilePick() async {
+    if (widget.customPickFile != null) {
+      final path = await widget.customPickFile!.call();
+      if (path != null) {
+        widget.controller?.text = path.split('/').last;
+        widget.onFilePicked?.call(path);
+        setState(() {});
+      }
+      return;
+    }
+    await _pickFile();
   }
 
   Future<void> _selectDate(BuildContext context) async {

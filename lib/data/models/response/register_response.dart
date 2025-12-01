@@ -6,17 +6,22 @@ part 'register_response.g.dart';
 @freezed
 class RegisterResponse with _$RegisterResponse {
   const factory RegisterResponse({
-    int? userId,
-    String? fullName,
-    String? email,
-    String? phone,
-    String? username,
-    String? role,
-    String? status,
-    String? ktpUrl,
-    String? selfieUrl,
+    bool? status,
+    String? message,
+    RegisterResponseData? data,
   }) = _RegisterResponse;
 
   factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
       _$RegisterResponseFromJson(json);
+}
+
+@freezed
+class RegisterResponseData with _$RegisterResponseData {
+  const factory RegisterResponseData({
+    String? userId,
+    String? verificationStatus,
+  }) = _RegisterResponseData;
+
+  factory RegisterResponseData.fromJson(Map<String, dynamic> json) =>
+      _$RegisterResponseDataFromJson(json);
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
@@ -49,7 +51,42 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
     RegisterRequest request,
   ) async {
     try {
-      final response = await _authApi.register(request);
+      final formData = FormData.fromMap({
+        'email': request.email,
+        'password': request.password,
+        'confirmPassword': request.confirmPassword,
+        'title': request.title,
+        'fullName': request.fullName,
+        'phone': request.phone,
+        'idType': request.idType,
+        'idNumber': request.idNumber,
+        'provinceId': request.provinceId,
+        'cityId': request.cityId,
+        'districtId': request.districtId,
+        'subdistrictId': request.subdistrictId,
+        'address': request.address,
+      });
+
+      formData.files.addAll([
+        MapEntry(
+          'idPhoto',
+          await MultipartFile.fromFile(
+            request.idPhotoPath,
+            filename: request.idPhotoPath.split(Platform.pathSeparator).last,
+          ),
+        ),
+        MapEntry(
+          'selfiePhoto',
+          await MultipartFile.fromFile(
+            request.selfiePhotoPath,
+            filename: request.selfiePhotoPath
+                .split(Platform.pathSeparator)
+                .last,
+          ),
+        ),
+      ]);
+
+      final response = await _authApi.register(formData);
       return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));

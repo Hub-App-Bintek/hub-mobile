@@ -5,7 +5,7 @@ abstract class ApiEndpoints {
 
   // --- Auth ---
   static const String login = '/api/auth/login';
-  static const String register = '/api/auth/register';
+  static const String register = '/api/v2/home-owner/register';
   static const String verifyOtp = '/api/auth/verify-otp';
   // TODO: Update this later since it doesn't exist in the backend yet.
   static const String resendOtp = '/api/auth/resend-otp';
