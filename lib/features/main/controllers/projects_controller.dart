@@ -5,15 +5,18 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/consultation_info.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 
 class ProjectsController extends BaseController {
   final GetProjectsUseCase getProjectsUseCase;
   final String? projectStatus;
   final UserStorage _userStorage;
+  final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   final RxnString _statusFilter = RxnString();
   final Rxn<UserRole> userRole = Rxn<UserRole>();
@@ -40,6 +43,7 @@ class ProjectsController extends BaseController {
     this.getProjectsUseCase,
     this.projectStatus,
     this._userStorage,
+    this._createDirectChatRoomUseCase,
   ) {
     if (projectStatus != null) {
       _statusFilter.value = projectStatus;
@@ -173,15 +177,29 @@ class ProjectsController extends BaseController {
     );
   }
 
-  void openChatWithConsultant(Project project) {
+  Future<void> openChatWithConsultant(Project project) async {
+    final consultantId = project.consultationInfo?.consultantId;
+    if (consultantId == null) {
+      showError(const ServerFailure(message: 'ID konsultan tidak tersedia'));
+      return;
+    }
     final consultantName =
         project.consultationInfo?.consultantName?.trim() ??
         project.consultationInfo?.consultantName?.trim();
-    navigateTo(
-      AppRoutes.chat,
-      arguments: ChatArgs(
-        name: consultantName?.isNotEmpty == true ? consultantName : 'Konsultan',
-      ),
+    await handleAsync<CreateChatRoomResponse>(
+      () => _createDirectChatRoomUseCase(consultantId),
+      onSuccess: (room) {
+        navigateTo(
+          AppRoutes.chat,
+          arguments: ChatArgs(
+            name: consultantName?.isNotEmpty == true
+                ? consultantName
+                : 'Konsultan',
+            roomId: room.id,
+          ),
+        );
+      },
+      onFailure: showError,
     );
   }
 

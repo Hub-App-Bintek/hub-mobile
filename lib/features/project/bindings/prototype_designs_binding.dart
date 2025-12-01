@@ -18,6 +18,7 @@ class PrototypeDesignsBinding extends Bindings {
         Get.find<GetPrototypeDesignsUseCase>(),
         Get.find<DownloadPrototypeDesignUseCase>(),
       ),
+      fenix: true,
     );
   }
 }

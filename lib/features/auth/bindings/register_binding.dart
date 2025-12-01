@@ -12,6 +12,7 @@ class RegisterBinding extends Bindings {
 
     Get.lazyPut<RegisterController>(
       () => RegisterController(Get.find<RegisterUseCase>()),
+      fenix: true,
     );
   }
 }

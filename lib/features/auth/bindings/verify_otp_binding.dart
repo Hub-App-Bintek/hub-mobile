@@ -28,6 +28,7 @@ class VerifyOtpBinding extends Bindings {
         resendOtpUseCase: Get.find<ResendOtpUseCase>(),
         authSession: Get.find<UserStorage>(),
       ),
+      fenix: true,
     );
   }
 }

@@ -27,12 +27,7 @@ class ProjectHistoryScreen extends GetView<ProjectHistoryController> {
       appBar: PkpAppBar(
         title: AppStrings.projectDetailsTitle,
         actions: [
-          PkpAppBarAction(
-            icon: Icons.chat,
-            onPressed: () {
-              controller.navigateTo(AppRoutes.chat);
-            },
-          ),
+          PkpAppBarAction(icon: Icons.chat, onPressed: controller.openChatRoom),
           // PkpAppBarAction(
           //   icon: Icons.cancel,
           //   onPressed: () {

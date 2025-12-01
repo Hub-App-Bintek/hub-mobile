@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
-import 'package:pkp_hub/data/models/chat_message.dart';
-import 'package:pkp_hub/data/models/request/send_chat_message_request.dart';
+import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
+import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
+import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
+import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'chat_api_service.g.dart';
@@ -10,19 +13,31 @@ part 'chat_api_service.g.dart';
 abstract class ChatApiService {
   factory ChatApiService(Dio dio, {String? baseUrl}) = _ChatApiService;
 
-  @POST(ApiEndpoints.chatMessages)
-  Future<ChatMessage> sendMessage(
-    @Path('consultationId') String consultationId,
-    @Body() SendChatMessageRequest body,
+  @POST(ApiEndpoints.chatDirectRoom)
+  Future<CreateChatRoomResponse> createDirectRoom(
+    @Path('targetUserId') int targetUserId,
   );
 
-  @GET(ApiEndpoints.chatMessages)
-  Future<List<ChatMessage>> getMessages(
-    @Path('consultationId') String consultationId,
+  @GET(ApiEndpoints.chatRoomDetail)
+  Future<ChatRoomDetailsResponse> getRoomDetail(
+    @Path('roomId') String roomId,
+    @Query('page') int page,
+    @Query('limit') int limit,
   );
 
-  @GET(ApiEndpoints.chatLatest)
-  Future<ChatMessage> getLatestMessage(
-    @Path('consultationId') String consultationId,
+  @POST(ApiEndpoints.chatRoomMessages)
+  Future<ChatSendMessageResponse> sendRoomMessage(
+    @Path('roomId') String roomId,
+    @Body() ChatSendMessageRequest body,
   );
+
+  @GET(ApiEndpoints.chatIncoming)
+  Future<IncomingChatResponse> getIncomingChats({
+    @Query('page') int page = 1,
+    @Query('limit') int limit = 10,
+    @Query('status') String? status,
+    @Query('date_range') String? dateRange,
+    @Query('sort_by') String? sortBy,
+    @Query('sort_order') String? sortOrder,
+  });
 }

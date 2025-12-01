@@ -22,6 +22,9 @@ _$MetadataImpl _$$MetadataImplFromJson(Map<String, dynamic> json) =>
       designFiles: (json['designFiles'] as List<dynamic>?)
           ?.map((e) => DesignFileMetadata.fromJson(e as Map<String, dynamic>))
           .toList(),
+      pagination: json['pagination'] == null
+          ? null
+          : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
@@ -38,4 +41,5 @@ Map<String, dynamic> _$$MetadataImplToJson(_$MetadataImpl instance) =>
       'totalPaymentAmount': instance.totalPaymentAmount,
       'documentDesignId': instance.documentDesignId,
       'designFiles': instance.designFiles,
+      'pagination': instance.pagination,
     };

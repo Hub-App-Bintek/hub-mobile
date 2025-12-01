@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pkp_hub/data/models/design_file_metadata.dart';
+import 'package:pkp_hub/data/models/pagination.dart';
 
 part 'metadata.freezed.dart';
 part 'metadata.g.dart';
@@ -19,6 +20,7 @@ class Metadata with _$Metadata {
     double? totalPaymentAmount,
     String? documentDesignId,
     List<DesignFileMetadata>? designFiles,
+    Pagination? pagination,
   }) = _Metadata;
 
   factory Metadata.fromJson(Map<String, dynamic> json) =>

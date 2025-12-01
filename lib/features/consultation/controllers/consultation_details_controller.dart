@@ -1,9 +1,13 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
+import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
 
@@ -35,7 +39,12 @@ class ConsultationDetailsController extends BaseController {
   final RxList<ConsultationInvoiceItem> invoices =
       <ConsultationInvoiceItem>[].obs;
 
-  ConsultationDetailsController(this._userStorage);
+  ConsultationDetailsController(
+    this._userStorage,
+    this._createDirectChatRoomUseCase,
+  );
+
+  final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   String sectionTitle(ConsultationDetailStep step) {
     switch (step) {
@@ -104,6 +113,27 @@ class ConsultationDetailsController extends BaseController {
 
   void markContractUploaded() {
     hasUploadedContract.value = true;
+  }
+
+  Future<void> startChatWithConsultant() async {
+    final consultantId = project.consultationInfo?.consultantId;
+    if (consultantId == null) {
+      showError(const ServerFailure(message: 'Konsultan tidak ditemukan'));
+      return;
+    }
+    final consultantName =
+        project.consultationInfo?.consultantName?.trim() ?? 'Konsultan';
+
+    await handleAsync<CreateChatRoomResponse>(
+      () => _createDirectChatRoomUseCase(consultantId),
+      onSuccess: (room) {
+        navigateTo(
+          AppRoutes.chat,
+          arguments: ChatArgs(name: consultantName, roomId: room.id),
+        );
+      },
+      onFailure: showError,
+    );
   }
 }
 

@@ -14,6 +14,8 @@ import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/response/consultant_on_portfolios.dart';
 import 'package:pkp_hub/data/models/response/consultant_portfolios_response.dart';
 import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
+import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 
@@ -28,6 +30,7 @@ class ConsultantDetailsController extends BaseController {
 
   // Inject create consultation use case
   final CreateConsultationUseCase _createConsultationUseCase;
+  final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   ConsultantDetailsController(
     this._consultantId,
@@ -36,6 +39,7 @@ class ConsultantDetailsController extends BaseController {
     this._userStorage,
     this._getPortfolioListUseCase,
     this._createConsultationUseCase,
+    this._createDirectChatRoomUseCase,
     this._consultant,
     this._requireLoginForAction,
   );
@@ -177,14 +181,14 @@ class ConsultantDetailsController extends BaseController {
 
   // Public: create consultation for this consultation
   Future<void> onChatPressed() async {
-    final loggedIn = await _ensureLoggedIn();
+    // For chat, always enforce login regardless of _requireLoginForAction flag.
+    final loggedIn = await ensureLoggedIn();
     if (!loggedIn) return;
-
-    _navigateToConsultantChat();
+    await _navigateToConsultantChat();
   }
 
   Future<void> onConsultPressed() async {
-    final loggedIn = await _ensureLoggedIn();
+    final loggedIn = await ensureLoggedIn();
     if (!loggedIn) return;
 
     if (_projectId.isEmpty) {
@@ -205,17 +209,8 @@ class ConsultantDetailsController extends BaseController {
     await _createConsultation(channel: 'CHAT');
   }
 
-  Future<bool> _ensureLoggedIn() async {
-    if (!_requireLoginForAction) {
-      final token = await _userStorage.getToken();
-      if (token == null || token.isEmpty) {
-        return true;
-      }
-    }
-    final token = await _userStorage.getToken();
-    if (token != null && token.isNotEmpty) {
-      return true;
-    }
+  Future<bool> ensureLoggedIn() async {
+    if (await _hasValidToken()) return true;
 
     await navigateToForResult<dynamic>(
       AppRoutes.login,
@@ -225,12 +220,36 @@ class ConsultantDetailsController extends BaseController {
       ),
     );
 
-    final refreshedToken = await _userStorage.getToken();
-    return refreshedToken != null && refreshedToken.isNotEmpty;
+    return await _hasValidToken();
   }
 
-  void _navigateToConsultantChat() {
-    navigateTo(AppRoutes.chat);
+  Future<bool> _hasValidToken() async {
+    final token = await _userStorage.getToken();
+    return token != null && token.isNotEmpty;
+  }
+
+  Future<void> _navigateToConsultantChat() async {
+    final consultantId = int.tryParse(_consultantId);
+    if (consultantId == null) {
+      showError(const ServerFailure(message: 'ID konsultan tidak ditemukan'));
+      return;
+    }
+
+    final name =
+        consultantName.value?.trim() ??
+        _consultant?.fullName?.trim() ??
+        'Konsultan';
+
+    await handleAsync<CreateChatRoomResponse>(
+      () => _createDirectChatRoomUseCase(consultantId),
+      onSuccess: (room) {
+        navigateTo(
+          AppRoutes.chat,
+          arguments: ChatArgs(name: name, roomId: room.id),
+        );
+      },
+      onFailure: showError,
+    );
   }
 
   void _hydrateConsultantFromArgument() {

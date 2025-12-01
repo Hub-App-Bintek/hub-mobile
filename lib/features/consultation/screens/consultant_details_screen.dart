@@ -119,6 +119,9 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
   }
 
   Future<void> _showConsultConfirmation(BuildContext context) async {
+    final loggedIn = await controller.ensureLoggedIn();
+    if (!loggedIn) return;
+
     final consultantName = controller.consultantName.value ?? 'konsultan ini';
 
     return PkpConfirmationDialog.show(

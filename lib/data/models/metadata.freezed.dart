@@ -34,6 +34,7 @@ mixin _$Metadata {
   String? get documentDesignId => throw _privateConstructorUsedError;
   List<DesignFileMetadata>? get designFiles =>
       throw _privateConstructorUsedError;
+  Pagination? get pagination => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -59,7 +60,10 @@ abstract class $MetadataCopyWith<$Res> {
     double? totalPaymentAmount,
     String? documentDesignId,
     List<DesignFileMetadata>? designFiles,
+    Pagination? pagination,
   });
+
+  $PaginationCopyWith<$Res>? get pagination;
 }
 
 /// @nodoc
@@ -87,6 +91,7 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
     Object? totalPaymentAmount = freezed,
     Object? documentDesignId = freezed,
     Object? designFiles = freezed,
+    Object? pagination = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -138,9 +143,25 @@ class _$MetadataCopyWithImpl<$Res, $Val extends Metadata>
                 ? _value.designFiles
                 : designFiles // ignore: cast_nullable_to_non_nullable
                       as List<DesignFileMetadata>?,
+            pagination: freezed == pagination
+                ? _value.pagination
+                : pagination // ignore: cast_nullable_to_non_nullable
+                      as Pagination?,
           )
           as $Val,
     );
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PaginationCopyWith<$Res>? get pagination {
+    if (_value.pagination == null) {
+      return null;
+    }
+
+    return $PaginationCopyWith<$Res>(_value.pagination!, (value) {
+      return _then(_value.copyWith(pagination: value) as $Val);
+    });
   }
 }
 
@@ -166,7 +187,11 @@ abstract class _$$MetadataImplCopyWith<$Res>
     double? totalPaymentAmount,
     String? documentDesignId,
     List<DesignFileMetadata>? designFiles,
+    Pagination? pagination,
   });
+
+  @override
+  $PaginationCopyWith<$Res>? get pagination;
 }
 
 /// @nodoc
@@ -193,6 +218,7 @@ class __$$MetadataImplCopyWithImpl<$Res>
     Object? totalPaymentAmount = freezed,
     Object? documentDesignId = freezed,
     Object? designFiles = freezed,
+    Object? pagination = freezed,
   }) {
     return _then(
       _$MetadataImpl(
@@ -244,6 +270,10 @@ class __$$MetadataImplCopyWithImpl<$Res>
             ? _value._designFiles
             : designFiles // ignore: cast_nullable_to_non_nullable
                   as List<DesignFileMetadata>?,
+        pagination: freezed == pagination
+            ? _value.pagination
+            : pagination // ignore: cast_nullable_to_non_nullable
+                  as Pagination?,
       ),
     );
   }
@@ -265,6 +295,7 @@ class _$MetadataImpl implements _Metadata {
     this.totalPaymentAmount,
     this.documentDesignId,
     final List<DesignFileMetadata>? designFiles,
+    this.pagination,
   }) : _designFiles = designFiles;
 
   factory _$MetadataImpl.fromJson(Map<String, dynamic> json) =>
@@ -303,8 +334,11 @@ class _$MetadataImpl implements _Metadata {
   }
 
   @override
+  final Pagination? pagination;
+
+  @override
   String toString() {
-    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, surveyCost: $surveyCost, surveyLocation: $surveyLocation, contractId: $contractId, scheduleId: $scheduleId, paymentId: $paymentId, totalPaymentAmount: $totalPaymentAmount, documentDesignId: $documentDesignId, designFiles: $designFiles)';
+    return 'Metadata(dateTime: $dateTime, actor: $actor, status: $status, notes: $notes, surveyCost: $surveyCost, surveyLocation: $surveyLocation, contractId: $contractId, scheduleId: $scheduleId, paymentId: $paymentId, totalPaymentAmount: $totalPaymentAmount, documentDesignId: $documentDesignId, designFiles: $designFiles, pagination: $pagination)';
   }
 
   @override
@@ -334,7 +368,9 @@ class _$MetadataImpl implements _Metadata {
             const DeepCollectionEquality().equals(
               other._designFiles,
               _designFiles,
-            ));
+            ) &&
+            (identical(other.pagination, pagination) ||
+                other.pagination == pagination));
   }
 
   @JsonKey(ignore: true)
@@ -353,6 +389,7 @@ class _$MetadataImpl implements _Metadata {
     totalPaymentAmount,
     documentDesignId,
     const DeepCollectionEquality().hash(_designFiles),
+    pagination,
   );
 
   @JsonKey(ignore: true)
@@ -381,6 +418,7 @@ abstract class _Metadata implements Metadata {
     final double? totalPaymentAmount,
     final String? documentDesignId,
     final List<DesignFileMetadata>? designFiles,
+    final Pagination? pagination,
   }) = _$MetadataImpl;
 
   factory _Metadata.fromJson(Map<String, dynamic> json) =
@@ -410,6 +448,8 @@ abstract class _Metadata implements Metadata {
   String? get documentDesignId;
   @override
   List<DesignFileMetadata>? get designFiles;
+  @override
+  Pagination? get pagination;
   @override
   @JsonKey(ignore: true)
   _$$MetadataImplCopyWith<_$MetadataImpl> get copyWith =>
