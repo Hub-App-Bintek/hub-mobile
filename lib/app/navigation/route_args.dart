@@ -8,9 +8,11 @@ class ConsultationDetailsArgs {
 }
 
 class ChatArgs {
-  const ChatArgs({this.name});
+  const ChatArgs({this.name, this.roomId, this.receiverId});
 
   final String? name;
+  final String? roomId;
+  final int? receiverId;
 }
 
 class PaymentArgs {

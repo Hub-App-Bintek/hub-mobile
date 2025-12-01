@@ -1,16 +1,36 @@
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/chat/chat_network_data_source.dart';
-import 'package:pkp_hub/data/models/chat_message.dart';
-import 'package:pkp_hub/data/models/request/send_chat_message_request.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
+import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
+import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
+import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
+import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
 
 abstract class ChatRepository {
-  Future<Result<ChatMessage, Failure>> sendMessage(
-    String consultationId,
-    SendChatMessageRequest request,
+  Future<Result<CreateChatRoomResponse, Failure>> createDirectRoom(
+    int targetUserId,
   );
-  Future<Result<List<ChatMessage>, Failure>> getMessages(String consultationId);
-  Future<Result<ChatMessage, Failure>> getLatestMessage(String consultationId);
+
+  Future<Result<ChatRoomDetailsResponse, Failure>> getRoomDetail(
+    String roomId, {
+    int page,
+    int limit,
+  });
+
+  Future<Result<ChatSendMessageResponse, Failure>> sendRoomMessage(
+    String roomId,
+    ChatSendMessageRequest request,
+  );
+
+  Future<Result<IncomingChatResponse, Failure>> getIncomingChats({
+    int page,
+    int limit,
+    String? status,
+    String? dateRange,
+    String? sortBy,
+    String? sortOrder,
+  });
 }
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -18,18 +38,37 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl(this._ds);
 
   @override
-  Future<Result<ChatMessage, Failure>> sendMessage(
-    String consultationId,
-    SendChatMessageRequest request,
-  ) => _ds.sendMessage(consultationId, request);
+  Future<Result<CreateChatRoomResponse, Failure>> createDirectRoom(
+    int targetUserId,
+  ) => _ds.createDirectRoom(targetUserId);
 
   @override
-  Future<Result<List<ChatMessage>, Failure>> getMessages(
-    String consultationId,
-  ) => _ds.getMessages(consultationId);
+  Future<Result<ChatRoomDetailsResponse, Failure>> getRoomDetail(
+    String roomId, {
+    int page = 1,
+    int limit = 50,
+  }) => _ds.getRoomDetail(roomId, page: page, limit: limit);
 
   @override
-  Future<Result<ChatMessage, Failure>> getLatestMessage(
-    String consultationId,
-  ) => _ds.getLatestMessage(consultationId);
+  Future<Result<ChatSendMessageResponse, Failure>> sendRoomMessage(
+    String roomId,
+    ChatSendMessageRequest request,
+  ) => _ds.sendRoomMessage(roomId, request);
+
+  @override
+  Future<Result<IncomingChatResponse, Failure>> getIncomingChats({
+    int page = 1,
+    int limit = 10,
+    String? status,
+    String? dateRange,
+    String? sortBy,
+    String? sortOrder,
+  }) => _ds.getIncomingChats(
+    page: page,
+    limit: limit,
+    status: status,
+    dateRange: dateRange,
+    sortBy: sortBy,
+    sortOrder: sortOrder,
+  );
 }

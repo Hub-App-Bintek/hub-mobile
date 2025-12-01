@@ -59,6 +59,6 @@ class LocationDetailsBinding extends Bindings {
         args.isPaidConsultation,
         args.type,
       );
-    });
+    }, fenix: true);
   }
 }

@@ -7,6 +7,7 @@ import 'package:pkp_hub/domain/repositories/design_document_repository.dart';
 import 'package:pkp_hub/domain/repositories/payment_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/repositories/survey_repository.dart';
+import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultation/accept_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/finalize_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/reject_consultation_use_case.dart';
@@ -30,6 +31,7 @@ import 'package:pkp_hub/domain/usecases/survey/complete_survey_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
+import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/project_history_controller.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 
@@ -110,6 +112,9 @@ class ProjectDetailsBinding extends Bindings {
     Get.lazyPut<ApprovePaymentUseCase>(
       () => ApprovePaymentUseCase(Get.find<PaymentRepository>()),
     );
+    Get.lazyPut<CreateDirectChatRoomUseCase>(
+      () => CreateDirectChatRoomUseCase(Get.find<ChatRepository>()),
+    );
 
     Get.lazyPut<ProjectHistoryController>(() {
       int? asInt(dynamic value) {
@@ -165,7 +170,8 @@ class ProjectDetailsBinding extends Bindings {
         Get.find<SignContractUseCase>(),
         Get.find<RequestPaymentUseCase>(),
         Get.find<ApprovePaymentUseCase>(),
+        Get.find<CreateDirectChatRoomUseCase>(),
       );
-    });
+    }, fenix: true);
   }
 }

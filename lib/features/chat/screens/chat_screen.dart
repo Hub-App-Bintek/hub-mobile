@@ -25,25 +25,44 @@ class ChatScreen extends GetView<ChatController> {
       ),
       body: Column(
         children: [
+          Obx(
+            () => _ConnectionBanner(
+              isConnecting: controller.wsConnecting.value,
+              isConnected: controller.wsConnected.value,
+            ),
+          ),
           Expanded(
-            child: Obx(
-              () => ListView.builder(
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final items = controller.messages;
+              if (items.isEmpty) {
+                return const Center(
+                  child: Text('Belum ada pesan.\nMulai percakapan.'),
+                );
+              }
+              return ListView.builder(
                 controller: controller.scrollController,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
                   vertical: 24,
                 ),
-                itemCount: controller.messages.length,
+                itemCount: items.length,
                 itemBuilder: (context, index) {
-                  final message = controller.messages[index];
+                  final message = items[index];
                   return _MessageBubble(message: message);
                 },
-              ),
-            ),
+              );
+            }),
           ),
           _Composer(
             controller: controller.composerController,
             onSend: controller.sendMessage,
+            isConnected: controller.wsConnected,
+            isConnecting: controller.wsConnecting,
+            isSending: controller.isSending,
+            onTap: controller.scrollToBottom,
           ),
         ],
       ),
@@ -51,10 +70,44 @@ class ChatScreen extends GetView<ChatController> {
   }
 }
 
+class _ConnectionBanner extends StatelessWidget {
+  const _ConnectionBanner({
+    required this.isConnecting,
+    required this.isConnected,
+  });
+
+  final bool isConnecting;
+  final bool isConnected;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isConnecting) {
+      return const LinearProgressIndicator(
+        minHeight: 2,
+        color: AppColors.primaryDark,
+        backgroundColor: AppColors.primaryLightest,
+      );
+    }
+    if (!isConnected) {
+      return Container(
+        width: double.infinity,
+        color: AppColors.errorLight,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Text(
+          'Menghubungkan ke server chat...',
+          style: AppTextStyles.bodyXS.copyWith(color: AppColors.errorDark),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+    return const SizedBox.shrink();
+  }
+}
+
 class _MessageBubble extends StatelessWidget {
   const _MessageBubble({required this.message});
 
-  final ChatMessage message;
+  final ChatUiMessage message;
 
   @override
   Widget build(BuildContext context) {
@@ -93,17 +146,28 @@ class _MessageBubble extends StatelessWidget {
 }
 
 class _Composer extends StatelessWidget {
-  const _Composer({required this.controller, required this.onSend});
+  const _Composer({
+    required this.controller,
+    required this.onSend,
+    required this.isConnected,
+    required this.isConnecting,
+    required this.isSending,
+    required this.onTap,
+  });
 
   final TextEditingController controller;
-  final VoidCallback onSend;
+  final Future<void> Function() onSend;
+  final RxBool isConnected;
+  final RxBool isConnecting;
+  final RxBool isSending;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: Container(
-        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(color: AppColors.neutralLight, width: 0.5),
@@ -111,55 +175,72 @@ class _Composer extends StatelessWidget {
         ),
         child: Row(
           children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.add, color: AppColors.primaryDarkest),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLightest.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: controller,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message...',
-                          hintStyle: AppTextStyles.bodyS.copyWith(
-                            color: AppColors.neutralMedium,
+            Obx(() {
+              final connected = isConnected.value;
+              final connecting = isConnecting.value;
+              final sending = isSending.value;
+              final enabled = connected && !connecting && !sending;
+              return Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLightest.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(26),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            minHeight: 36,
+                            maxHeight: 140,
                           ),
-                          border: InputBorder.none,
+                          child: TextField(
+                            controller: controller,
+                            enabled: enabled,
+                            minLines: 1,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              hintText: enabled
+                                  ? 'Type a message...'
+                                  : 'Menghubungkan...',
+                              hintStyle: AppTextStyles.bodyS.copyWith(
+                                color: AppColors.neutralMedium,
+                              ),
+                              border: InputBorder.none,
+                            ),
+                            textInputAction: TextInputAction.newline,
+                            onTap: onTap,
+                            onSubmitted: (_) => enabled ? onSend() : null,
+                          ),
                         ),
-                        textInputAction: TextInputAction.send,
-                        onSubmitted: (_) => onSend(),
                       ),
-                    ),
-                    Container(
-                      width: 36,
-                      height: 36,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: AppColors.primaryDarkest,
-                      ),
-                      child: IconButton(
-                        padding: EdgeInsets.zero,
-                        icon: const Icon(
-                          Icons.send_rounded,
-                          color: AppColors.white,
-                          size: 18,
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: enabled
+                              ? AppColors.primaryDarkest
+                              : AppColors.neutralLight,
                         ),
-                        onPressed: onSend,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: Icon(
+                            Icons.send_rounded,
+                            color: enabled
+                                ? AppColors.white
+                                : AppColors.neutralMedium,
+                            size: 18,
+                          ),
+                          onPressed: enabled ? () => onSend() : null,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),

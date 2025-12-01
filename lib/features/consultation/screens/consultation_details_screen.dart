@@ -173,17 +173,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
           ),
           InkWell(
             onTap: () {
-              final consultantName =
-                  controller.project.consultationInfo?.consultantName?.trim() ??
-                  '';
-              controller.navigateTo(
-                AppRoutes.chat,
-                arguments: ChatArgs(
-                  name: consultantName.isNotEmpty == true
-                      ? consultantName
-                      : 'Konsultan',
-                ),
-              );
+              controller.startChatWithConsultant();
             },
             child: Container(
               width: 40,

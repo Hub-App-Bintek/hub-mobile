@@ -36,6 +36,6 @@ class PrototypeDesignDetailsBinding extends Bindings {
         designId,
         initialDesign: design,
       );
-    });
+    }, fenix: true);
   }
 }

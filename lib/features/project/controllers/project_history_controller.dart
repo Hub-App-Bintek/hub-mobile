@@ -51,6 +51,7 @@ import 'package:pkp_hub/domain/usecases/survey/create_survey_schedule_use_case.d
 import 'package:pkp_hub/domain/usecases/survey/reject_survey_schedule_use_case.dart';
 import 'package:pkp_hub/domain/usecases/survey/reschedule_survey_use_case.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 
 class ProjectHistoryController extends BaseController {
   final String projectId;
@@ -86,6 +87,7 @@ class ProjectHistoryController extends BaseController {
   final SignContractUseCase _signContractUseCase;
   final RequestPaymentUseCase _requestPaymentUseCase;
   final ApprovePaymentUseCase _approvePaymentUseCase;
+  final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   ProjectHistoryController(
     this.projectId,
@@ -117,6 +119,7 @@ class ProjectHistoryController extends BaseController {
     this._signContractUseCase,
     this._requestPaymentUseCase,
     this._approvePaymentUseCase,
+    this._createDirectChatRoomUseCase,
   );
 
   var isLoading = false.obs;
@@ -144,6 +147,7 @@ class ProjectHistoryController extends BaseController {
   final RxBool downloadTemplateLoading = false.obs;
   final RxBool uploadContractLoading = false.obs;
   final RxBool uploadDesignDocumentsLoading = false.obs;
+  final RxBool creatingChatRoom = false.obs;
 
   // Loading flags for contract approval by homeowner
   final RxBool contractApproveLoading = false.obs;
@@ -179,6 +183,39 @@ class ProjectHistoryController extends BaseController {
 
   Future<void> _initUserRole() async {
     userRole.value = await _userStorage.getRole();
+  }
+
+  Future<void> openChatRoom() async {
+    final targetUserId = _resolveChatTargetUserId();
+    if (targetUserId == null) {
+      showError(const ServerFailure(message: 'Penerima chat tidak ditemukan'));
+      return;
+    }
+    if (creatingChatRoom.value) return;
+
+    creatingChatRoom.value = true;
+    // await handleAsync<CreateChatRoomResponse>(
+    //   () => _createDirectChatRoomUseCase(targetUserId),
+    //   onSuccess: (room) {
+    //     navigateTo(
+    //       AppRoutes.chat,
+    //       arguments: ChatArgs(name: _resolveChatTargetName(), roomId: room.id),
+    //     );
+    //   },
+    //   onFailure: showError,
+    // );
+    creatingChatRoom.value = false;
+  }
+
+  int? _resolveChatTargetUserId() {
+    return _initialConsultantId ?? _initialHomeOwnerId;
+  }
+
+  String _resolveChatTargetName() {
+    return _initialConsultantName ??
+        _initialHomeOwnerName ??
+        details.value?.consultation?.consultantName ??
+        'Pengguna';
   }
 
   Future<void> fetchDetails({bool isInitialLoad = false}) async {

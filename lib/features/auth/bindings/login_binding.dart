@@ -10,6 +10,7 @@ class LoginBinding extends Bindings {
     Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
     Get.lazyPut<LoginController>(
       () => LoginController(Get.find<LoginUseCase>()),
+      fenix: true,
     );
   }
 }

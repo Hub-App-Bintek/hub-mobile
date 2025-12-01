@@ -68,9 +68,11 @@ abstract class ApiEndpoints {
   static const String filesDownloadUrl = '/api/files/download-url';
 
   // --- Chats ---
-  static const String chatMessages = '/api/v1/chats/{consultationId}/messages';
-  static const String chatLatest =
-      '/api/v1/chats/{consultationId}/messages/latest';
+  static const String chatDirectRoom =
+      '/api/v1/chat/rooms/direct/{targetUserId}';
+  static const String chatRoomDetail = '/api/chats/{roomId}/room';
+  static const String chatRoomMessages = '/api/chats/{roomId}/messages';
+  static const String chatIncoming = '/api/chats/incoming';
 
   // --- Locations ---
   static const String locationsProvince = '/api/locations/province';

@@ -18,29 +18,87 @@ class _ChatApiService implements ChatApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<ChatMessage> sendMessage(
-    String consultationId,
-    SendChatMessageRequest body,
+  Future<CreateChatRoomResponse> createDirectRoom(int targetUserId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<CreateChatRoomResponse>(
+      Options(method: 'POST', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/v1/chat/rooms/direct/${targetUserId}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CreateChatRoomResponse _value;
+    try {
+      _value = CreateChatRoomResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ChatRoomDetailsResponse> getRoomDetail(
+    String roomId,
+    int page,
+    int limit,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page, r'limit': limit};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<ChatRoomDetailsResponse>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/chats/${roomId}/room',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ChatRoomDetailsResponse _value;
+    try {
+      _value = ChatRoomDetailsResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<ChatSendMessageResponse> sendRoomMessage(
+    String roomId,
+    ChatSendMessageRequest body,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _options = _setStreamType<ChatMessage>(
+    final _options = _setStreamType<ChatSendMessageResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/chats/${consultationId}/messages',
+            '/api/chats/${roomId}/messages',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ChatMessage _value;
+    late ChatSendMessageResponse _value;
     try {
-      _value = ChatMessage.fromJson(_result.data!);
+      _value = ChatSendMessageResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -49,54 +107,40 @@ class _ChatApiService implements ChatApiService {
   }
 
   @override
-  Future<List<ChatMessage>> getMessages(String consultationId) async {
+  Future<IncomingChatResponse> getIncomingChats({
+    int page = 1,
+    int limit = 10,
+    String? status,
+    String? dateRange,
+    String? sortBy,
+    String? sortOrder,
+  }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'limit': limit,
+      r'status': status,
+      r'date_range': dateRange,
+      r'sort_by': sortBy,
+      r'sort_order': sortOrder,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<ChatMessage>>(
+    final _options = _setStreamType<IncomingChatResponse>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/chats/${consultationId}/messages',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ChatMessage> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => ChatMessage.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<ChatMessage> getLatestMessage(String consultationId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ChatMessage>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/api/v1/chats/${consultationId}/messages/latest',
+            '/api/chats/incoming',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ChatMessage _value;
+    late IncomingChatResponse _value;
     try {
-      _value = ChatMessage.fromJson(_result.data!);
+      _value = IncomingChatResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

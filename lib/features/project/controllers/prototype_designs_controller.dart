@@ -7,6 +7,7 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 import 'package:pkp_hub/domain/usecases/design/download_prototype_design_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design/get_prototype_designs_use_case.dart';
@@ -72,13 +73,44 @@ class PrototypeDesignsController extends BaseController {
         onSuccess: (file) async {
           hideLoadingOverlay();
           final projectName = design.name ?? 'Prototype';
-          final saved = await saveToExternalProjectDocuments(
+          String? saved;
+          if (file.path != null) {
+            final source = File(file.path!);
+            if (await source.exists()) {
+              try {
+                final bytes = await source.readAsBytes();
+                saved = await saveToExternalProjectDocuments(
+                  projectName: projectName,
+                  fileName: file.fileName,
+                  bytes: bytes,
+                  subDirectory: 'Prototype Designs',
+                  mimeType: 'application/zip',
+                );
+              } finally {
+                // Clean up temp file
+                source.delete().catchError((e) {
+                  Logger().e('Failed to delete temp file: $e');
+                  return null;
+                });
+              }
+            }
+          }
+          saved ??= await saveToExternalProjectDocuments(
             projectName: projectName,
             fileName: file.fileName,
             bytes: file.bytes,
             subDirectory: 'Prototype Designs',
             mimeType: 'application/zip',
           );
+          if (saved != null && saved.isNotEmpty) {
+            saved = await saveToExternalProjectDocuments(
+              projectName: projectName,
+              fileName: file.fileName,
+              bytes: file.bytes,
+              subDirectory: 'Prototype Designs',
+              mimeType: 'application/zip',
+            );
+          }
           if (saved != null && saved.isNotEmpty) {
             final where = Platform.isAndroid
                 ? 'Dokumen > PKP > $projectName'

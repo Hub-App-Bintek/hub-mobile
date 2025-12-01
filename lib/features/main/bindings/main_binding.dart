@@ -14,7 +14,7 @@ import 'package:pkp_hub/features/main/controllers/profile_controller.dart';
 class MainBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => MainController(Get.find<UserStorage>()));
+    Get.lazyPut(() => MainController(Get.find<UserStorage>()), fenix: true);
 
     Get.lazyPut(() => GetWalletBalanceUseCase(Get.find()));
     Get.lazyPut(() => GetConsultantsUseCase(Get.find<ConsultantRepository>()));
@@ -26,8 +26,9 @@ class MainBinding extends Bindings {
         Get.find<GetProjectsUseCase>(),
         Get.find<GetWalletBalanceUseCase>(),
       ),
+      fenix: true,
     );
-    Get.lazyPut(() => ProfileController(Get.find<UserStorage>()));
+    Get.lazyPut(() => ProfileController(Get.find<UserStorage>()), fenix: true);
 
     final args = Get.arguments;
     String? status;

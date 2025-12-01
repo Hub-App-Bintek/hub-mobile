@@ -659,6 +659,64 @@ abstract class BaseController extends SuperController<dynamic> {
     }
   }
 
+  /// Copy an existing file to the project documents folder without loading it fully in memory.
+  /// Returns the saved path/URI or null on failure.
+  Future<String?> copyFileToExternalProjectDocuments({
+    required String sourcePath,
+    required String projectName,
+    required String fileName,
+    String? subDirectory,
+  }) async {
+    try {
+      final source = File(sourcePath);
+      if (!await source.exists()) {
+        showError(const ServerFailure(message: 'File sumber tidak ditemukan'));
+        return null;
+      }
+
+      final sanitizedProject = _sanitizePathSegment(projectName);
+      final safeFileName = _sanitizeFileName(fileName);
+      final safeSubDirectory = subDirectory?.trim().isNotEmpty == true
+          ? _sanitizePathSegment(subDirectory!)
+          : null;
+
+      Directory baseDir;
+      if (Platform.isAndroid) {
+        baseDir =
+            (await getExternalStorageDirectory()) ??
+            await getTemporaryDirectory();
+      } else if (Platform.isIOS) {
+        baseDir = await getApplicationDocumentsDirectory();
+      } else {
+        baseDir = await getTemporaryDirectory();
+      }
+
+      final sep = Platform.pathSeparator;
+      final documentsDir = Directory('${baseDir.path}${sep}Documents${sep}PKP');
+      if (!await documentsDir.exists()) {
+        await documentsDir.create(recursive: true);
+      }
+      final projectDir = Directory('${documentsDir.path}$sep$sanitizedProject');
+      if (!await projectDir.exists()) {
+        await projectDir.create(recursive: true);
+      }
+      final targetDir = safeSubDirectory != null
+          ? Directory('${projectDir.path}$sep$safeSubDirectory')
+          : projectDir;
+      if (!await targetDir.exists()) {
+        await targetDir.create(recursive: true);
+      }
+
+      final filePath = '${targetDir.path}$sep$safeFileName';
+      final sink = File(filePath).openWrite();
+      await source.openRead().pipe(sink);
+      return filePath;
+    } catch (e) {
+      showError(ServerFailure(message: 'Gagal menyalin file: $e'));
+      return null;
+    }
+  }
+
   String _sanitizePathSegment(String input) {
     // Remove characters not allowed in typical file paths and trim.
     final s = input.replaceAll(RegExp(r'[\\/:*?"<>|]'), '').trim();
