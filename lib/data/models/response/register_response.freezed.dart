@@ -21,15 +21,9 @@ RegisterResponse _$RegisterResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RegisterResponse {
-  int? get userId => throw _privateConstructorUsedError;
-  String? get fullName => throw _privateConstructorUsedError;
-  String? get email => throw _privateConstructorUsedError;
-  String? get phone => throw _privateConstructorUsedError;
-  String? get username => throw _privateConstructorUsedError;
-  String? get role => throw _privateConstructorUsedError;
-  String? get status => throw _privateConstructorUsedError;
-  String? get ktpUrl => throw _privateConstructorUsedError;
-  String? get selfieUrl => throw _privateConstructorUsedError;
+  bool? get status => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
+  RegisterResponseData? get data => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,17 +38,9 @@ abstract class $RegisterResponseCopyWith<$Res> {
     $Res Function(RegisterResponse) then,
   ) = _$RegisterResponseCopyWithImpl<$Res, RegisterResponse>;
   @useResult
-  $Res call({
-    int? userId,
-    String? fullName,
-    String? email,
-    String? phone,
-    String? username,
-    String? role,
-    String? status,
-    String? ktpUrl,
-    String? selfieUrl,
-  });
+  $Res call({bool? status, String? message, RegisterResponseData? data});
+
+  $RegisterResponseDataCopyWith<$Res>? get data;
 }
 
 /// @nodoc
@@ -70,57 +56,39 @@ class _$RegisterResponseCopyWithImpl<$Res, $Val extends RegisterResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? fullName = freezed,
-    Object? email = freezed,
-    Object? phone = freezed,
-    Object? username = freezed,
-    Object? role = freezed,
     Object? status = freezed,
-    Object? ktpUrl = freezed,
-    Object? selfieUrl = freezed,
+    Object? message = freezed,
+    Object? data = freezed,
   }) {
     return _then(
       _value.copyWith(
-            userId: freezed == userId
-                ? _value.userId
-                : userId // ignore: cast_nullable_to_non_nullable
-                      as int?,
-            fullName: freezed == fullName
-                ? _value.fullName
-                : fullName // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            email: freezed == email
-                ? _value.email
-                : email // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            phone: freezed == phone
-                ? _value.phone
-                : phone // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            username: freezed == username
-                ? _value.username
-                : username // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            role: freezed == role
-                ? _value.role
-                : role // ignore: cast_nullable_to_non_nullable
-                      as String?,
             status: freezed == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
+                      as bool?,
+            message: freezed == message
+                ? _value.message
+                : message // ignore: cast_nullable_to_non_nullable
                       as String?,
-            ktpUrl: freezed == ktpUrl
-                ? _value.ktpUrl
-                : ktpUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
-            selfieUrl: freezed == selfieUrl
-                ? _value.selfieUrl
-                : selfieUrl // ignore: cast_nullable_to_non_nullable
-                      as String?,
+            data: freezed == data
+                ? _value.data
+                : data // ignore: cast_nullable_to_non_nullable
+                      as RegisterResponseData?,
           )
           as $Val,
     );
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RegisterResponseDataCopyWith<$Res>? get data {
+    if (_value.data == null) {
+      return null;
+    }
+
+    return $RegisterResponseDataCopyWith<$Res>(_value.data!, (value) {
+      return _then(_value.copyWith(data: value) as $Val);
+    });
   }
 }
 
@@ -133,17 +101,10 @@ abstract class _$$RegisterResponseImplCopyWith<$Res>
   ) = __$$RegisterResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int? userId,
-    String? fullName,
-    String? email,
-    String? phone,
-    String? username,
-    String? role,
-    String? status,
-    String? ktpUrl,
-    String? selfieUrl,
-  });
+  $Res call({bool? status, String? message, RegisterResponseData? data});
+
+  @override
+  $RegisterResponseDataCopyWith<$Res>? get data;
 }
 
 /// @nodoc
@@ -158,54 +119,24 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? fullName = freezed,
-    Object? email = freezed,
-    Object? phone = freezed,
-    Object? username = freezed,
-    Object? role = freezed,
     Object? status = freezed,
-    Object? ktpUrl = freezed,
-    Object? selfieUrl = freezed,
+    Object? message = freezed,
+    Object? data = freezed,
   }) {
     return _then(
       _$RegisterResponseImpl(
-        userId: freezed == userId
-            ? _value.userId
-            : userId // ignore: cast_nullable_to_non_nullable
-                  as int?,
-        fullName: freezed == fullName
-            ? _value.fullName
-            : fullName // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        email: freezed == email
-            ? _value.email
-            : email // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        phone: freezed == phone
-            ? _value.phone
-            : phone // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        username: freezed == username
-            ? _value.username
-            : username // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        role: freezed == role
-            ? _value.role
-            : role // ignore: cast_nullable_to_non_nullable
-                  as String?,
         status: freezed == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
+                  as bool?,
+        message: freezed == message
+            ? _value.message
+            : message // ignore: cast_nullable_to_non_nullable
                   as String?,
-        ktpUrl: freezed == ktpUrl
-            ? _value.ktpUrl
-            : ktpUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
-        selfieUrl: freezed == selfieUrl
-            ? _value.selfieUrl
-            : selfieUrl // ignore: cast_nullable_to_non_nullable
-                  as String?,
+        data: freezed == data
+            ? _value.data
+            : data // ignore: cast_nullable_to_non_nullable
+                  as RegisterResponseData?,
       ),
     );
   }
@@ -214,43 +145,21 @@ class __$$RegisterResponseImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RegisterResponseImpl implements _RegisterResponse {
-  const _$RegisterResponseImpl({
-    this.userId,
-    this.fullName,
-    this.email,
-    this.phone,
-    this.username,
-    this.role,
-    this.status,
-    this.ktpUrl,
-    this.selfieUrl,
-  });
+  const _$RegisterResponseImpl({this.status, this.message, this.data});
 
   factory _$RegisterResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$RegisterResponseImplFromJson(json);
 
   @override
-  final int? userId;
+  final bool? status;
   @override
-  final String? fullName;
+  final String? message;
   @override
-  final String? email;
-  @override
-  final String? phone;
-  @override
-  final String? username;
-  @override
-  final String? role;
-  @override
-  final String? status;
-  @override
-  final String? ktpUrl;
-  @override
-  final String? selfieUrl;
+  final RegisterResponseData? data;
 
   @override
   String toString() {
-    return 'RegisterResponse(userId: $userId, fullName: $fullName, email: $email, phone: $phone, username: $username, role: $role, status: $status, ktpUrl: $ktpUrl, selfieUrl: $selfieUrl)';
+    return 'RegisterResponse(status: $status, message: $message, data: $data)';
   }
 
   @override
@@ -258,34 +167,14 @@ class _$RegisterResponseImpl implements _RegisterResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RegisterResponseImpl &&
-            (identical(other.userId, userId) || other.userId == userId) &&
-            (identical(other.fullName, fullName) ||
-                other.fullName == fullName) &&
-            (identical(other.email, email) || other.email == email) &&
-            (identical(other.phone, phone) || other.phone == phone) &&
-            (identical(other.username, username) ||
-                other.username == username) &&
-            (identical(other.role, role) || other.role == role) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.ktpUrl, ktpUrl) || other.ktpUrl == ktpUrl) &&
-            (identical(other.selfieUrl, selfieUrl) ||
-                other.selfieUrl == selfieUrl));
+            (identical(other.message, message) || other.message == message) &&
+            (identical(other.data, data) || other.data == data));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    userId,
-    fullName,
-    email,
-    phone,
-    username,
-    role,
-    status,
-    ktpUrl,
-    selfieUrl,
-  );
+  int get hashCode => Object.hash(runtimeType, status, message, data);
 
   @JsonKey(ignore: true)
   @override
@@ -304,40 +193,185 @@ class _$RegisterResponseImpl implements _RegisterResponse {
 
 abstract class _RegisterResponse implements RegisterResponse {
   const factory _RegisterResponse({
-    final int? userId,
-    final String? fullName,
-    final String? email,
-    final String? phone,
-    final String? username,
-    final String? role,
-    final String? status,
-    final String? ktpUrl,
-    final String? selfieUrl,
+    final bool? status,
+    final String? message,
+    final RegisterResponseData? data,
   }) = _$RegisterResponseImpl;
 
   factory _RegisterResponse.fromJson(Map<String, dynamic> json) =
       _$RegisterResponseImpl.fromJson;
 
   @override
-  int? get userId;
+  bool? get status;
   @override
-  String? get fullName;
+  String? get message;
   @override
-  String? get email;
-  @override
-  String? get phone;
-  @override
-  String? get username;
-  @override
-  String? get role;
-  @override
-  String? get status;
-  @override
-  String? get ktpUrl;
-  @override
-  String? get selfieUrl;
+  RegisterResponseData? get data;
   @override
   @JsonKey(ignore: true)
   _$$RegisterResponseImplCopyWith<_$RegisterResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+RegisterResponseData _$RegisterResponseDataFromJson(Map<String, dynamic> json) {
+  return _RegisterResponseData.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RegisterResponseData {
+  String? get userId => throw _privateConstructorUsedError;
+  String? get verificationStatus => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RegisterResponseDataCopyWith<RegisterResponseData> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RegisterResponseDataCopyWith<$Res> {
+  factory $RegisterResponseDataCopyWith(
+    RegisterResponseData value,
+    $Res Function(RegisterResponseData) then,
+  ) = _$RegisterResponseDataCopyWithImpl<$Res, RegisterResponseData>;
+  @useResult
+  $Res call({String? userId, String? verificationStatus});
+}
+
+/// @nodoc
+class _$RegisterResponseDataCopyWithImpl<
+  $Res,
+  $Val extends RegisterResponseData
+>
+    implements $RegisterResponseDataCopyWith<$Res> {
+  _$RegisterResponseDataCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? userId = freezed, Object? verificationStatus = freezed}) {
+    return _then(
+      _value.copyWith(
+            userId: freezed == userId
+                ? _value.userId
+                : userId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            verificationStatus: freezed == verificationStatus
+                ? _value.verificationStatus
+                : verificationStatus // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$RegisterResponseDataImplCopyWith<$Res>
+    implements $RegisterResponseDataCopyWith<$Res> {
+  factory _$$RegisterResponseDataImplCopyWith(
+    _$RegisterResponseDataImpl value,
+    $Res Function(_$RegisterResponseDataImpl) then,
+  ) = __$$RegisterResponseDataImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String? userId, String? verificationStatus});
+}
+
+/// @nodoc
+class __$$RegisterResponseDataImplCopyWithImpl<$Res>
+    extends _$RegisterResponseDataCopyWithImpl<$Res, _$RegisterResponseDataImpl>
+    implements _$$RegisterResponseDataImplCopyWith<$Res> {
+  __$$RegisterResponseDataImplCopyWithImpl(
+    _$RegisterResponseDataImpl _value,
+    $Res Function(_$RegisterResponseDataImpl) _then,
+  ) : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? userId = freezed, Object? verificationStatus = freezed}) {
+    return _then(
+      _$RegisterResponseDataImpl(
+        userId: freezed == userId
+            ? _value.userId
+            : userId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        verificationStatus: freezed == verificationStatus
+            ? _value.verificationStatus
+            : verificationStatus // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RegisterResponseDataImpl implements _RegisterResponseData {
+  const _$RegisterResponseDataImpl({this.userId, this.verificationStatus});
+
+  factory _$RegisterResponseDataImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RegisterResponseDataImplFromJson(json);
+
+  @override
+  final String? userId;
+  @override
+  final String? verificationStatus;
+
+  @override
+  String toString() {
+    return 'RegisterResponseData(userId: $userId, verificationStatus: $verificationStatus)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegisterResponseDataImpl &&
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.verificationStatus, verificationStatus) ||
+                other.verificationStatus == verificationStatus));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, userId, verificationStatus);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RegisterResponseDataImplCopyWith<_$RegisterResponseDataImpl>
+  get copyWith =>
+      __$$RegisterResponseDataImplCopyWithImpl<_$RegisterResponseDataImpl>(
+        this,
+        _$identity,
+      );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RegisterResponseDataImplToJson(this);
+  }
+}
+
+abstract class _RegisterResponseData implements RegisterResponseData {
+  const factory _RegisterResponseData({
+    final String? userId,
+    final String? verificationStatus,
+  }) = _$RegisterResponseDataImpl;
+
+  factory _RegisterResponseData.fromJson(Map<String, dynamic> json) =
+      _$RegisterResponseDataImpl.fromJson;
+
+  @override
+  String? get userId;
+  @override
+  String? get verificationStatus;
+  @override
+  @JsonKey(ignore: true)
+  _$$RegisterResponseDataImplCopyWith<_$RegisterResponseDataImpl>
+  get copyWith => throw _privateConstructorUsedError;
 }

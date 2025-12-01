@@ -40,7 +40,7 @@ abstract class AppStrings {
   static const kycFullNameLabel = 'Nama Lengkap';
   static const kycFullNameHint = 'Masukkan Nama Lengkap';
   static const kycPhoneNumberLabel = 'No. Handphone';
-  static const kycPhoneNumberHint = '081234567890';
+  static const kycPhoneNumberHint = '81234567890';
   static const kycAddressLabel = 'Alamat';
   static const kycAddressHint = 'Masukkan Alamat Lengkap';
   static const kycKtpNumberLabel = 'Nomer KTP';

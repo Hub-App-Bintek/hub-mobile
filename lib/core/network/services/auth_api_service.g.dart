@@ -45,16 +45,21 @@ class _AuthApiService implements AuthApiService {
   }
 
   @override
-  Future<RegisterResponse> register(RegisterRequest body) async {
+  Future<RegisterResponse> register(FormData body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = body;
     final _options = _setStreamType<RegisterResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'multipart/form-data',
+          )
           .compose(
             _dio.options,
-            '/api/auth/register',
+            '/api/v2/home-owner/register',
             queryParameters: queryParameters,
             data: _data,
           )

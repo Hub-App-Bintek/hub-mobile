@@ -100,7 +100,7 @@ class VerifyOtpController extends BaseController {
           VerifyOtpRequest(email: email, otpCode: otpString),
         ),
         onSuccess: (loginResponse) async {
-          navigateOffAll(AppRoutes.kyc);
+          navigateOffAll(AppRoutes.main);
         },
         onFailure: (Failure failure) {
           showError(failure);
