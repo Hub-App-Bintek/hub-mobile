@@ -22,14 +22,10 @@ import 'package:pkp_hub/features/inbox/bindings/inbox_binding.dart';
 import 'package:pkp_hub/features/inbox/screens/inbox_screen.dart';
 import 'package:pkp_hub/features/kyc/bindings/kyc_binding.dart';
 import 'package:pkp_hub/features/kyc/screens/kyc_screen.dart';
-import 'package:pkp_hub/features/licensing/controllers/licensing_controller.dart';
-import 'package:pkp_hub/features/licensing/controllers/licensing_details_controller.dart';
-import 'package:pkp_hub/features/licensing/controllers/licensing_location_details_controller.dart';
-import 'package:pkp_hub/features/licensing/controllers/simbg_form_controller.dart';
-import 'package:pkp_hub/features/licensing/screens/licensing_details_screen.dart';
-import 'package:pkp_hub/features/licensing/screens/licensing_location_details_screen.dart';
-import 'package:pkp_hub/features/licensing/screens/licensing_screen.dart';
-import 'package:pkp_hub/features/licensing/screens/simbg_form_screen.dart';
+import 'package:pkp_hub/features/licensing/bindings/licensing_binding.dart';
+import 'package:pkp_hub/features/licensing/bindings/licensing_details_binding.dart';
+import 'package:pkp_hub/features/licensing/bindings/licensing_location_details_binding.dart';
+import 'package:pkp_hub/features/licensing/bindings/simbg_form_binding.dart';
 import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
@@ -199,33 +195,22 @@ class AppPages {
     GetPage(
       name: AppRoutes.licensingDetails,
       page: () => const LicensingDetailsScreen(),
-      binding: BindingsBuilder(
-        () => Get.lazyPut(() => LicensingDetailsController(), fenix: true),
-      ),
+      binding: LicensingDetailsBinding(),
     ),
     GetPage(
       name: AppRoutes.simbgForm,
       page: () => const SIMBGFormScreen(),
-      binding: BindingsBuilder(
-        () => Get.lazyPut(() => SIMBGFormController(), fenix: true),
-      ),
+      binding: SimbgFormBinding(),
     ),
     GetPage(
       name: AppRoutes.licensing,
       page: () => const LicensingScreen(),
-      binding: BindingsBuilder(
-        () => Get.lazyPut(() => LicensingController(), fenix: true),
-      ),
+      binding: LicensingBinding(),
     ),
     GetPage(
       name: AppRoutes.licensingLocation,
       page: () => const LicensingLocationDetailsScreen(),
-      binding: BindingsBuilder(
-        () => Get.lazyPut(
-          () => LicensingLocationDetailsController(),
-          fenix: true,
-        ),
-      ),
+      binding: LicensingLocationDetailsBinding(),
     ),
   ];
 }

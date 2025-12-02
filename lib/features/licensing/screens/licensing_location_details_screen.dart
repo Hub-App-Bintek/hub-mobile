@@ -82,7 +82,8 @@ class LicensingLocationDetailsScreen
             padding: const EdgeInsets.all(16),
             child: PkpElevatedButton(
               text: 'Submit',
-              onPressed: enabled ? controller.goToForm : null,
+              // Change this line to call the new method
+              onPressed: enabled ? controller.submitLocationAndCreateProject : null,
             ),
           ),
         );

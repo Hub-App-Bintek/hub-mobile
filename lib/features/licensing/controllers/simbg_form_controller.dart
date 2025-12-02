@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/data/models/request/submit_simbg_request.dart';
+import 'package:pkp_hub/domain/usecases/permit/submit_simbg_form_use_case.dart';
 
 class SIMBGFormController extends BaseController {
   final RxBool isPrototype = true.obs;
@@ -47,6 +49,17 @@ class SIMBGFormController extends BaseController {
   List<String> get conditionOptions => const ['Baru', 'Renovasi'];
   List<String> get categoryOptions => const ['Rumah Tinggal', 'Rumah Usaha'];
 
+  final SubmitSimbgFormUseCase _submitSimbgFormUseCase;
+
+  SIMBGFormController(this._submitSimbgFormUseCase);
+
+  // Example project ID passed via arguments
+  late final String projectId;
+
+  // Assuming you have TextEditingControllers for all your form fields
+  final formKey = GlobalKey<FormState>();
+  // ... e.g., final provinceNameController = TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
@@ -75,6 +88,8 @@ class SIMBGFormController extends BaseController {
           subdistrict?.isNotEmpty == true ||
           village?.isNotEmpty == true;
     }
+
+    projectId = Get.arguments['projectId'] as String;
   }
 
   void togglePrototype(bool value) {
@@ -108,5 +123,72 @@ class SIMBGFormController extends BaseController {
     unitTotalController.dispose();
     occupantEstimateController.dispose();
     super.onClose();
+  }
+
+  // 2. The main submission method
+  void submitForm() async {
+    if (!formKey.currentState!.validate()) {
+      Get.snackbar('Error', 'Please fill all required fields correctly.');
+      return;
+    }
+
+    // 3. Build the request object from controller state/fields
+    final request = _buildRequest();
+
+    // 4. Call the use case with handleAsync
+    await handleAsync(
+          () => _submitSimbgFormUseCase(
+        SubmitSimbgFormParams(
+          projectId: projectId,
+          request: request,
+        ),
+      ),
+      onSuccess: (_) {
+        Get.back(); // Go back to the previous screen on success
+        Get.snackbar('Success', 'Form SIMBG has been submitted successfully.');
+      },
+      // onFailure is handled automatically by BaseController
+    );
+  }
+
+  SubmitSimbgRequest _buildRequest() {
+    if (isPrototype.value) {
+      // Gather all data from prototype form fields
+      const prototypeData = PrototypeForm(
+        type: "PROTOTYPE",
+        // Populate all fields from your TextEditControllers and state variables
+        nomorDokumenIzinPemanfaatanRuang: "DOC-789012", // Example
+        garisSempadanBangunanGsb: 4.0, // Example
+        // ... fill all other 20+ fields
+        jumlahUnitDibangun: 10,
+        menyesuaikanDesainPrototype: true,
+        jumlahPenghuni: 40, provinceName: '', regencyId: 0, regencyName: '', districtId: 0, districtName: '', villageId: 0, villageName: '', alamat: '', kondisiBangunanSaatIni: '', sudahMemilikiPbgImb: false, titikKoordinat: '', petaLokasiBangunanPdf: '', koefisienDasarBangunanKdb: 0, koefisienDasarBangunanKdbUnit: '', koefisienLantaiBangunanKlb: 0, koefisienLantaiBangunanKlbUnit: '', koefisienDasarHijauKdh: 0, koefisienDasarHijauKdhUnit: '', provinceId: 0,
+      );
+      return const SubmitSimbgRequest(
+        type: "PROTOTYPE",
+        prototypeForm: prototypeData,
+      );
+    } else {
+      // Gather all data from non-prototype form fields
+      const nonPrototypeData = NonPrototypeForm(
+        type: "NON_PROTOTYPE",
+        // Populate all fields from your TextEditControllers and state variables
+        nomorDokumenIzinPemanfaatanRuang: "DOC-123456", // Example
+        garisSempadanBangunanGsb: 5.0, // Example
+        // ... fill all other 20+ fields
+        kategoriBangunan: "RUMAH_TINGGAL",
+        memilikiBasement: false,
+        namaRumah: "Rumah Contoh A",
+        luasTotalBangunanPerUnit: 120.5,
+        tinggiBangunan: 10.0,
+        jumlahLantai: 2,
+        jumlahUnit: 1,
+        estimasiJumlahPenghuni: 4, provinceName: '', regencyId: 0, regencyName: '', districtId: 0, districtName: '', villageId: 0, villageName: '', alamat: '', kondisiBangunanSaatIni: '', sudahMemilikiPbgImb: false, titikKoordinat: '', petaLokasiBangunanPdf: '', koefisienDasarBangunanKdb: 0, koefisienDasarBangunanKdbUnit: '', koefisienLantaiBangunanKlb: 0, koefisienLantaiBangunanKlbUnit: '', koefisienDasarHijauKdh: 0, koefisienDasarHijauKdhUnit: '', provinceId: 0,
+      );
+      return const SubmitSimbgRequest(
+        type: "NON_PROTOTYPE",
+        nonPrototypeForm: nonPrototypeData,
+      );
+    }
   }
 }
