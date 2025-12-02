@@ -24,8 +24,5 @@ class SubmitSimbgFormParams {
   final String projectId;
   final SubmitSimbgRequest request;
 
-  SubmitSimbgFormParams({
-    required this.projectId,
-    required this.request,
-  });
+  SubmitSimbgFormParams({required this.projectId, required this.request});
 }

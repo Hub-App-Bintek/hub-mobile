@@ -9,15 +9,9 @@ class LicensingDetailsBinding extends Bindings {
   void dependencies() {
     // This assumes PermitRepository is already registered in a higher-level binding
     // (like RepositoryInjection or AppBinding) as per your guidelines.
-    Get.lazyPut(
-          () => GetPermitStatusUseCase(Get.find()),
-      fenix: true,
-    );
+    Get.lazyPut(() => GetPermitStatusUseCase(Get.find()), fenix: true);
 
     // The controller now requires the use case in its constructor.
-    Get.lazyPut(
-          () => LicensingDetailsController(Get.find()),
-      fenix: true,
-    );
+    Get.lazyPut(() => LicensingDetailsController(Get.find()), fenix: true);
   }
 }

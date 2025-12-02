@@ -12,7 +12,8 @@ part of 'submit_simbg_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 SubmitSimbgResponse _$SubmitSimbgResponseFromJson(Map<String, dynamic> json) {
   return _SubmitSimbgResponse.fromJson(json);
@@ -33,8 +34,9 @@ mixin _$SubmitSimbgResponse {
 /// @nodoc
 abstract class $SubmitSimbgResponseCopyWith<$Res> {
   factory $SubmitSimbgResponseCopyWith(
-          SubmitSimbgResponse value, $Res Function(SubmitSimbgResponse) then) =
-      _$SubmitSimbgResponseCopyWithImpl<$Res, SubmitSimbgResponse>;
+    SubmitSimbgResponse value,
+    $Res Function(SubmitSimbgResponse) then,
+  ) = _$SubmitSimbgResponseCopyWithImpl<$Res, SubmitSimbgResponse>;
   @useResult
   $Res call({String simbgId, String permitId, String status});
 }
@@ -56,29 +58,33 @@ class _$SubmitSimbgResponseCopyWithImpl<$Res, $Val extends SubmitSimbgResponse>
     Object? permitId = null,
     Object? status = null,
   }) {
-    return _then(_value.copyWith(
-      simbgId: null == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String,
-      permitId: null == permitId
-          ? _value.permitId
-          : permitId // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            simbgId: null == simbgId
+                ? _value.simbgId
+                : simbgId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            permitId: null == permitId
+                ? _value.permitId
+                : permitId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$SubmitSimbgResponseImplCopyWith<$Res>
     implements $SubmitSimbgResponseCopyWith<$Res> {
-  factory _$$SubmitSimbgResponseImplCopyWith(_$SubmitSimbgResponseImpl value,
-          $Res Function(_$SubmitSimbgResponseImpl) then) =
-      __$$SubmitSimbgResponseImplCopyWithImpl<$Res>;
+  factory _$$SubmitSimbgResponseImplCopyWith(
+    _$SubmitSimbgResponseImpl value,
+    $Res Function(_$SubmitSimbgResponseImpl) then,
+  ) = __$$SubmitSimbgResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String simbgId, String permitId, String status});
@@ -88,9 +94,10 @@ abstract class _$$SubmitSimbgResponseImplCopyWith<$Res>
 class __$$SubmitSimbgResponseImplCopyWithImpl<$Res>
     extends _$SubmitSimbgResponseCopyWithImpl<$Res, _$SubmitSimbgResponseImpl>
     implements _$$SubmitSimbgResponseImplCopyWith<$Res> {
-  __$$SubmitSimbgResponseImplCopyWithImpl(_$SubmitSimbgResponseImpl _value,
-      $Res Function(_$SubmitSimbgResponseImpl) _then)
-      : super(_value, _then);
+  __$$SubmitSimbgResponseImplCopyWithImpl(
+    _$SubmitSimbgResponseImpl _value,
+    $Res Function(_$SubmitSimbgResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -99,28 +106,33 @@ class __$$SubmitSimbgResponseImplCopyWithImpl<$Res>
     Object? permitId = null,
     Object? status = null,
   }) {
-    return _then(_$SubmitSimbgResponseImpl(
-      simbgId: null == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String,
-      permitId: null == permitId
-          ? _value.permitId
-          : permitId // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$SubmitSimbgResponseImpl(
+        simbgId: null == simbgId
+            ? _value.simbgId
+            : simbgId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        permitId: null == permitId
+            ? _value.permitId
+            : permitId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SubmitSimbgResponseImpl implements _SubmitSimbgResponse {
-  const _$SubmitSimbgResponseImpl(
-      {required this.simbgId, required this.permitId, required this.status});
+  const _$SubmitSimbgResponseImpl({
+    required this.simbgId,
+    required this.permitId,
+    required this.status,
+  });
 
   factory _$SubmitSimbgResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$SubmitSimbgResponseImplFromJson(json);
@@ -157,21 +169,22 @@ class _$SubmitSimbgResponseImpl implements _SubmitSimbgResponse {
   @pragma('vm:prefer-inline')
   _$$SubmitSimbgResponseImplCopyWith<_$SubmitSimbgResponseImpl> get copyWith =>
       __$$SubmitSimbgResponseImplCopyWithImpl<_$SubmitSimbgResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SubmitSimbgResponseImplToJson(
-      this,
-    );
+    return _$$SubmitSimbgResponseImplToJson(this);
   }
 }
 
 abstract class _SubmitSimbgResponse implements SubmitSimbgResponse {
-  const factory _SubmitSimbgResponse(
-      {required final String simbgId,
-      required final String permitId,
-      required final String status}) = _$SubmitSimbgResponseImpl;
+  const factory _SubmitSimbgResponse({
+    required final String simbgId,
+    required final String permitId,
+    required final String status,
+  }) = _$SubmitSimbgResponseImpl;
 
   factory _SubmitSimbgResponse.fromJson(Map<String, dynamic> json) =
       _$SubmitSimbgResponseImpl.fromJson;

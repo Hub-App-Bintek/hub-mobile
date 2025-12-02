@@ -77,7 +77,7 @@ class NetworkServiceInjection {
       fenix: true,
     );
     Get.lazyPut<PermitApiService>(
-          () => PermitApiService(Get.find<ApiClient>().dio),
+      () => PermitApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

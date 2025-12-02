@@ -49,5 +49,4 @@ class PermitRepositoryImpl implements PermitRepository {
     // The data source is responsible for handling try/catch and error mapping.
     return _remoteDataSource.getPermitStatus(projectId: projectId);
   }
-
 }

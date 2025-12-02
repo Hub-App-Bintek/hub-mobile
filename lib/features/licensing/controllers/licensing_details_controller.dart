@@ -50,7 +50,7 @@ class LicensingDetailsController extends BaseController {
   void fetchPermitStatus() async {
     // handleAsync will manage isLoading and errorMessage for you
     await handleAsync(
-          () => _getPermitStatusUseCase(projectId),
+      () => _getPermitStatusUseCase(projectId),
       onSuccess: (response) {
         permitStatus.value = response;
         // --- NEW: POPULATE STATE FROM API RESPONSE ---
@@ -97,23 +97,30 @@ class LicensingDetailsController extends BaseController {
   // --- NEW: HELPER FOR FORMATTING ---
   String _formatStatusTitle(String status) {
     // Example: 'UNDER_REVIEW' becomes 'Under Review'
-    return status.replaceAll('_', ' ').split(' ').map((word) {
-      if (word.isEmpty) return '';
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }).join(' ');
+    return status
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) {
+          if (word.isEmpty) return '';
+          return word[0].toUpperCase() + word.substring(1).toLowerCase();
+        })
+        .join(' ');
   }
 
   // --- NEW: HELPER TO MAP API RESPONSE TO UI STATE ---
   void _updateStateFromResponse(PermitStatusResponse response) {
     // 1. Update project details (assuming you add these fields to your UI)
-    projectName.value = response.permit.projectId; // Or a more descriptive name if available
+    projectName.value =
+        response.permit.projectId; // Or a more descriptive name if available
     licenseNumber.value = response.permit.simbgId ?? 'Belum Tersedia';
     // Note: The address is not in the status response, so it must be passed from the previous screen or fetched separately.
 
     // 2. Map the status history to your LicensingStep model
     final newSteps = response.status.history.map((historyItem) {
       return LicensingStep(
-        title: _formatStatusTitle(historyItem.status), // Helper to make title pretty
+        title: _formatStatusTitle(
+          historyItem.status,
+        ), // Helper to make title pretty
         subtitle: 'Dokumen ${historyItem.status.toLowerCase()}',
         date: DateFormat('dd MMM yyyy').format(historyItem.at.toLocal()),
         isCompleted: true, // All items in history are completed steps
@@ -132,7 +139,6 @@ class LicensingDetailsController extends BaseController {
         ),
       );
     }
-
 
     steps.assignAll(newSteps);
   }

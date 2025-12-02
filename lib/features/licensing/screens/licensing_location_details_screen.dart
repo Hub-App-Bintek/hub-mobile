@@ -49,7 +49,8 @@ class LicensingLocationDetailsScreen
                           controller: controller.cityController,
                           options: controller.cityOptions,
                           onChanged: controller.selectCity,
-                          enabled: controller.selectedProvince.value != null &&
+                          enabled:
+                              controller.selectedProvince.value != null &&
                               controller.regencies.isNotEmpty,
                         ),
                         const SizedBox(height: 16),
@@ -59,7 +60,8 @@ class LicensingLocationDetailsScreen
                           controller: controller.subdistrictController,
                           options: controller.subdistrictOptions,
                           onChanged: controller.selectSubdistrict,
-                          enabled: controller.selectedCity.value != null &&
+                          enabled:
+                              controller.selectedCity.value != null &&
                               controller.districts.isNotEmpty,
                         ),
                         const SizedBox(height: 16),
@@ -69,7 +71,8 @@ class LicensingLocationDetailsScreen
                           controller: controller.villageController,
                           options: controller.villageOptions,
                           onChanged: controller.selectVillage,
-                          enabled: controller.selectedSubdistrict.value != null &&
+                          enabled:
+                              controller.selectedSubdistrict.value != null &&
                               controller.villages.isNotEmpty,
                         ),
                         const SizedBox(height: 24),
@@ -83,15 +86,16 @@ class LicensingLocationDetailsScreen
         ),
       ),
       bottomNavigationBar: Obx(() {
-        final enabled =
-            controller.isFormValid.value;
+        final enabled = controller.isFormValid.value;
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: PkpElevatedButton(
               text: 'Submit',
               // Change this line to call the new method
-              onPressed: enabled ? controller.submitLocationAndCreateProject : null,
+              onPressed: enabled
+                  ? controller.submitLocationAndCreateProject
+                  : null,
             ),
           ),
         );
@@ -172,14 +176,14 @@ class _DropdownField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PkpTextFormField(
-        controller: controller,
-        labelText: label,
-        hintText: hint,
-        type: PkpTextFormFieldType.dropdown,
-        options: options,
-        onChanged: onChanged,
-        filled: true,
-        enabled: enabled,
-      );
+      controller: controller,
+      labelText: label,
+      hintText: hint,
+      type: PkpTextFormFieldType.dropdown,
+      options: options,
+      onChanged: onChanged,
+      filled: true,
+      enabled: enabled,
+    );
   }
 }

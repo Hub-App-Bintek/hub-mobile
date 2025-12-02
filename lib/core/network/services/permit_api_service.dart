@@ -18,11 +18,12 @@ abstract class PermitApiService {
   // Change the return type from Future<void> to Future<SubmitSimbgResponse>
   @POST(ApiEndpoints.submitPermit)
   Future<SubmitSimbgResponse> submitSimbgForm(
-      @Path("projectId") String projectId,
-      @Body() SubmitSimbgRequest request,);
+    @Path("projectId") String projectId,
+    @Body() SubmitSimbgRequest request,
+  );
 
   @GET(ApiEndpoints.statusPermit)
   Future<PermitStatusResponse> getPermitStatus(
-      @Path("projectId") String projectId,
-      );
+    @Path("projectId") String projectId,
+  );
 }

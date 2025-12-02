@@ -71,10 +71,8 @@ class StatusHistoryItem with _$StatusHistoryItem {
 // The 'assignedOffice' object
 @freezed
 class AssignedOffice with _$AssignedOffice {
-  const factory AssignedOffice({
-    String? regionCode,
-    String? officeName,
-  }) = _AssignedOffice;
+  const factory AssignedOffice({String? regionCode, String? officeName}) =
+      _AssignedOffice;
 
   factory AssignedOffice.fromJson(Map<String, dynamic> json) =>
       _$AssignedOfficeFromJson(json);
