@@ -70,7 +70,7 @@ class _PermitApiService implements PermitApiService {
     )
         .compose(
           _dio.options,
-          '/api/permits/${projectId}/status/{projectId}/status',
+          '/api/permits/${projectId}/status',
           queryParameters: queryParameters,
           data: _data,
         )

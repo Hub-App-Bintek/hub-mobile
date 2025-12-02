@@ -17,7 +17,7 @@ class SimbgFormBinding extends Bindings {
     // Get.lazyPut<PermitRemoteDataSource>(() => PermitRemoteDataSourceImpl(Get.find()));
     // Get.lazyPut<PermitRepository>(() => PermitRepositoryImpl(Get.find()));
 
-    Get.lazyPut(() => SubmitSimbgFormUseCase(Get.find<PermitRepository>()));
+    Get.lazyPut<SubmitSimbgFormUseCase>(() => SubmitSimbgFormUseCase(Get.find<PermitRepository>()));
     Get.lazyPut(() => SIMBGFormController(Get.find<SubmitSimbgFormUseCase>()));
   }
 }
