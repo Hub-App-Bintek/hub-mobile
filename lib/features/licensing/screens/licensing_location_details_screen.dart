@@ -29,45 +29,53 @@ class LicensingLocationDetailsScreen
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-                child: Column(
-                  children: [
-                    _DropdownField(
-                      label: 'Provinsi *',
-                      hint: 'Pilih provinsi',
-                      controller: controller.provinceController,
-                      options: controller.provinces,
-                      onChanged: controller.selectProvince,
-                      isLoading: controller.isLoadingRegions,
+                child: Obx(
+                  () => IgnorePointer(
+                    ignoring: controller.isLoadingRegions.value,
+                    child: Column(
+                      children: [
+                        _DropdownField(
+                          label: 'Provinsi *',
+                          hint: 'Pilih provinsi',
+                          controller: controller.provinceController,
+                          options: controller.provinceOptions,
+                          onChanged: controller.selectProvince,
+                          enabled: controller.provinces.isNotEmpty,
+                        ),
+                        const SizedBox(height: 16),
+                        _DropdownField(
+                          label: 'Kabupaten/Kota *',
+                          hint: 'Pilih kabupaten/kota',
+                          controller: controller.cityController,
+                          options: controller.cityOptions,
+                          onChanged: controller.selectCity,
+                          enabled: controller.selectedProvince.value != null &&
+                              controller.regencies.isNotEmpty,
+                        ),
+                        const SizedBox(height: 16),
+                        _DropdownField(
+                          label: 'Kecamatan *',
+                          hint: 'Pilih kecamatan',
+                          controller: controller.subdistrictController,
+                          options: controller.subdistrictOptions,
+                          onChanged: controller.selectSubdistrict,
+                          enabled: controller.selectedCity.value != null &&
+                              controller.districts.isNotEmpty,
+                        ),
+                        const SizedBox(height: 16),
+                        _DropdownField(
+                          label: 'Kelurahan *',
+                          hint: 'Pilih kelurahan',
+                          controller: controller.villageController,
+                          options: controller.villageOptions,
+                          onChanged: controller.selectVillage,
+                          enabled: controller.selectedSubdistrict.value != null &&
+                              controller.villages.isNotEmpty,
+                        ),
+                        const SizedBox(height: 24),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    _DropdownField(
-                      label: 'Kabupaten/Kota *',
-                      hint: 'Pilih kabupaten/kota',
-                      controller: controller.cityController,
-                      options: controller.cities,
-                      onChanged: controller.selectCity,
-                      isLoading: controller.isLoadingRegions,
-                    ),
-                    const SizedBox(height: 16),
-                    _DropdownField(
-                      label: 'Kecamatan *',
-                      hint: 'Pilih kecamatan',
-                      controller: controller.subdistrictController,
-                      options: controller.subdistricts,
-                      onChanged: controller.selectSubdistrict,
-                      isLoading: controller.isLoadingRegions,
-                    ),
-                    const SizedBox(height: 16),
-                    _DropdownField(
-                      label: 'Kelurahan *',
-                      hint: 'Pilih kelurahan',
-                      controller: controller.villageController,
-                      options: controller.villages,
-                      onChanged: controller.selectVillage,
-                      isLoading: controller.isLoadingRegions,
-                    ),
-                    const SizedBox(height: 24),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -76,7 +84,7 @@ class LicensingLocationDetailsScreen
       ),
       bottomNavigationBar: Obx(() {
         final enabled =
-            controller.isFormValid.value && !controller.isLoadingRegions.value;
+            controller.isFormValid.value;
         return SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -151,20 +159,19 @@ class _DropdownField extends StatelessWidget {
     required this.controller,
     required this.options,
     required this.onChanged,
-    required this.isLoading,
+    this.enabled = true,
   });
 
   final String label;
   final String hint;
   final TextEditingController controller;
-  final RxList<String> options;
+  final List<String> options;
   final ValueChanged<String?> onChanged;
-  final RxBool isLoading;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
-    return Obx(
-      () => PkpTextFormField(
+    return PkpTextFormField(
         controller: controller,
         labelText: label,
         hintText: hint,
@@ -172,8 +179,7 @@ class _DropdownField extends StatelessWidget {
         options: options,
         onChanged: onChanged,
         filled: true,
-        enabled: !isLoading.value,
-      ),
-    );
+        enabled: enabled,
+      );
   }
 }

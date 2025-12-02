@@ -46,7 +46,10 @@ class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
         'landArea': request.landArea.toString(),
         'income': request.income.toString(),
         'name': 'RUMAH-Generated-hardcoded first',
-        ''
+        'provinceId': request.provinceId.toString(),
+        'regencyId': request.regencyId.toString(),
+        'districtId': request.districtId.toString(),
+        'villageId': request.villageId.toString(),
       });
 
       if (incomeProofFile != null) {

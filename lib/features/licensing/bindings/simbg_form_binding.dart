@@ -1,6 +1,7 @@
 // lib/features/licensing/bindings/simbg_form_binding.dart
 
 import 'package:get/get.dart';
+import 'package:pkp_hub/domain/repositories/permit_repository.dart';
 import 'package:pkp_hub/domain/usecases/permit/submit_simbg_form_use_case.dart';
 import 'package:pkp_hub/features/licensing/controllers/simbg_form_controller.dart';
 // You might need to import the repository if it's not globally available
@@ -16,7 +17,7 @@ class SimbgFormBinding extends Bindings {
     // Get.lazyPut<PermitRemoteDataSource>(() => PermitRemoteDataSourceImpl(Get.find()));
     // Get.lazyPut<PermitRepository>(() => PermitRepositoryImpl(Get.find()));
 
-    Get.lazyPut(() => SubmitSimbgFormUseCase(Get.find()));
-    Get.lazyPut(() => SIMBGFormController(Get.find()));
+    Get.lazyPut(() => SubmitSimbgFormUseCase(Get.find<PermitRepository>()));
+    Get.lazyPut(() => SIMBGFormController(Get.find<SubmitSimbgFormUseCase>()));
   }
 }

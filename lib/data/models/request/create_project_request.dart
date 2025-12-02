@@ -12,6 +12,11 @@ class CreateProjectRequest with _$CreateProjectRequest {
     required String type, // 'PROTOTYPE' or 'NON_PROTOTYPE'
     required double landArea,
     required double income,
+    required String name,
+    required int provinceId,
+    required int regencyId,
+    required int districtId,
+    required int villageId,
   }) = _CreateProjectRequest;
 
   factory CreateProjectRequest.fromJson(Map<String, dynamic> json) =>
