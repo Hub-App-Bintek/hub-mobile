@@ -4,12 +4,14 @@ import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultant/consultant_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/location/location_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/permit/permit_remote_data_source.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/wallet/wallet_local_repository.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/location_repository.dart';
+import 'package:pkp_hub/domain/repositories/permit_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/repositories/survey_repository.dart';
 import 'package:pkp_hub/domain/repositories/contract_repository.dart';
@@ -106,6 +108,12 @@ class RepositoryInjection {
         Get.find<WalletNetworkDataSource>(),
         Get.find<WalletLocalDataSource>(),
       ),
+      fenix: true,
+    );
+
+    // Permit repository
+    Get.lazyPut<PermitRepository>(
+      () => PermitRepositoryImpl(Get.find<PermitRemoteDataSource>()),
       fenix: true,
     );
   }

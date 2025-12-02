@@ -21,7 +21,7 @@ abstract class PermitApiService {
       @Path("projectId") String projectId,
       @Body() SubmitSimbgRequest request,);
 
-  @GET('${ApiEndpoints.statusPermit}/{projectId}/status')
+  @GET(ApiEndpoints.statusPermit)
   Future<PermitStatusResponse> getPermitStatus(
       @Path("projectId") String projectId,
       );

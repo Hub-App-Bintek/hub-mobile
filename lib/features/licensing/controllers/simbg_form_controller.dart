@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/request/submit_simbg_request.dart';
 import 'package:pkp_hub/domain/usecases/permit/submit_simbg_form_use_case.dart';
@@ -127,10 +128,10 @@ class SIMBGFormController extends BaseController {
 
   // 2. The main submission method
   void submitForm() async {
-    if (!formKey.currentState!.validate()) {
-      Get.snackbar('Error', 'Please fill all required fields correctly.');
-      return;
-    }
+    // if (!formKey.currentState!.validate()) {
+    //   Get.snackbar('Error', 'Please fill all required fields correctly.');
+    //   return;
+    // }
 
     // 3. Build the request object from controller state/fields
     final request = _buildRequest();
@@ -144,7 +145,13 @@ class SIMBGFormController extends BaseController {
         ),
       ),
       onSuccess: (_) {
-        Get.back(); // Go back to the previous screen on success
+        Get.offAndToNamed(
+          AppRoutes.licensingDetails, // Your route for the details screen
+          arguments: {
+            'projectId': projectId, // Pass the projectId from the API response
+          },
+        );
+
         Get.snackbar('Success', 'Form SIMBG has been submitted successfully.');
       },
       // onFailure is handled automatically by BaseController

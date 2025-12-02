@@ -1,5 +1,6 @@
 // lib/features/licensing/controllers/licensing_controller.dart
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/get_projects_request.dart';
@@ -58,7 +59,13 @@ class LicensingController extends BaseController {
     if (selectedConsultationIndex.value >= 0) {
       final project = consultations[selectedConsultationIndex.value];
       selectedConsultationProject.value = project;
-      Get.back(); // Close the bottom sheet
+      Get.offAndToNamed(
+        AppRoutes.simbgForm,
+        arguments: {
+          'projectId': project.projectId,
+          'isPrototype': project.type!.toUpperCase() == "PROTOTYPE" ? true : false,
+        },
+      );
     }
   }
 }

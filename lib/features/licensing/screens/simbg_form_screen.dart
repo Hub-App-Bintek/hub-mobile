@@ -31,7 +31,7 @@ class SIMBGFormScreen extends GetView<SIMBGFormController> {
       bottomNavigationBar: SafeArea(
         child: PkpBottomActions(
           primaryText: 'Lanjutkan',
-          onPrimaryPressed: () {},
+          onPrimaryPressed: controller.submitForm,
         ),
       ),
     );
