@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/response/permit_status_response.dart';
 import 'package:pkp_hub/domain/usecases/permit/get_permit_status_use_case.dart';
+import 'package:pkp_hub/features/main/widgets/project_item.dart';
 
 class LicensingStep {
   LicensingStep({
@@ -29,6 +32,7 @@ class LicensingDetailsController extends BaseController {
   final RxBool hasSupportingDocument = false.obs;
 
   final RxList<LicensingStep> steps = <LicensingStep>[].obs;
+  final RxList<ProjectItem> documents = <ProjectItem>[].obs;
 
   // 1. Inject the use case
   final GetPermitStatusUseCase _getPermitStatusUseCase;
@@ -36,6 +40,7 @@ class LicensingDetailsController extends BaseController {
   LicensingDetailsController(this._getPermitStatusUseCase);
 
   final permitStatus = Rx<PermitStatusResponse?>(null);
+  bool get hasDocument => documents.isNotEmpty;
 
   @override
   void onInit() {
@@ -124,6 +129,28 @@ class LicensingDetailsController extends BaseController {
         subtitle: 'Dokumen ${historyItem.status.toLowerCase()}',
         date: DateFormat('dd MMM yyyy').format(historyItem.at.toLocal()),
         isCompleted: true, // All items in history are completed steps
+      );
+    }).toList();
+
+    final newDocuments = response.submissions.map((submission) {
+      String title = 'Dokumen Pengajuan Awal';
+      String content = 'Catatan tidak tersedia';
+      try {
+        // Safely decode the JSON string in permissionData
+        final data = json.decode(submission.permissionData) as Map<String, dynamic>;
+        title = _formatStatusTitle(data['step'] as String? ?? 'submission');
+        content = data['notes'] as String? ?? 'Catatan tidak tersedia';
+      } catch (e) {
+        // Handle cases where permissionData is not valid JSON
+        print('Error decoding permissionData: $e');
+      }
+
+      return ProjectItem(
+        title: title,
+        content: content,
+        date: DateFormat('dd MMM yyyy').format(submission.createdAt.toLocal()),
+        // Determine status based on logic (e.g., if it's the latest, it's awaiting)
+        status: ProjectItemStatus.approved, // Or another dynamic status
       );
     }).toList();
 
