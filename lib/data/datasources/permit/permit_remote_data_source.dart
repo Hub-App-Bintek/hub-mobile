@@ -60,9 +60,7 @@ class PermitRemoteDataSourceImpl implements PermitRemoteDataSource {
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
-      return Error(
-        ServerFailure(message: 'Failed to parse permit status: $e'),
-      );
+      return Error(ServerFailure(message: 'Failed to parse permit status: $e'));
     }
   }
 }

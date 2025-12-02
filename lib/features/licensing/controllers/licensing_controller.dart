@@ -24,7 +24,7 @@ class LicensingController extends BaseController {
     bool success = false;
 
     await handleAsync(
-          () => _getProjectsUseCase(
+      () => _getProjectsUseCase(
         const GetProjectsRequest(
           page: 0,
           size: 100,
@@ -34,7 +34,10 @@ class LicensingController extends BaseController {
       ),
       onSuccess: (response) {
         if (response.projects.isEmpty) {
-          Get.snackbar('Info', 'Tidak ada proyek konsultasi yang dapat dipilih.');
+          Get.snackbar(
+            'Info',
+            'Tidak ada proyek konsultasi yang dapat dipilih.',
+          );
           success = false;
         } else {
           consultations.assignAll(response.projects);
@@ -63,7 +66,9 @@ class LicensingController extends BaseController {
         AppRoutes.simbgForm,
         arguments: {
           'projectId': project.projectId,
-          'isPrototype': project.type!.toUpperCase() == "PROTOTYPE" ? true : false,
+          'isPrototype': project.type!.toUpperCase() == "PROTOTYPE"
+              ? true
+              : false,
         },
       );
     }

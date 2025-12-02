@@ -16,25 +16,27 @@ class LicensingLocationDetailsBinding extends Bindings {
     Get.lazyPut(() => CreateProjectUseCase(Get.find()));
 
     // Pass the use case into the controller
-    Get.lazyPut(() => LicensingLocationDetailsController(
+    Get.lazyPut(
+      () => LicensingLocationDetailsController(
         Get.find(),
         Get.find(),
         Get.find(),
         Get.find(),
         Get.find(),
-    ));
+      ),
+    );
 
     Get.lazyPut<GetProvincesUseCase>(
-          () => GetProvincesUseCase(Get.find<LocationRepository>()),
+      () => GetProvincesUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetRegenciesUseCase>(
-          () => GetRegenciesUseCase(Get.find<LocationRepository>()),
+      () => GetRegenciesUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetDistrictsUseCase>(
-          () => GetDistrictsUseCase(Get.find<LocationRepository>()),
+      () => GetDistrictsUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetVillagesUseCase>(
-          () => GetVillagesUseCase(Get.find<LocationRepository>()),
+      () => GetVillagesUseCase(Get.find<LocationRepository>()),
     );
 
     // ... other dependencies for this binding ...

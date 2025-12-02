@@ -204,7 +204,10 @@ class ProjectsController extends BaseController {
   }
 
   void openLicensingDetails(Project project) {
-    navigateTo(AppRoutes.licensingDetails, arguments: {'projectId': project.projectId});
+    navigateTo(
+      AppRoutes.licensingDetails,
+      arguments: {'projectId': project.projectId},
+    );
   }
 
   void _seedMockProjects() {

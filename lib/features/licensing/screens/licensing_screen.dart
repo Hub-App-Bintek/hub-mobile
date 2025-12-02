@@ -238,9 +238,9 @@ class _BuildingTypeTile extends StatelessWidget {
 }
 
 void _showConsultationPicker(
-    BuildContext context,
-    LicensingController controller,
-    ) async {
+  BuildContext context,
+  LicensingController controller,
+) async {
   // 1. Ask the controller to fetch the data.
   //    The controller will show a loading indicator on the main screen.
   final bool isDataAvailable = await controller.fetchConsultations();
@@ -274,13 +274,18 @@ void _showConsultationPicker(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 // Obx rebuilds the list when the controller's state changes.
                 child: Obx(
-                      () => Column(
-                    children: List.generate(controller.consultations.length, (index) {
+                  () => Column(
+                    children: List.generate(controller.consultations.length, (
+                      index,
+                    ) {
                       final item = controller.consultations[index];
-                      final selected = controller.selectedConsultationIndex.value == index;
+                      final selected =
+                          controller.selectedConsultationIndex.value == index;
                       return Padding(
                         padding: EdgeInsets.only(
-                          bottom: index < controller.consultations.length - 1 ? 16.0 : 0,
+                          bottom: index < controller.consultations.length - 1
+                              ? 16.0
+                              : 0,
                         ),
                         child: ProjectInfoCard(
                           title: item.name ?? 'No Name',
@@ -303,7 +308,7 @@ void _showConsultationPicker(
               ),
             ),
             Obx(
-                  () => PkpBottomActions(
+              () => PkpBottomActions(
                 primaryText: 'Pilih',
                 onPrimaryPressed: controller.confirmSelection,
                 primaryEnabled: controller.selectedConsultationIndex.value >= 0,

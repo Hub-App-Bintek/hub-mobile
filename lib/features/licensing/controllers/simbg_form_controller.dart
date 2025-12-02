@@ -138,11 +138,8 @@ class SIMBGFormController extends BaseController {
 
     // 4. Call the use case with handleAsync
     await handleAsync(
-          () => _submitSimbgFormUseCase(
-        SubmitSimbgFormParams(
-          projectId: projectId,
-          request: request,
-        ),
+      () => _submitSimbgFormUseCase(
+        SubmitSimbgFormParams(projectId: projectId, request: request),
       ),
       onSuccess: (_) {
         Get.offAndToNamed(
@@ -169,7 +166,26 @@ class SIMBGFormController extends BaseController {
         // ... fill all other 20+ fields
         jumlahUnitDibangun: 10,
         menyesuaikanDesainPrototype: true,
-        jumlahPenghuni: 40, provinceName: '', regencyId: 0, regencyName: '', districtId: 0, districtName: '', villageId: 0, villageName: '', alamat: '', kondisiBangunanSaatIni: '', sudahMemilikiPbgImb: false, titikKoordinat: '', petaLokasiBangunanPdf: '', koefisienDasarBangunanKdb: 0, koefisienDasarBangunanKdbUnit: '', koefisienLantaiBangunanKlb: 0, koefisienLantaiBangunanKlbUnit: '', koefisienDasarHijauKdh: 0, koefisienDasarHijauKdhUnit: '', provinceId: 0,
+        jumlahPenghuni: 40,
+        provinceName: '',
+        regencyId: 0,
+        regencyName: '',
+        districtId: 0,
+        districtName: '',
+        villageId: 0,
+        villageName: '',
+        alamat: '',
+        kondisiBangunanSaatIni: '',
+        sudahMemilikiPbgImb: false,
+        titikKoordinat: '',
+        petaLokasiBangunanPdf: '',
+        koefisienDasarBangunanKdb: 0,
+        koefisienDasarBangunanKdbUnit: '',
+        koefisienLantaiBangunanKlb: 0,
+        koefisienLantaiBangunanKlbUnit: '',
+        koefisienDasarHijauKdh: 0,
+        koefisienDasarHijauKdhUnit: '',
+        provinceId: 0,
       );
       return const SubmitSimbgRequest(
         type: "PROTOTYPE",
@@ -190,7 +206,26 @@ class SIMBGFormController extends BaseController {
         tinggiBangunan: 10.0,
         jumlahLantai: 2,
         jumlahUnit: 1,
-        estimasiJumlahPenghuni: 4, provinceName: '', regencyId: 0, regencyName: '', districtId: 0, districtName: '', villageId: 0, villageName: '', alamat: '', kondisiBangunanSaatIni: '', sudahMemilikiPbgImb: false, titikKoordinat: '', petaLokasiBangunanPdf: '', koefisienDasarBangunanKdb: 0, koefisienDasarBangunanKdbUnit: '', koefisienLantaiBangunanKlb: 0, koefisienLantaiBangunanKlbUnit: '', koefisienDasarHijauKdh: 0, koefisienDasarHijauKdhUnit: '', provinceId: 0,
+        estimasiJumlahPenghuni: 4,
+        provinceName: '',
+        regencyId: 0,
+        regencyName: '',
+        districtId: 0,
+        districtName: '',
+        villageId: 0,
+        villageName: '',
+        alamat: '',
+        kondisiBangunanSaatIni: '',
+        sudahMemilikiPbgImb: false,
+        titikKoordinat: '',
+        petaLokasiBangunanPdf: '',
+        koefisienDasarBangunanKdb: 0,
+        koefisienDasarBangunanKdbUnit: '',
+        koefisienLantaiBangunanKlb: 0,
+        koefisienLantaiBangunanKlbUnit: '',
+        koefisienDasarHijauKdh: 0,
+        koefisienDasarHijauKdhUnit: '',
+        provinceId: 0,
       );
       return const SubmitSimbgRequest(
         type: "NON_PROTOTYPE",

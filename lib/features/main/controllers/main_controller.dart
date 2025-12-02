@@ -56,7 +56,16 @@ class MainController extends BaseController {
 
   void _switchTab(int index) {
     selectedIndex.value = index;
-    pageController.jumpToPage(index);
+    if (pageController.hasClients) {
+      pageController.jumpToPage(index);
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (pageController.hasClients) {
+        pageController.jumpToPage(index);
+      }
+    });
   }
 
   void _notifyPageVisible(int index) {

@@ -54,12 +54,12 @@ class LicensingLocationDetailsController extends BaseController {
   final GetVillagesUseCase _getVillagesUseCase;
 
   LicensingLocationDetailsController(
-      this._createProjectUseCase,
-      this._getProvincesUseCase,
-      this._getRegenciesUseCase,
-      this._getDistrictsUseCase,
-      this._getVillagesUseCase,
-      );
+    this._createProjectUseCase,
+    this._getProvincesUseCase,
+    this._getRegenciesUseCase,
+    this._getDistrictsUseCase,
+    this._getVillagesUseCase,
+  );
 
   List<String> get provinceOptions =>
       provinces.map((province) => province.name).toList();
@@ -90,7 +90,7 @@ class LicensingLocationDetailsController extends BaseController {
 
   Future<void> _fetchProvinces() async {
     await handleAsync<List<Province>>(
-          () => _getProvincesUseCase(),
+      () => _getProvincesUseCase(),
       onSuccess: provinces.assignAll,
       onFailure: showError,
     );
@@ -99,7 +99,7 @@ class LicensingLocationDetailsController extends BaseController {
   Future<void> _fetchRegencies(int provinceId) async {
     _resetCitySelection();
     await handleAsync<List<Regency>>(
-          () => _getRegenciesUseCase(provinceId),
+      () => _getRegenciesUseCase(provinceId),
       onSuccess: regencies.assignAll,
       onFailure: showError,
     );
@@ -108,7 +108,7 @@ class LicensingLocationDetailsController extends BaseController {
   Future<void> _fetchDistricts(int regencyId) async {
     _resetSubdistrictSelection();
     await handleAsync<List<District>>(
-          () => _getDistrictsUseCase(regencyId),
+      () => _getDistrictsUseCase(regencyId),
       onSuccess: districts.assignAll,
       onFailure: showError,
     );
@@ -117,7 +117,7 @@ class LicensingLocationDetailsController extends BaseController {
   Future<void> _fetchVillages(int districtId) async {
     _resetVillageSelection();
     await handleAsync<List<Village>>(
-          () => _getVillagesUseCase(districtId),
+      () => _getVillagesUseCase(districtId),
       onSuccess: villages.assignAll,
       onFailure: showError,
     );
@@ -126,10 +126,10 @@ class LicensingLocationDetailsController extends BaseController {
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
-            isProvinceValid.value &&
-            isCityValid.value &&
-            isSubdistrictValid.value &&
-            isVillageValid.value;
+        isProvinceValid.value &&
+        isCityValid.value &&
+        isSubdistrictValid.value &&
+        isVillageValid.value;
 
     debugPrint('Form validity updated: $_isFormValid');
   }
@@ -206,28 +206,28 @@ class LicensingLocationDetailsController extends BaseController {
   Province? _findProvinceByName(String value) {
     final query = value.trim().toLowerCase();
     return provinces.firstWhereOrNull(
-          (province) => province.name.toLowerCase() == query,
+      (province) => province.name.toLowerCase() == query,
     );
   }
 
   Regency? _findRegencyByName(String value) {
     final query = value.trim().toLowerCase();
     return regencies.firstWhereOrNull(
-          (regency) => regency.name.toLowerCase() == query,
+      (regency) => regency.name.toLowerCase() == query,
     );
   }
 
   District? _findDistrictByName(String value) {
     final query = value.trim().toLowerCase();
     return districts.firstWhereOrNull(
-          (district) => district.name.toLowerCase() == query,
+      (district) => district.name.toLowerCase() == query,
     );
   }
 
   Village? _findVillageByName(String value) {
     final query = value.trim().toLowerCase();
     return villages.firstWhereOrNull(
-          (village) => village.name.toLowerCase() == query,
+      (village) => village.name.toLowerCase() == query,
     );
   }
 
@@ -301,7 +301,8 @@ class LicensingLocationDetailsController extends BaseController {
     //    This is an example structure.
     final request = CreateProjectRequest(
       type: isPrototype ? 'PROTOTYPE' : 'NON_PROTOTYPE',
-      locationDetail: '${villageController.text}, ${subdistrictController.text}, ${cityController.text}, ${provinceController.text}',
+      locationDetail:
+          '${villageController.text}, ${subdistrictController.text}, ${cityController.text}, ${provinceController.text}',
       landArea: 1,
       income: 1,
       latitude: selectedLocation.value!.latitude,
@@ -314,11 +315,9 @@ class LicensingLocationDetailsController extends BaseController {
       // ... include IDs and any other required fields ...
     );
 
-
-
     // 4. Use handleAsync to call the use case
     await handleAsync(
-          () => _createProjectUseCase.repository.createProject(request),
+      () => _createProjectUseCase.repository.createProject(request),
       onSuccess: (response) {
         // 5. On success, navigate to the SIMBG form with the new projectId
         Get.toNamed(

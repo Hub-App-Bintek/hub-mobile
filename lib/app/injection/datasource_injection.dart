@@ -157,10 +157,10 @@ class DataSourceInjection {
 
     // Permit datasource
     Get.lazyPut<PermitRemoteDataSource>(
-          () => PermitRemoteDataSourceImpl(
-            Get.find<ApiClient>(),
-            Get.find<PermitApiService>(),
-          ),
+      () => PermitRemoteDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<PermitApiService>(),
+      ),
       fenix: true,
     );
   }
