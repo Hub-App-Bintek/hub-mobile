@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
+import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_confirmation_controller.dart';
 
 class ConsultationConfirmationScreen
     extends GetView<ConsultationConfirmationController> {
   const ConsultationConfirmationScreen({super.key});
-
-  static const _mapPlaceholder =
-      'https://www.figma.com/api/mcp/asset/809374c9-e2d2-4c8a-9c41-eae2190e27e9';
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +27,17 @@ class ConsultationConfirmationScreen
         actions: [
           PkpAppBarAction(
             icon: Icons.chat_bubble_outline,
-            onPressed: () {},
+            onPressed: controller.startChatWithHomeOwner,
             color: AppColors.white,
+            iconWidget: SvgPicture.asset(
+              AppIcons.chat,
+              width: 24,
+              height: 24,
+              colorFilter: const ColorFilter.mode(
+                AppColors.white,
+                BlendMode.srcIn,
+              ),
+            ),
           ),
         ],
       ),
@@ -85,6 +95,64 @@ class ConsultationConfirmationScreen
                         ),
                       ),
                     ),
+                    const SizedBox(height: 12),
+                    Obx(() {
+                      if (!controller.requiresSurvey) {
+                        return const SizedBox.shrink();
+                      }
+
+                      final dateText =
+                          controller.selectedSurveyDate.value != null
+                          ? DateFormat(
+                              'dd MMM yyyy',
+                            ).format(controller.selectedSurveyDate.value!)
+                          : 'Pilih tanggal';
+                      final timeText =
+                          controller.selectedSurveyTime.value != null
+                          ? controller.selectedSurveyTime.value!.format(context)
+                          : 'Pilih waktu';
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tanggal Survey',
+                            style: AppTextStyles.bodyM.copyWith(
+                              color: AppColors.neutralDarkest,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: controller.pickSurveyDate,
+                            child: AbsorbPointer(
+                              child: PkpTextFormField(
+                                hintText: dateText,
+                                type: PkpTextFormFieldType.datetime,
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Waktu Survey',
+                            style: AppTextStyles.bodyM.copyWith(
+                              color: AppColors.neutralDarkest,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          GestureDetector(
+                            onTap: controller.pickSurveyTime,
+                            child: AbsorbPointer(
+                              child: PkpTextFormField(
+                                hintText: timeText,
+                                type: PkpTextFormFieldType.time,
+                                filled: true,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -99,9 +167,27 @@ class ConsultationConfirmationScreen
   Widget _buildMap() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
-      child: AspectRatio(
-        aspectRatio: 393 / 220,
-        child: Image.network(_mapPlaceholder, fit: BoxFit.cover),
+      child: SizedBox(
+        height: 220,
+        child: GoogleMap(
+          initialCameraPosition: const CameraPosition(
+            target: LatLng(-6.2, 106.816666),
+            zoom: 15,
+          ),
+          myLocationEnabled: false,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          scrollGesturesEnabled: false,
+          rotateGesturesEnabled: false,
+          tiltGesturesEnabled: false,
+          zoomGesturesEnabled: false,
+          markers: {
+            const Marker(
+              markerId: MarkerId('project_location'),
+              position: LatLng(-6.2, 106.816666),
+            ),
+          },
+        ),
       ),
     );
   }

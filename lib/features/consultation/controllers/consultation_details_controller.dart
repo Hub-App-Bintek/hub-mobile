@@ -1,12 +1,16 @@
+import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
-import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
@@ -39,12 +43,30 @@ class ConsultationDetailsController extends BaseController {
   final RxList<ConsultationInvoiceItem> invoices =
       <ConsultationInvoiceItem>[].obs;
 
+  final RxnString selectedContractName = RxnString();
+  final List<TextEditingController> termAmountControllers = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
+  final List<TextEditingController> termDueDateControllers = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
+  final List<TextEditingController> draftFileControllers = List.generate(
+    3,
+    (_) => TextEditingController(),
+  );
+  final List<RxnString> draftFileNames = List.generate(3, (_) => RxnString());
+  final TextEditingController draftNotesController = TextEditingController();
+
   ConsultationDetailsController(
     this._userStorage,
     this._createDirectChatRoomUseCase,
   );
 
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
+
+  final TextEditingController contractController = TextEditingController();
 
   String sectionTitle(ConsultationDetailStep step) {
     switch (step) {
@@ -94,25 +116,174 @@ class ConsultationDetailsController extends BaseController {
   // --- Mocked download helpers ---
 
   Future<void> downloadContract(ConsultationContractItem item) async {
-    _showDownloadSnack('Dokumen kontrak "${item.title}" diunduh (mock)');
+    _showDownloadSnack('Dokumen kontrak "${item.title}" berhasil diunduh');
   }
 
   Future<void> downloadDesign(ConsultationDocumentItem item) async {
-    _showDownloadSnack('Dokumen desain "${item.title}" diunduh (mock)');
+    _showDownloadSnack('Dokumen desain "${item.title}" berhasil diunduh');
   }
 
   void _showDownloadSnack(String message) {
-    Get.snackbar('Unduh Dokumen', message, snackPosition: SnackPosition.BOTTOM);
+    Get.snackbar(
+      'Unduh Dokumen',
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.successDark,
+      colorText: AppColors.white,
+    );
   }
 
   bool get isConsultant => userRole.value == UserRole.consultant;
 
   void downloadContractTemplate() {
-    _showDownloadSnack('Template kontrak diunduh (mock)');
+    _showDownloadSnack('Template kontrak berhasil diunduh');
+  }
+
+  void pickContractFile() {
+    pickContractFileCustom();
+  }
+
+  Future<String?> pickContractFileCustom() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+      withData: false,
+    );
+    final file = result?.files.single;
+    if (file == null) return null;
+
+    final name = file.name;
+    selectedContractName.value = name;
+    contractController.text = name;
+    return name;
+  }
+
+  void submitContractUpload() {
+    markContractUploaded();
   }
 
   void markContractUploaded() {
-    hasUploadedContract.value = true;
+    _updateHasUploadedContract();
+  }
+
+  void submitPaymentTerms() {
+    _addUploadedContract();
+    _updateHasUploadedContract();
+  }
+
+  void approveLatestContract() {
+    if (contracts.isEmpty) return;
+    final last = contracts.last;
+    contracts[contracts.length - 1] = ConsultationContractItem(
+      title: last.title,
+      dateLabel: last.dateLabel,
+      status: ContractStatus.approvedNeedSign,
+    );
+    _updateHasUploadedContract();
+  }
+
+  void reviseLatestContract() {
+    if (contracts.isEmpty) return;
+    final last = contracts.last;
+    contracts[contracts.length - 1] = ConsultationContractItem(
+      title: last.title,
+      dateLabel: last.dateLabel,
+      status: ContractStatus.needsRevision,
+    );
+    _updateHasUploadedContract();
+  }
+
+  void approveLatestDraft() {
+    if (draftDesigns.isEmpty) return;
+    final last = draftDesigns.last;
+    draftDesigns[draftDesigns.length - 1] = ConsultationDocumentItem(
+      title: last.title,
+      dateLabel: last.dateLabel,
+      status: DesignStatus.approved,
+    );
+    finalDesigns.add(
+      ConsultationDocumentItem(
+        title: last.title,
+        dateLabel: last.dateLabel,
+        status: DesignStatus.approved,
+      ),
+    );
+  }
+
+  void reviseLatestDraft() {
+    if (draftDesigns.isEmpty) return;
+    final last = draftDesigns.last;
+    draftDesigns[draftDesigns.length - 1] = ConsultationDocumentItem(
+      title: last.title,
+      dateLabel: last.dateLabel,
+      status: DesignStatus.needsRevision,
+    );
+  }
+
+  Future<String?> pickDraftFileCustom(int index) async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: const ['pdf'],
+      withData: false,
+    );
+    final file = result?.files.single;
+    if (file == null) return null;
+
+    final name = file.name;
+    draftFileNames[index].value = name;
+    draftFileControllers[index].text = name;
+    return name;
+  }
+
+  void submitDraftDesigns() {
+    final now = DateFormat('dd MMM yyyy').format(DateTime.now());
+    final names = draftFileControllers
+        .map((c) => c.text.trim())
+        .where((t) => t.isNotEmpty)
+        .toList();
+    final title = names.isNotEmpty
+        ? 'Draft Desain (${names.length} file)'
+        : 'Draft Desain';
+
+    draftDesigns.add(
+      _designItem(title, DesignStatus.awaitingApproval, date: now),
+    );
+  }
+
+  void _addUploadedContract() {
+    final title = selectedContractName.value?.isNotEmpty == true
+        ? selectedContractName.value!
+        : 'Kontrak Baru';
+    contracts.add(
+      _contractItem(
+        title,
+        ContractStatus.awaitingApproval,
+        date: DateFormat('dd MMM yyyy').format(DateTime.now()),
+      ),
+    );
+    _updateHasUploadedContract();
+  }
+
+  void _updateHasUploadedContract() {
+    hasUploadedContract.value =
+        contracts.isNotEmpty &&
+        contracts.last.status == ContractStatus.awaitingApproval;
+  }
+
+  Future<void> selectTermDueDate(int index) async {
+    final ctx = Get.context;
+    if (ctx == null) return;
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: ctx,
+      initialDate: now,
+      firstDate: now,
+      lastDate: DateTime(now.year + 5),
+    );
+    if (picked != null) {
+      final formatted = DateFormat('dd MMM yyyy').format(picked);
+      termDueDateControllers[index].text = formatted;
+    }
   }
 
   Future<void> startChatWithConsultant() async {
@@ -399,5 +570,7 @@ extension on ConsultationDetailsController {
       default:
         break;
     }
+
+    _updateHasUploadedContract();
   }
 }
