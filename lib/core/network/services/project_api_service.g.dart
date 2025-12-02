@@ -32,7 +32,7 @@ class _ProjectApiService implements ProjectApiService {
           )
           .compose(
             _dio.options,
-            '/api/projects/v2',
+            '/api/projects',
             queryParameters: queryParameters,
             data: _data,
           )

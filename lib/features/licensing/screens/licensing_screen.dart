@@ -238,16 +238,26 @@ class _BuildingTypeTile extends StatelessWidget {
 }
 
 void _showConsultationPicker(
-  BuildContext context,
-  LicensingController controller,
-) {
-  controller.showBottomSheet(
-    SafeArea(
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
+    BuildContext context,
+    LicensingController controller,
+    ) async {
+  // 1. Ask the controller to fetch the data.
+  //    The controller will show a loading indicator on the main screen.
+  final bool isDataAvailable = await controller.fetchConsultations();
+
+  // 2. Only show the bottom sheet if the data fetch was successful.
+  if (!isDataAvailable) return;
+
+  // 3. Show the bottom sheet, which is pure UI and reads state from the controller.
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (_) {
+      return SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -259,66 +269,50 @@ void _showConsultationPicker(
               titleTextColor: AppColors.neutralDarkest,
             ),
             const SizedBox(height: 16),
-            SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  ...List.generate(controller.consultations.length, (index) {
-                    final item = controller.consultations[index];
-                    return Obx(() {
-                      final selected =
-                          controller.selectedConsultationIndex.value == index;
-                      return index < controller.consultations.length - 1
-                          ? Column(
-                              children: [
-                                ProjectInfoCard(
-                                  title: item.title,
-                                  primaryLine: ProjectInfoLine(
-                                    icon: Icons.calendar_today_outlined,
-                                    text: item.dateLabel,
-                                  ),
-                                  secondaryLine: ProjectInfoLine(
-                                    icon: Icons.place_outlined,
-                                    text: item.location,
-                                  ),
-                                  onTap: () =>
-                                      controller.selectConsultation(index),
-                                  isSelected: selected,
-                                ),
-                                const SizedBox(height: 16),
-                              ],
-                            )
-                          : ProjectInfoCard(
-                              title: item.title,
-                              primaryLine: ProjectInfoLine(
-                                icon: Icons.calendar_today_outlined,
-                                text: item.dateLabel,
-                              ),
-                              secondaryLine: ProjectInfoLine(
-                                icon: Icons.place_outlined,
-                                text: item.location,
-                              ),
-                              onTap: () => controller.selectConsultation(index),
-                              isSelected: selected,
-                            );
-                    });
-                  }),
-                ],
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                // Obx rebuilds the list when the controller's state changes.
+                child: Obx(
+                      () => Column(
+                    children: List.generate(controller.consultations.length, (index) {
+                      final item = controller.consultations[index];
+                      final selected = controller.selectedConsultationIndex.value == index;
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: index < controller.consultations.length - 1 ? 16.0 : 0,
+                        ),
+                        child: ProjectInfoCard(
+                          title: item.name ?? 'No Name',
+                          primaryLine: ProjectInfoLine(
+                            icon: Icons.calendar_today_outlined,
+                            // Use your actual data model fields
+                            text: item.status ?? 'No Status',
+                          ),
+                          secondaryLine: ProjectInfoLine(
+                            icon: Icons.place_outlined,
+                            text: item.location?.address ?? 'No Location',
+                          ),
+                          onTap: () => controller.selectConsultation(index),
+                          isSelected: selected,
+                        ),
+                      );
+                    }),
+                  ),
+                ),
               ),
             ),
-            Obx(() {
-              return PkpBottomActions(
+            Obx(
+                  () => PkpBottomActions(
                 primaryText: 'Pilih',
-                onPrimaryPressed: () {},
+                onPrimaryPressed: controller.confirmSelection,
                 primaryEnabled: controller.selectedConsultationIndex.value >= 0,
-              );
-            }),
+              ),
+            ),
           ],
         ),
-      ),
-    ),
+      );
+    },
   );
 }
 

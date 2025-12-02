@@ -1,40 +1,64 @@
+// lib/features/licensing/controllers/licensing_controller.dart
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/data/models/request/get_projects_request.dart';
+import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 
 class LicensingController extends BaseController {
+  final GetProjectsUseCase _getProjectsUseCase;
+  LicensingController(this._getProjectsUseCase);
+
+  // --- STATE ---
+  final RxList<Project> consultations = <Project>[].obs;
+  final Rx<Project?> selectedConsultationProject = Rx<Project?>(null);
   final RxInt selectedConsultationIndex = (-1).obs;
 
-  final List<ConsultationSummary> consultations = const [
-    ConsultationSummary(
-      title: 'Renovasi Rumah Type 45',
-      dateLabel: '20 Nov 2025',
-      location: 'DKI Jakarta',
-    ),
-    ConsultationSummary(
-      title: 'Pembangunan Rumah 2 Lantai',
-      dateLabel: '18 Nov 2025',
-      location: 'Jawa Barat',
-    ),
-    ConsultationSummary(
-      title: 'Renovasi Dapur Modern',
-      dateLabel: '15 Nov 2025',
-      location: 'DKI Jakarta',
-    ),
-  ];
+  // --- LOGIC ---
+  // Fetches data and populates the state. Returns true on success.
+  Future<bool> fetchConsultations() async {
+    // Reset state before fetching
+    consultations.clear();
+    selectedConsultationIndex.value = -1;
+    bool success = false;
 
+    await handleAsync(
+          () => _getProjectsUseCase(
+        const GetProjectsRequest(
+          page: 0,
+          size: 100,
+          type: 'PROTOTYPE',
+          status: 'ACTIVE',
+        ),
+      ),
+      onSuccess: (response) {
+        if (response.projects.isEmpty) {
+          Get.snackbar('Info', 'Tidak ada proyek konsultasi yang dapat dipilih.');
+          success = false;
+        } else {
+          consultations.assignAll(response.projects);
+          success = true;
+        }
+      },
+      onFailure: (failure) {
+        // The BaseController's showError is called automatically by handleAsync's default behavior
+        success = false;
+      },
+    );
+    return success;
+  }
+
+  // Manages the selection state within the bottom sheet
   void selectConsultation(int index) {
     selectedConsultationIndex.value = index;
   }
-}
 
-class ConsultationSummary {
-  const ConsultationSummary({
-    required this.title,
-    required this.dateLabel,
-    required this.location,
-  });
-
-  final String title;
-  final String dateLabel;
-  final String location;
+  // Confirms the selection and updates the main screen's state
+  void confirmSelection() {
+    if (selectedConsultationIndex.value >= 0) {
+      final project = consultations[selectedConsultationIndex.value];
+      selectedConsultationProject.value = project;
+      Get.back(); // Close the bottom sheet
+    }
+  }
 }

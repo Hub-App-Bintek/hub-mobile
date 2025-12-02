@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/data/models/request/create_project_request.dart';
+import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 
 class LicensingLocationDetailsController extends BaseController {
   bool isPrototype = true;
@@ -20,6 +22,10 @@ class LicensingLocationDetailsController extends BaseController {
   final Rxn<LatLng> selectedLocation = Rxn<LatLng>();
   GoogleMapController? mapController;
   static const LatLng _defaultLocation = LatLng(-6.2088, 106.8456);
+
+  final CreateProjectUseCase _createProjectUseCase;
+
+  LicensingLocationDetailsController(this._createProjectUseCase);
 
   @override
   void onInit() {
@@ -78,6 +84,43 @@ class LicensingLocationDetailsController extends BaseController {
   void updatePosition(LatLng position) {
     selectedLocation.value = position;
     _updateFormValid();
+  }
+
+  // 2. Rename the submit method for clarity and implement the logic
+  //    The old 'goToForm' is now 'submitLocationAndCreateProject'
+  void submitLocationAndCreateProject() async {
+    // Optional: Add a final check, though the button is disabled
+    if (!isFormValid.value) return;
+
+    // 3. Build the request object from the controller's state
+    //    You need to map your selected dropdown values and LatLng to a request model.
+    //    This is an example structure.
+    final request = CreateProjectRequest(
+      type: isPrototype ? 'PROTOTYPE' : 'NON_PROTOTYPE',
+      locationDetail: '${villageController.text}, ${subdistrictController.text}, ${cityController.text}, ${provinceController.text}',
+      landArea: 0,
+      income: 0,
+      latitude: selectedLocation.value!.latitude,
+      longitude: selectedLocation.value!.longitude,
+      // ... include IDs and any other required fields ...
+    );
+
+
+
+    // 4. Use handleAsync to call the use case
+    await handleAsync(
+          () => _createProjectUseCase.repository.createProject(request),
+      onSuccess: (response) {
+        // 5. On success, navigate to the SIMBG form with the new projectId
+        Get.toNamed(
+          AppRoutes.simbgForm,
+          arguments: {
+            'projectId': response.projectId, // Get projectId from the response
+          },
+        );
+      },
+      // onFailure is handled automatically by BaseController (shows an error snackbar)
+    );
   }
 
   void goToForm() {

@@ -13,7 +13,7 @@ abstract class ProjectApiService {
   factory ProjectApiService(Dio dio, {String? baseUrl}) = _ProjectApiService;
 
   @MultiPart()
-  @POST(ApiEndpoints.projects)
+  @POST(ApiEndpoints.projectsV1)
   Future<CreateProjectResponse> createProject(@Body() FormData body);
 
   @GET(ApiEndpoints.projects)

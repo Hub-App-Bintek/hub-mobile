@@ -10,6 +10,7 @@ abstract class ApiEndpoints {
   // TODO: Update this later since it doesn't exist in the backend yet.
   static const String resendOtp = '/api/auth/resend-otp';
   static const projects = '/api/projects/v2';
+  static const projectsV1 = '/api/projects';
 
   // --- User ---
   static const String consultants = '/api/users/consultants';
@@ -103,6 +104,10 @@ abstract class ApiEndpoints {
 
   // --- Wallet ---
   static const String walletBalance = '/api/wallet/balance';
+
+  // --- Permit ---
+  static const String submitPermit = '/api/permits/{projectId}/submit';
+  static const String statusPermit = '/api/permits/{projectId}/status';
 
   // Add other endpoints here as the app grows, for example:
   // static const String forgotPassword = '/api/auth/forgot-password';
