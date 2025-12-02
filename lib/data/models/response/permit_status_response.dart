@@ -12,10 +12,27 @@ class PermitStatusResponse with _$PermitStatusResponse {
   const factory PermitStatusResponse({
     required PermitDetails permit,
     required StatusDetails status,
+    @Default([]) List<SubmissionItem> submissions,
   }) = _PermitStatusResponse;
 
   factory PermitStatusResponse.fromJson(Map<String, dynamic> json) =>
       _$PermitStatusResponseFromJson(json);
+}
+
+@freezed
+class SubmissionItem with _$SubmissionItem {
+  const factory SubmissionItem({
+    required String id,
+    required String permitId,
+    // Assuming permissionData is a JSON string, we'll handle it as such.
+    // If it were a structured object, we'd define another model for it.
+    required String permissionData,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) = _SubmissionItem;
+
+  factory SubmissionItem.fromJson(Map<String, dynamic> json) =>
+      _$SubmissionItemFromJson(json);
 }
 
 // The 'permit' object
