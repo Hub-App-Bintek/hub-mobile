@@ -26,18 +26,23 @@ class ProjectsScreen extends GetView<ProjectsController> {
     final safeInitialIndex = initialCategoryIndex >= 0
         ? initialCategoryIndex
         : 0;
-    final isConsultant = controller.userRole.value == UserRole.consultant;
 
-    Widget buildProjectCard(Project project) {
+    Widget buildProjectCard(Project project, bool isConsultant) {
       final isConsultationCategory =
           controller.selectedCategory == 'Konsultasi';
+      final homeOwnerName =
+          project.consultationInfo?.homeOwnerName?.trim().isNotEmpty == true
+          ? project.consultationInfo?.homeOwnerName!
+          : 'Pemilik rumah belum ditentukan';
       final consultantName =
           project.consultationInfo?.consultantName?.trim().isNotEmpty == true
           ? project.consultationInfo?.consultantName!
           : 'Konsultan belum ditentukan';
+      final primaryName = isConsultant ? homeOwnerName ?? '' : consultantName;
       final location = project.location?.address?.trim().isNotEmpty == true
           ? project.location!.address!
           : 'Lokasi belum tersedia';
+      final ctaText = isConsultant ? 'Tanya Pemilik' : 'Tanya Konsultan';
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -45,7 +50,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
           title: project.name ?? '',
           primaryLine: ProjectInfoLine(
             icon: Icons.person_outline,
-            text: consultantName ?? '',
+            text: primaryName ?? '',
             color: AppColors.neutralDarkest,
           ),
           secondaryLine: ProjectInfoLine(
@@ -53,13 +58,19 @@ class ProjectsScreen extends GetView<ProjectsController> {
             text: location,
             color: AppColors.neutralMediumLight,
           ),
-          ctaLabel: isConsultationCategory ? 'Tanya Konsultan' : null,
+          ctaLabel: isConsultationCategory ? ctaText : null,
           onCtaTap: isConsultationCategory
               ? () => controller.openChatWithConsultant(project)
               : null,
           onTap: () {
             final status = project.status ?? '';
             if (isConsultationCategory &&
+                controller.statusFilter == 'PENDING') {
+              controller.openConsultationConfirmation(project);
+            } else if (isConsultationCategory &&
+                controller.statusFilter == 'COMPLETED') {
+              controller.openConsultationDetailsWithCompletedData(project);
+            } else if (isConsultationCategory &&
                 (status == 'ACTIVE' || status == 'COMPLETED')) {
               controller.openConsultationDetails(project);
             } else if (controller.selectedCategory == 'Perizinan') {
@@ -101,6 +112,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
       ),
       body: SafeArea(
         child: Obx(() {
+          final isConsultant = controller.userRole.value == UserRole.consultant;
           if (controller.isLoading.value && controller.projects.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -151,7 +163,9 @@ class ProjectsScreen extends GetView<ProjectsController> {
                               ),
                             ),
                           ),
-                        ...projects.map(buildProjectCard),
+                        ...projects.map(
+                          (p) => buildProjectCard(p, isConsultant),
+                        ),
                         if (controller.hasMore && controller.isLoading.value)
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 16),
@@ -167,15 +181,17 @@ class ProjectsScreen extends GetView<ProjectsController> {
       ),
     );
 
-    if (isConsultant) {
-      return tabChild;
-    }
-
-    return DefaultTabController(
-      length: categories.length,
-      initialIndex: safeInitialIndex,
-      child: tabChild,
-    );
+    return Obx(() {
+      final isConsultant = controller.userRole.value == UserRole.consultant;
+      if (isConsultant) {
+        return tabChild;
+      }
+      return DefaultTabController(
+        length: categories.length,
+        initialIndex: safeInitialIndex,
+        child: tabChild,
+      );
+    });
   }
 
   Widget _buildStatusMenu(

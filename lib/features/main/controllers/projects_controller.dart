@@ -19,7 +19,7 @@ class ProjectsController extends BaseController {
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   final RxnString _statusFilter = RxnString();
-  final Rxn<UserRole> userRole = Rxn<UserRole>();
+  final Rx<UserRole> userRole = UserRole.unknown.obs;
 
   String? get statusFilter => _statusFilter.value;
 
@@ -55,6 +55,7 @@ class ProjectsController extends BaseController {
   @override
   void onResumed() {
     super.onResumed();
+    _loadRole();
     _seedMockProjects();
     projects.value = _allProjects
         .where((p) => p.status == _statusFilter.value)
@@ -64,6 +65,7 @@ class ProjectsController extends BaseController {
   }
 
   void onPageVisible() {
+    _loadRole();
     _seedMockProjects();
     projects.value = _allProjects
         .where((p) => p.status == _statusFilter.value)
@@ -78,7 +80,10 @@ class ProjectsController extends BaseController {
   }
 
   Future<void> _loadRole() async {
-    userRole.value = await _userStorage.getRole();
+    final role = await _userStorage.getRole();
+    if (role != null) {
+      userRole.value = role;
+    }
   }
 
   void _updateProjectCounts() {
@@ -177,6 +182,22 @@ class ProjectsController extends BaseController {
     );
   }
 
+  void openConsultationDetailsWithCompletedData(Project project) {
+    navigateTo(
+      AppRoutes.consultationDetails,
+      arguments: ConsultationDetailsArgs(
+        project: project.copyWith(projectId: 'A17'),
+      ),
+    );
+  }
+
+  void openConsultationConfirmation(Project project) {
+    navigateTo(
+      AppRoutes.consultationConfirmation,
+      arguments: ConsultationDetailsArgs(project: project),
+    );
+  }
+
   Future<void> openChatWithConsultant(Project project) async {
     final consultantId = project.consultationInfo?.consultantId;
     if (consultantId == null) {
@@ -231,172 +252,268 @@ const List<Project> _mockProjects = [
   // ACTIVE scenarios
   Project(
     projectId: 'A0',
-    name: 'Konsultasi A0 - tanpa kontrak/desain/invoice',
+    name: 'Renovasi rumah BSD',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Ir. Ahmad Wijaya'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Dian Pratama',
+      consultantId: 1001,
+      consultantName: 'Ir. Ahmad Wijaya',
+    ),
     location: ProjectLocation(address: 'BSD, Tangerang Selatan'),
   ),
   Project(
     projectId: 'A1',
-    name: 'Konsultasi A1 - kontrak butuh persetujuan',
+    name: 'Desain interior Kemang',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Salsa Putri, ST'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Rani Kusuma',
+      consultantId: 1001,
+      consultantName: 'Salsa Putri, ST',
+    ),
     location: ProjectLocation(address: 'Kemang, Jakarta Selatan'),
   ),
   Project(
     projectId: 'A2',
-    name: 'Konsultasi A2 - 1 revisi, 1 approval kontrak',
+    name: 'Tata ulang kafe Depok',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Dimas Wibowo'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Fajar Setiawan',
+      consultantId: 1001,
+      consultantName: 'Dimas Wibowo',
+    ),
     location: ProjectLocation(address: 'Depok, Jawa Barat'),
   ),
   Project(
     projectId: 'A3',
-    name: 'Konsultasi A3 - 2 revisi, 1 approval kontrak',
+    name: 'Rumah modern Bandung',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Alya Nabila'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Sari Anggraini',
+      consultantId: 1001,
+      consultantName: 'Alya Nabila',
+    ),
     location: ProjectLocation(address: 'Bandung, Jawa Barat'),
   ),
   Project(
     projectId: 'A4',
-    name: 'Konsultasi A4 - 3 revisi, 1 approval kontrak',
+    name: 'Ruko Surabaya',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Budi Santoso'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Hendra Wijaya',
+      consultantId: 1001,
+      consultantName: 'Budi Santoso',
+    ),
     location: ProjectLocation(address: 'Surabaya, Jawa Timur'),
   ),
   Project(
     projectId: 'A5',
-    name: 'Konsultasi A5 - 3 revisi, 1 kontrak disetujui (TTD)',
+    name: 'Renovasi dapur Bekasi',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Nadia Farah'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Lilis Hartati',
+      consultantId: 1001,
+      consultantName: 'Nadia Farah',
+    ),
     location: ProjectLocation(address: 'Bekasi, Jawa Barat'),
   ),
   Project(
     projectId: 'A6',
-    name: 'Konsultasi A6 - 3 revisi, kontrak sudah ditandatangani',
+    name: 'Villa Bogor',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Rio Prabowo'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Galih Raharjo',
+      consultantId: 1001,
+      consultantName: 'Rio Prabowo',
+    ),
     location: ProjectLocation(address: 'Bogor, Jawa Barat'),
   ),
   Project(
     projectId: 'A7',
-    name: 'Konsultasi A7 - siap approve draft desain',
+    name: 'Rumah keluarga Cibubur',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Sinta Maharani'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Maya Salsabila',
+      consultantId: 1001,
+      consultantName: 'Sinta Maharani',
+    ),
     location: ProjectLocation(address: 'Cibubur, Jawa Barat'),
   ),
   Project(
     projectId: 'A8',
-    name: 'Konsultasi A8 - 1 revisi + 1 approval draft desain',
+    name: 'Rumah minimalis Serpong',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Yusuf Aditya'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Arif Pratomo',
+      consultantId: 1001,
+      consultantName: 'Yusuf Aditya',
+    ),
     location: ProjectLocation(address: 'Serpong, Banten'),
   ),
   Project(
     projectId: 'A9',
-    name: 'Konsultasi A9 - 2 revisi + 1 approval draft desain',
+    name: 'Gudang Cilegon',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Mega Lestari'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Nia Lestari',
+      consultantId: 1001,
+      consultantName: 'Mega Lestari',
+    ),
     location: ProjectLocation(address: 'Cilegon, Banten'),
   ),
   Project(
     projectId: 'A10',
-    name: 'Konsultasi A10 - 3 revisi + 1 approval draft desain',
+    name: 'Homestay Yogyakarta',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Gilang Saputra'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Bagus Aditya',
+      consultantId: 1001,
+      consultantName: 'Gilang Saputra',
+    ),
     location: ProjectLocation(address: 'Yogyakarta'),
   ),
   Project(
     projectId: 'A11',
-    name: 'Konsultasi A11 - 3 revisi + 1 approval draft desain',
+    name: 'Townhouse Semarang',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Fitri Handayani'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Yulia Kartika',
+      consultantId: 1001,
+      consultantName: 'Fitri Handayani',
+    ),
     location: ProjectLocation(address: 'Semarang, Jawa Tengah'),
   ),
   Project(
     projectId: 'A12',
-    name: 'Konsultasi A12 - 3 revisi + 1 draft disetujui',
+    name: 'Guesthouse Malang',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Indra Kurniawan'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Rico Prabowo',
+      consultantId: 1001,
+      consultantName: 'Indra Kurniawan',
+    ),
     location: ProjectLocation(address: 'Malang, Jawa Timur'),
   ),
   Project(
     projectId: 'A13',
-    name: 'Konsultasi A13 - 3 revisi + 1 draft disetujui + final desain',
+    name: 'Villa Bali',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Clara Widjaja'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Putri Rahayu',
+      consultantId: 1001,
+      consultantName: 'Clara Widjaja',
+    ),
     location: ProjectLocation(address: 'Bali'),
   ),
   Project(
     projectId: 'A14',
-    name: 'Konsultasi A14 - final desain + invoice (unpaid)',
+    name: 'Perumahan Makassar',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Rama Wijaya'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Reza Mahendra',
+      consultantId: 1001,
+      consultantName: 'Rama Wijaya',
+    ),
     location: ProjectLocation(address: 'Makassar'),
   ),
   Project(
     projectId: 'A15',
-    name: 'Konsultasi A15 - final desain + 1 invoice paid & 1 unpaid',
+    name: 'Ruko Medan',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Putri Anggraini'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Dewi Ayu',
+      consultantId: 1001,
+      consultantName: 'Putri Anggraini',
+    ),
     location: ProjectLocation(address: 'Medan'),
   ),
   Project(
     projectId: 'A16',
-    name: 'Konsultasi A16 - final desain + 2 invoice paid & 1 unpaid',
+    name: 'Kantor Padang',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Adi Rahman'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Bramantyo Saputra',
+      consultantId: 1001,
+      consultantName: 'Adi Rahman',
+    ),
     location: ProjectLocation(address: 'Padang'),
   ),
   Project(
     projectId: 'A17',
-    name: 'Konsultasi A17 - final desain + semua invoice paid',
+    name: 'Cafe Pontianak',
     status: 'ACTIVE',
-    consultationInfo: ConsultationInfo(consultantName: 'Laras Pangestu'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Nadya Paramita',
+      consultantId: 1001,
+      consultantName: 'Laras Pangestu',
+    ),
     location: ProjectLocation(address: 'Pontianak'),
   ),
   // PENDING
   Project(
     projectId: 'P1',
-    name: 'Konsultasi P1 - Pending',
+    name: 'Rumah dua lantai Cirebon',
     status: 'PENDING',
-    consultationInfo: ConsultationInfo(consultantName: 'Tia Safitri'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Fikri Ramadhan',
+      consultantId: 1001,
+      consultantName: 'Tia Safitri',
+    ),
     location: ProjectLocation(address: 'Cirebon'),
   ),
   Project(
     projectId: 'P2',
-    name: 'Konsultasi P2 - Pending',
+    name: 'Renovasi Solo',
     status: 'PENDING',
-    consultationInfo: ConsultationInfo(consultantName: 'Johan Prasetyo'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Anita Rahmi',
+      consultantId: 1001,
+      consultantName: 'Johan Prasetyo',
+    ),
     location: ProjectLocation(address: 'Solo'),
   ),
   Project(
     projectId: 'P3',
-    name: 'Konsultasi P3 - Pending',
+    name: 'Desain toko Sukabumi',
     status: 'PENDING',
-    consultationInfo: ConsultationInfo(consultantName: 'Dewi Paramita'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Dodi Saputra',
+      consultantId: 1001,
+      consultantName: 'Dewi Paramita',
+    ),
     location: ProjectLocation(address: 'Sukabumi'),
   ),
   // COMPLETED
   Project(
     projectId: 'C1',
-    name: 'Konsultasi C1 - Completed',
+    name: 'Renovasi dapur Palembang',
     status: 'COMPLETED',
-    consultationInfo: ConsultationInfo(consultantName: 'Rizky Alamsyah'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Citra Wulandari',
+      consultantId: 1001,
+      consultantName: 'Rizky Alamsyah',
+    ),
     location: ProjectLocation(address: 'Palembang'),
   ),
   Project(
     projectId: 'C2',
-    name: 'Konsultasi C2 - Completed',
+    name: 'Villa Manado',
     status: 'COMPLETED',
-    consultationInfo: ConsultationInfo(consultantName: 'Zahra Kamila'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Adrian Susanto',
+      consultantId: 1001,
+      consultantName: 'Zahra Kamila',
+    ),
     location: ProjectLocation(address: 'Manado'),
   ),
   Project(
     projectId: 'C3',
-    name: 'Konsultasi C3 - Completed',
+    name: 'Kantor Bandar Lampung',
     status: 'COMPLETED',
-    consultationInfo: ConsultationInfo(consultantName: 'Farhan Akbar'),
+    consultationInfo: ConsultationInfo(
+      homeOwnerName: 'Hana Fauzia',
+      consultantId: 1001,
+      consultantName: 'Farhan Akbar',
+    ),
     location: ProjectLocation(address: 'Bandar Lampung'),
   ),
 ];

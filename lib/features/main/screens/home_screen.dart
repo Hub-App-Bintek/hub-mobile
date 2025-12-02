@@ -548,15 +548,23 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildProjectCard(Project project) {
+    final isConsultant = controller.userRole.value == UserRole.consultant;
+    final homeOwnerName =
+        project.consultationInfo?.homeOwnerName?.trim().isNotEmpty == true
+        ? project.consultationInfo?.homeOwnerName!
+        : 'Pemilik rumah belum ditentukan';
+    final consultantName =
+        project.consultationInfo?.consultantName ??
+        'Konsultan belum ditentukan';
+    final primaryName = isConsultant ? homeOwnerName : consultantName;
+
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: ProjectInfoCard(
         title: project.name ?? '-',
         primaryLine: ProjectInfoLine(
           icon: Icons.person_outline,
-          text:
-              project.consultationInfo?.consultantName ??
-              'Konsultan belum ditentukan',
+          text: primaryName ?? '',
           color: AppColors.neutralDarkest,
         ),
         secondaryLine: ProjectInfoLine(

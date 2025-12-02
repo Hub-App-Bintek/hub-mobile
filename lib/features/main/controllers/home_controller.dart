@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
@@ -168,6 +169,16 @@ class HomeController extends BaseController {
   void onSelectProject(Project project) {
     if (project.status == "CREATED") {
       navigateTo(AppRoutes.consultation);
+    } else if (project.status == 'PENDING') {
+      navigateTo(
+        AppRoutes.consultationConfirmation,
+        arguments: ConsultationDetailsArgs(project: project),
+      );
+    } else if (project.status == 'ACTIVE') {
+      navigateTo(
+        AppRoutes.consultationDetails,
+        arguments: ConsultationDetailsArgs(project: project),
+      );
     } else {
       navigateTo(
         AppRoutes.projectHistory,
