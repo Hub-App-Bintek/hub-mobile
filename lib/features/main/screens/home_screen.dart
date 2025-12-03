@@ -407,7 +407,7 @@ class HomeScreen extends GetView<HomeController> {
               iconData: Icons.remove_red_eye_outlined,
               iconAsset: AppIcons.supervision,
               onTap: () {
-                // TODO: Navigate to MonitoringScreen
+                controller.navigateTo(AppRoutes.monitoring);
               },
             ),
           );
