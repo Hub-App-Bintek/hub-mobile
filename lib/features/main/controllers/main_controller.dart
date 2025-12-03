@@ -17,6 +17,7 @@ class MainController extends BaseController {
   MainController(this._userStorage);
 
   final RxInt selectedIndex = 0.obs;
+  final PageController pageController = PageController();
 
   final RxString _token = ''.obs;
 
@@ -55,6 +56,7 @@ class MainController extends BaseController {
 
   void _switchTab(int index) {
     selectedIndex.value = index;
+    pageController.jumpToPage(index);
   }
 
   void _notifyPageVisible(int index) {
@@ -68,5 +70,11 @@ class MainController extends BaseController {
     } else if (index == 2 && Get.isRegistered<ProfileController>()) {
       Get.find<ProfileController>().onPageVisible();
     }
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    super.onClose();
   }
 }

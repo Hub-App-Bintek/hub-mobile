@@ -56,11 +56,22 @@ class ProjectsController extends BaseController {
   @override
   void onResumed() {
     super.onResumed();
-    _refreshForVisibility();
+    _loadRole();
+    _seedMockProjects();
+    projects.value = _allProjects
+        .where((p) => p.status == _statusFilter.value)
+        .toList();
+    // refreshProjects();
+    _updateProjectCounts();
   }
 
-  Future<void> onPageVisible() async {
-    await _refreshForVisibility();
+  void onPageVisible() {
+    _loadRole();
+    _seedMockProjects();
+    projects.value = _allProjects
+        .where((p) => p.status == _statusFilter.value)
+        .toList();
+    _updateProjectCounts();
   }
 
   @override
@@ -74,21 +85,6 @@ class ProjectsController extends BaseController {
     if (role != null) {
       userRole.value = role;
     }
-  }
-
-  Future<void> _refreshForVisibility() async {
-    if (!await _ensureLoggedIn()) return;
-    await _loadRole();
-    await refreshProjects();
-  }
-
-  Future<bool> _ensureLoggedIn() async {
-    final token = await _userStorage.getToken();
-    if (token == null || token.isEmpty) {
-      navigateOffAll(AppRoutes.login);
-      return false;
-    }
-    return true;
   }
 
   void _updateProjectCounts() {

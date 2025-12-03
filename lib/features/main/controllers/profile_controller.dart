@@ -15,29 +15,13 @@ class ProfileController extends BaseController {
   final RxBool isVerified = false.obs;
 
   @override
-  void onInit() {
-    super.onInit();
-    _loadUser();
-  }
-
-  @override
   void onResumed() {
     super.onResumed();
     _loadUser();
   }
 
-  Future<void> onPageVisible() async {
-    if (!await _ensureLoggedIn()) return;
-    await _loadUser();
-  }
-
-  Future<bool> _ensureLoggedIn() async {
-    final token = await _userStorage.getToken();
-    if (token == null || token.isEmpty) {
-      navigateOffAll(AppRoutes.login);
-      return false;
-    }
-    return true;
+  void onPageVisible() {
+    _loadUser();
   }
 
   Future<void> _loadUser() async {
