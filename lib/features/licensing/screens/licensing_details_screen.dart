@@ -20,35 +20,43 @@ class LicensingDetailsScreen extends GetView<LicensingDetailsController> {
       appBar: const PkpAppBar(title: 'Perizinan'),
       body: SafeArea(
         child: Obx(() {
+
+          if (controller.isLoading.value && controller.permitStatus.value == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           final stage = controller.selectedStage.value;
-          final hasDocument = controller.hasSupportingDocument.value;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(height: 16),
-              _buildStageMenu(context, stage),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(_stageTitle(stage), style: AppTextStyles.h3),
-                ),
-              ),
-              Expanded(
-                child: Padding(
+          final hasDocument = controller.hasDocument;
+          return RefreshIndicator(
+            onRefresh: controller.fetchPermitStatus,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SizedBox(height: 16),
+                _buildStageMenu(context, stage),
+                const SizedBox(height: 16),
+                Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _buildContent(stage, hasDocument),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(_stageTitle(stage), style: AppTextStyles.h3),
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildContent(stage, hasDocument),
+                  ),
+                ),
+              ],
+            ),
           );
         }),
       ),
       bottomNavigationBar: SafeArea(
         child: Obx(() {
-          final hasDocument = controller.hasSupportingDocument.value;
+          final hasDocument = controller.hasDocument;
           if (hasDocument ||
               controller.selectedStage.value != LicensingStage.documents) {
             return const SizedBox.shrink();
