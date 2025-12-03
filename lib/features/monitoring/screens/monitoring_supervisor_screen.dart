@@ -20,22 +20,25 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Daftar Supervisi Pekerjaan',
-                    style: theme.textTheme.titleMedium,
+          Container(
+            color: theme.scaffoldBackgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Daftar Supervisi Pekerjaan',
+                      style: theme.textTheme.titleMedium,
+                    ),
                   ),
-                ),
-                OutlinedButton.icon(
-                  onPressed: () => _showSortBottomSheet(context),
-                  icon: const Icon(Icons.sort),
-                  label: const Text('Urutkan'),
-                ),
-              ],
+                  OutlinedButton.icon(
+                    onPressed: () => _showSortBottomSheet(context),
+                    icon: const Icon(Icons.sort),
+                    label: const Text('Urutkan'),
+                  ),
+                ],
+              ),
             ),
           ),
           Expanded(

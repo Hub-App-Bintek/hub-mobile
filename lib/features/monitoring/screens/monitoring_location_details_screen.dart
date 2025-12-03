@@ -10,7 +10,7 @@ import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/monitoring/controllers/monitoring_form_controller.dart';
 
-class MonitoringFormScreen extends GetView<MonitoringController> {
+class MonitoringFormScreen extends GetView<MonitoringFormController> {
   const MonitoringFormScreen({super.key});
 
   @override

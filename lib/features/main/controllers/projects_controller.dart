@@ -11,6 +11,7 @@ import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/project_location.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
+import 'package:pkp_hub/features/monitoring/controllers/supervisor_screen_controller.dart';
 
 class ProjectsController extends BaseController {
   final GetProjectsUseCase getProjectsUseCase;
@@ -227,7 +228,20 @@ class ProjectsController extends BaseController {
   void openLicensingDetails(Project project) {
     navigateTo(
       AppRoutes.licensingDetails,
-      arguments: {'projectId': project.projectId},
+      arguments: {'projectId': 'c05f794d-b6ee-49bc-a3d5-63a36529a882'},
+    );
+  }
+
+  void openPengawasanDetails(Project project) {
+    navigateTo(
+      AppRoutes.monitoringDetail,
+      arguments: ConstructionSupervisor(
+        id: '5',
+        name: 'Danu Pranata',
+        specialization: 'Ahli Sipil Ahli Konstruksi',
+        priceJuta: 18,
+        distanceKm: 7,
+      ),
     );
   }
 

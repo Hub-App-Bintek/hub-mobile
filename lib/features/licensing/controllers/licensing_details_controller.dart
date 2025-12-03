@@ -36,6 +36,7 @@ class LicensingDetailsController extends BaseController {
 
   final RxList<LicensingStep> steps = <LicensingStep>[].obs;
   final RxList<ProjectItem> documents = <ProjectItem>[].obs;
+  final RxList<ProjectItem> results = <ProjectItem>[].obs;
 
   // 1. Inject the use case
   final GetPermitStatusUseCase _getPermitStatusUseCase;
@@ -43,6 +44,7 @@ class LicensingDetailsController extends BaseController {
   LicensingDetailsController(this._getPermitStatusUseCase);
 
   final permitStatus = Rx<PermitStatusResponse?>(null);
+
   bool get hasDocument => documents.isNotEmpty;
 
   @override
@@ -55,11 +57,13 @@ class LicensingDetailsController extends BaseController {
   }
 
   // 3. Method to fetch the data
-  Future<void> fetchPermitStatus({bool isInitialLoad = false}) { // This already returns a Future<void>
+  Future<void> fetchPermitStatus({bool isInitialLoad = false}) {
+    // This already returns a Future<void>
     // The `onRefresh` callback needs the Future to be returned.
     if (isInitialLoad) {
-      return handleAsync( // Add 'return' here
-            () => _getPermitStatusUseCase(projectId),
+      return handleAsync(
+        // Add 'return' here
+        () => _getPermitStatusUseCase(projectId),
         onSuccess: (response) {
           permitStatus.value = response;
           _updateStateFromResponse(response);
@@ -81,8 +85,9 @@ class LicensingDetailsController extends BaseController {
       return;
     }
 
-    return handleAsync( // Add 'return' here
-          () => _getPermitStatusUseCase(projectId),
+    return handleAsync(
+      // Add 'return' here
+      () => _getPermitStatusUseCase(projectId),
       onSuccess: (response) {
         permitStatus.value = response;
         _updateStateFromResponse(response);
@@ -167,9 +172,14 @@ class LicensingDetailsController extends BaseController {
       String content = 'Catatan tidak tersedia';
       try {
         // Safely decode the JSON string in permissionData
-        final data = json.decode(submission.permissionData) as Map<String, dynamic>;
-        title = _formatStatusTitle(data['nomorDokumenIzinPemanfaatanRuang'] as String? ?? 'Formulir');
-        content = data['kondisiBangunanSaatIni'] as String? ?? 'Catatan tidak tersedia';
+        final data =
+            json.decode(submission.permissionData) as Map<String, dynamic>;
+        title = _formatStatusTitle(
+          data['nomorDokumenIzinPemanfaatanRuang'] as String? ?? 'Formulir',
+        );
+        content =
+            data['kondisiBangunanSaatIni'] as String? ??
+            'Catatan tidak tersedia';
       } catch (e) {
         // Handle cases where permissionData is not valid JSON
         print('Error decoding permissionData: $e');
@@ -185,19 +195,40 @@ class LicensingDetailsController extends BaseController {
     }).toList();
 
     // 3. Add a final, non-completed step if the process is not finished
-    final lastStatus = response.status.status;
-    if (lastStatus != 'APPROVED' && lastStatus != 'REJECTED') {
-      newSteps.add(
-        LicensingStep(
-          title: _formatStatusTitle(lastStatus),
-          subtitle: 'Permohonan sedang dalam tahap ini',
-          date: '-',
-          isCompleted: false,
+    // final lastStatus = response.status.status;
+    // if (lastStatus != 'APPROVED' && lastStatus != 'REJECTED') {
+    //   newSteps.add(
+    //     LicensingStep(
+    //       title: _formatStatusTitle(lastStatus),
+    //       subtitle: 'Permohonan sedang dalam tahap ini',
+    //       date: '-',
+    //       isCompleted: false,
+    //     ),
+    //   );
+    // }
+
+    final newResults = <ProjectItem>[
+      // ProjectItem(
+      //   title: 'Surat Izin Pemanfaatan Ruang (IPR)',
+      //   content: 'Dokumen IPR yang telah disetujui.',
+      //   date: DateFormat('dd MMM yyyy').format(
+      //     response.permit.createdAt.add(const Duration(days: 14)).toLocal(),
+      //   ),
+      //   status: ProjectItemStatus.approved,
+      // ),
+      ProjectItem(
+        title: 'Dokumen PBG',
+        content: 'Dokumen PBG Telah Terbit',
+        date: DateFormat('dd MMM yyyy').format(
+          response.permit.createdAt.add(const Duration(days: 14)).toLocal(),
         ),
-      );
-    }
+        status: ProjectItemStatus.approved,
+        onDownloadTap: (){},
+      ),
+    ];
 
     documents.assignAll(newDocuments);
     steps.assignAll(newSteps);
+    results.assignAll(newResults);
   }
 }
