@@ -41,18 +41,16 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
           ],
         ),
       ),
-      bottomNavigationBar: Obx(
-            () {
-          switch (controller.selectedStage.value) {
-            case MonitoringStage.kontrak:
-              return _KontrakActions();
-            case MonitoringStage.dokumen:
-              return _UploadDokumenAction();
-            default:
-              return const SizedBox.shrink();
-          }
-        },
-      ),
+      bottomNavigationBar: Obx(() {
+        switch (controller.selectedStage.value) {
+          case MonitoringStage.kontrak:
+            return _KontrakActions();
+          case MonitoringStage.dokumen:
+            return _UploadDokumenAction();
+          default:
+            return const SizedBox.shrink();
+        }
+      }),
     );
   }
 }
@@ -65,17 +63,18 @@ class _StageSelector extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     Widget buildStage(
-        MonitoringStage stage,
-        IconData icon,
-        String label,
-        int badgeCount,
-        ) {
+      MonitoringStage stage,
+      IconData icon,
+      String label,
+      int badgeCount,
+    ) {
       final isActive = controller.selectedStage.value == stage;
       final circleColor = isActive
           ? theme.colorScheme.primary
           : theme.colorScheme.surfaceVariant;
-      final iconColor =
-      isActive ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface;
+      final iconColor = isActive
+          ? theme.colorScheme.onPrimary
+          : theme.colorScheme.onSurface;
 
       return GestureDetector(
         onTap: () => controller.changeStage(stage),
@@ -110,17 +109,14 @@ class _StageSelector extends GetView<MonitoringDetailController> {
               ],
             ),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: theme.textTheme.bodySmall,
-            ),
+            Text(label, style: theme.textTheme.bodySmall),
           ],
         ),
       );
     }
 
     return Obx(
-          () => SingleChildScrollView(
+      () => SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
@@ -176,17 +172,19 @@ class _KontrakList extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     return Obx(
-          () => ListView.separated(
+      () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: controller.contracts.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, index) {
           final item = controller.contracts[index];
           final isApproved = item.status == ContractStatus.approved;
-          final chipColor =
-          isApproved ? Colors.green.shade100 : Colors.orange.shade100;
-          final chipTextColor =
-          isApproved ? Colors.green.shade800 : Colors.orange.shade800;
+          final chipColor = isApproved
+              ? Colors.green.shade100
+              : Colors.orange.shade100;
+          final chipTextColor = isApproved
+              ? Colors.green.shade800
+              : Colors.orange.shade800;
 
           return Card(
             shape: RoundedRectangleBorder(
@@ -212,18 +210,16 @@ class _KontrakList extends GetView<MonitoringDetailController> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(
-                    item.company,
-                    style: theme.textTheme.bodySmall,
-                  ),
+                  Text(item.company, style: theme.textTheme.bodySmall),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
                           _formatDate(item.date),
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: theme.hintColor),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.hintColor,
+                          ),
                         ),
                       ),
                       Container(
@@ -300,7 +296,7 @@ class _DokumenList extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     return Obx(
-          () => ListView.separated(
+      () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: controller.documents.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -311,10 +307,7 @@ class _DokumenList extends GetView<MonitoringDetailController> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: ListTile(
-              title: Text(
-                item.title,
-                style: theme.textTheme.titleMedium,
-              ),
+              title: Text(item.title, style: theme.textTheme.titleMedium),
               trailing: IconButton(
                 icon: const Icon(Icons.download_outlined),
                 onPressed: () => controller.downloadDocument(item),
@@ -354,7 +347,7 @@ class _LaporanList extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     return Obx(
-          () => ListView.separated(
+      () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: controller.laporanItems.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -372,20 +365,15 @@ class _LaporanList extends GetView<MonitoringDetailController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.title,
-                      style: theme.textTheme.titleMedium,
-                    ),
+                    Text(item.title, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 4),
-                    Text(
-                      'Pengawas',
-                      style: theme.textTheme.bodySmall,
-                    ),
+                    Text('Pengawas', style: theme.textTheme.bodySmall),
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(item.date),
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: theme.hintColor),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.hintColor,
+                      ),
                     ),
                   ],
                 ),
@@ -406,7 +394,7 @@ class _TemuanList extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     return Obx(
-          () => ListView.separated(
+      () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: controller.temuanItems.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -424,20 +412,15 @@ class _TemuanList extends GetView<MonitoringDetailController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      item.title,
-                      style: theme.textTheme.titleMedium,
-                    ),
+                    Text(item.title, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 4),
-                    Text(
-                      'Pengawas',
-                      style: theme.textTheme.bodySmall,
-                    ),
+                    Text('Pengawas', style: theme.textTheme.bodySmall),
                     const SizedBox(height: 4),
                     Text(
                       _formatDate(item.date),
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: theme.hintColor),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.hintColor,
+                      ),
                     ),
                   ],
                 ),
@@ -458,17 +441,19 @@ class _InvoiceList extends GetView<MonitoringDetailController> {
     final theme = Theme.of(context);
 
     return Obx(
-          () => ListView.separated(
+      () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         itemCount: controller.invoiceItems.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, index) {
           final item = controller.invoiceItems[index];
           final statusLabel = item.isPaid ? 'LUNAS' : 'BELUM LUNAS';
-          final chipColor =
-          item.isPaid ? Colors.green.shade100 : Colors.red.shade100;
-          final chipTextColor =
-          item.isPaid ? Colors.green.shade800 : Colors.red.shade800;
+          final chipColor = item.isPaid
+              ? Colors.green.shade100
+              : Colors.red.shade100;
+          final chipTextColor = item.isPaid
+              ? Colors.green.shade800
+              : Colors.red.shade800;
 
           return Card(
             shape: RoundedRectangleBorder(
@@ -494,9 +479,7 @@ class _InvoiceList extends GetView<MonitoringDetailController> {
                           item.isPaid
                               ? Icons.check_circle_outline
                               : Icons.cancel_outlined,
-                          color: item.isPaid
-                              ? Colors.green
-                              : Colors.red,
+                          color: item.isPaid ? Colors.green : Colors.red,
                         ),
                       ],
                     ),
@@ -508,8 +491,9 @@ class _InvoiceList extends GetView<MonitoringDetailController> {
                     const SizedBox(height: 8),
                     Text(
                       'Rp ${_formatCurrency(item.amount)}',
-                      style: theme.textTheme.titleMedium
-                          ?.copyWith(color: theme.colorScheme.primary),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Container(

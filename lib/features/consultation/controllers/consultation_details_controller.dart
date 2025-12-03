@@ -182,6 +182,17 @@ class ConsultationDetailsController extends BaseController {
     _updateHasUploadedContract();
   }
 
+  void signLatestContract() {
+    if (contracts.isEmpty) return;
+    final last = contracts.last;
+    contracts[contracts.length - 1] = ConsultationContractItem(
+      title: last.title,
+      dateLabel: last.dateLabel,
+      status: ContractStatus.approvedSigned,
+    );
+    _updateHasUploadedContract();
+  }
+
   void reviseLatestContract() {
     if (contracts.isEmpty) return;
     final last = contracts.last;

@@ -37,20 +37,20 @@ class MonitoringFormController extends BaseController {
   final String? _initialProjectTypeId;
 
   MonitoringFormController(
-      this._createProjectUseCase,
-      this._getProvincesUseCase,
-      this._getRegenciesUseCase,
-      this._getDistrictsUseCase,
-      this._getVillagesUseCase,
-      this._initialProjectTypeId,
-      );
+    this._createProjectUseCase,
+    this._getProvincesUseCase,
+    this._getRegenciesUseCase,
+    this._getDistrictsUseCase,
+    this._getVillagesUseCase,
+    this._initialProjectTypeId,
+  );
 
   final TextEditingController provinceController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController subdistrictController = TextEditingController();
   final TextEditingController villageController = TextEditingController();
   final TextEditingController locationDetailsController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
   final TextEditingController incomeProofController = TextEditingController();
@@ -143,7 +143,7 @@ class MonitoringFormController extends BaseController {
       return;
     }
     final match = projectTypeList.firstWhere(
-          (type) => type.id.toUpperCase() == _initialProjectTypeId.toUpperCase(),
+      (type) => type.id.toUpperCase() == _initialProjectTypeId.toUpperCase(),
       orElse: () => prototype,
     );
     selectedProjectType.value = match;
@@ -151,7 +151,7 @@ class MonitoringFormController extends BaseController {
 
   Future<void> _fetchProvinces() async {
     await handleAsync<List<Province>>(
-          () => _getProvincesUseCase(),
+      () => _getProvincesUseCase(),
       onSuccess: provinces.assignAll,
       onFailure: showError,
     );
@@ -160,7 +160,7 @@ class MonitoringFormController extends BaseController {
   Future<void> _fetchRegencies(int provinceId) async {
     _resetCitySelection();
     await handleAsync<List<Regency>>(
-          () => _getRegenciesUseCase(provinceId),
+      () => _getRegenciesUseCase(provinceId),
       onSuccess: regencies.assignAll,
       onFailure: showError,
     );
@@ -169,7 +169,7 @@ class MonitoringFormController extends BaseController {
   Future<void> _fetchDistricts(int regencyId) async {
     _resetSubdistrictSelection();
     await handleAsync<List<District>>(
-          () => _getDistrictsUseCase(regencyId),
+      () => _getDistrictsUseCase(regencyId),
       onSuccess: districts.assignAll,
       onFailure: showError,
     );
@@ -178,7 +178,7 @@ class MonitoringFormController extends BaseController {
   Future<void> _fetchVillages(int districtId) async {
     _resetVillageSelection();
     await handleAsync<List<Village>>(
-          () => _getVillagesUseCase(districtId),
+      () => _getVillagesUseCase(districtId),
       onSuccess: villages.assignAll,
       onFailure: showError,
     );
@@ -319,14 +319,14 @@ class MonitoringFormController extends BaseController {
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
-            isProvinceValid.value &&
-            isCityValid.value &&
-            isSubdistrictValid.value &&
-            isVillageValid.value &&
-            isLocationDetailsValid.value &&
-            isIncomeValid.value &&
-            selectedProjectType.value != null &&
-            !isLoadingLocation.value;
+        isProvinceValid.value &&
+        isCityValid.value &&
+        isSubdistrictValid.value &&
+        isVillageValid.value &&
+        isLocationDetailsValid.value &&
+        isIncomeValid.value &&
+        selectedProjectType.value != null &&
+        !isLoadingLocation.value;
 
     debugPrint('Form validity updated: $_isFormValid');
   }
@@ -386,17 +386,17 @@ class MonitoringFormController extends BaseController {
   Future<void> _fetchLocation() async {
     try {
       final position =
-      await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: _locationFetchTimeout,
-      ).timeout(
-        _locationFetchTimeout,
-        onTimeout: () {
-          throw TimeoutException(
-            'Location fetch timed out after ${_locationFetchTimeout.inSeconds}s',
+          await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high,
+            timeLimit: _locationFetchTimeout,
+          ).timeout(
+            _locationFetchTimeout,
+            onTimeout: () {
+              throw TimeoutException(
+                'Location fetch timed out after ${_locationFetchTimeout.inSeconds}s',
+              );
+            },
           );
-        },
-      );
 
       selectedLocation.value = LatLng(position.latitude, position.longitude);
       _updateFormValidity();
@@ -490,28 +490,28 @@ class MonitoringFormController extends BaseController {
   Province? _findProvinceByName(String value) {
     final query = value.trim().toLowerCase();
     return provinces.firstWhereOrNull(
-          (province) => province.name.toLowerCase() == query,
+      (province) => province.name.toLowerCase() == query,
     );
   }
 
   Regency? _findRegencyByName(String value) {
     final query = value.trim().toLowerCase();
     return regencies.firstWhereOrNull(
-          (regency) => regency.name.toLowerCase() == query,
+      (regency) => regency.name.toLowerCase() == query,
     );
   }
 
   District? _findDistrictByName(String value) {
     final query = value.trim().toLowerCase();
     return districts.firstWhereOrNull(
-          (district) => district.name.toLowerCase() == query,
+      (district) => district.name.toLowerCase() == query,
     );
   }
 
   Village? _findVillageByName(String value) {
     final query = value.trim().toLowerCase();
     return villages.firstWhereOrNull(
-          (village) => village.name.toLowerCase() == query,
+      (village) => village.name.toLowerCase() == query,
     );
   }
 
@@ -583,7 +583,7 @@ class MonitoringFormController extends BaseController {
     final landArea = double.tryParse(landAreaController.text.trim()) ?? 0.0;
     final income =
         double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
-            0.0;
+        0.0;
 
     final combinedLocationDetail = [
       locationDetailsController.text.trim(),
@@ -597,7 +597,7 @@ class MonitoringFormController extends BaseController {
     CreateProjectResponse? createdProject;
     try {
       await handleAsync(
-            () => _createProjectUseCase(
+        () => _createProjectUseCase(
           CreateProjectParams(
             request: CreateProjectRequest(
               locationDetail: combinedLocationDetail,
@@ -622,7 +622,6 @@ class MonitoringFormController extends BaseController {
           showError(failure);
         },
       );
-
     } finally {
       isRequesting.value = false;
     }

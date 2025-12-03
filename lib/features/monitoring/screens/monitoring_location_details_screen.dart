@@ -29,7 +29,7 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Obx(
-                      () => IgnorePointer(
+                  () => IgnorePointer(
                     ignoring: controller.isLoadingLocation.value,
                     child: Opacity(
                       opacity: controller.isLoadingLocation.value ? 0.6 : 1,
@@ -53,7 +53,7 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
                             options: controller.cityOptions,
                             controller: controller.cityController,
                             enabled:
-                            controller.selectedProvince.value != null &&
+                                controller.selectedProvince.value != null &&
                                 controller.regencies.isNotEmpty,
                             errorText: controller.cityError.value,
                             onChanged: controller.selectCity,
@@ -65,7 +65,7 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
                             options: controller.subdistrictOptions,
                             controller: controller.subdistrictController,
                             enabled:
-                            controller.selectedCity.value != null &&
+                                controller.selectedCity.value != null &&
                                 controller.districts.isNotEmpty,
                             errorText: controller.subdistrictError.value,
                             onChanged: controller.selectSubdistrict,
@@ -77,7 +77,7 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
                             options: controller.villageOptions,
                             controller: controller.villageController,
                             enabled:
-                            controller.selectedSubdistrict.value != null &&
+                                controller.selectedSubdistrict.value != null &&
                                 controller.villages.isNotEmpty,
                             errorText: controller.villageError.value,
                             onChanged: controller.selectVillage,
@@ -130,8 +130,8 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
       bottomNavigationBar: Obx(() {
         final enabled =
             controller.isFormValid &&
-                !controller.isLoadingLocation.value &&
-                !controller.isRequesting.value;
+            !controller.isLoadingLocation.value &&
+            !controller.isRequesting.value;
         return SafeArea(
           child: PkpBottomActions(
             primaryText: 'Lanjutkan',

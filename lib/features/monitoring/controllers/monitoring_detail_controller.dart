@@ -33,11 +33,7 @@ class DocumentItem {
 }
 
 class ReportItem {
-  ReportItem({
-    required this.title,
-    required this.date,
-    required this.category,
-  });
+  ReportItem({required this.title, required this.date, required this.category});
 
   final String title;
   final DateTime date;
@@ -45,10 +41,7 @@ class ReportItem {
 }
 
 class FindingItem {
-  FindingItem({
-    required this.title,
-    required this.date,
-  });
+  FindingItem({required this.title, required this.date});
 
   final String title;
   final DateTime date;
@@ -105,16 +98,8 @@ class MonitoringDetailController extends BaseController {
       date: DateTime(2025, 11, 18),
       category: 'Pondasi',
     ),
-    ReportItem(
-      title: 'Sloof',
-      date: DateTime(2025, 11, 22),
-      category: 'Sloof',
-    ),
-    ReportItem(
-      title: 'Kolom',
-      date: DateTime(2025, 11, 25),
-      category: 'Kolom',
-    ),
+    ReportItem(title: 'Sloof', date: DateTime(2025, 11, 22), category: 'Sloof'),
+    ReportItem(title: 'Kolom', date: DateTime(2025, 11, 25), category: 'Kolom'),
     ReportItem(
       title: 'Ring Balok',
       date: DateTime(2025, 11, 26),
@@ -138,18 +123,9 @@ class MonitoringDetailController extends BaseController {
   ].obs;
 
   final temuanItems = <FindingItem>[
-    FindingItem(
-      title: 'Tembok tidak rata',
-      date: DateTime(2025, 11, 18),
-    ),
-    FindingItem(
-      title: 'Atap Bangunan ada bocor',
-      date: DateTime(2025, 11, 22),
-    ),
-    FindingItem(
-      title: 'Beton kolom keropos',
-      date: DateTime(2025, 11, 25),
-    ),
+    FindingItem(title: 'Tembok tidak rata', date: DateTime(2025, 11, 18)),
+    FindingItem(title: 'Atap Bangunan ada bocor', date: DateTime(2025, 11, 22)),
+    FindingItem(title: 'Beton kolom keropos', date: DateTime(2025, 11, 25)),
   ].obs;
 
   final invoiceItems = <InvoiceItem>[
@@ -189,9 +165,11 @@ class MonitoringDetailController extends BaseController {
   void requestRevision() {
     // Call handleAsync with a function that returns a Future<Result>
     handleAsync(
-          () async {
+      () async {
         // TODO: Replace with actual use case: _requestRevisionUseCase(contractId)
-        await Future.delayed(const Duration(seconds: 1)); // Simulate network latency
+        await Future.delayed(
+          const Duration(seconds: 1),
+        ); // Simulate network latency
         // Return a mock Success object to satisfy the handleAsync signature
         return Success('Permintaan revisi berhasil dikirim');
       },
@@ -204,7 +182,7 @@ class MonitoringDetailController extends BaseController {
 
   void approveContract() {
     handleAsync(
-          () async {
+      () async {
         // TODO: Replace with actual use case: _approveContractUseCase(contractId)
         await Future.delayed(const Duration(seconds: 1));
         return Success('Kontrak berhasil disetujui');
@@ -221,10 +199,7 @@ class MonitoringDetailController extends BaseController {
   }
 
   void openReportDetail(ReportItem item) {
-    Get.toNamed(
-      AppRoutes.monitoringDetailReport,
-      arguments: item,
-    );
+    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: item);
   }
 
   void openFindingDetail(FindingItem item) {
@@ -234,14 +209,11 @@ class MonitoringDetailController extends BaseController {
       date: item.date,
       category: 'Temuan',
     );
-    Get.toNamed(
-      AppRoutes.monitoringDetailReport,
-      arguments: reportLike,
-    );
+    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: reportLike);
   }
 
   void openInvoiceDetail(InvoiceItem item) {
-    if(item.isPaid) {
+    if (item.isPaid) {
       Get.toNamed(
         AppRoutes.paymentReceipt, // existing page in your app
         arguments: item,
@@ -252,6 +224,5 @@ class MonitoringDetailController extends BaseController {
         arguments: item,
       );
     }
-
   }
 }

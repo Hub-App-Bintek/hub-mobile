@@ -41,9 +41,7 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
                 'Pencahayaan',
                 'Penghawaan',
                 'Temuan',
-              ]
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
               onChanged: null,
             ),
             const SizedBox(height: 16),
@@ -56,10 +54,7 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
             const SizedBox(height: 16),
             Text('Tenaga Ahli', style: theme.textTheme.bodyMedium),
             const SizedBox(height: 4),
-            TextFormField(
-              enabled: false,
-              initialValue: 'Galih Ramadan',
-            ),
+            TextFormField(enabled: false, initialValue: 'Galih Ramadan'),
             const SizedBox(height: 16),
             Text('Notes', style: theme.textTheme.bodyMedium),
             const SizedBox(height: 4),
@@ -78,7 +73,7 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
               runSpacing: 12,
               children: List.generate(
                 3,
-                    (index) => Container(
+                (index) => Container(
                   width: 110,
                   height: 80,
                   decoration: BoxDecoration(

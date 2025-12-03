@@ -9,8 +9,6 @@ import 'package:pkp_hub/app/widgets/empty_placeholder.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
-import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
-import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
@@ -340,18 +338,15 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   }
 
   Widget _buildCancelConsultation() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: SizedBox(
-        width: double.infinity,
-        child: TextButton(
-          onPressed: () {
-            // TODO: Cancel consultation
-          },
-          child: Text(
-            'Batalkan Konsultasi',
-            style: AppTextStyles.actionM.copyWith(color: AppColors.errorDark),
-          ),
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: Text(
+          'Batalkan Konsultasi',
+          style: AppTextStyles.actionM.copyWith(color: AppColors.errorDark),
         ),
       ),
     );
@@ -366,6 +361,10 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
       date: item.dateLabel,
       status: isPaid ? ProjectItemStatus.paid : ProjectItemStatus.unpaid,
       onTap: () {
+        if (controller.userRole.value == UserRole.consultant) {
+          return;
+        }
+
         if (isPaid) {
           controller.navigateTo(
             AppRoutes.paymentReceipt,
@@ -701,7 +700,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
       if (hasPendingContractSign) {
         return PkpBottomActions(
           primaryText: 'Tandatangani Kontrak',
-          onPrimaryPressed: () {},
+          onPrimaryPressed: controller.signLatestContract,
         );
       }
 
@@ -745,15 +744,24 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         );
       }
 
-      if (hasPendingContractApproval) {
-        return _buildApprovalActions(
-          onApprove: controller.approveLatestContract,
-          onReject: controller.reviseLatestContract,
+      if (hasPendingContractApproval && canCancel) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildApprovalActions(
+              onApprove: controller.approveLatestContract,
+              onReject: controller.reviseLatestContract,
+            ),
+            _buildCancelConsultation(),
+          ],
         );
       }
 
       if (canCancel) {
-        return _buildCancelConsultation();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: _buildCancelConsultation(),
+        );
       }
 
       return const SizedBox.shrink();

@@ -20,13 +20,13 @@ class ConstructionSupervisor {
   final double priceJuta;
   final double distanceKm;
 
-  String get initial =>
-      name.isNotEmpty ? name[0].toUpperCase() : '?';
+  String get initial => name.isNotEmpty ? name[0].toUpperCase() : '?';
 
   String get priceLabel {
     final hasDecimal = priceJuta % 1 != 0;
-    final value =
-    hasDecimal ? priceJuta.toStringAsFixed(1) : priceJuta.toStringAsFixed(0);
+    final value = hasDecimal
+        ? priceJuta.toStringAsFixed(1)
+        : priceJuta.toStringAsFixed(0);
     return '+ $value Juta';
   }
 
@@ -119,10 +119,7 @@ class SupervisorController extends BaseController {
     final supervisor = selectedSupervisor;
     if (supervisor == null) return;
 
-    Get.toNamed(
-      AppRoutes.monitoringDetail,
-      arguments: supervisor,
-    );
+    Get.toNamed(AppRoutes.monitoringDetail, arguments: supervisor);
   }
 }
 

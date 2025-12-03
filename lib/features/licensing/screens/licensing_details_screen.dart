@@ -20,8 +20,8 @@ class LicensingDetailsScreen extends GetView<LicensingDetailsController> {
       appBar: const PkpAppBar(title: 'Perizinan'),
       body: SafeArea(
         child: Obx(() {
-
-          if (controller.isLoading.value && controller.permitStatus.value == null) {
+          if (controller.isLoading.value &&
+              controller.permitStatus.value == null) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -178,7 +178,7 @@ class LicensingDetailsScreen extends GetView<LicensingDetailsController> {
       });
     }
 
-    if (stage == LicensingStage.result){
+    if (stage == LicensingStage.result) {
       return Obx(() {
         return ListView.builder(
           itemCount: controller.results.length,

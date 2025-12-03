@@ -12,7 +12,8 @@ part of 'permit_status_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 PermitStatusResponse _$PermitStatusResponseFromJson(Map<String, dynamic> json) {
   return _PermitStatusResponse.fromJson(json);
@@ -32,22 +33,26 @@ mixin _$PermitStatusResponse {
 
 /// @nodoc
 abstract class $PermitStatusResponseCopyWith<$Res> {
-  factory $PermitStatusResponseCopyWith(PermitStatusResponse value,
-          $Res Function(PermitStatusResponse) then) =
-      _$PermitStatusResponseCopyWithImpl<$Res, PermitStatusResponse>;
+  factory $PermitStatusResponseCopyWith(
+    PermitStatusResponse value,
+    $Res Function(PermitStatusResponse) then,
+  ) = _$PermitStatusResponseCopyWithImpl<$Res, PermitStatusResponse>;
   @useResult
-  $Res call(
-      {PermitDetails permit,
-      StatusDetails status,
-      List<SubmissionItem> submissions});
+  $Res call({
+    PermitDetails permit,
+    StatusDetails status,
+    List<SubmissionItem> submissions,
+  });
 
   $PermitDetailsCopyWith<$Res> get permit;
   $StatusDetailsCopyWith<$Res> get status;
 }
 
 /// @nodoc
-class _$PermitStatusResponseCopyWithImpl<$Res,
-        $Val extends PermitStatusResponse>
+class _$PermitStatusResponseCopyWithImpl<
+  $Res,
+  $Val extends PermitStatusResponse
+>
     implements $PermitStatusResponseCopyWith<$Res> {
   _$PermitStatusResponseCopyWithImpl(this._value, this._then);
 
@@ -63,20 +68,23 @@ class _$PermitStatusResponseCopyWithImpl<$Res,
     Object? status = null,
     Object? submissions = null,
   }) {
-    return _then(_value.copyWith(
-      permit: null == permit
-          ? _value.permit
-          : permit // ignore: cast_nullable_to_non_nullable
-              as PermitDetails,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as StatusDetails,
-      submissions: null == submissions
-          ? _value.submissions
-          : submissions // ignore: cast_nullable_to_non_nullable
-              as List<SubmissionItem>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            permit: null == permit
+                ? _value.permit
+                : permit // ignore: cast_nullable_to_non_nullable
+                      as PermitDetails,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as StatusDetails,
+            submissions: null == submissions
+                ? _value.submissions
+                : submissions // ignore: cast_nullable_to_non_nullable
+                      as List<SubmissionItem>,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -99,15 +107,17 @@ class _$PermitStatusResponseCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$PermitStatusResponseImplCopyWith<$Res>
     implements $PermitStatusResponseCopyWith<$Res> {
-  factory _$$PermitStatusResponseImplCopyWith(_$PermitStatusResponseImpl value,
-          $Res Function(_$PermitStatusResponseImpl) then) =
-      __$$PermitStatusResponseImplCopyWithImpl<$Res>;
+  factory _$$PermitStatusResponseImplCopyWith(
+    _$PermitStatusResponseImpl value,
+    $Res Function(_$PermitStatusResponseImpl) then,
+  ) = __$$PermitStatusResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PermitDetails permit,
-      StatusDetails status,
-      List<SubmissionItem> submissions});
+  $Res call({
+    PermitDetails permit,
+    StatusDetails status,
+    List<SubmissionItem> submissions,
+  });
 
   @override
   $PermitDetailsCopyWith<$Res> get permit;
@@ -119,9 +129,10 @@ abstract class _$$PermitStatusResponseImplCopyWith<$Res>
 class __$$PermitStatusResponseImplCopyWithImpl<$Res>
     extends _$PermitStatusResponseCopyWithImpl<$Res, _$PermitStatusResponseImpl>
     implements _$$PermitStatusResponseImplCopyWith<$Res> {
-  __$$PermitStatusResponseImplCopyWithImpl(_$PermitStatusResponseImpl _value,
-      $Res Function(_$PermitStatusResponseImpl) _then)
-      : super(_value, _then);
+  __$$PermitStatusResponseImplCopyWithImpl(
+    _$PermitStatusResponseImpl _value,
+    $Res Function(_$PermitStatusResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -130,31 +141,33 @@ class __$$PermitStatusResponseImplCopyWithImpl<$Res>
     Object? status = null,
     Object? submissions = null,
   }) {
-    return _then(_$PermitStatusResponseImpl(
-      permit: null == permit
-          ? _value.permit
-          : permit // ignore: cast_nullable_to_non_nullable
-              as PermitDetails,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as StatusDetails,
-      submissions: null == submissions
-          ? _value._submissions
-          : submissions // ignore: cast_nullable_to_non_nullable
-              as List<SubmissionItem>,
-    ));
+    return _then(
+      _$PermitStatusResponseImpl(
+        permit: null == permit
+            ? _value.permit
+            : permit // ignore: cast_nullable_to_non_nullable
+                  as PermitDetails,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as StatusDetails,
+        submissions: null == submissions
+            ? _value._submissions
+            : submissions // ignore: cast_nullable_to_non_nullable
+                  as List<SubmissionItem>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PermitStatusResponseImpl implements _PermitStatusResponse {
-  const _$PermitStatusResponseImpl(
-      {required this.permit,
-      required this.status,
-      final List<SubmissionItem> submissions = const []})
-      : _submissions = submissions;
+  const _$PermitStatusResponseImpl({
+    required this.permit,
+    required this.status,
+    final List<SubmissionItem> submissions = const [],
+  }) : _submissions = submissions;
 
   factory _$PermitStatusResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$PermitStatusResponseImplFromJson(json);
@@ -184,36 +197,43 @@ class _$PermitStatusResponseImpl implements _PermitStatusResponse {
             other is _$PermitStatusResponseImpl &&
             (identical(other.permit, permit) || other.permit == permit) &&
             (identical(other.status, status) || other.status == status) &&
-            const DeepCollectionEquality()
-                .equals(other._submissions, _submissions));
+            const DeepCollectionEquality().equals(
+              other._submissions,
+              _submissions,
+            ));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, permit, status,
-      const DeepCollectionEquality().hash(_submissions));
+  int get hashCode => Object.hash(
+    runtimeType,
+    permit,
+    status,
+    const DeepCollectionEquality().hash(_submissions),
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PermitStatusResponseImplCopyWith<_$PermitStatusResponseImpl>
-      get copyWith =>
-          __$$PermitStatusResponseImplCopyWithImpl<_$PermitStatusResponseImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$PermitStatusResponseImplCopyWithImpl<_$PermitStatusResponseImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PermitStatusResponseImplToJson(
-      this,
-    );
+    return _$$PermitStatusResponseImplToJson(this);
   }
 }
 
 abstract class _PermitStatusResponse implements PermitStatusResponse {
-  const factory _PermitStatusResponse(
-      {required final PermitDetails permit,
-      required final StatusDetails status,
-      final List<SubmissionItem> submissions}) = _$PermitStatusResponseImpl;
+  const factory _PermitStatusResponse({
+    required final PermitDetails permit,
+    required final StatusDetails status,
+    final List<SubmissionItem> submissions,
+  }) = _$PermitStatusResponseImpl;
 
   factory _PermitStatusResponse.fromJson(Map<String, dynamic> json) =
       _$PermitStatusResponseImpl.fromJson;
@@ -227,7 +247,7 @@ abstract class _PermitStatusResponse implements PermitStatusResponse {
   @override
   @JsonKey(ignore: true)
   _$$PermitStatusResponseImplCopyWith<_$PermitStatusResponseImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 SubmissionItem _$SubmissionItemFromJson(Map<String, dynamic> json) {
@@ -239,7 +259,7 @@ mixin _$SubmissionItem {
   String get id => throw _privateConstructorUsedError;
   String get permitId =>
       throw _privateConstructorUsedError; // Assuming permissionData is a JSON string, we'll handle it as such.
-// If it were a structured object, we'd define another model for it.
+  // If it were a structured object, we'd define another model for it.
   String get permissionData => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
@@ -253,15 +273,17 @@ mixin _$SubmissionItem {
 /// @nodoc
 abstract class $SubmissionItemCopyWith<$Res> {
   factory $SubmissionItemCopyWith(
-          SubmissionItem value, $Res Function(SubmissionItem) then) =
-      _$SubmissionItemCopyWithImpl<$Res, SubmissionItem>;
+    SubmissionItem value,
+    $Res Function(SubmissionItem) then,
+  ) = _$SubmissionItemCopyWithImpl<$Res, SubmissionItem>;
   @useResult
-  $Res call(
-      {String id,
-      String permitId,
-      String permissionData,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    String permitId,
+    String permissionData,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
@@ -283,45 +305,50 @@ class _$SubmissionItemCopyWithImpl<$Res, $Val extends SubmissionItem>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      permitId: null == permitId
-          ? _value.permitId
-          : permitId // ignore: cast_nullable_to_non_nullable
-              as String,
-      permissionData: null == permissionData
-          ? _value.permissionData
-          : permissionData // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            permitId: null == permitId
+                ? _value.permitId
+                : permitId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            permissionData: null == permissionData
+                ? _value.permissionData
+                : permissionData // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$SubmissionItemImplCopyWith<$Res>
     implements $SubmissionItemCopyWith<$Res> {
-  factory _$$SubmissionItemImplCopyWith(_$SubmissionItemImpl value,
-          $Res Function(_$SubmissionItemImpl) then) =
-      __$$SubmissionItemImplCopyWithImpl<$Res>;
+  factory _$$SubmissionItemImplCopyWith(
+    _$SubmissionItemImpl value,
+    $Res Function(_$SubmissionItemImpl) then,
+  ) = __$$SubmissionItemImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String permitId,
-      String permissionData,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    String permitId,
+    String permissionData,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
@@ -329,8 +356,9 @@ class __$$SubmissionItemImplCopyWithImpl<$Res>
     extends _$SubmissionItemCopyWithImpl<$Res, _$SubmissionItemImpl>
     implements _$$SubmissionItemImplCopyWith<$Res> {
   __$$SubmissionItemImplCopyWithImpl(
-      _$SubmissionItemImpl _value, $Res Function(_$SubmissionItemImpl) _then)
-      : super(_value, _then);
+    _$SubmissionItemImpl _value,
+    $Res Function(_$SubmissionItemImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -341,40 +369,43 @@ class __$$SubmissionItemImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_$SubmissionItemImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      permitId: null == permitId
-          ? _value.permitId
-          : permitId // ignore: cast_nullable_to_non_nullable
-              as String,
-      permissionData: null == permissionData
-          ? _value.permissionData
-          : permissionData // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$SubmissionItemImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        permitId: null == permitId
+            ? _value.permitId
+            : permitId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        permissionData: null == permissionData
+            ? _value.permissionData
+            : permissionData // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SubmissionItemImpl implements _SubmissionItem {
-  const _$SubmissionItemImpl(
-      {required this.id,
-      required this.permitId,
-      required this.permissionData,
-      required this.createdAt,
-      required this.updatedAt});
+  const _$SubmissionItemImpl({
+    required this.id,
+    required this.permitId,
+    required this.permissionData,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory _$SubmissionItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$SubmissionItemImplFromJson(json);
@@ -383,8 +414,8 @@ class _$SubmissionItemImpl implements _SubmissionItem {
   final String id;
   @override
   final String permitId;
-// Assuming permissionData is a JSON string, we'll handle it as such.
-// If it were a structured object, we'd define another model for it.
+  // Assuming permissionData is a JSON string, we'll handle it as such.
+  // If it were a structured object, we'd define another model for it.
   @override
   final String permissionData;
   @override
@@ -416,30 +447,37 @@ class _$SubmissionItemImpl implements _SubmissionItem {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, permitId, permissionData, createdAt, updatedAt);
+    runtimeType,
+    id,
+    permitId,
+    permissionData,
+    createdAt,
+    updatedAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$SubmissionItemImplCopyWith<_$SubmissionItemImpl> get copyWith =>
       __$$SubmissionItemImplCopyWithImpl<_$SubmissionItemImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SubmissionItemImplToJson(
-      this,
-    );
+    return _$$SubmissionItemImplToJson(this);
   }
 }
 
 abstract class _SubmissionItem implements SubmissionItem {
-  const factory _SubmissionItem(
-      {required final String id,
-      required final String permitId,
-      required final String permissionData,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$SubmissionItemImpl;
+  const factory _SubmissionItem({
+    required final String id,
+    required final String permitId,
+    required final String permissionData,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+  }) = _$SubmissionItemImpl;
 
   factory _SubmissionItem.fromJson(Map<String, dynamic> json) =
       _$SubmissionItemImpl.fromJson;
@@ -449,7 +487,7 @@ abstract class _SubmissionItem implements SubmissionItem {
   @override
   String get permitId;
   @override // Assuming permissionData is a JSON string, we'll handle it as such.
-// If it were a structured object, we'd define another model for it.
+  // If it were a structured object, we'd define another model for it.
   String get permissionData;
   @override
   DateTime get createdAt;
@@ -489,22 +527,24 @@ mixin _$PermitDetails {
 /// @nodoc
 abstract class $PermitDetailsCopyWith<$Res> {
   factory $PermitDetailsCopyWith(
-          PermitDetails value, $Res Function(PermitDetails) then) =
-      _$PermitDetailsCopyWithImpl<$Res, PermitDetails>;
+    PermitDetails value,
+    $Res Function(PermitDetails) then,
+  ) = _$PermitDetailsCopyWithImpl<$Res, PermitDetails>;
   @useResult
-  $Res call(
-      {String id,
-      String projectId,
-      String? simbgId,
-      String permitType,
-      String status,
-      DateTime? submittedAt,
-      DateTime? approvedAt,
-      String? dedDocumentUrl,
-      String? pbgDocumentUrl,
-      String? notes,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    String projectId,
+    String? simbgId,
+    String permitType,
+    String status,
+    DateTime? submittedAt,
+    DateTime? approvedAt,
+    String? dedDocumentUrl,
+    String? pbgDocumentUrl,
+    String? notes,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
@@ -533,56 +573,59 @@ class _$PermitDetailsCopyWithImpl<$Res, $Val extends PermitDetails>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      simbgId: freezed == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      permitType: null == permitType
-          ? _value.permitType
-          : permitType // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      submittedAt: freezed == submittedAt
-          ? _value.submittedAt
-          : submittedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      approvedAt: freezed == approvedAt
-          ? _value.approvedAt
-          : approvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      dedDocumentUrl: freezed == dedDocumentUrl
-          ? _value.dedDocumentUrl
-          : dedDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      pbgDocumentUrl: freezed == pbgDocumentUrl
-          ? _value.pbgDocumentUrl
-          : pbgDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            projectId: null == projectId
+                ? _value.projectId
+                : projectId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            simbgId: freezed == simbgId
+                ? _value.simbgId
+                : simbgId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            permitType: null == permitType
+                ? _value.permitType
+                : permitType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            submittedAt: freezed == submittedAt
+                ? _value.submittedAt
+                : submittedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            approvedAt: freezed == approvedAt
+                ? _value.approvedAt
+                : approvedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            dedDocumentUrl: freezed == dedDocumentUrl
+                ? _value.dedDocumentUrl
+                : dedDocumentUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            pbgDocumentUrl: freezed == pbgDocumentUrl
+                ? _value.pbgDocumentUrl
+                : pbgDocumentUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            notes: freezed == notes
+                ? _value.notes
+                : notes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -590,23 +633,25 @@ class _$PermitDetailsCopyWithImpl<$Res, $Val extends PermitDetails>
 abstract class _$$PermitDetailsImplCopyWith<$Res>
     implements $PermitDetailsCopyWith<$Res> {
   factory _$$PermitDetailsImplCopyWith(
-          _$PermitDetailsImpl value, $Res Function(_$PermitDetailsImpl) then) =
-      __$$PermitDetailsImplCopyWithImpl<$Res>;
+    _$PermitDetailsImpl value,
+    $Res Function(_$PermitDetailsImpl) then,
+  ) = __$$PermitDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String projectId,
-      String? simbgId,
-      String permitType,
-      String status,
-      DateTime? submittedAt,
-      DateTime? approvedAt,
-      String? dedDocumentUrl,
-      String? pbgDocumentUrl,
-      String? notes,
-      DateTime createdAt,
-      DateTime updatedAt});
+  $Res call({
+    String id,
+    String projectId,
+    String? simbgId,
+    String permitType,
+    String status,
+    DateTime? submittedAt,
+    DateTime? approvedAt,
+    String? dedDocumentUrl,
+    String? pbgDocumentUrl,
+    String? notes,
+    DateTime createdAt,
+    DateTime updatedAt,
+  });
 }
 
 /// @nodoc
@@ -614,8 +659,9 @@ class __$$PermitDetailsImplCopyWithImpl<$Res>
     extends _$PermitDetailsCopyWithImpl<$Res, _$PermitDetailsImpl>
     implements _$$PermitDetailsImplCopyWith<$Res> {
   __$$PermitDetailsImplCopyWithImpl(
-      _$PermitDetailsImpl _value, $Res Function(_$PermitDetailsImpl) _then)
-      : super(_value, _then);
+    _$PermitDetailsImpl _value,
+    $Res Function(_$PermitDetailsImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -633,75 +679,78 @@ class __$$PermitDetailsImplCopyWithImpl<$Res>
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
-    return _then(_$PermitDetailsImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      simbgId: freezed == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      permitType: null == permitType
-          ? _value.permitType
-          : permitType // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      submittedAt: freezed == submittedAt
-          ? _value.submittedAt
-          : submittedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      approvedAt: freezed == approvedAt
-          ? _value.approvedAt
-          : approvedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      dedDocumentUrl: freezed == dedDocumentUrl
-          ? _value.dedDocumentUrl
-          : dedDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      pbgDocumentUrl: freezed == pbgDocumentUrl
-          ? _value.pbgDocumentUrl
-          : pbgDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$PermitDetailsImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        projectId: null == projectId
+            ? _value.projectId
+            : projectId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        simbgId: freezed == simbgId
+            ? _value.simbgId
+            : simbgId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        permitType: null == permitType
+            ? _value.permitType
+            : permitType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        submittedAt: freezed == submittedAt
+            ? _value.submittedAt
+            : submittedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        approvedAt: freezed == approvedAt
+            ? _value.approvedAt
+            : approvedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        dedDocumentUrl: freezed == dedDocumentUrl
+            ? _value.dedDocumentUrl
+            : dedDocumentUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        pbgDocumentUrl: freezed == pbgDocumentUrl
+            ? _value.pbgDocumentUrl
+            : pbgDocumentUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        notes: freezed == notes
+            ? _value.notes
+            : notes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$PermitDetailsImpl implements _PermitDetails {
-  const _$PermitDetailsImpl(
-      {required this.id,
-      required this.projectId,
-      this.simbgId,
-      required this.permitType,
-      required this.status,
-      this.submittedAt,
-      this.approvedAt,
-      this.dedDocumentUrl,
-      this.pbgDocumentUrl,
-      this.notes,
-      required this.createdAt,
-      required this.updatedAt});
+  const _$PermitDetailsImpl({
+    required this.id,
+    required this.projectId,
+    this.simbgId,
+    required this.permitType,
+    required this.status,
+    this.submittedAt,
+    this.approvedAt,
+    this.dedDocumentUrl,
+    this.pbgDocumentUrl,
+    this.notes,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
   factory _$PermitDetailsImpl.fromJson(Map<String, dynamic> json) =>
       _$$PermitDetailsImplFromJson(json);
@@ -766,19 +815,20 @@ class _$PermitDetailsImpl implements _PermitDetails {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      projectId,
-      simbgId,
-      permitType,
-      status,
-      submittedAt,
-      approvedAt,
-      dedDocumentUrl,
-      pbgDocumentUrl,
-      notes,
-      createdAt,
-      updatedAt);
+    runtimeType,
+    id,
+    projectId,
+    simbgId,
+    permitType,
+    status,
+    submittedAt,
+    approvedAt,
+    dedDocumentUrl,
+    pbgDocumentUrl,
+    notes,
+    createdAt,
+    updatedAt,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -788,26 +838,25 @@ class _$PermitDetailsImpl implements _PermitDetails {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PermitDetailsImplToJson(
-      this,
-    );
+    return _$$PermitDetailsImplToJson(this);
   }
 }
 
 abstract class _PermitDetails implements PermitDetails {
-  const factory _PermitDetails(
-      {required final String id,
-      required final String projectId,
-      final String? simbgId,
-      required final String permitType,
-      required final String status,
-      final DateTime? submittedAt,
-      final DateTime? approvedAt,
-      final String? dedDocumentUrl,
-      final String? pbgDocumentUrl,
-      final String? notes,
-      required final DateTime createdAt,
-      required final DateTime updatedAt}) = _$PermitDetailsImpl;
+  const factory _PermitDetails({
+    required final String id,
+    required final String projectId,
+    final String? simbgId,
+    required final String permitType,
+    required final String status,
+    final DateTime? submittedAt,
+    final DateTime? approvedAt,
+    final String? dedDocumentUrl,
+    final String? pbgDocumentUrl,
+    final String? notes,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+  }) = _$PermitDetailsImpl;
 
   factory _PermitDetails.fromJson(Map<String, dynamic> json) =
       _$PermitDetailsImpl.fromJson;
@@ -863,15 +912,17 @@ mixin _$StatusDetails {
 /// @nodoc
 abstract class $StatusDetailsCopyWith<$Res> {
   factory $StatusDetailsCopyWith(
-          StatusDetails value, $Res Function(StatusDetails) then) =
-      _$StatusDetailsCopyWithImpl<$Res, StatusDetails>;
+    StatusDetails value,
+    $Res Function(StatusDetails) then,
+  ) = _$StatusDetailsCopyWithImpl<$Res, StatusDetails>;
   @useResult
-  $Res call(
-      {String? simbgId,
-      String? externalReference,
-      String status,
-      List<StatusHistoryItem> history,
-      AssignedOffice? assignedOffice});
+  $Res call({
+    String? simbgId,
+    String? externalReference,
+    String status,
+    List<StatusHistoryItem> history,
+    AssignedOffice? assignedOffice,
+  });
 
   $AssignedOfficeCopyWith<$Res>? get assignedOffice;
 }
@@ -895,28 +946,31 @@ class _$StatusDetailsCopyWithImpl<$Res, $Val extends StatusDetails>
     Object? history = null,
     Object? assignedOffice = freezed,
   }) {
-    return _then(_value.copyWith(
-      simbgId: freezed == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      externalReference: freezed == externalReference
-          ? _value.externalReference
-          : externalReference // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      history: null == history
-          ? _value.history
-          : history // ignore: cast_nullable_to_non_nullable
-              as List<StatusHistoryItem>,
-      assignedOffice: freezed == assignedOffice
-          ? _value.assignedOffice
-          : assignedOffice // ignore: cast_nullable_to_non_nullable
-              as AssignedOffice?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            simbgId: freezed == simbgId
+                ? _value.simbgId
+                : simbgId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            externalReference: freezed == externalReference
+                ? _value.externalReference
+                : externalReference // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            history: null == history
+                ? _value.history
+                : history // ignore: cast_nullable_to_non_nullable
+                      as List<StatusHistoryItem>,
+            assignedOffice: freezed == assignedOffice
+                ? _value.assignedOffice
+                : assignedOffice // ignore: cast_nullable_to_non_nullable
+                      as AssignedOffice?,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -936,16 +990,18 @@ class _$StatusDetailsCopyWithImpl<$Res, $Val extends StatusDetails>
 abstract class _$$StatusDetailsImplCopyWith<$Res>
     implements $StatusDetailsCopyWith<$Res> {
   factory _$$StatusDetailsImplCopyWith(
-          _$StatusDetailsImpl value, $Res Function(_$StatusDetailsImpl) then) =
-      __$$StatusDetailsImplCopyWithImpl<$Res>;
+    _$StatusDetailsImpl value,
+    $Res Function(_$StatusDetailsImpl) then,
+  ) = __$$StatusDetailsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? simbgId,
-      String? externalReference,
-      String status,
-      List<StatusHistoryItem> history,
-      AssignedOffice? assignedOffice});
+  $Res call({
+    String? simbgId,
+    String? externalReference,
+    String status,
+    List<StatusHistoryItem> history,
+    AssignedOffice? assignedOffice,
+  });
 
   @override
   $AssignedOfficeCopyWith<$Res>? get assignedOffice;
@@ -956,8 +1012,9 @@ class __$$StatusDetailsImplCopyWithImpl<$Res>
     extends _$StatusDetailsCopyWithImpl<$Res, _$StatusDetailsImpl>
     implements _$$StatusDetailsImplCopyWith<$Res> {
   __$$StatusDetailsImplCopyWithImpl(
-      _$StatusDetailsImpl _value, $Res Function(_$StatusDetailsImpl) _then)
-      : super(_value, _then);
+    _$StatusDetailsImpl _value,
+    $Res Function(_$StatusDetailsImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -968,41 +1025,43 @@ class __$$StatusDetailsImplCopyWithImpl<$Res>
     Object? history = null,
     Object? assignedOffice = freezed,
   }) {
-    return _then(_$StatusDetailsImpl(
-      simbgId: freezed == simbgId
-          ? _value.simbgId
-          : simbgId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      externalReference: freezed == externalReference
-          ? _value.externalReference
-          : externalReference // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      history: null == history
-          ? _value._history
-          : history // ignore: cast_nullable_to_non_nullable
-              as List<StatusHistoryItem>,
-      assignedOffice: freezed == assignedOffice
-          ? _value.assignedOffice
-          : assignedOffice // ignore: cast_nullable_to_non_nullable
-              as AssignedOffice?,
-    ));
+    return _then(
+      _$StatusDetailsImpl(
+        simbgId: freezed == simbgId
+            ? _value.simbgId
+            : simbgId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        externalReference: freezed == externalReference
+            ? _value.externalReference
+            : externalReference // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        history: null == history
+            ? _value._history
+            : history // ignore: cast_nullable_to_non_nullable
+                  as List<StatusHistoryItem>,
+        assignedOffice: freezed == assignedOffice
+            ? _value.assignedOffice
+            : assignedOffice // ignore: cast_nullable_to_non_nullable
+                  as AssignedOffice?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StatusDetailsImpl implements _StatusDetails {
-  const _$StatusDetailsImpl(
-      {this.simbgId,
-      this.externalReference,
-      required this.status,
-      final List<StatusHistoryItem> history = const [],
-      this.assignedOffice})
-      : _history = history;
+  const _$StatusDetailsImpl({
+    this.simbgId,
+    this.externalReference,
+    required this.status,
+    final List<StatusHistoryItem> history = const [],
+    this.assignedOffice,
+  }) : _history = history;
 
   factory _$StatusDetailsImpl.fromJson(Map<String, dynamic> json) =>
       _$$StatusDetailsImplFromJson(json);
@@ -1046,8 +1105,14 @@ class _$StatusDetailsImpl implements _StatusDetails {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, simbgId, externalReference,
-      status, const DeepCollectionEquality().hash(_history), assignedOffice);
+  int get hashCode => Object.hash(
+    runtimeType,
+    simbgId,
+    externalReference,
+    status,
+    const DeepCollectionEquality().hash(_history),
+    assignedOffice,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -1057,19 +1122,18 @@ class _$StatusDetailsImpl implements _StatusDetails {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StatusDetailsImplToJson(
-      this,
-    );
+    return _$$StatusDetailsImplToJson(this);
   }
 }
 
 abstract class _StatusDetails implements StatusDetails {
-  const factory _StatusDetails(
-      {final String? simbgId,
-      final String? externalReference,
-      required final String status,
-      final List<StatusHistoryItem> history,
-      final AssignedOffice? assignedOffice}) = _$StatusDetailsImpl;
+  const factory _StatusDetails({
+    final String? simbgId,
+    final String? externalReference,
+    required final String status,
+    final List<StatusHistoryItem> history,
+    final AssignedOffice? assignedOffice,
+  }) = _$StatusDetailsImpl;
 
   factory _StatusDetails.fromJson(Map<String, dynamic> json) =
       _$StatusDetailsImpl.fromJson;
@@ -1109,8 +1173,9 @@ mixin _$StatusHistoryItem {
 /// @nodoc
 abstract class $StatusHistoryItemCopyWith<$Res> {
   factory $StatusHistoryItemCopyWith(
-          StatusHistoryItem value, $Res Function(StatusHistoryItem) then) =
-      _$StatusHistoryItemCopyWithImpl<$Res, StatusHistoryItem>;
+    StatusHistoryItem value,
+    $Res Function(StatusHistoryItem) then,
+  ) = _$StatusHistoryItemCopyWithImpl<$Res, StatusHistoryItem>;
   @useResult
   $Res call({String status, DateTime at, String by});
 }
@@ -1127,34 +1192,34 @@ class _$StatusHistoryItemCopyWithImpl<$Res, $Val extends StatusHistoryItem>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = null,
-    Object? at = null,
-    Object? by = null,
-  }) {
-    return _then(_value.copyWith(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      at: null == at
-          ? _value.at
-          : at // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      by: null == by
-          ? _value.by
-          : by // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? status = null, Object? at = null, Object? by = null}) {
+    return _then(
+      _value.copyWith(
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            at: null == at
+                ? _value.at
+                : at // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            by: null == by
+                ? _value.by
+                : by // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$StatusHistoryItemImplCopyWith<$Res>
     implements $StatusHistoryItemCopyWith<$Res> {
-  factory _$$StatusHistoryItemImplCopyWith(_$StatusHistoryItemImpl value,
-          $Res Function(_$StatusHistoryItemImpl) then) =
-      __$$StatusHistoryItemImplCopyWithImpl<$Res>;
+  factory _$$StatusHistoryItemImplCopyWith(
+    _$StatusHistoryItemImpl value,
+    $Res Function(_$StatusHistoryItemImpl) then,
+  ) = __$$StatusHistoryItemImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String status, DateTime at, String by});
@@ -1164,39 +1229,41 @@ abstract class _$$StatusHistoryItemImplCopyWith<$Res>
 class __$$StatusHistoryItemImplCopyWithImpl<$Res>
     extends _$StatusHistoryItemCopyWithImpl<$Res, _$StatusHistoryItemImpl>
     implements _$$StatusHistoryItemImplCopyWith<$Res> {
-  __$$StatusHistoryItemImplCopyWithImpl(_$StatusHistoryItemImpl _value,
-      $Res Function(_$StatusHistoryItemImpl) _then)
-      : super(_value, _then);
+  __$$StatusHistoryItemImplCopyWithImpl(
+    _$StatusHistoryItemImpl _value,
+    $Res Function(_$StatusHistoryItemImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? status = null,
-    Object? at = null,
-    Object? by = null,
-  }) {
-    return _then(_$StatusHistoryItemImpl(
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      at: null == at
-          ? _value.at
-          : at // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      by: null == by
-          ? _value.by
-          : by // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? status = null, Object? at = null, Object? by = null}) {
+    return _then(
+      _$StatusHistoryItemImpl(
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        at: null == at
+            ? _value.at
+            : at // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        by: null == by
+            ? _value.by
+            : by // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$StatusHistoryItemImpl implements _StatusHistoryItem {
-  const _$StatusHistoryItemImpl(
-      {required this.status, required this.at, required this.by});
+  const _$StatusHistoryItemImpl({
+    required this.status,
+    required this.at,
+    required this.by,
+  });
 
   factory _$StatusHistoryItemImpl.fromJson(Map<String, dynamic> json) =>
       _$$StatusHistoryItemImplFromJson(json);
@@ -1232,21 +1299,22 @@ class _$StatusHistoryItemImpl implements _StatusHistoryItem {
   @pragma('vm:prefer-inline')
   _$$StatusHistoryItemImplCopyWith<_$StatusHistoryItemImpl> get copyWith =>
       __$$StatusHistoryItemImplCopyWithImpl<_$StatusHistoryItemImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$StatusHistoryItemImplToJson(
-      this,
-    );
+    return _$$StatusHistoryItemImplToJson(this);
   }
 }
 
 abstract class _StatusHistoryItem implements StatusHistoryItem {
-  const factory _StatusHistoryItem(
-      {required final String status,
-      required final DateTime at,
-      required final String by}) = _$StatusHistoryItemImpl;
+  const factory _StatusHistoryItem({
+    required final String status,
+    required final DateTime at,
+    required final String by,
+  }) = _$StatusHistoryItemImpl;
 
   factory _StatusHistoryItem.fromJson(Map<String, dynamic> json) =
       _$StatusHistoryItemImpl.fromJson;
@@ -1281,8 +1349,9 @@ mixin _$AssignedOffice {
 /// @nodoc
 abstract class $AssignedOfficeCopyWith<$Res> {
   factory $AssignedOfficeCopyWith(
-          AssignedOffice value, $Res Function(AssignedOffice) then) =
-      _$AssignedOfficeCopyWithImpl<$Res, AssignedOffice>;
+    AssignedOffice value,
+    $Res Function(AssignedOffice) then,
+  ) = _$AssignedOfficeCopyWithImpl<$Res, AssignedOffice>;
   @useResult
   $Res call({String? regionCode, String? officeName});
 }
@@ -1299,29 +1368,30 @@ class _$AssignedOfficeCopyWithImpl<$Res, $Val extends AssignedOffice>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? regionCode = freezed,
-    Object? officeName = freezed,
-  }) {
-    return _then(_value.copyWith(
-      regionCode: freezed == regionCode
-          ? _value.regionCode
-          : regionCode // ignore: cast_nullable_to_non_nullable
-              as String?,
-      officeName: freezed == officeName
-          ? _value.officeName
-          : officeName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+  $Res call({Object? regionCode = freezed, Object? officeName = freezed}) {
+    return _then(
+      _value.copyWith(
+            regionCode: freezed == regionCode
+                ? _value.regionCode
+                : regionCode // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            officeName: freezed == officeName
+                ? _value.officeName
+                : officeName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AssignedOfficeImplCopyWith<$Res>
     implements $AssignedOfficeCopyWith<$Res> {
-  factory _$$AssignedOfficeImplCopyWith(_$AssignedOfficeImpl value,
-          $Res Function(_$AssignedOfficeImpl) then) =
-      __$$AssignedOfficeImplCopyWithImpl<$Res>;
+  factory _$$AssignedOfficeImplCopyWith(
+    _$AssignedOfficeImpl value,
+    $Res Function(_$AssignedOfficeImpl) then,
+  ) = __$$AssignedOfficeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? regionCode, String? officeName});
@@ -1332,25 +1402,25 @@ class __$$AssignedOfficeImplCopyWithImpl<$Res>
     extends _$AssignedOfficeCopyWithImpl<$Res, _$AssignedOfficeImpl>
     implements _$$AssignedOfficeImplCopyWith<$Res> {
   __$$AssignedOfficeImplCopyWithImpl(
-      _$AssignedOfficeImpl _value, $Res Function(_$AssignedOfficeImpl) _then)
-      : super(_value, _then);
+    _$AssignedOfficeImpl _value,
+    $Res Function(_$AssignedOfficeImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? regionCode = freezed,
-    Object? officeName = freezed,
-  }) {
-    return _then(_$AssignedOfficeImpl(
-      regionCode: freezed == regionCode
-          ? _value.regionCode
-          : regionCode // ignore: cast_nullable_to_non_nullable
-              as String?,
-      officeName: freezed == officeName
-          ? _value.officeName
-          : officeName // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+  $Res call({Object? regionCode = freezed, Object? officeName = freezed}) {
+    return _then(
+      _$AssignedOfficeImpl(
+        regionCode: freezed == regionCode
+            ? _value.regionCode
+            : regionCode // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        officeName: freezed == officeName
+            ? _value.officeName
+            : officeName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
@@ -1392,20 +1462,21 @@ class _$AssignedOfficeImpl implements _AssignedOffice {
   @pragma('vm:prefer-inline')
   _$$AssignedOfficeImplCopyWith<_$AssignedOfficeImpl> get copyWith =>
       __$$AssignedOfficeImplCopyWithImpl<_$AssignedOfficeImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AssignedOfficeImplToJson(
-      this,
-    );
+    return _$$AssignedOfficeImplToJson(this);
   }
 }
 
 abstract class _AssignedOffice implements AssignedOffice {
-  const factory _AssignedOffice(
-      {final String? regionCode,
-      final String? officeName}) = _$AssignedOfficeImpl;
+  const factory _AssignedOffice({
+    final String? regionCode,
+    final String? officeName,
+  }) = _$AssignedOfficeImpl;
 
   factory _AssignedOffice.fromJson(Map<String, dynamic> json) =
       _$AssignedOfficeImpl.fromJson;

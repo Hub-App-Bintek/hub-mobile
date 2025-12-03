@@ -24,7 +24,7 @@ class MonitoringController extends BaseController {
     bool success = false;
 
     await handleAsync(
-          () => _getProjectsUseCase(
+      () => _getProjectsUseCase(
         const GetProjectsRequest(
           page: 0,
           size: 100,

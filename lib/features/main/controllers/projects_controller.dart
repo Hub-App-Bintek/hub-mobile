@@ -56,22 +56,11 @@ class ProjectsController extends BaseController {
   @override
   void onResumed() {
     super.onResumed();
-    _loadRole();
-    _seedMockProjects();
-    projects.value = _allProjects
-        .where((p) => p.status == _statusFilter.value)
-        .toList();
-    // refreshProjects();
-    _updateProjectCounts();
+    _refreshForVisibility();
   }
 
-  void onPageVisible() {
-    _loadRole();
-    _seedMockProjects();
-    projects.value = _allProjects
-        .where((p) => p.status == _statusFilter.value)
-        .toList();
-    _updateProjectCounts();
+  Future<void> onPageVisible() async {
+    await _refreshForVisibility();
   }
 
   @override
@@ -85,6 +74,21 @@ class ProjectsController extends BaseController {
     if (role != null) {
       userRole.value = role;
     }
+  }
+
+  Future<void> _refreshForVisibility() async {
+    if (!await _ensureLoggedIn()) return;
+    await _loadRole();
+    await refreshProjects();
+  }
+
+  Future<bool> _ensureLoggedIn() async {
+    final token = await _userStorage.getToken();
+    if (token == null || token.isEmpty) {
+      navigateOffAll(AppRoutes.login);
+      return false;
+    }
+    return true;
   }
 
   void _updateProjectCounts() {
@@ -269,6 +273,7 @@ const List<Project> _mockProjects = [
     name: 'Renovasi rumah BSD',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Dian Pratama',
       consultantId: 1001,
       consultantName: 'Ir. Ahmad Wijaya',
@@ -280,6 +285,7 @@ const List<Project> _mockProjects = [
     name: 'Desain interior Kemang',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Rani Kusuma',
       consultantId: 1001,
       consultantName: 'Salsa Putri, ST',
@@ -291,6 +297,7 @@ const List<Project> _mockProjects = [
     name: 'Tata ulang kafe Depok',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Fajar Setiawan',
       consultantId: 1001,
       consultantName: 'Dimas Wibowo',
@@ -302,6 +309,7 @@ const List<Project> _mockProjects = [
     name: 'Rumah modern Bandung',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Sari Anggraini',
       consultantId: 1001,
       consultantName: 'Alya Nabila',
@@ -313,6 +321,7 @@ const List<Project> _mockProjects = [
     name: 'Ruko Surabaya',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Hendra Wijaya',
       consultantId: 1001,
       consultantName: 'Budi Santoso',
@@ -335,6 +344,7 @@ const List<Project> _mockProjects = [
     name: 'Villa Bogor',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Galih Raharjo',
       consultantId: 1001,
       consultantName: 'Rio Prabowo',
@@ -346,6 +356,7 @@ const List<Project> _mockProjects = [
     name: 'Rumah keluarga Cibubur',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Maya Salsabila',
       consultantId: 1001,
       consultantName: 'Sinta Maharani',
@@ -357,6 +368,7 @@ const List<Project> _mockProjects = [
     name: 'Rumah minimalis Serpong',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Arif Pratomo',
       consultantId: 1001,
       consultantName: 'Yusuf Aditya',
@@ -368,6 +380,7 @@ const List<Project> _mockProjects = [
     name: 'Gudang Cilegon',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Nia Lestari',
       consultantId: 1001,
       consultantName: 'Mega Lestari',
@@ -379,6 +392,7 @@ const List<Project> _mockProjects = [
     name: 'Homestay Yogyakarta',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Bagus Aditya',
       consultantId: 1001,
       consultantName: 'Gilang Saputra',
@@ -390,6 +404,7 @@ const List<Project> _mockProjects = [
     name: 'Townhouse Semarang',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Yulia Kartika',
       consultantId: 1001,
       consultantName: 'Fitri Handayani',
@@ -401,6 +416,7 @@ const List<Project> _mockProjects = [
     name: 'Guesthouse Malang',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Rico Prabowo',
       consultantId: 1001,
       consultantName: 'Indra Kurniawan',
@@ -412,6 +428,7 @@ const List<Project> _mockProjects = [
     name: 'Villa Bali',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Putri Rahayu',
       consultantId: 1001,
       consultantName: 'Clara Widjaja',
@@ -423,6 +440,7 @@ const List<Project> _mockProjects = [
     name: 'Perumahan Makassar',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Reza Mahendra',
       consultantId: 1001,
       consultantName: 'Rama Wijaya',
@@ -434,6 +452,7 @@ const List<Project> _mockProjects = [
     name: 'Ruko Medan',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Dewi Ayu',
       consultantId: 1001,
       consultantName: 'Putri Anggraini',
@@ -445,6 +464,7 @@ const List<Project> _mockProjects = [
     name: 'Kantor Padang',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Bramantyo Saputra',
       consultantId: 1001,
       consultantName: 'Adi Rahman',
@@ -456,6 +476,7 @@ const List<Project> _mockProjects = [
     name: 'Cafe Pontianak',
     status: 'ACTIVE',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Nadya Paramita',
       consultantId: 1001,
       consultantName: 'Laras Pangestu',
@@ -468,6 +489,7 @@ const List<Project> _mockProjects = [
     name: 'Rumah dua lantai Cirebon',
     status: 'PENDING',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Fikri Ramadhan',
       consultantId: 1001,
       consultantName: 'Tia Safitri',
@@ -479,6 +501,7 @@ const List<Project> _mockProjects = [
     name: 'Renovasi Solo',
     status: 'PENDING',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Anita Rahmi',
       consultantId: 1001,
       consultantName: 'Johan Prasetyo',
@@ -490,6 +513,7 @@ const List<Project> _mockProjects = [
     name: 'Desain toko Sukabumi',
     status: 'PENDING',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Dodi Saputra',
       consultantId: 1001,
       consultantName: 'Dewi Paramita',
@@ -502,6 +526,7 @@ const List<Project> _mockProjects = [
     name: 'Renovasi dapur Palembang',
     status: 'COMPLETED',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Citra Wulandari',
       consultantId: 1001,
       consultantName: 'Rizky Alamsyah',
@@ -513,6 +538,7 @@ const List<Project> _mockProjects = [
     name: 'Villa Manado',
     status: 'COMPLETED',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Adrian Susanto',
       consultantId: 1001,
       consultantName: 'Zahra Kamila',
@@ -524,6 +550,7 @@ const List<Project> _mockProjects = [
     name: 'Kantor Bandar Lampung',
     status: 'COMPLETED',
     consultationInfo: ConsultationInfo(
+      homeOwnerId: 27,
       homeOwnerName: 'Hana Fauzia',
       consultantId: 1001,
       consultantName: 'Farhan Akbar',

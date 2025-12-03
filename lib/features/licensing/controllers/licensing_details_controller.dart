@@ -223,7 +223,7 @@ class LicensingDetailsController extends BaseController {
           response.permit.createdAt.add(const Duration(days: 14)).toLocal(),
         ),
         status: ProjectItemStatus.approved,
-        onDownloadTap: (){},
+        onDownloadTap: () {},
       ),
     ];
 

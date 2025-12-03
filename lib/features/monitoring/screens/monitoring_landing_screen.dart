@@ -198,10 +198,7 @@ class _PengawasanCardButton extends StatelessWidget {
             CircleAvatar(
               radius: 24,
               backgroundColor: theme.colorScheme.onPrimary.withOpacity(0.1),
-              child: Icon(
-                icon,
-                color: theme.colorScheme.onPrimary,
-              ),
+              child: Icon(icon, color: theme.colorScheme.onPrimary),
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -210,14 +207,16 @@ class _PengawasanCardButton extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(color: theme.colorScheme.onPrimary),
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.onPrimary),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onPrimary,
+                    ),
                   ),
                 ],
               ),
@@ -230,9 +229,9 @@ class _PengawasanCardButton extends StatelessWidget {
 }
 
 void _showConsultationPicker(
-    BuildContext context,
-    MonitoringController controller,
-    ) async {
+  BuildContext context,
+  MonitoringController controller,
+) async {
   // 1. Ask the controller to fetch the data.
   //    The controller will show a loading indicator on the main screen.
   final bool isDataAvailable = await controller.fetchConsultations();
@@ -266,10 +265,10 @@ void _showConsultationPicker(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 // Obx rebuilds the list when the controller's state changes.
                 child: Obx(
-                      () => Column(
+                  () => Column(
                     children: List.generate(controller.consultations.length, (
-                        index,
-                        ) {
+                      index,
+                    ) {
                       final item = controller.consultations[index];
                       final selected =
                           controller.selectedConsultationIndex.value == index;
@@ -300,7 +299,7 @@ void _showConsultationPicker(
               ),
             ),
             Obx(
-                  () => PkpBottomActions(
+              () => PkpBottomActions(
                 primaryText: 'Pilih',
                 onPrimaryPressed: controller.confirmSelection,
                 primaryEnabled: controller.selectedConsultationIndex.value >= 0,

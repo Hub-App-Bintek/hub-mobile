@@ -83,7 +83,7 @@ class ConsultationConfirmationController extends BaseController {
 
   void onReject() {
     // TODO: hook into reject flow
-    Get.back;
+    Get.back();
   }
 
   Future<void> startChatWithHomeOwner() async {

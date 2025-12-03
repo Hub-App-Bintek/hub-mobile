@@ -13,10 +13,11 @@ class MainScreen extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: controller.pageController,
-        physics: const NeverScrollableScrollPhysics(),
-        children: controller.pages,
+      body: Obx(
+        () => IndexedStack(
+          index: controller.selectedIndex.value,
+          children: controller.pages,
+        ),
       ),
       bottomNavigationBar: Obx(() {
         final currentIndex = controller.selectedIndex.value;

@@ -43,7 +43,7 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
           ),
           Expanded(
             child: Obx(
-                  () => GridView.builder(
+              () => GridView.builder(
                 padding: const EdgeInsets.all(16),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -56,7 +56,8 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
                   final supervisor = controller.supervisors[index];
                   return _SupervisorCard(
                     supervisor: supervisor,
-                    isSelected: controller.selectedSupervisorId.value == supervisor.id,
+                    isSelected:
+                        controller.selectedSupervisorId.value == supervisor.id,
                     onTap: () => controller.selectSupervisor(supervisor),
                   );
                 },
@@ -64,15 +65,15 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
             ),
           ),
           Obx(
-                () => Card(
-                  margin: EdgeInsets.zero, // Remove default card margins
-                  elevation: 4, // Add a slight shadow to lift it from the content
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero, // Make it a sharp rectangle
-                  ),
-                  child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: SizedBox(
+            () => Card(
+              margin: EdgeInsets.zero, // Remove default card margins
+              elevation: 4, // Add a slight shadow to lift it from the content
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.zero, // Make it a sharp rectangle
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: controller.selectedSupervisorId.value == null
@@ -80,9 +81,9 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
                         : controller.goToPengawasanDetail,
                     child: const Text('Lanjutkan'),
                   ),
-                                ),
-                              ),
                 ),
+              ),
+            ),
           ),
         ],
       ),
@@ -97,7 +98,7 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
       ),
       builder: (_) {
         return Obx(
-              () => Column(
+          () => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
@@ -181,9 +182,7 @@ class _SupervisorCard extends StatelessWidget {
           color: theme.colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected
-                ? theme.colorScheme.primary
-                : theme.dividerColor,
+            color: isSelected ? theme.colorScheme.primary : theme.dividerColor,
             width: isSelected ? 2 : 1,
           ),
         ),
@@ -210,7 +209,8 @@ class _SupervisorCard extends StatelessWidget {
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(), // A nice scroll effect
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center, // Center the text content vertically
+                  mainAxisAlignment: MainAxisAlignment
+                      .center, // Center the text content vertically
                   children: [
                     Text(
                       supervisor.name,
