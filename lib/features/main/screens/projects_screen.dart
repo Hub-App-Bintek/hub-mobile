@@ -65,7 +65,8 @@ class ProjectsScreen extends GetView<ProjectsController> {
           onTap: () {
             final status = project.status ?? '';
             if (isConsultationCategory &&
-                controller.statusFilter == 'PENDING') {
+                controller.statusFilter == 'PENDING' &&
+                controller.userRole.value == UserRole.consultant) {
               controller.openConsultationConfirmation(project);
             } else if (isConsultationCategory &&
                 controller.statusFilter == 'COMPLETED') {
@@ -77,8 +78,6 @@ class ProjectsScreen extends GetView<ProjectsController> {
               controller.openLicensingDetails(project);
             } else if (controller.selectedCategory == 'Pengawasan') {
               controller.openPengawasanDetails(project);
-            } else {
-              controller.openProjectReview(project);
             }
           },
         ),
