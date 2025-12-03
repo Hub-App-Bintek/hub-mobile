@@ -75,6 +75,8 @@ class ProjectsScreen extends GetView<ProjectsController> {
               controller.openConsultationDetails(project);
             } else if (controller.selectedCategory == 'Perizinan') {
               controller.openLicensingDetails(project);
+            } else if (controller.selectedCategory == 'Pengawasan') {
+              controller.openPengawasanDetails(project);
             } else {
               controller.openProjectReview(project);
             }

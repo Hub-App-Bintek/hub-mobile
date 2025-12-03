@@ -159,14 +159,6 @@ class LicensingDetailsScreen extends GetView<LicensingDetailsController> {
       );
     }
 
-    if (stage == LicensingStage.result) {
-      return const Center(
-        child: EmptyPlaceholder(
-          message: 'Belum ada hasil perizinan yang tersedia.',
-        ),
-      );
-    }
-
     if (stage == LicensingStage.documents) {
       if (!hasDocument) {
         return const Center(
@@ -181,6 +173,18 @@ class LicensingDetailsScreen extends GetView<LicensingDetailsController> {
           itemBuilder: (_, index) {
             // The controller already prepared the ProjectItem for us
             return controller.documents[index];
+          },
+        );
+      });
+    }
+
+    if (stage == LicensingStage.result){
+      return Obx(() {
+        return ListView.builder(
+          itemCount: controller.results.length,
+          itemBuilder: (_, index) {
+            // The controller already prepared the ProjectItem for us
+            return controller.results[index];
           },
         );
       });

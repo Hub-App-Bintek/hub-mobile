@@ -25,7 +25,7 @@ import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 
 import '../../../core/base/base_controller.dart';
 
-class MonitoringController extends BaseController {
+class MonitoringFormController extends BaseController {
   // Form key
   final formKey = GlobalKey<FormState>();
 
@@ -36,7 +36,7 @@ class MonitoringController extends BaseController {
   final GetVillagesUseCase _getVillagesUseCase;
   final String? _initialProjectTypeId;
 
-  MonitoringController(
+  MonitoringFormController(
       this._createProjectUseCase,
       this._getProvincesUseCase,
       this._getRegenciesUseCase,

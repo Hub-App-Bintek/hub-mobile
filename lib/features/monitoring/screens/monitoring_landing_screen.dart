@@ -5,8 +5,11 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
+import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
+import 'package:pkp_hub/features/monitoring/controllers/monitoring_controller.dart';
 
-class MonitoringScreen extends StatelessWidget {
+class MonitoringScreen extends GetView<MonitoringController> {
   const MonitoringScreen({super.key});
 
   @override
@@ -43,7 +46,7 @@ class MonitoringScreen extends StatelessWidget {
                   title: 'Buat Pengawasan dari Project',
                   subtitle: 'Gunakan data dari project yang sudah ada',
                   iconAsset: fromConsultIcon,
-                  onTap: () {},
+                  onTap: () => _showConsultationPicker(context, controller),
                 ),
               ],
             ),
@@ -224,4 +227,88 @@ class _PengawasanCardButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showConsultationPicker(
+    BuildContext context,
+    MonitoringController controller,
+    ) async {
+  // 1. Ask the controller to fetch the data.
+  //    The controller will show a loading indicator on the main screen.
+  final bool isDataAvailable = await controller.fetchConsultations();
+
+  // 2. Only show the bottom sheet if the data fetch was successful.
+  if (!isDataAvailable) return;
+
+  // 3. Show the bottom sheet, which is pure UI and reads state from the controller.
+  showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: AppColors.white,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (_) {
+      return SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            const PkpAppBar(
+              title: 'Pilih Proyek',
+              backgroundColor: AppColors.white,
+              leadingColor: AppColors.neutralDarkest,
+              titleTextColor: AppColors.neutralDarkest,
+            ),
+            const SizedBox(height: 16),
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                // Obx rebuilds the list when the controller's state changes.
+                child: Obx(
+                      () => Column(
+                    children: List.generate(controller.consultations.length, (
+                        index,
+                        ) {
+                      final item = controller.consultations[index];
+                      final selected =
+                          controller.selectedConsultationIndex.value == index;
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          bottom: index < controller.consultations.length - 1
+                              ? 16.0
+                              : 0,
+                        ),
+                        child: ProjectInfoCard(
+                          title: item.name ?? 'No Name',
+                          primaryLine: ProjectInfoLine(
+                            icon: Icons.calendar_today_outlined,
+                            // Use your actual data model fields
+                            text: item.status ?? 'No Status',
+                          ),
+                          secondaryLine: ProjectInfoLine(
+                            icon: Icons.place_outlined,
+                            text: item.location?.address ?? 'No Location',
+                          ),
+                          onTap: () => controller.selectConsultation(index),
+                          isSelected: selected,
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              ),
+            ),
+            Obx(
+                  () => PkpBottomActions(
+                primaryText: 'Pilih',
+                onPrimaryPressed: controller.confirmSelection,
+                primaryEnabled: controller.selectedConsultationIndex.value >= 0,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }

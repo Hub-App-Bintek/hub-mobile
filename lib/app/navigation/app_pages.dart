@@ -34,6 +34,7 @@ import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
+import 'package:pkp_hub/features/monitoring/bindings/monitoring_binding.dart';
 import 'package:pkp_hub/features/monitoring/bindings/monitoring_form_binding.dart';
 import 'package:pkp_hub/features/monitoring/bindings/monitoring_detail_binding.dart';
 import 'package:pkp_hub/features/monitoring/bindings/monitoring_detail_report_binding.dart';
@@ -248,7 +249,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.monitoringForm,
       page: () => const MonitoringFormScreen(),
-      binding: MonitoringBinding(),
+      binding: MonitoringFormBinding(),
     ),
   ];
 }

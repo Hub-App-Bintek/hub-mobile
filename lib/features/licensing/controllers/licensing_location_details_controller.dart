@@ -352,8 +352,7 @@ class LicensingLocationDetailsController extends BaseController {
         provinceController.text.isNotEmpty &&
         cityController.text.isNotEmpty &&
         subdistrictController.text.isNotEmpty &&
-        villageController.text.isNotEmpty &&
-        selectedLocation.value != null;
+        villageController.text.isNotEmpty;
   }
 
   @override

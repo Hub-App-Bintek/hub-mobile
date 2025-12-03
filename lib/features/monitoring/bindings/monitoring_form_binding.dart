@@ -9,7 +9,7 @@ import 'package:pkp_hub/domain/usecases/location/get_villages_use_case.dart';
 import 'package:pkp_hub/features/monitoring/controllers/monitoring_form_controller.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 
-class MonitoringBinding extends Bindings {
+class MonitoringFormBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<CreateProjectUseCase>(
@@ -28,7 +28,7 @@ class MonitoringBinding extends Bindings {
           () => GetVillagesUseCase(Get.find<LocationRepository>()),
     );
 
-    Get.lazyPut<MonitoringController>(() {
+    Get.lazyPut<MonitoringFormController>(() {
       final rawArgs = Get.arguments;
       LocationDetailsArgs args;
       if (rawArgs is LocationDetailsArgs) {
@@ -42,7 +42,7 @@ class MonitoringBinding extends Bindings {
       } else {
         args = const LocationDetailsArgs();
       }
-      return MonitoringController(
+      return MonitoringFormController(
         Get.find<CreateProjectUseCase>(),
         Get.find<GetProvincesUseCase>(),
         Get.find<GetRegenciesUseCase>(),
