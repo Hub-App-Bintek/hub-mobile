@@ -351,8 +351,10 @@ class HomeScreen extends GetView<HomeController> {
               title: AppStrings.homeFeatureDesignConsultation,
               iconData: Icons.chat_outlined,
               iconAsset: AppIcons.consultation,
-              onTap: () {
-                controller.onConsultationFeatureTapped();
+              onTap: () async {
+                if (await controller.ensureLoggedIn()) {
+                  controller.onConsultationFeatureTapped();
+                }
               },
             ),
           );
@@ -362,8 +364,10 @@ class HomeScreen extends GetView<HomeController> {
               title: AppStrings.homeFeatureLicensingFacilities,
               iconData: Icons.description_outlined,
               iconAsset: AppIcons.licensing,
-              onTap: () {
-                controller.navigateTo(AppRoutes.licensing);
+              onTap: () async {
+                if (await controller.ensureLoggedIn()) {
+                  controller.navigateTo(AppRoutes.licensing);
+                }
               },
             ),
           );
@@ -406,8 +410,10 @@ class HomeScreen extends GetView<HomeController> {
               title: AppStrings.homeFeatureConstructionSupervision,
               iconData: Icons.remove_red_eye_outlined,
               iconAsset: AppIcons.supervision,
-              onTap: () {
-                controller.navigateTo(AppRoutes.monitoring);
+              onTap: () async {
+                if (await controller.ensureLoggedIn()) {
+                  controller.navigateTo(AppRoutes.monitoring);
+                }
               },
             ),
           );

@@ -79,8 +79,7 @@ class HomeController extends BaseController {
   }
 
   Future<void> init() async {
-    userRole.value = await _userStorage.getRole();
-    _token.value = await _userStorage.getToken();
+    await _refreshAuthState();
     await _loadUserName();
     // if (userRole.value != UserRole.consultation) {
     //   final coords = await _determineUserLocation();
@@ -112,6 +111,20 @@ class HomeController extends BaseController {
   bool get _isLoggedIn => _token.value?.isNotEmpty ?? false;
 
   bool get isLoggedIn => _isLoggedIn;
+
+  Future<void> _refreshAuthState() async {
+    userRole.value = await _userStorage.getRole();
+    _token.value = await _userStorage.getToken();
+  }
+
+  Future<bool> ensureLoggedIn({bool redirectOnFail = true}) async {
+    await _refreshAuthState();
+    if (_isLoggedIn) return true;
+    if (redirectOnFail) {
+      navigateTo(AppRoutes.login);
+    }
+    return false;
+  }
 
   Future<void> _loadUserName() async {
     final user = await _userStorage.getUser();
