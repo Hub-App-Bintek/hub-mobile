@@ -20,6 +20,10 @@ abstract class AppRoutes {
   static const material = _Paths.material;
   static const construction = _Paths.construction;
   static const monitoring = _Paths.monitoring;
+  static const monitoringForm = _Paths.monitoringForm;
+  static const monitoringSupervisor = _Paths.monitoringSupervisor;
+  static const monitoringDetail = _Paths.monitoringDetail;
+  static const monitoringDetailReport = _Paths.monitoringDetailReport;
   static const licensingLocation = _Paths.licensingLocation;
   static const kyc = _Paths.kyc;
   static const createProject = _Paths.createProject;
@@ -58,6 +62,10 @@ abstract class _Paths {
   static const material = '/material';
   static const construction = '/construction';
   static const monitoring = '/monitoring';
+  static const monitoringForm = '/monitoring/form';
+  static const monitoringSupervisor = '/monitoring/supervisor';
+  static const monitoringDetail = '/monitoring/detail';
+  static const monitoringDetailReport = '/monitoring/detail/report';
   static const licensingLocation = '/licensing/location';
   static const kyc = '/kyc';
   static const createProject = '/create-project';

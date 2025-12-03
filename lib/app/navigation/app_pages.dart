@@ -34,6 +34,15 @@ import 'package:pkp_hub/features/main/bindings/main_binding.dart';
 import 'package:pkp_hub/features/main/bindings/projects_binding.dart';
 import 'package:pkp_hub/features/main/screens/main_screen.dart';
 import 'package:pkp_hub/features/main/screens/projects_screen.dart';
+import 'package:pkp_hub/features/monitoring/bindings/monitoring_form_binding.dart';
+import 'package:pkp_hub/features/monitoring/bindings/monitoring_detail_binding.dart';
+import 'package:pkp_hub/features/monitoring/bindings/monitoring_detail_report_binding.dart';
+import 'package:pkp_hub/features/monitoring/bindings/supervisor_binding.dart';
+import 'package:pkp_hub/features/monitoring/screens/monitoring_detail_screen.dart';
+import 'package:pkp_hub/features/monitoring/screens/monitoring_landing_screen.dart';
+import 'package:pkp_hub/features/monitoring/screens/monitoring_location_details_screen.dart';
+import 'package:pkp_hub/features/monitoring/screens/monitoring_supervisor_screen.dart';
+import 'package:pkp_hub/features/monitoring/screens/report_detail_screen.dart';
 import 'package:pkp_hub/features/payment/bindings/payment_binding.dart';
 import 'package:pkp_hub/features/payment/screens/payment_qr_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_receipt_screen.dart';
@@ -215,6 +224,31 @@ class AppPages {
       name: AppRoutes.licensingLocation,
       page: () => const LicensingLocationDetailsScreen(),
       binding: LicensingLocationDetailsBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.monitoring,
+      page: () => const MonitoringScreen(),
+      binding: MonitoringBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.monitoringDetail,
+      page: () => const MonitoringDetailScreen(),
+      binding: MonitoringDetailBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.monitoringDetailReport,
+      page: () => const MonitoringReportDetailScreen(),
+      binding: MonitoringDetailReportBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.monitoringSupervisor,
+      page: () => const MonitoringSupervisorScreen(),
+      binding: SupervisorBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.monitoringForm,
+      page: () => const MonitoringFormScreen(),
+      binding: MonitoringBinding(),
     ),
   ];
 }
