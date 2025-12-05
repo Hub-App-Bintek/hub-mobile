@@ -332,7 +332,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     );
   }
 
-  Widget _buildDesignCard(ConsultationDocumentItem item) {
+  Widget _buildDesignCard(ConsultationDesignItem item) {
     return ProjectItem(
       title: item.title,
       content: 'Diupload ${item.dateLabel}',

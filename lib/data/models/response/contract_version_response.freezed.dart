@@ -315,6 +315,7 @@ ContractDocumentInfo _$ContractDocumentInfoFromJson(Map<String, dynamic> json) {
 mixin _$ContractDocumentInfo {
   String? get documentType => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
+  String? get versionId => throw _privateConstructorUsedError;
   String? get fileUrl => throw _privateConstructorUsedError;
   String? get fileId => throw _privateConstructorUsedError;
   String? get uploadedBy => throw _privateConstructorUsedError;
@@ -338,6 +339,7 @@ abstract class $ContractDocumentInfoCopyWith<$Res> {
   $Res call({
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,
@@ -365,6 +367,7 @@ class _$ContractDocumentInfoCopyWithImpl<
   $Res call({
     Object? documentType = freezed,
     Object? version = freezed,
+    Object? versionId = freezed,
     Object? fileUrl = freezed,
     Object? fileId = freezed,
     Object? uploadedBy = freezed,
@@ -381,6 +384,10 @@ class _$ContractDocumentInfoCopyWithImpl<
             version: freezed == version
                 ? _value.version
                 : version // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            versionId: freezed == versionId
+                ? _value.versionId
+                : versionId // ignore: cast_nullable_to_non_nullable
                       as String?,
             fileUrl: freezed == fileUrl
                 ? _value.fileUrl
@@ -424,6 +431,7 @@ abstract class _$$ContractDocumentInfoImplCopyWith<$Res>
   $Res call({
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,
@@ -447,6 +455,7 @@ class __$$ContractDocumentInfoImplCopyWithImpl<$Res>
   $Res call({
     Object? documentType = freezed,
     Object? version = freezed,
+    Object? versionId = freezed,
     Object? fileUrl = freezed,
     Object? fileId = freezed,
     Object? uploadedBy = freezed,
@@ -463,6 +472,10 @@ class __$$ContractDocumentInfoImplCopyWithImpl<$Res>
         version: freezed == version
             ? _value.version
             : version // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        versionId: freezed == versionId
+            ? _value.versionId
+            : versionId // ignore: cast_nullable_to_non_nullable
                   as String?,
         fileUrl: freezed == fileUrl
             ? _value.fileUrl
@@ -499,6 +512,7 @@ class _$ContractDocumentInfoImpl implements _ContractDocumentInfo {
   const _$ContractDocumentInfoImpl({
     this.documentType,
     this.version,
+    this.versionId,
     this.fileUrl,
     this.fileId,
     this.uploadedBy,
@@ -515,6 +529,8 @@ class _$ContractDocumentInfoImpl implements _ContractDocumentInfo {
   @override
   final String? version;
   @override
+  final String? versionId;
+  @override
   final String? fileUrl;
   @override
   final String? fileId;
@@ -529,7 +545,7 @@ class _$ContractDocumentInfoImpl implements _ContractDocumentInfo {
 
   @override
   String toString() {
-    return 'ContractDocumentInfo(documentType: $documentType, version: $version, fileUrl: $fileUrl, fileId: $fileId, uploadedBy: $uploadedBy, status: $status, notes: $notes, uploadedAt: $uploadedAt)';
+    return 'ContractDocumentInfo(documentType: $documentType, version: $version, versionId: $versionId, fileUrl: $fileUrl, fileId: $fileId, uploadedBy: $uploadedBy, status: $status, notes: $notes, uploadedAt: $uploadedAt)';
   }
 
   @override
@@ -540,6 +556,8 @@ class _$ContractDocumentInfoImpl implements _ContractDocumentInfo {
             (identical(other.documentType, documentType) ||
                 other.documentType == documentType) &&
             (identical(other.version, version) || other.version == version) &&
+            (identical(other.versionId, versionId) ||
+                other.versionId == versionId) &&
             (identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl) &&
             (identical(other.fileId, fileId) || other.fileId == fileId) &&
             (identical(other.uploadedBy, uploadedBy) ||
@@ -556,6 +574,7 @@ class _$ContractDocumentInfoImpl implements _ContractDocumentInfo {
     runtimeType,
     documentType,
     version,
+    versionId,
     fileUrl,
     fileId,
     uploadedBy,
@@ -584,6 +603,7 @@ abstract class _ContractDocumentInfo implements ContractDocumentInfo {
   const factory _ContractDocumentInfo({
     final String? documentType,
     final String? version,
+    final String? versionId,
     final String? fileUrl,
     final String? fileId,
     final String? uploadedBy,
@@ -599,6 +619,8 @@ abstract class _ContractDocumentInfo implements ContractDocumentInfo {
   String? get documentType;
   @override
   String? get version;
+  @override
+  String? get versionId;
   @override
   String? get fileUrl;
   @override

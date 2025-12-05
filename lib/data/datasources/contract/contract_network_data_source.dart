@@ -11,6 +11,7 @@ import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart
 import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_param.dart';
 import 'package:retrofit/dio.dart';
 
 abstract class ContractNetworkDataSource {
@@ -42,6 +43,10 @@ abstract class ContractNetworkDataSource {
 
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
+  );
+
+  Future<Result<UploadContractResponse, Failure>> uploadRevisedContract(
+    UploadRevisedContractParam param,
   );
 
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
@@ -185,6 +190,26 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to upload contract: $e'));
+    }
+  }
+
+  @override
+  Future<Result<UploadContractResponse, Failure>> uploadRevisedContract(
+    UploadRevisedContractParam param,
+  ) async {
+    try {
+      final requestJson = jsonEncode(param.request.toJson());
+      final response = await _contractApi.uploadRevisedContract(
+        requestJson,
+        param.file,
+      );
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(message: 'Failed to upload revised contract: $e'),
+      );
     }
   }
 

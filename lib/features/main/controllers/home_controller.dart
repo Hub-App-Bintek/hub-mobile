@@ -217,12 +217,13 @@ class HomeController extends BaseController {
     final isWaitingConfirmation = status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
     final isActive = status == 'AKTIF';
 
-    if (isConsultant && isWaitingConfirmation) {
+    // Consultants should always land on consultation details, regardless of status
+    if (isConsultant) {
       navigateTo(
-        AppRoutes.consultationConfirmation,
+        AppRoutes.consultationDetails,
         arguments: ConsultationDetailsArgs(project: project),
       );
-    } else if (isActive) {
+    } else if (isActive || isWaitingConfirmation) {
       navigateTo(
         AppRoutes.consultationDetails,
         arguments: ConsultationDetailsArgs(project: project),

@@ -23,6 +23,7 @@ class ContractDocumentInfo with _$ContractDocumentInfo {
   const factory ContractDocumentInfo({
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,

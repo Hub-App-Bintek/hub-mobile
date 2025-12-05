@@ -18,7 +18,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class NotificationService extends GetxService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   @override
   void onInit() {
@@ -30,23 +31,20 @@ class NotificationService extends GetxService {
   // This private method contains all the async setup logic.
   Future<void> _initialize() async {
     // 1. Request notification permissions (essential for iOS).
-    await _fcm.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    await _fcm.requestPermission(alert: true, badge: true, sound: true);
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // TODO: Add iOS/macOS settings if needed
     const DarwinInitializationSettings initializationSettingsDarwin =
-    DarwinInitializationSettings();
+        DarwinInitializationSettings();
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin,
+        );
 
     // The onDidReceiveNotificationResponse callback is passed directly here.
     await _localNotifications.initialize(
@@ -63,7 +61,6 @@ class NotificationService extends GetxService {
 
     // 4. Configure foreground notification handling.
     await _setupForegroundNotifications();
-
 
     log('NotificationService Initialized');
   }
@@ -97,7 +94,9 @@ class NotificationService extends GetxService {
 
     // Create the channel on the device.
     await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     // Listen for incoming messages while the app is in the foreground.

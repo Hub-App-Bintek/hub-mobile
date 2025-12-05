@@ -15,8 +15,10 @@ import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/installment.dart';
+import 'package:pkp_hub/data/models/payment.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/request/create_contract_draft_request.dart';
+import 'package:pkp_hub/data/models/request/upload_revised_contract_request.dart';
 import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
 import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
@@ -30,12 +32,15 @@ import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.
 import 'package:pkp_hub/domain/usecases/contract/get_contract_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/download_design_version_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/get_design_document_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
+import 'package:pkp_hub/domain/usecases/payment/get_payments_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
 
@@ -65,6 +70,7 @@ class ConsultationDetailsController extends BaseController {
   final RxBool isUploadingDesign = false.obs;
   final RxBool isDownloadingContract = false.obs;
   final RxBool isDownloadingDesign = false.obs;
+  final RxBool isLoadingInvoices = false.obs;
   final RxBool hasUploadedContract = false.obs;
   final UserStorage _userStorage;
   final Rxn<ConsultationDetailsResponse> consultation =
@@ -73,10 +79,10 @@ class ConsultationDetailsController extends BaseController {
 
   final RxList<ConsultationContractItem> contracts =
       <ConsultationContractItem>[].obs;
-  final RxList<ConsultationDocumentItem> draftDesigns =
-      <ConsultationDocumentItem>[].obs;
-  final RxList<ConsultationDocumentItem> finalDesigns =
-      <ConsultationDocumentItem>[].obs;
+  final RxList<ConsultationDesignItem> draftDesigns =
+      <ConsultationDesignItem>[].obs;
+  final RxList<ConsultationDesignItem> finalDesigns =
+      <ConsultationDesignItem>[].obs;
   final RxList<ConsultationInvoiceItem> invoices =
       <ConsultationInvoiceItem>[].obs;
 
@@ -105,6 +111,7 @@ class ConsultationDetailsController extends BaseController {
     this._getConsultationDetailUseCase,
     this._getContractVersionsUseCase,
     this._createContractDraftUseCase,
+    this._uploadRevisedContractUseCase,
     this._approveContractUseCase,
     this._askContractRevisionUseCase,
     this._signContractUseCase,
@@ -114,12 +121,14 @@ class ConsultationDetailsController extends BaseController {
     this._getDesignDocumentVersionsUseCase,
     this._downloadDesignVersionUseCase,
     this._downloadFileUseCase,
+    this._getPaymentsUseCase,
   );
 
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
   final GetConsultationDetailUseCase _getConsultationDetailUseCase;
   final GetContractVersionsUseCase _getContractVersionsUseCase;
   final CreateContractDraftUseCase _createContractDraftUseCase;
+  final UploadRevisedContractUseCase _uploadRevisedContractUseCase;
   final ApproveContractUseCase _approveContractUseCase;
   final AskContractRevisionUseCase _askContractRevisionUseCase;
   final SignContractUseCase _signContractUseCase;
@@ -129,6 +138,7 @@ class ConsultationDetailsController extends BaseController {
   final GetDesignDocumentVersionsUseCase _getDesignDocumentVersionsUseCase;
   final DownloadDesignVersionUseCase _downloadDesignVersionUseCase;
   final DownloadFileUseCase _downloadFileUseCase;
+  final GetPaymentsUseCase _getPaymentsUseCase;
 
   final TextEditingController contractController = TextEditingController();
   final RxBool isPaymentTermsValid = false.obs;
@@ -192,6 +202,10 @@ class ConsultationDetailsController extends BaseController {
         finalDesigns.isEmpty &&
         !isLoadingDesigns.value) {
       _fetchDesignDocumentsIfNeeded();
+    } else if (step == ConsultationDetailStep.invoice &&
+        invoices.isEmpty &&
+        !isLoadingInvoices.value) {
+      _fetchInvoicesIfNeeded();
     }
   }
 
@@ -227,6 +241,9 @@ class ConsultationDetailsController extends BaseController {
                 selectedStep.value == ConsultationDetailStep.finalDesign) &&
             !isLoadingDesigns.value) {
           _fetchDesignDocumentsIfNeeded(consultationId: detail.consultationId);
+        } else if (selectedStep.value == ConsultationDetailStep.invoice &&
+            !isLoadingInvoices.value) {
+          _fetchInvoicesIfNeeded(consultationId: detail.consultationId);
         }
       },
       onFailure: showError,
@@ -260,16 +277,20 @@ class ConsultationDetailsController extends BaseController {
         ),
       ),
       onSuccess: (response) {
+        final totalContracts = response.length;
         final mapped = response.asMap().entries.map((entry) {
           final index = entry.key;
           final contract = entry.value;
           final info = contract.documentInfo;
           return ConsultationContractItem(
             id: contract.id,
+            versionId: info?.versionId,
             fileId: info?.fileId,
             title: _contractTitleForIndex(index),
             dateLabel: Formatters.formatIsoDate(info?.uploadedAt ?? '') ?? '',
-            status: _mapContractStatus(contract.contractStatus),
+            status: (index < totalContracts - 1)
+                ? ContractStatus.revisionRequested
+                : _mapContractStatus(contract.contractStatus),
             rawStatus: contract.contractStatus,
           );
         }).toList();
@@ -299,13 +320,15 @@ class ConsultationDetailsController extends BaseController {
           consultationId: effectiveConsultationId,
         ),
       ),
-      onSuccess: (versions) {
+      onSuccess: (response) {
         draftDesigns.clear();
         finalDesigns.clear();
-        for (final version in versions) {
+        for (final version in response.takeWhile(
+          (value) => value.documents.lastOrNull?.documentType != 'CONTRACT',
+        )) {
           for (final doc in version.documents) {
             final status = _mapDesignStatusFromApi(doc.status);
-            final item = ConsultationDocumentItem(
+            final item = ConsultationDesignItem(
               id: doc.id,
               title:
                   '${doc.documentType ?? 'Desain'} v${doc.version ?? version.version ?? ''}',
@@ -331,10 +354,43 @@ class ConsultationDetailsController extends BaseController {
     isLoadingDesigns.value = false;
   }
 
+  Future<void> _fetchInvoicesIfNeeded({String? consultationId}) async {
+    final effectiveConsultationId =
+        consultationId ?? project.value?.consultationInfo?.consultationId;
+    if (effectiveConsultationId == null ||
+        effectiveConsultationId.isEmpty ||
+        isLoadingInvoices.value) {
+      return;
+    }
+    isLoadingInvoices.value = true;
+    await handleAsync<List<Payment>>(
+      () => _getPaymentsUseCase(effectiveConsultationId),
+      onSuccess: (payments) {
+        final mapped = payments.map((p) {
+          final title = p.termin != null ? 'Termin ${p.termin}' : 'Invoice';
+          final date =
+              Formatters.formatIsoDate(p.dueDate ?? p.createdAt ?? '') ?? '';
+          return ConsultationInvoiceItem(
+            title: title,
+            dateLabel: date,
+            status: _mapInvoiceStatus(p.status),
+            amount: (p.amount ?? 0).toDouble(),
+            method: p.method ?? '-',
+          );
+        }).toList();
+        invoices
+          ..clear()
+          ..addAll(mapped);
+      },
+      onFailure: showError,
+    );
+    isLoadingInvoices.value = false;
+  }
+
   ContractStatus _mapContractStatus(String? status) {
     switch ((status ?? '').toUpperCase()) {
-      case 'UPLOADED':
-        return ContractStatus.requestForApproval;
+      // case 'UPLOADED':
+      //   return ContractStatus.requestForApproval;
       case 'MENUNGGU_APPROVAL_KONTRAK':
       case 'REQUEST_FOR_APPROVAL':
         return ContractStatus.requestForApproval;
@@ -353,10 +409,23 @@ class ConsultationDetailsController extends BaseController {
     }
   }
 
+  InvoiceStatus _mapInvoiceStatus(String? status) {
+    switch ((status ?? '').toUpperCase()) {
+      case 'PAID':
+      case 'SETTLED':
+      case 'COMPLETED':
+        return InvoiceStatus.paid;
+      case 'MENUNGGU':
+      case 'ESCROW_HOLD':
+      default:
+        return InvoiceStatus.unpaid;
+    }
+  }
+
   DesignStatus _mapDesignStatusFromApi(String? status) {
     switch ((status ?? '').toUpperCase()) {
       case 'SUBMITTED':
-      case 'UPLOADED':
+        // case 'UPLOADED':
         return DesignStatus.awaitingApproval;
       case 'REVISION_REQUESTED':
         return DesignStatus.needsRevision;
@@ -474,7 +543,7 @@ class ConsultationDetailsController extends BaseController {
     }
   }
 
-  Future<void> downloadDesign(ConsultationDocumentItem item) async {
+  Future<void> downloadDesign(ConsultationDesignItem item) async {
     if (isDownloadingDesign.value) return;
     final version = item.version;
     if (version == null || version.isEmpty) {
@@ -606,14 +675,29 @@ class ConsultationDetailsController extends BaseController {
 
     isUploadingContract.value = true;
     var success = false;
+    final isRevisionFlow =
+        contracts.isNotEmpty &&
+        contracts.last.status == ContractStatus.revisionRequested;
+
     await handleAsync(
-      () => _createContractDraftUseCase(
-        UploadContractParam(
-          consultationId: consultationId,
-          file: file,
-          request: request,
-        ),
-      ),
+      () => isRevisionFlow
+          ? _uploadRevisedContractUseCase(
+              UploadRevisedContractParam(
+                request: UploadRevisedContractRequest(
+                  contractValue: contractValue,
+                  installments: installments,
+                  revisionNotes: null,
+                ),
+                file: file,
+              ),
+            )
+          : _createContractDraftUseCase(
+              UploadContractParam(
+                consultationId: consultationId,
+                file: file,
+                request: request,
+              ),
+            ),
       onSuccess: (_) async {
         await _fetchContractsIfNeeded(
           consultationId: consultationId,
@@ -657,7 +741,7 @@ class ConsultationDetailsController extends BaseController {
   }
 
   void reviseLatestContract() {
-    _handleRequestRevision();
+    _handleRequestRevision(notes: '-');
   }
 
   Future<void> approveLatestDraft() async {
@@ -798,7 +882,7 @@ class ConsultationDetailsController extends BaseController {
         contracts.last.status != ContractStatus.unknown;
   }
 
-  ConsultationDocumentItem? _latestDraftAwaitingAction() {
+  ConsultationDesignItem? _latestDraftAwaitingAction() {
     if (draftDesigns.isEmpty) return null;
     for (final item in draftDesigns.reversed) {
       if (item.status == DesignStatus.awaitingApproval ||
@@ -826,13 +910,13 @@ class ConsultationDetailsController extends BaseController {
 
   Future<void> _handleHomeOwnerApproval() async {
     if (contracts.isEmpty) return;
-    final latest = contracts.last;
+    final latest = contracts.first;
     final contractId = latest.id;
     if (contractId == null || contractId.isEmpty) {
       showError(const ServerFailure(message: 'ID kontrak tidak ditemukan'));
       return;
     }
-    final approvedVersionId = latest.id;
+    final approvedVersionId = latest.versionId;
     if (approvedVersionId == null || approvedVersionId.isEmpty) {
       showError(
         const ServerFailure(message: 'Versi dokumen kontrak tidak ditemukan'),
@@ -848,10 +932,7 @@ class ConsultationDetailsController extends BaseController {
         ),
       ),
       onSuccess: (_) async {
-        await _fetchContractsIfNeeded(
-          consultationId: project.value?.consultationInfo?.consultationId,
-          projectId: project.value?.projectId,
-        );
+        await fetchDetails();
       },
       onFailure: showError,
     );
@@ -860,7 +941,7 @@ class ConsultationDetailsController extends BaseController {
 
   Future<void> _handleRequestRevision({String? notes}) async {
     if (contracts.isEmpty) return;
-    final latest = contracts.last;
+    final latest = contracts.first;
     final contractId = latest.id;
     if (contractId == null || contractId.isEmpty) {
       showError(const ServerFailure(message: 'ID kontrak tidak ditemukan'));
@@ -872,10 +953,7 @@ class ConsultationDetailsController extends BaseController {
         AskContractRevisionParams(contractId: contractId, revisionNotes: notes),
       ),
       onSuccess: (_) async {
-        await _fetchContractsIfNeeded(
-          consultationId: project.value?.consultationInfo?.consultationId,
-          projectId: project.value?.projectId,
-        );
+        await fetchDetails();
       },
       onFailure: showError,
     );
@@ -894,10 +972,7 @@ class ConsultationDetailsController extends BaseController {
     await handleAsync<Contract>(
       () => _signContractUseCase(contractId),
       onSuccess: (_) async {
-        await _fetchContractsIfNeeded(
-          consultationId: project.value?.consultationInfo?.consultationId,
-          projectId: project.value?.projectId,
-        );
+        await fetchDetails();
       },
       onFailure: showError,
     );
@@ -946,6 +1021,7 @@ class ConsultationDetailsController extends BaseController {
 class ConsultationContractItem {
   const ConsultationContractItem({
     required this.id,
+    this.versionId,
     this.fileId,
     required this.title,
     required this.dateLabel,
@@ -954,6 +1030,7 @@ class ConsultationContractItem {
   });
 
   final String? id;
+  final String? versionId;
   final String? fileId;
   final String title;
   final String dateLabel;
@@ -961,8 +1038,8 @@ class ConsultationContractItem {
   final String? rawStatus;
 }
 
-class ConsultationDocumentItem {
-  const ConsultationDocumentItem({
+class ConsultationDesignItem {
+  const ConsultationDesignItem({
     required this.id,
     required this.title,
     required this.dateLabel,

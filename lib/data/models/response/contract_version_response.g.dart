@@ -37,6 +37,7 @@ _$ContractDocumentInfoImpl _$$ContractDocumentInfoImplFromJson(
 ) => _$ContractDocumentInfoImpl(
   documentType: json['documentType'] as String?,
   version: json['version'] as String?,
+  versionId: json['versionId'] as String?,
   fileUrl: json['fileUrl'] as String?,
   fileId: json['fileId'] as String?,
   uploadedBy: json['uploadedBy'] as String?,
@@ -50,6 +51,7 @@ Map<String, dynamic> _$$ContractDocumentInfoImplToJson(
 ) => <String, dynamic>{
   'documentType': instance.documentType,
   'version': instance.version,
+  'versionId': instance.versionId,
   'fileUrl': instance.fileUrl,
   'fileId': instance.fileId,
   'uploadedBy': instance.uploadedBy,

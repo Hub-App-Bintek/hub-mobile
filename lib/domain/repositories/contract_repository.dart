@@ -8,6 +8,7 @@ import 'package:retrofit/dio.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_param.dart';
 
 abstract class ContractRepository {
   Future<Result<Contract, Failure>> getContract(String consultationId);
@@ -25,6 +26,10 @@ abstract class ContractRepository {
   Future<Result<Contract, Failure>> requestPayment(String contractId);
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
+  );
+
+  Future<Result<UploadContractResponse, Failure>> uploadRevisedContract(
+    UploadRevisedContractParam param,
   );
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
     required String consultationId,
@@ -79,6 +84,11 @@ class ContractRepositoryImpl implements ContractRepository {
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
   ) => _remoteDataSource.uploadContract(param);
+
+  @override
+  Future<Result<UploadContractResponse, Failure>> uploadRevisedContract(
+    UploadRevisedContractParam param,
+  ) => _remoteDataSource.uploadRevisedContract(param);
 
   @override
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({

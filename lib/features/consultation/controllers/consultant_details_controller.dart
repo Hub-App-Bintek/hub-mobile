@@ -5,22 +5,21 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
+import 'package:pkp_hub/core/enums/consultation_type.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/location_permission_helper.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
-import 'package:pkp_hub/core/enums/consultation_type.dart';
-import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
 import 'package:pkp_hub/data/models/portfolio.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/response/consultant_on_portfolios.dart';
 import 'package:pkp_hub/data/models/response/consultant_portfolios_response.dart';
-import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
+import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
-import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 
 class ConsultantDetailsController extends BaseController {
   final String _consultantId;

@@ -25,6 +25,7 @@ mixin _$DesignDocument {
   String? get consultationId => throw _privateConstructorUsedError;
   String? get documentType => throw _privateConstructorUsedError;
   String? get version => throw _privateConstructorUsedError;
+  String? get versionId => throw _privateConstructorUsedError;
   String? get fileUrl => throw _privateConstructorUsedError;
   String? get fileId => throw _privateConstructorUsedError;
   String? get uploadedBy => throw _privateConstructorUsedError;
@@ -52,6 +53,7 @@ abstract class $DesignDocumentCopyWith<$Res> {
     String? consultationId,
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,
@@ -80,6 +82,7 @@ class _$DesignDocumentCopyWithImpl<$Res, $Val extends DesignDocument>
     Object? consultationId = freezed,
     Object? documentType = freezed,
     Object? version = freezed,
+    Object? versionId = freezed,
     Object? fileUrl = freezed,
     Object? fileId = freezed,
     Object? uploadedBy = freezed,
@@ -106,6 +109,10 @@ class _$DesignDocumentCopyWithImpl<$Res, $Val extends DesignDocument>
             version: freezed == version
                 ? _value.version
                 : version // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            versionId: freezed == versionId
+                ? _value.versionId
+                : versionId // ignore: cast_nullable_to_non_nullable
                       as String?,
             fileUrl: freezed == fileUrl
                 ? _value.fileUrl
@@ -159,6 +166,7 @@ abstract class _$$DesignDocumentImplCopyWith<$Res>
     String? consultationId,
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,
@@ -186,6 +194,7 @@ class __$$DesignDocumentImplCopyWithImpl<$Res>
     Object? consultationId = freezed,
     Object? documentType = freezed,
     Object? version = freezed,
+    Object? versionId = freezed,
     Object? fileUrl = freezed,
     Object? fileId = freezed,
     Object? uploadedBy = freezed,
@@ -212,6 +221,10 @@ class __$$DesignDocumentImplCopyWithImpl<$Res>
         version: freezed == version
             ? _value.version
             : version // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        versionId: freezed == versionId
+            ? _value.versionId
+            : versionId // ignore: cast_nullable_to_non_nullable
                   as String?,
         fileUrl: freezed == fileUrl
             ? _value.fileUrl
@@ -258,6 +271,7 @@ class _$DesignDocumentImpl implements _DesignDocument {
     this.consultationId,
     this.documentType,
     this.version,
+    this.versionId,
     this.fileUrl,
     this.fileId,
     this.uploadedBy,
@@ -280,6 +294,8 @@ class _$DesignDocumentImpl implements _DesignDocument {
   @override
   final String? version;
   @override
+  final String? versionId;
+  @override
   final String? fileUrl;
   @override
   final String? fileId;
@@ -298,7 +314,7 @@ class _$DesignDocumentImpl implements _DesignDocument {
 
   @override
   String toString() {
-    return 'DesignDocument(id: $id, consultationId: $consultationId, documentType: $documentType, version: $version, fileUrl: $fileUrl, fileId: $fileId, uploadedBy: $uploadedBy, status: $status, notes: $notes, uploadedAt: $uploadedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'DesignDocument(id: $id, consultationId: $consultationId, documentType: $documentType, version: $version, versionId: $versionId, fileUrl: $fileUrl, fileId: $fileId, uploadedBy: $uploadedBy, status: $status, notes: $notes, uploadedAt: $uploadedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -312,6 +328,8 @@ class _$DesignDocumentImpl implements _DesignDocument {
             (identical(other.documentType, documentType) ||
                 other.documentType == documentType) &&
             (identical(other.version, version) || other.version == version) &&
+            (identical(other.versionId, versionId) ||
+                other.versionId == versionId) &&
             (identical(other.fileUrl, fileUrl) || other.fileUrl == fileUrl) &&
             (identical(other.fileId, fileId) || other.fileId == fileId) &&
             (identical(other.uploadedBy, uploadedBy) ||
@@ -334,6 +352,7 @@ class _$DesignDocumentImpl implements _DesignDocument {
     consultationId,
     documentType,
     version,
+    versionId,
     fileUrl,
     fileId,
     uploadedBy,
@@ -365,6 +384,7 @@ abstract class _DesignDocument implements DesignDocument {
     final String? consultationId,
     final String? documentType,
     final String? version,
+    final String? versionId,
     final String? fileUrl,
     final String? fileId,
     final String? uploadedBy,
@@ -386,6 +406,8 @@ abstract class _DesignDocument implements DesignDocument {
   String? get documentType;
   @override
   String? get version;
+  @override
+  String? get versionId;
   @override
   String? get fileUrl;
   @override
