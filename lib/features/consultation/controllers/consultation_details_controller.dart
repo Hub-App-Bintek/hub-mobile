@@ -339,7 +339,7 @@ class ConsultationDetailsController extends BaseController {
       return;
     }
     final consultantName =
-        project.consultationInfo?.consultantName?.trim() ?? 'Konsultan';
+        consultationInfo.value?.consultantName?.trim() ?? 'Konsultan';
 
     await handleAsync<CreateChatRoomResponse>(
       () => _createDirectChatRoomUseCase(consultantId),
