@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/widgets/controllers/location_selector_controller.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/request/submit_simbg_request.dart';
 import 'package:pkp_hub/domain/usecases/permit/submit_simbg_form_use_case.dart';
 
 class SIMBGFormController extends BaseController {
   final RxBool isPrototype = true.obs;
+
+  // final LocationSelectorController locationController = Get.find<LocationSelectorController>(tag: 'simbgForm');
 
   final TextEditingController docPermitController = TextEditingController();
   final TextEditingController gsbController = TextEditingController();
@@ -51,8 +54,9 @@ class SIMBGFormController extends BaseController {
   List<String> get categoryOptions => const ['Rumah Tinggal', 'Rumah Usaha'];
 
   final SubmitSimbgFormUseCase _submitSimbgFormUseCase;
+  final LocationSelectorController locationController;
 
-  SIMBGFormController(this._submitSimbgFormUseCase);
+  SIMBGFormController(this._submitSimbgFormUseCase, this.locationController);
 
   // Example project ID passed via arguments
   late final String projectId;
@@ -158,7 +162,7 @@ class SIMBGFormController extends BaseController {
   SubmitSimbgRequest _buildRequest() {
     if (isPrototype.value) {
       // Gather all data from prototype form fields
-      const prototypeData = PrototypeForm(
+      final prototypeData = PrototypeForm(
         type: "PROTOTYPE",
         // Populate all fields from your TextEditControllers and state variables
         nomorDokumenIzinPemanfaatanRuang: "DOC-789012", // Example
@@ -167,13 +171,14 @@ class SIMBGFormController extends BaseController {
         jumlahUnitDibangun: 10,
         menyesuaikanDesainPrototype: true,
         jumlahPenghuni: 40,
-        provinceName: '',
-        regencyId: 0,
-        regencyName: '',
-        districtId: 0,
-        districtName: '',
-        villageId: 0,
-        villageName: '',
+        provinceId: locationController.selectedProvince.value?.id ?? 0,
+        provinceName: locationController.selectedProvince.value?.name ?? '',
+        regencyId: locationController.selectedCity.value?.id ?? 0,
+        regencyName: locationController.selectedCity.value?.name ?? '',
+        districtId: locationController.selectedSubdistrict.value?.id ?? 0,
+        districtName: locationController.selectedSubdistrict.value?.name ?? '',
+        villageId: locationController.selectedVillage.value?.id ?? 0,
+        villageName: locationController.selectedVillage.value?.name ?? '',
         alamat: '',
         kondisiBangunanSaatIni: '',
         sudahMemilikiPbgImb: false,
@@ -185,9 +190,8 @@ class SIMBGFormController extends BaseController {
         koefisienLantaiBangunanKlbUnit: '',
         koefisienDasarHijauKdh: 0,
         koefisienDasarHijauKdhUnit: '',
-        provinceId: 0,
       );
-      return const SubmitSimbgRequest(
+      return SubmitSimbgRequest(
         type: "PROTOTYPE",
         prototypeForm: prototypeData,
       );

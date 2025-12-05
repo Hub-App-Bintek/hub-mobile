@@ -136,13 +136,13 @@ class PrototypeDesignDetailsScreen
                         onPressed: controller.onDownloadPressed,
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    /*const SizedBox(width: 12),
                     Expanded(
                       child: PkpElevatedButton(
                         text: 'Pilih Desain',
                         onPressed: () => _showSelectConfirmation(context),
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),

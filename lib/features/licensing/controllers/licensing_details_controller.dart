@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -223,7 +228,78 @@ class LicensingDetailsController extends BaseController {
           response.permit.createdAt.add(const Duration(days: 14)).toLocal(),
         ),
         status: ProjectItemStatus.approved,
-        onDownloadTap: () {},
+        onDownloadTap: () async {
+          const url = 'https://hub-dev.editnest.online/api/download/PBG-contoh.pdf';
+          final fileName = 'pbg.pdf';
+
+          try {
+
+            Directory? downloadsDir;
+            if (Platform.isAndroid) {
+              // On Android, get the public downloads directory.
+              downloadsDir = await getDownloadsDirectory();
+            } else {
+              // On iOS, get the app's documents directory, which is accessible via the Files app.
+              downloadsDir = await getApplicationDocumentsDirectory();
+            }
+
+            final savePath = '${downloadsDir!.path}/$fileName';
+
+            // 3. Show "Starting Download" snackbar
+            Get.snackbar(
+              'Mengunduh',
+              'Memulai unduhan file: PBG',
+              snackPosition: SnackPosition.BOTTOM,
+              showProgressIndicator: true,
+              progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            );
+
+            // 4. Perform download with Dio
+            await Dio().download(
+              url,
+              savePath,
+              onReceiveProgress: (received, total) {
+                if (total != -1) {
+                  // You can optionally update a progress variable here
+                  print((received / total * 100).toStringAsFixed(0) + "%");
+                }
+              },
+            );
+
+            // 5. Show "Completed" snackbar and offer to open the file
+            Get.back(); // Close the progress snackbar
+            Get.snackbar(
+              'Unduhan Selesai',
+              'File "PBG" berhasil diunduh.',
+              snackPosition: SnackPosition.BOTTOM,
+              mainButton: TextButton(
+                onPressed: () => OpenFilex.open(savePath),
+                child: const Text(
+                  'BUKA',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              duration: const Duration(seconds: 20),
+            );
+
+          } on DioException catch (e) {
+            Get.back(); // Close any open snackbar
+            Get.snackbar(
+              'Gagal Mengunduh',
+              'Terjadi kesalahan: ${e.message}',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+            );
+          } catch (e) {
+            Get.back();
+            Get.snackbar(
+              'Gagal Mengunduh',
+              'Terjadi kesalahan yang tidak diketahui.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+            );
+          }
+        },
       ),
     ];
 

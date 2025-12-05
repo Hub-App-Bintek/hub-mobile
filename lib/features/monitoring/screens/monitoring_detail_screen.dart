@@ -44,7 +44,7 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
       bottomNavigationBar: Obx(() {
         switch (controller.selectedStage.value) {
           case MonitoringStage.kontrak:
-            return _KontrakActions();
+            return controller.hasApprovedContract.value ? const SizedBox.shrink() : _KontrakActions();
           case MonitoringStage.dokumen:
             return _UploadDokumenAction();
           default:
@@ -232,7 +232,7 @@ class _KontrakList extends GetView<MonitoringDetailController> {
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
-                          item.statusLabel,
+                          item.getStatusLabel(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: chipTextColor,
                             fontWeight: FontWeight.w600,
@@ -260,28 +260,29 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton.icon(
-                onPressed: controller.requestRevision,
-                icon: const Icon(Icons.close),
-                label: const Text('Minta Revisi'),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: ElevatedButton.icon(
-                onPressed: controller.approveContract,
-                icon: const Icon(Icons.check_circle_outline),
-                label: const Text('Setujui'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.colorScheme.primary,
-                  foregroundColor: theme.colorScheme.onPrimary,
+        child: Obx(() => controller.hasApprovedContract.value ? const SizedBox() : Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: controller.requestRevision,
+                  icon: const Icon(Icons.close),
+                  label: const Text('Minta Revisi'),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: controller.approveContract,
+                  icon: const Icon(Icons.check_circle_outline),
+                  label: const Text('Setujui'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.colorScheme.primary,
+                    foregroundColor: theme.colorScheme.onPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

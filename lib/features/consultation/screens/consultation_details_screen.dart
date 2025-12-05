@@ -155,14 +155,18 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  consultantName,
+                  controller.isConsultant
+                      ? (controller.homeOwnerName == ''
+                            ? 'Pemilik Rumah'
+                            : controller.homeOwnerName)
+                      : consultantName,
                   style: AppTextStyles.h4.copyWith(
                     color: AppColors.neutralDarkest,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Consultant Speciality',
+                  controller.isConsultant ? '' : 'Consultant Speciality',
                   style: AppTextStyles.bodyS.copyWith(
                     color: AppColors.neutralMediumLight,
                   ),

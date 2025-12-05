@@ -27,9 +27,9 @@ class MonitoringController extends BaseController {
       () => _getProjectsUseCase(
         const GetProjectsRequest(
           page: 0,
-          size: 100,
-          type: 'PROTOTYPE',
-          status: 'ACTIVE',
+          size: 10,
+          // type: 'PROTOTYPE',
+          // status: 'ACTIVE',
         ),
       ),
       onSuccess: (response) {
