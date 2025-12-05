@@ -10,6 +10,7 @@ part 'consultation.g.dart';
 class Consultation with _$Consultation {
   const factory Consultation({
     String? consultationId,
+    int? consultantId,
     String? consultantName,
     String? scheduledAt,
     String? status,

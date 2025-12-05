@@ -5,6 +5,8 @@ import 'package:pkp_hub/features/consultation/controllers/consultation_confirmat
 class ConsultationConfirmationBinding extends Bindings {
   @override
   void dependencies() {
+    Get.lazyPut<CreateDirectChatRoomUseCase>(() => Get.find<CreateDirectChatRoomUseCase>());
+
     Get.lazyPut<ConsultationConfirmationController>(
       () => ConsultationConfirmationController(
         Get.find<CreateDirectChatRoomUseCase>(),

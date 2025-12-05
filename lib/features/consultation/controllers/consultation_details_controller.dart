@@ -9,9 +9,13 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
+import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
+import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
+import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
 
@@ -28,12 +32,13 @@ enum InvoiceStatus { unpaid, paid }
 
 class ConsultationDetailsController extends BaseController {
   late final Project project;
-  String homeOwnerName = '';
+  final RxString homeOwnerName = ''.obs;
   final Rx<ConsultationDetailStep> selectedStep =
       ConsultationDetailStep.contract.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
   final RxBool hasUploadedContract = false.obs;
   final UserStorage _userStorage;
+  final Rxn<Consultation> consultationInfo = Rxn<Consultation>();
 
   final RxList<ConsultationContractItem> contracts =
       <ConsultationContractItem>[].obs;
@@ -60,9 +65,14 @@ class ConsultationDetailsController extends BaseController {
   final List<RxnString> draftFileNames = List.generate(3, (_) => RxnString());
   final TextEditingController draftNotesController = TextEditingController();
 
+  final GetProjectDetailsUseCase _getDetailsUseCase;
+
+  final _logger = Logger();
+
   ConsultationDetailsController(
     this._userStorage,
     this._createDirectChatRoomUseCase,
+    this._getDetailsUseCase,
   );
 
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
@@ -91,7 +101,7 @@ class ConsultationDetailsController extends BaseController {
     } else if (args is Map<String, dynamic>) {
       final mapProject = args['project'] as Project?;
       final projectId = args['projectId'] as String?;
-      homeOwnerName = args['homeOwnerName'];
+      homeOwnerName.value = args['homeOwnerName'] ?? 'Pemilik Rumah';
       project =
           mapProject ??
           Project(
@@ -103,6 +113,7 @@ class ConsultationDetailsController extends BaseController {
       project = const Project();
     }
 
+    fetchDetails();
     _applyMockScenario(project.projectId);
     _loadUserRole();
   }
@@ -113,6 +124,28 @@ class ConsultationDetailsController extends BaseController {
 
   void selectStep(ConsultationDetailStep step) {
     selectedStep.value = step;
+  }
+
+  Future<void> handleRefresh() async {
+    // We call fetchDetails and let it handle the loading state and updates.
+    await fetchDetails();
+  }
+
+  Future<void> fetchDetails({bool isInitialLoad = false}) async {
+    await handleAsync<ProjectDetailsResponse>(
+      () => _getDetailsUseCase(project.projectId!),
+      onSuccess: (data) {
+        final newName = data.userInfo?['name'];
+
+        homeOwnerName.value = newName ?? 'Pemilik Rumah';
+
+        final consultation = data.consultation;
+        _logger.d('Consultation: ${consultation?.consultantName}');
+        if(consultation != null){
+          consultationInfo.value = consultation;
+        }
+      },
+    );
   }
 
   // --- Mocked download helpers ---
@@ -300,7 +333,7 @@ class ConsultationDetailsController extends BaseController {
   }
 
   Future<void> startChatWithConsultant() async {
-    final consultantId = project.consultationInfo?.consultantId;
+    final consultantId = consultationInfo.value?.consultantId;
     if (consultantId == null) {
       showError(const ServerFailure(message: 'Konsultan tidak ditemukan'));
       return;
