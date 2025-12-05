@@ -65,7 +65,6 @@ Future<Directory> _downloadDirectory() async {
 Future<void> _downloadDocument(BuildContext context, String title) async {
   const url =
       'https://drive.google.com/file/d/1RryBcDn9vrZCLpUvSGwNBaBQBssm-neB/view?usp=drive_link';
-  final scaffold = ScaffoldMessenger.of(context);
   try {
     final httpClient = HttpClient();
     final request = await httpClient.getUrl(Uri.parse(url));

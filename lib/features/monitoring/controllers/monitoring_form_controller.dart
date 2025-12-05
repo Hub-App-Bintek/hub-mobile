@@ -12,9 +12,9 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
-import 'package:pkp_hub/data/models/project_type.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
@@ -78,7 +78,7 @@ class MonitoringFormController extends BaseController {
   RxnString landAreaError = RxnString();
   RxnString incomeError = RxnString();
 
-  Rxn<ProjectType> selectedProjectType = Rxn<ProjectType>(nonPrototype);
+  Rxn<ProjectType> selectedProjectType = Rxn<ProjectType>(monitoring);
 
   final isPickingFile = false.obs;
 
@@ -142,9 +142,9 @@ class MonitoringFormController extends BaseController {
     if (_initialProjectTypeId == null || _initialProjectTypeId.isEmpty) {
       return;
     }
-    final match = projectTypeList.firstWhere(
-      (type) => type.id.toUpperCase() == _initialProjectTypeId.toUpperCase(),
-      orElse: () => prototype,
+    final match = projectTypes.firstWhere(
+      (type) => type.name == _initialProjectTypeId,
+      orElse: () => monitoring,
     );
     selectedProjectType.value = match;
   }
@@ -584,6 +584,10 @@ class MonitoringFormController extends BaseController {
     final income =
         double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
         0.0;
+    final projectName = locationDetailsController.text.trim();
+    final incomeProofFile = (incomeProofPath.value ?? '').isNotEmpty
+        ? File(incomeProofPath.value!)
+        : null;
 
     final combinedLocationDetail = [
       locationDetailsController.text.trim(),
@@ -605,13 +609,14 @@ class MonitoringFormController extends BaseController {
               income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
-              type: selectedProjectType.value?.id ?? '',
-              name: 'GENERATED-Hardcoded first',
-              provinceId: selectedProvince.value?.id ?? 0,
-              regencyId: selectedCity.value?.id ?? 0,
-              districtId: selectedSubdistrict.value?.id ?? 0,
-              villageId: selectedVillage.value?.id ?? 0,
+              type: selectedProjectType.value?.name ?? '',
+              name: projectName.isNotEmpty ? projectName : 'Project',
+              provinceId: selectedProvince.value?.id.toString() ?? '',
+              regencyId: selectedCity.value?.id.toString() ?? '',
+              districtId: selectedSubdistrict.value?.id.toString() ?? '',
+              villageId: selectedVillage.value?.id.toString() ?? '',
             ),
+            incomeProofFile: incomeProofFile,
           ),
         ),
         onSuccess: (response) {

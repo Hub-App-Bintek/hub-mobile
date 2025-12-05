@@ -5,7 +5,7 @@ import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 
 // Enum to manage payment methods
-enum PaymentMethod { qris, debit, credit, va }
+enum PaymentMethod { qris, debit, credit, va, none }
 
 class PaymentController extends BaseController {
   // State for the payment amount, injected from arguments
@@ -43,9 +43,13 @@ class PaymentController extends BaseController {
 
   /// Updates the selected payment method
   void selectPaymentMethod(PaymentMethod method) {
-    selectedMethod.value = method;
-    if (method != PaymentMethod.debit && method != PaymentMethod.va) {
-      selectedBank.value = null;
+    if (selectedMethod.value == method) {
+      selectedMethod.value = PaymentMethod.none;
+    } else {
+      selectedMethod.value = method;
+      if (method != PaymentMethod.debit && method != PaymentMethod.va) {
+        selectedBank.value = null;
+      }
     }
   }
 

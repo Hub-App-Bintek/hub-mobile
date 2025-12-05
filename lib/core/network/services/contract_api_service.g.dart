@@ -45,6 +45,41 @@ class _ContractApiService implements ContractApiService {
   }
 
   @override
+  Future<List<ContractVersionResponse>> getContractVersions(
+    String projectId,
+    String consultationId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<ContractVersionResponse>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/api/contracts/projects/${projectId}/consultations/${consultationId}/versions',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<ContractVersionResponse> _value;
+    try {
+      _value = _result.data!
+          .map(
+            (dynamic i) =>
+                ContractVersionResponse.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<UploadContractResponse> createDraft(
     String consultationId,
     String requestJson,
@@ -155,11 +190,15 @@ class _ContractApiService implements ContractApiService {
   }
 
   @override
-  Future<Contract> approve(String contractId) async {
+  Future<Contract> approve(
+    String contractId,
+    ApproveContractRequest body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
     final _options = _setStreamType<Contract>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(

@@ -11,9 +11,11 @@ class PrototypeDesignDetailsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<GetPrototypeDesignDetailUseCase>(
       () => GetPrototypeDesignDetailUseCase(Get.find<DesignRepository>()),
+      fenix: true,
     );
     Get.lazyPut<DownloadPrototypeDesignUseCase>(
       () => DownloadPrototypeDesignUseCase(Get.find<DesignRepository>()),
+      fenix: true,
     );
 
     Get.lazyPut<PrototypeDesignDetailsController>(() {

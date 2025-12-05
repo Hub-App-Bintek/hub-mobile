@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
-import 'package:pkp_hub/features/monitoring/controllers/monitoring_detail_controller.dart';
 import 'package:pkp_hub/features/monitoring/controllers/report_detail_controller.dart';
 
 class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
@@ -78,7 +77,7 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
                   height: 80,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
                   ),
                   child: const Icon(Icons.image),
                 ),

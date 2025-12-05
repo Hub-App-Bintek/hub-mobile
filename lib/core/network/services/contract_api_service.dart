@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
+import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'contract_api_service.g.dart';
@@ -14,6 +16,12 @@ abstract class ContractApiService {
 
   @GET(ApiEndpoints.contractByConsultation)
   Future<Contract> getContract(@Path('consultationId') String consultationId);
+
+  @GET(ApiEndpoints.contractVersions)
+  Future<List<ContractVersionResponse>> getContractVersions(
+    @Path('projectId') String projectId,
+    @Path('consultationId') String consultationId,
+  );
 
   @MultiPart()
   @POST(ApiEndpoints.contractCreateDraft)
@@ -34,7 +42,10 @@ abstract class ContractApiService {
   Future<Contract> requestApproval(@Path('contractId') String contractId);
 
   @POST(ApiEndpoints.contractApprove)
-  Future<Contract> approve(@Path('contractId') String contractId);
+  Future<Contract> approve(
+    @Path('contractId') String contractId,
+    @Body() ApproveContractRequest body,
+  );
 
   @POST(ApiEndpoints.contractRejectPost)
   Future<Contract> rejectPost(

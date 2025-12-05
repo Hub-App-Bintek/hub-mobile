@@ -5,6 +5,7 @@ import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 
 class LocationSelectorWidget extends GetWidget<LocationSelectorController> {
   // A unique tag is crucial for reusing the widget on the same page.
+  @override
   final String tag;
 
   const LocationSelectorWidget({super.key, required this.tag});
@@ -15,52 +16,57 @@ class LocationSelectorWidget extends GetWidget<LocationSelectorController> {
     // Get.put() ensures it's created and available.
     Get.put(
       LocationSelectorController(
-          Get.find(), Get.find(), Get.find(), Get.find()),
+        Get.find(),
+        Get.find(),
+        Get.find(),
+        Get.find(),
+      ),
       tag: tag,
     );
 
-    return Obx(() =>
-        Column(
-          children: [
-            PkpTextFormField(
-              type: PkpTextFormFieldType.dropdown,
-              controller: controller.provinceController,
-              labelText: 'Provinsi',
-              hintText: 'Pilih provinsi',
-              options: controller.provinceOptions,
-              onChanged: controller.onProvinceSelected,
-            ),
-            const SizedBox(height: 16),
-            PkpTextFormField(
-              type: PkpTextFormFieldType.dropdown,
-              controller: controller.cityController,
-              labelText: 'Kabupaten/Kota',
-              hintText: 'Pilih Kabupaten/Kota',
-              options: controller.cityOptions,
-              onChanged: controller.onCitySelected,
-              enabled: controller.provinces.isNotEmpty,
-            ),
-            const SizedBox(height: 16),
-            PkpTextFormField(
-              type: PkpTextFormFieldType.dropdown,
-              controller: controller.subdistrictController,
-              labelText: 'Kecamatan',
-              hintText: 'Pilih Kecamatan',
-              options: controller.subdistrictOptions,
-              onChanged: controller.onSubdistrictSelected,
-              enabled: controller.regencies.isNotEmpty,
-            ),
-            const SizedBox(height: 16),
-            PkpTextFormField(
-              type: PkpTextFormFieldType.dropdown,
-              controller: controller.villageController,
-              labelText: 'Kelurahan/Desa',
-              hintText: 'Pilih Kelurahan/Desa',
-              options: controller.villageOptions,
-              onChanged: controller.onVillageSelected,
-              enabled: controller.districts.isNotEmpty,
-            ),
-          ],
-        ));
+    return Obx(
+      () => Column(
+        children: [
+          PkpTextFormField(
+            type: PkpTextFormFieldType.dropdown,
+            controller: controller.provinceController,
+            labelText: 'Provinsi',
+            hintText: 'Pilih provinsi',
+            options: controller.provinceOptions,
+            onChanged: controller.onProvinceSelected,
+          ),
+          const SizedBox(height: 16),
+          PkpTextFormField(
+            type: PkpTextFormFieldType.dropdown,
+            controller: controller.cityController,
+            labelText: 'Kabupaten/Kota',
+            hintText: 'Pilih Kabupaten/Kota',
+            options: controller.cityOptions,
+            onChanged: controller.onCitySelected,
+            enabled: controller.provinces.isNotEmpty,
+          ),
+          const SizedBox(height: 16),
+          PkpTextFormField(
+            type: PkpTextFormFieldType.dropdown,
+            controller: controller.subdistrictController,
+            labelText: 'Kecamatan',
+            hintText: 'Pilih Kecamatan',
+            options: controller.subdistrictOptions,
+            onChanged: controller.onSubdistrictSelected,
+            enabled: controller.regencies.isNotEmpty,
+          ),
+          const SizedBox(height: 16),
+          PkpTextFormField(
+            type: PkpTextFormFieldType.dropdown,
+            controller: controller.villageController,
+            labelText: 'Kelurahan/Desa',
+            hintText: 'Pilih Kelurahan/Desa',
+            options: controller.villageOptions,
+            onChanged: controller.onVillageSelected,
+            enabled: controller.districts.isNotEmpty,
+          ),
+        ],
+      ),
+    );
   }
 }

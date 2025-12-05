@@ -11,7 +11,15 @@ _$ProjectLocationImpl _$$ProjectLocationImplFromJson(
 ) => _$ProjectLocationImpl(
   latitude: (json['latitude'] as num?)?.toDouble(),
   longitude: (json['longitude'] as num?)?.toDouble(),
-  address: json['address'] as String?,
+  provinceId: json['provinceId'] as String?,
+  provinceName: json['provinceName'] as String?,
+  regencyId: json['regencyId'] as String?,
+  regencyName: json['regencyName'] as String?,
+  districtId: json['districtId'] as String?,
+  districtName: json['districtName'] as String?,
+  villageId: json['villageId'] as String?,
+  villageName: json['villageName'] as String?,
+  locationDetail: json['locationDetail'] as String?,
 );
 
 Map<String, dynamic> _$$ProjectLocationImplToJson(
@@ -19,5 +27,13 @@ Map<String, dynamic> _$$ProjectLocationImplToJson(
 ) => <String, dynamic>{
   'latitude': instance.latitude,
   'longitude': instance.longitude,
-  'address': instance.address,
+  'provinceId': instance.provinceId,
+  'provinceName': instance.provinceName,
+  'regencyId': instance.regencyId,
+  'regencyName': instance.regencyName,
+  'districtId': instance.districtId,
+  'districtName': instance.districtName,
+  'villageId': instance.villageId,
+  'villageName': instance.villageName,
+  'locationDetail': instance.locationDetail,
 };

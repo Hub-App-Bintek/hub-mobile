@@ -11,8 +11,8 @@ class ProjectInfoCard extends StatelessWidget {
     required this.primaryLine,
     required this.secondaryLine,
     this.onTap,
-    this.ctaLabel,
-    this.onCtaTap,
+    this.buttonText,
+    this.onButtonTap,
     this.isSelected,
   });
 
@@ -20,11 +20,11 @@ class ProjectInfoCard extends StatelessWidget {
   final ProjectInfoLine primaryLine;
   final ProjectInfoLine secondaryLine;
   final VoidCallback? onTap;
-  final String? ctaLabel;
-  final VoidCallback? onCtaTap;
+  final String? buttonText;
+  final VoidCallback? onButtonTap;
   final bool? isSelected;
 
-  bool get _hasCta => ctaLabel != null && ctaLabel!.isNotEmpty;
+  bool get _hasCta => buttonText != null && buttonText!.isNotEmpty;
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +55,8 @@ class ProjectInfoCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: PkpElevatedButton(
-                text: ctaLabel!,
-                onPressed: onCtaTap,
+                text: buttonText!,
+                onPressed: onButtonTap,
                 size: PkpButtonSize.medium,
               ),
             ),
@@ -68,7 +68,7 @@ class ProjectInfoCard extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: onTap ?? onCtaTap,
+      onTap: onTap ?? onButtonTap,
       child: card,
     );
   }

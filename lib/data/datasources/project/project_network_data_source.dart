@@ -6,9 +6,7 @@ import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
-import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
-import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 
 abstract class ProjectNetworkDataSource {
@@ -17,11 +15,7 @@ abstract class ProjectNetworkDataSource {
     File? incomeProofFile,
   });
 
-  Future<Result<GetProjectsResponse, Failure>> getProjectList(
-    GetProjectsRequest request,
-  );
-
-  Future<Result<ProjectDetailsResponse, Failure>> getProjectDetail(
+  Future<Result<ProjectDetailsResponse, Failure>> getProjectV2(
     String projectId,
   );
 }
@@ -38,19 +32,7 @@ class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
     File? incomeProofFile,
   }) async {
     try {
-      final formData = FormData.fromMap({
-        'longitude': request.longitude.toString(),
-        'latitude': request.latitude.toString(),
-        'locationDetail': request.locationDetail,
-        'type': request.type,
-        'landArea': request.landArea.toString(),
-        'income': request.income.toString(),
-        'name': 'RUMAH-Generated-hardcoded first',
-        'provinceId': request.provinceId.toString(),
-        'regencyId': request.regencyId.toString(),
-        'districtId': request.districtId.toString(),
-        'villageId': request.villageId.toString(),
-      });
+      final formData = FormData.fromMap(request.toJson());
 
       if (incomeProofFile != null) {
         formData.files.add(
@@ -76,40 +58,17 @@ class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
   }
 
   @override
-  Future<Result<GetProjectsResponse, Failure>> getProjectList(
-    GetProjectsRequest request,
-  ) async {
-    try {
-      final response = await _projectApi.getProjects(
-        request.page,
-        request.size,
-        request.type,
-        request.status,
-      );
-      return Success(response);
-    } on DioException catch (e) {
-      return Error(_apiClient.toFailure(e));
-    } catch (e) {
-      return Error(
-        ServerFailure(message: 'Failed to parse get projects response: $e'),
-      );
-    }
-  }
-
-  @override
-  Future<Result<ProjectDetailsResponse, Failure>> getProjectDetail(
+  Future<Result<ProjectDetailsResponse, Failure>> getProjectV2(
     String projectId,
   ) async {
     try {
-      final response = await _projectApi.getProjectDetail(projectId);
-      return Success(response);
+      final res = await _projectApi.getProjectV2(projectId);
+      return Success(res);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
       return Error(
-        ServerFailure(
-          message: 'Failed to parse get project details response: $e',
-        ),
+        ServerFailure(message: 'Failed to parse project detail: $e'),
       );
     }
   }

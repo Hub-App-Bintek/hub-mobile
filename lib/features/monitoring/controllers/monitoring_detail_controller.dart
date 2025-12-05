@@ -1,15 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
-import 'package:pkp_hub/core/network/result.dart';
-import '../../../core/base/base_controller.dart';
+import 'package:pkp_hub/core/base/base_controller.dart';
 import 'supervisor_screen_controller.dart';
 
 enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
@@ -29,8 +26,8 @@ class ContractItem {
   final DateTime date;
   final ContractStatus status;
 
-  String getStatusLabel(){
-    switch(status){
+  String getStatusLabel() {
+    switch (status) {
       case ContractStatus.approved:
         return 'DISETUJUI';
       case ContractStatus.pending:
@@ -39,7 +36,6 @@ class ContractItem {
         return 'TIDAK DISETUJUI';
     }
   }
-
 }
 
 class DocumentItem {
@@ -102,7 +98,6 @@ class MonitoringDetailController extends BaseController {
       status: ContractStatus.pending,
     ),
   ].obs;
-
 
   final documents = <DocumentItem>[
     DocumentItem(title: 'Bill Of Quantities'),
@@ -171,7 +166,7 @@ class MonitoringDetailController extends BaseController {
   int get temuanCount => temuanItems.length;
   int get invoiceCount => invoiceItems.length;
 
-  void downloadContract (ContractItem item) async {
+  void downloadContract(ContractItem item) async {
     // var status = await Permission.storage.request();
     // if (!status.isGranted) {
     //   Get.snackbar('Izin Ditolak', 'Izin penyimpanan dibutuhkan untuk mengunduh file.');
@@ -200,7 +195,9 @@ class MonitoringDetailController extends BaseController {
         'Memulai unduhan file: ${item.title}',
         snackPosition: SnackPosition.BOTTOM,
         showProgressIndicator: true,
-        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(
+          Colors.white,
+        ),
       );
 
       // 4. Perform download with Dio
@@ -210,7 +207,7 @@ class MonitoringDetailController extends BaseController {
         onReceiveProgress: (received, total) {
           if (total != -1) {
             // You can optionally update a progress variable here
-            print((received / total * 100).toStringAsFixed(0) + "%");
+            print("${(received / total * 100).toStringAsFixed(0)}%");
           }
         },
       );
@@ -223,14 +220,10 @@ class MonitoringDetailController extends BaseController {
         snackPosition: SnackPosition.BOTTOM,
         mainButton: TextButton(
           onPressed: () => OpenFilex.open(savePath),
-          child: const Text(
-            'BUKA',
-            style: TextStyle(color: Colors.white),
-          ),
+          child: const Text('BUKA', style: TextStyle(color: Colors.white)),
         ),
         duration: const Duration(seconds: 5),
       );
-
     } on DioException catch (e) {
       Get.back(); // Close any open snackbar
       Get.snackbar(

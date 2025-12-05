@@ -12,7 +12,8 @@ part of 'consultation.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 Consultation _$ConsultationFromJson(Map<String, dynamic> json) {
   return _Consultation.fromJson(json);
@@ -20,22 +21,15 @@ Consultation _$ConsultationFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Consultation {
-  String? get consultationId => throw _privateConstructorUsedError;
+  String? get projectId => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
+  int? get homeOwnerId => throw _privateConstructorUsedError;
+  String? get homeOwnerName => throw _privateConstructorUsedError;
   int? get consultantId => throw _privateConstructorUsedError;
   String? get consultantName => throw _privateConstructorUsedError;
-  String? get scheduledAt => throw _privateConstructorUsedError;
+  String? get city => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
-  String? get notes => throw _privateConstructorUsedError;
-  CurrentSurveySchedule? get currentSurveySchedule =>
-      throw _privateConstructorUsedError;
-  List<ProjectHistory>? get consultationHistory =>
-      throw _privateConstructorUsedError;
-  DocumentExchange? get documentExchange => throw _privateConstructorUsedError;
-  List<CurrentSurveySchedule>? get revisionRequests =>
-      throw _privateConstructorUsedError;
-  List<CurrentSurveySchedule>? get surveySchedules =>
-      throw _privateConstructorUsedError;
-  String? get permit => throw _privateConstructorUsedError;
+  String? get state => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,25 +40,21 @@ mixin _$Consultation {
 /// @nodoc
 abstract class $ConsultationCopyWith<$Res> {
   factory $ConsultationCopyWith(
-          Consultation value, $Res Function(Consultation) then) =
-      _$ConsultationCopyWithImpl<$Res, Consultation>;
+    Consultation value,
+    $Res Function(Consultation) then,
+  ) = _$ConsultationCopyWithImpl<$Res, Consultation>;
   @useResult
-  $Res call(
-      {String? consultationId,
-      int? consultantId,
-      String? consultantName,
-      String? scheduledAt,
-      String? status,
-      String? notes,
-      CurrentSurveySchedule? currentSurveySchedule,
-      List<ProjectHistory>? consultationHistory,
-      DocumentExchange? documentExchange,
-      List<CurrentSurveySchedule>? revisionRequests,
-      List<CurrentSurveySchedule>? surveySchedules,
-      String? permit});
-
-  $CurrentSurveyScheduleCopyWith<$Res>? get currentSurveySchedule;
-  $DocumentExchangeCopyWith<$Res>? get documentExchange;
+  $Res call({
+    String? projectId,
+    String? projectName,
+    int? homeOwnerId,
+    String? homeOwnerName,
+    int? consultantId,
+    String? consultantName,
+    String? city,
+    String? status,
+    String? state,
+  });
 }
 
 /// @nodoc
@@ -80,94 +70,57 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? consultationId = freezed,
+    Object? projectId = freezed,
+    Object? projectName = freezed,
+    Object? homeOwnerId = freezed,
+    Object? homeOwnerName = freezed,
     Object? consultantId = freezed,
     Object? consultantName = freezed,
-    Object? scheduledAt = freezed,
+    Object? city = freezed,
     Object? status = freezed,
-    Object? notes = freezed,
-    Object? currentSurveySchedule = freezed,
-    Object? consultationHistory = freezed,
-    Object? documentExchange = freezed,
-    Object? revisionRequests = freezed,
-    Object? surveySchedules = freezed,
-    Object? permit = freezed,
+    Object? state = freezed,
   }) {
-    return _then(_value.copyWith(
-      consultationId: freezed == consultationId
-          ? _value.consultationId
-          : consultationId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      consultantId: freezed == consultantId
-          ? _value.consultantId
-          : consultantId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      consultantName: freezed == consultantName
-          ? _value.consultantName
-          : consultantName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      scheduledAt: freezed == scheduledAt
-          ? _value.scheduledAt
-          : scheduledAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentSurveySchedule: freezed == currentSurveySchedule
-          ? _value.currentSurveySchedule
-          : currentSurveySchedule // ignore: cast_nullable_to_non_nullable
-              as CurrentSurveySchedule?,
-      consultationHistory: freezed == consultationHistory
-          ? _value.consultationHistory
-          : consultationHistory // ignore: cast_nullable_to_non_nullable
-              as List<ProjectHistory>?,
-      documentExchange: freezed == documentExchange
-          ? _value.documentExchange
-          : documentExchange // ignore: cast_nullable_to_non_nullable
-              as DocumentExchange?,
-      revisionRequests: freezed == revisionRequests
-          ? _value.revisionRequests
-          : revisionRequests // ignore: cast_nullable_to_non_nullable
-              as List<CurrentSurveySchedule>?,
-      surveySchedules: freezed == surveySchedules
-          ? _value.surveySchedules
-          : surveySchedules // ignore: cast_nullable_to_non_nullable
-              as List<CurrentSurveySchedule>?,
-      permit: freezed == permit
-          ? _value.permit
-          : permit // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $CurrentSurveyScheduleCopyWith<$Res>? get currentSurveySchedule {
-    if (_value.currentSurveySchedule == null) {
-      return null;
-    }
-
-    return $CurrentSurveyScheduleCopyWith<$Res>(_value.currentSurveySchedule!,
-        (value) {
-      return _then(_value.copyWith(currentSurveySchedule: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DocumentExchangeCopyWith<$Res>? get documentExchange {
-    if (_value.documentExchange == null) {
-      return null;
-    }
-
-    return $DocumentExchangeCopyWith<$Res>(_value.documentExchange!, (value) {
-      return _then(_value.copyWith(documentExchange: value) as $Val);
-    });
+    return _then(
+      _value.copyWith(
+            projectId: freezed == projectId
+                ? _value.projectId
+                : projectId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            projectName: freezed == projectName
+                ? _value.projectName
+                : projectName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            homeOwnerId: freezed == homeOwnerId
+                ? _value.homeOwnerId
+                : homeOwnerId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            homeOwnerName: freezed == homeOwnerName
+                ? _value.homeOwnerName
+                : homeOwnerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            consultantId: freezed == consultantId
+                ? _value.consultantId
+                : consultantId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            consultantName: freezed == consultantName
+                ? _value.consultantName
+                : consultantName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            city: freezed == city
+                ? _value.city
+                : city // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            status: freezed == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            state: freezed == state
+                ? _value.state
+                : state // ignore: cast_nullable_to_non_nullable
+                      as String?,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -175,28 +128,22 @@ class _$ConsultationCopyWithImpl<$Res, $Val extends Consultation>
 abstract class _$$ConsultationImplCopyWith<$Res>
     implements $ConsultationCopyWith<$Res> {
   factory _$$ConsultationImplCopyWith(
-          _$ConsultationImpl value, $Res Function(_$ConsultationImpl) then) =
-      __$$ConsultationImplCopyWithImpl<$Res>;
+    _$ConsultationImpl value,
+    $Res Function(_$ConsultationImpl) then,
+  ) = __$$ConsultationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? consultationId,
-      int? consultantId,
-      String? consultantName,
-      String? scheduledAt,
-      String? status,
-      String? notes,
-      CurrentSurveySchedule? currentSurveySchedule,
-      List<ProjectHistory>? consultationHistory,
-      DocumentExchange? documentExchange,
-      List<CurrentSurveySchedule>? revisionRequests,
-      List<CurrentSurveySchedule>? surveySchedules,
-      String? permit});
-
-  @override
-  $CurrentSurveyScheduleCopyWith<$Res>? get currentSurveySchedule;
-  @override
-  $DocumentExchangeCopyWith<$Res>? get documentExchange;
+  $Res call({
+    String? projectId,
+    String? projectName,
+    int? homeOwnerId,
+    String? homeOwnerName,
+    int? consultantId,
+    String? consultantName,
+    String? city,
+    String? status,
+    String? state,
+  });
 }
 
 /// @nodoc
@@ -204,155 +151,106 @@ class __$$ConsultationImplCopyWithImpl<$Res>
     extends _$ConsultationCopyWithImpl<$Res, _$ConsultationImpl>
     implements _$$ConsultationImplCopyWith<$Res> {
   __$$ConsultationImplCopyWithImpl(
-      _$ConsultationImpl _value, $Res Function(_$ConsultationImpl) _then)
-      : super(_value, _then);
+    _$ConsultationImpl _value,
+    $Res Function(_$ConsultationImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? consultationId = freezed,
+    Object? projectId = freezed,
+    Object? projectName = freezed,
+    Object? homeOwnerId = freezed,
+    Object? homeOwnerName = freezed,
     Object? consultantId = freezed,
     Object? consultantName = freezed,
-    Object? scheduledAt = freezed,
+    Object? city = freezed,
     Object? status = freezed,
-    Object? notes = freezed,
-    Object? currentSurveySchedule = freezed,
-    Object? consultationHistory = freezed,
-    Object? documentExchange = freezed,
-    Object? revisionRequests = freezed,
-    Object? surveySchedules = freezed,
-    Object? permit = freezed,
+    Object? state = freezed,
   }) {
-    return _then(_$ConsultationImpl(
-      consultationId: freezed == consultationId
-          ? _value.consultationId
-          : consultationId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      consultantId: freezed == consultantId
-          ? _value.consultantId
-          : consultantId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      consultantName: freezed == consultantName
-          ? _value.consultantName
-          : consultantName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      scheduledAt: freezed == scheduledAt
-          ? _value.scheduledAt
-          : scheduledAt // ignore: cast_nullable_to_non_nullable
-              as String?,
-      status: freezed == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      currentSurveySchedule: freezed == currentSurveySchedule
-          ? _value.currentSurveySchedule
-          : currentSurveySchedule // ignore: cast_nullable_to_non_nullable
-              as CurrentSurveySchedule?,
-      consultationHistory: freezed == consultationHistory
-          ? _value._consultationHistory
-          : consultationHistory // ignore: cast_nullable_to_non_nullable
-              as List<ProjectHistory>?,
-      documentExchange: freezed == documentExchange
-          ? _value.documentExchange
-          : documentExchange // ignore: cast_nullable_to_non_nullable
-              as DocumentExchange?,
-      revisionRequests: freezed == revisionRequests
-          ? _value._revisionRequests
-          : revisionRequests // ignore: cast_nullable_to_non_nullable
-              as List<CurrentSurveySchedule>?,
-      surveySchedules: freezed == surveySchedules
-          ? _value._surveySchedules
-          : surveySchedules // ignore: cast_nullable_to_non_nullable
-              as List<CurrentSurveySchedule>?,
-      permit: freezed == permit
-          ? _value.permit
-          : permit // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
+    return _then(
+      _$ConsultationImpl(
+        projectId: freezed == projectId
+            ? _value.projectId
+            : projectId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        projectName: freezed == projectName
+            ? _value.projectName
+            : projectName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        homeOwnerId: freezed == homeOwnerId
+            ? _value.homeOwnerId
+            : homeOwnerId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        homeOwnerName: freezed == homeOwnerName
+            ? _value.homeOwnerName
+            : homeOwnerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        consultantId: freezed == consultantId
+            ? _value.consultantId
+            : consultantId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        consultantName: freezed == consultantName
+            ? _value.consultantName
+            : consultantName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        city: freezed == city
+            ? _value.city
+            : city // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        status: freezed == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        state: freezed == state
+            ? _value.state
+            : state // ignore: cast_nullable_to_non_nullable
+                  as String?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ConsultationImpl implements _Consultation {
-  const _$ConsultationImpl(
-      {this.consultationId,
-      this.consultantId,
-      this.consultantName,
-      this.scheduledAt,
-      this.status,
-      this.notes,
-      this.currentSurveySchedule,
-      final List<ProjectHistory>? consultationHistory,
-      this.documentExchange,
-      final List<CurrentSurveySchedule>? revisionRequests,
-      final List<CurrentSurveySchedule>? surveySchedules,
-      this.permit})
-      : _consultationHistory = consultationHistory,
-        _revisionRequests = revisionRequests,
-        _surveySchedules = surveySchedules;
+  const _$ConsultationImpl({
+    this.projectId,
+    this.projectName,
+    this.homeOwnerId,
+    this.homeOwnerName,
+    this.consultantId,
+    this.consultantName,
+    this.city,
+    this.status,
+    this.state,
+  });
 
   factory _$ConsultationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultationImplFromJson(json);
 
   @override
-  final String? consultationId;
+  final String? projectId;
+  @override
+  final String? projectName;
+  @override
+  final int? homeOwnerId;
+  @override
+  final String? homeOwnerName;
   @override
   final int? consultantId;
   @override
   final String? consultantName;
   @override
-  final String? scheduledAt;
+  final String? city;
   @override
   final String? status;
   @override
-  final String? notes;
-  @override
-  final CurrentSurveySchedule? currentSurveySchedule;
-  final List<ProjectHistory>? _consultationHistory;
-  @override
-  List<ProjectHistory>? get consultationHistory {
-    final value = _consultationHistory;
-    if (value == null) return null;
-    if (_consultationHistory is EqualUnmodifiableListView)
-      return _consultationHistory;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  final DocumentExchange? documentExchange;
-  final List<CurrentSurveySchedule>? _revisionRequests;
-  @override
-  List<CurrentSurveySchedule>? get revisionRequests {
-    final value = _revisionRequests;
-    if (value == null) return null;
-    if (_revisionRequests is EqualUnmodifiableListView)
-      return _revisionRequests;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<CurrentSurveySchedule>? _surveySchedules;
-  @override
-  List<CurrentSurveySchedule>? get surveySchedules {
-    final value = _surveySchedules;
-    if (value == null) return null;
-    if (_surveySchedules is EqualUnmodifiableListView) return _surveySchedules;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  final String? permit;
+  final String? state;
 
   @override
   String toString() {
-    return 'Consultation(consultationId: $consultationId, consultantId: $consultantId, consultantName: $consultantName, scheduledAt: $scheduledAt, status: $status, notes: $notes, currentSurveySchedule: $currentSurveySchedule, consultationHistory: $consultationHistory, documentExchange: $documentExchange, revisionRequests: $revisionRequests, surveySchedules: $surveySchedules, permit: $permit)';
+    return 'Consultation(projectId: $projectId, projectName: $projectName, homeOwnerId: $homeOwnerId, homeOwnerName: $homeOwnerName, consultantId: $consultantId, consultantName: $consultantName, city: $city, status: $status, state: $state)';
   }
 
   @override
@@ -360,45 +258,37 @@ class _$ConsultationImpl implements _Consultation {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsultationImpl &&
-            (identical(other.consultationId, consultationId) ||
-                other.consultationId == consultationId) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
+            (identical(other.homeOwnerId, homeOwnerId) ||
+                other.homeOwnerId == homeOwnerId) &&
+            (identical(other.homeOwnerName, homeOwnerName) ||
+                other.homeOwnerName == homeOwnerName) &&
             (identical(other.consultantId, consultantId) ||
                 other.consultantId == consultantId) &&
             (identical(other.consultantName, consultantName) ||
                 other.consultantName == consultantName) &&
-            (identical(other.scheduledAt, scheduledAt) ||
-                other.scheduledAt == scheduledAt) &&
+            (identical(other.city, city) || other.city == city) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.notes, notes) || other.notes == notes) &&
-            (identical(other.currentSurveySchedule, currentSurveySchedule) ||
-                other.currentSurveySchedule == currentSurveySchedule) &&
-            const DeepCollectionEquality()
-                .equals(other._consultationHistory, _consultationHistory) &&
-            (identical(other.documentExchange, documentExchange) ||
-                other.documentExchange == documentExchange) &&
-            const DeepCollectionEquality()
-                .equals(other._revisionRequests, _revisionRequests) &&
-            const DeepCollectionEquality()
-                .equals(other._surveySchedules, _surveySchedules) &&
-            (identical(other.permit, permit) || other.permit == permit));
+            (identical(other.state, state) || other.state == state));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      consultationId,
-      consultantId,
-      consultantName,
-      scheduledAt,
-      status,
-      notes,
-      currentSurveySchedule,
-      const DeepCollectionEquality().hash(_consultationHistory),
-      documentExchange,
-      const DeepCollectionEquality().hash(_revisionRequests),
-      const DeepCollectionEquality().hash(_surveySchedules),
-      permit);
+    runtimeType,
+    projectId,
+    projectName,
+    homeOwnerId,
+    homeOwnerName,
+    consultantId,
+    consultantName,
+    city,
+    status,
+    state,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -408,54 +298,44 @@ class _$ConsultationImpl implements _Consultation {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConsultationImplToJson(
-      this,
-    );
+    return _$$ConsultationImplToJson(this);
   }
 }
 
 abstract class _Consultation implements Consultation {
-  const factory _Consultation(
-      {final String? consultationId,
-      final int? consultantId,
-      final String? consultantName,
-      final String? scheduledAt,
-      final String? status,
-      final String? notes,
-      final CurrentSurveySchedule? currentSurveySchedule,
-      final List<ProjectHistory>? consultationHistory,
-      final DocumentExchange? documentExchange,
-      final List<CurrentSurveySchedule>? revisionRequests,
-      final List<CurrentSurveySchedule>? surveySchedules,
-      final String? permit}) = _$ConsultationImpl;
+  const factory _Consultation({
+    final String? projectId,
+    final String? projectName,
+    final int? homeOwnerId,
+    final String? homeOwnerName,
+    final int? consultantId,
+    final String? consultantName,
+    final String? city,
+    final String? status,
+    final String? state,
+  }) = _$ConsultationImpl;
 
   factory _Consultation.fromJson(Map<String, dynamic> json) =
       _$ConsultationImpl.fromJson;
 
   @override
-  String? get consultationId;
+  String? get projectId;
+  @override
+  String? get projectName;
+  @override
+  int? get homeOwnerId;
+  @override
+  String? get homeOwnerName;
   @override
   int? get consultantId;
   @override
   String? get consultantName;
   @override
-  String? get scheduledAt;
+  String? get city;
   @override
   String? get status;
   @override
-  String? get notes;
-  @override
-  CurrentSurveySchedule? get currentSurveySchedule;
-  @override
-  List<ProjectHistory>? get consultationHistory;
-  @override
-  DocumentExchange? get documentExchange;
-  @override
-  List<CurrentSurveySchedule>? get revisionRequests;
-  @override
-  List<CurrentSurveySchedule>? get surveySchedules;
-  @override
-  String? get permit;
+  String? get state;
   @override
   @JsonKey(ignore: true)
   _$$ConsultationImplCopyWith<_$ConsultationImpl> get copyWith =>

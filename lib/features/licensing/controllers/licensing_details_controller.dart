@@ -10,7 +10,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
-import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/models/response/permit_status_response.dart';
 import 'package:pkp_hub/domain/usecases/permit/get_permit_status_use_case.dart';
 import 'package:pkp_hub/features/main/widgets/project_item.dart';
@@ -229,11 +228,11 @@ class LicensingDetailsController extends BaseController {
         ),
         status: ProjectItemStatus.approved,
         onDownloadTap: () async {
-          const url = 'https://hub-dev.editnest.online/api/download/PBG-contoh.pdf';
-          final fileName = 'pbg.pdf';
+          const url =
+              'https://hub-dev.editnest.online/api/download/PBG-contoh.pdf';
+          const fileName = 'pbg.pdf';
 
           try {
-
             Directory? downloadsDir;
             if (Platform.isAndroid) {
               // On Android, get the public downloads directory.
@@ -251,7 +250,9 @@ class LicensingDetailsController extends BaseController {
               'Memulai unduhan file: PBG',
               snackPosition: SnackPosition.BOTTOM,
               showProgressIndicator: true,
-              progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(
+                Colors.white,
+              ),
             );
 
             // 4. Perform download with Dio
@@ -261,7 +262,7 @@ class LicensingDetailsController extends BaseController {
               onReceiveProgress: (received, total) {
                 if (total != -1) {
                   // You can optionally update a progress variable here
-                  print((received / total * 100).toStringAsFixed(0) + "%");
+                  print("${(received / total * 100).toStringAsFixed(0)}%");
                 }
               },
             );
@@ -281,7 +282,6 @@ class LicensingDetailsController extends BaseController {
               ),
               duration: const Duration(seconds: 20),
             );
-
           } on DioException catch (e) {
             Get.back(); // Close any open snackbar
             Get.snackbar(

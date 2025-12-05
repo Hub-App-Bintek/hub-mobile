@@ -100,8 +100,7 @@ class LoginScreen extends GetView<LoginController> {
               const SizedBox(height: 24),
               Obx(() {
                 final isEnabled =
-                    controller.isFormValid &&
-                    !controller.isRequesting.value;
+                    controller.isFormValid && !controller.isRequesting.value;
                 return PkpElevatedButton(
                   onPressed: isEnabled ? controller.login : null,
                   text: AppStrings.loginButton,

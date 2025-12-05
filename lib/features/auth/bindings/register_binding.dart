@@ -13,18 +13,23 @@ class RegisterBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<RegisterUseCase>(
       () => RegisterUseCase(Get.find<AuthRepository>()),
+      fenix: true,
     );
     Get.lazyPut<GetProvincesUseCase>(
       () => GetProvincesUseCase(Get.find<LocationRepository>()),
+      fenix: true,
     );
     Get.lazyPut<GetRegenciesUseCase>(
       () => GetRegenciesUseCase(Get.find<LocationRepository>()),
+      fenix: true,
     );
     Get.lazyPut<GetDistrictsUseCase>(
       () => GetDistrictsUseCase(Get.find<LocationRepository>()),
+      fenix: true,
     );
     Get.lazyPut<GetVillagesUseCase>(
       () => GetVillagesUseCase(Get.find<LocationRepository>()),
+      fenix: true,
     );
 
     Get.lazyPut<RegisterController>(

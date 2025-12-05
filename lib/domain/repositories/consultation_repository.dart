@@ -1,14 +1,20 @@
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_source.dart';
-import 'package:pkp_hub/data/models/consultation.dart';
+import 'package:pkp_hub/data/models/request/accept_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
+import 'package:pkp_hub/data/models/consultation.dart';
+import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
+import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 
 abstract class ConsultationRepository {
   // Read
-  Future<Result<List<Consultation>, Failure>> getConsultations();
-  Future<Result<Consultation, Failure>> getConsultationDetail(
+  Future<Result<ConsultationsResponse, Failure>> getConsultations({
+    String? status,
+    int? page,
+  });
+  Future<Result<ConsultationDetailsResponse, Failure>> getConsultationDetail(
     String consultationId,
   );
 
@@ -18,19 +24,7 @@ abstract class ConsultationRepository {
   );
   Future<Result<Consultation, Failure>> acceptConsultation(
     String consultationId,
-  );
-  Future<Result<Consultation, Failure>> rejectConsultation(
-    String consultationId,
-  );
-  Future<Result<Consultation, Failure>> startActiveConsultation(
-    String consultationId,
-  );
-  Future<Result<Consultation, Failure>> startRevision(
-    String consultationId, {
-    String? notes,
-  });
-  Future<Result<Consultation, Failure>> finalizeConsultation(
-    String consultationId,
+    AcceptConsultationRequest request,
   );
 }
 
@@ -41,12 +35,15 @@ class ConsultationRepositoryImpl implements ConsultationRepository {
 
   // --- Read ---
   @override
-  Future<Result<List<Consultation>, Failure>> getConsultations() {
-    return _dataSource.getConsultations();
+  Future<Result<ConsultationsResponse, Failure>> getConsultations({
+    String? status,
+    int? page,
+  }) {
+    return _dataSource.getConsultations(status: status, page: page);
   }
 
   @override
-  Future<Result<Consultation, Failure>> getConsultationDetail(
+  Future<Result<ConsultationDetailsResponse, Failure>> getConsultationDetail(
     String consultationId,
   ) {
     return _dataSource.getConsultationDetail(consultationId);
@@ -63,36 +60,8 @@ class ConsultationRepositoryImpl implements ConsultationRepository {
   @override
   Future<Result<Consultation, Failure>> acceptConsultation(
     String consultationId,
+    AcceptConsultationRequest request,
   ) {
-    return _dataSource.acceptConsultation(consultationId);
-  }
-
-  @override
-  Future<Result<Consultation, Failure>> rejectConsultation(
-    String consultationId,
-  ) {
-    return _dataSource.rejectConsultation(consultationId);
-  }
-
-  @override
-  Future<Result<Consultation, Failure>> startActiveConsultation(
-    String consultationId,
-  ) {
-    return _dataSource.startActiveConsultation(consultationId);
-  }
-
-  @override
-  Future<Result<Consultation, Failure>> startRevision(
-    String consultationId, {
-    String? notes,
-  }) {
-    return _dataSource.startRevision(consultationId, notes: notes);
-  }
-
-  @override
-  Future<Result<Consultation, Failure>> finalizeConsultation(
-    String consultationId,
-  ) {
-    return _dataSource.finalizeConsultation(consultationId);
+    return _dataSource.acceptConsultation(consultationId, request);
   }
 }

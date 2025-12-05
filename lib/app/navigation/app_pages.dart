@@ -51,7 +51,6 @@ import 'package:pkp_hub/features/payment/screens/payment_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_va_screen.dart';
 import 'package:pkp_hub/features/project/bindings/design_type_binding.dart';
 import 'package:pkp_hub/features/project/bindings/location_details_binding.dart';
-import 'package:pkp_hub/features/project/bindings/project_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_design_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_designs_binding.dart';
 import 'package:pkp_hub/features/project/screens/contracts_screen.dart';
@@ -60,8 +59,6 @@ import 'package:pkp_hub/features/project/screens/draft_design_screen.dart';
 import 'package:pkp_hub/features/project/screens/final_design_screen.dart';
 import 'package:pkp_hub/features/project/screens/invoice_screen.dart';
 import 'package:pkp_hub/features/project/screens/location_details_screen.dart';
-import 'package:pkp_hub/features/project/screens/project_history_screen.dart';
-import 'package:pkp_hub/features/project/screens/project_review_screen.dart';
 import 'package:pkp_hub/features/project/screens/prototype_design_details_screen.dart';
 import 'package:pkp_hub/features/project/screens/prototype_designs_screen.dart';
 
@@ -99,7 +96,7 @@ class AppPages {
       binding: KycBinding(),
     ),
     GetPage(
-      name: _Paths.createProject,
+      name: _Paths.locationDetails,
       page: () => const LocationDetailsScreen(),
       binding: LocationDetailsBinding(),
     ),
@@ -116,7 +113,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.projects,
-      page: () => const ProjectsScreen(controllerTag: ProjectsBinding.routeTag),
+      page: () => const ProjectsScreen(),
       binding: ProjectsBinding(),
     ),
     GetPage(
@@ -133,10 +130,6 @@ class AppPages {
       name: _Paths.prototypeDesignDetails,
       page: () => const PrototypeDesignDetailsScreen(),
       binding: PrototypeDesignDetailsBinding(),
-    ),
-    GetPage(
-      name: _Paths.projectReview,
-      page: () => const ProjectReviewScreen(),
     ),
     GetPage(name: _Paths.projectContracts, page: () => const ContractsScreen()),
     GetPage(
@@ -158,12 +151,6 @@ class AppPages {
       name: _Paths.consultationDetails,
       page: () => const ConsultationDetailsScreen(),
       binding: ConsultationDetailsBinding(),
-    ),
-    // Project details screen
-    GetPage(
-      name: _Paths.projectHistory,
-      page: () => const ProjectHistoryScreen(),
-      binding: ProjectDetailsBinding(),
     ),
     GetPage(
       name: _Paths.inbox,

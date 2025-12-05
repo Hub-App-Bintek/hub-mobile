@@ -6,23 +6,25 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
-import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/project.dart';
-import 'package:pkp_hub/data/models/request/get_projects_request.dart';
-import 'package:pkp_hub/data/models/response/get_projects_response.dart';
+import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/wallet_response.dart';
-import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 
 class HomeController extends BaseController {
   final UserStorage _userStorage;
-  final GetProjectsUseCase _getProjectListUseCase;
   final GetWalletBalanceUseCase _getWalletBalanceUseCase;
+  final GetConsultationsUseCase _getConsultationsUseCase;
 
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
+  final Rx<ConsultationFilterStatus> consultationStatus =
+      consultationFilterWaitingConfirmation.obs;
+  final RxMap<String, int> projectCounts = <String, int>{}.obs;
   final RxInt chatBadgeCount = 3.obs;
   final RxInt notificationBadgeCount = 5.obs;
 
@@ -36,22 +38,24 @@ class HomeController extends BaseController {
     'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=800&h=400&fit=crop',
   ];
 
-  final RxList<Project> projects = <Project>[].obs;
+  final RxList<Project> consultations = <Project>[].obs;
   final RxBool isProjectLoading = false.obs;
-  final RxList<Consultant> consultants = <Consultant>[].obs;
-  final RxBool isConsultantLoading = false.obs;
   final RxString userDisplayName = ''.obs;
 
   final RxnString _token = RxnString();
+  int _consultationPage = 0;
+  bool _hasMoreConsultations = true;
+  bool _initialConsultationFetchTriggered = false;
 
   HomeController(
     this._userStorage,
-    this._getProjectListUseCase,
     this._getWalletBalanceUseCase,
+    this._getConsultationsUseCase,
   );
 
   @override
   Future<void> refresh() async {
+    _initialConsultationFetchTriggered = false;
     await init();
   }
 
@@ -81,31 +85,16 @@ class HomeController extends BaseController {
   Future<void> init() async {
     await _refreshAuthState();
     await _loadUserName();
-    // if (userRole.value != UserRole.consultation) {
-    //   final coords = await _determineUserLocation();
-    //   _currentLat = coords.$1;
-    //   _currentLong = coords.$2;
-    // } else {
-    //   _currentLat = 0;
-    //   _currentLong = 0;
-    // }
 
     if (_isLoggedIn) {
       _fetchBalance();
-      // await Future.wait([
-      //   fetchProjects('PENDING'),
-      //   _fetchConsultants(),
-      // ]);
     }
 
-    if (userRole.value == UserRole.consultant) {
-      projects.clear();
-      fetchProjects('PENDING');
+    if (userRole.value == UserRole.consultant &&
+        !_initialConsultationFetchTriggered) {
+      _initialConsultationFetchTriggered = true;
+      fetchConsultations(consultationFilterWaitingConfirmation);
     }
-    // else {
-    //   projects.clear();
-    //   await _fetchConsultants();
-    // }
   }
 
   bool get _isLoggedIn => _token.value?.isNotEmpty ?? false;
@@ -151,20 +140,62 @@ class HomeController extends BaseController {
     );
   }
 
-  Future<void> fetchProjects(String status) async {
+  Future<void> fetchConsultations(ConsultationFilterStatus status) async {
+    if (isProjectLoading.value) return;
     isProjectLoading.value = true;
+    consultationStatus.value = status;
+    _consultationPage = 0;
+    _hasMoreConsultations = true;
+    consultations.clear();
 
-    await handleAsync<GetProjectsResponse>(
-      () =>
-          _getProjectListUseCase(GetProjectsRequest(size: 100, status: status)),
-      onSuccess: (data) {
-        final result = data.projects.where((p) => p.status == status).toList();
-        projects.value = result;
+    await handleAsync<ConsultationsResponse>(
+      () => _getConsultationsUseCase(
+        GetConsultationsParams(status: status.id, page: _consultationPage),
+      ),
+      onSuccess: (response) {
+        consultations
+          ..clear()
+          ..addAll(response.projects?.content ?? []);
+        final isLast = response.projects?.last ?? true;
+        _hasMoreConsultations = !isLast;
+        projectCounts.assignAll({
+          consultationFilterInProgress.id: response.inProgressCount ?? 0,
+          consultationFilterWaitingConfirmation.id: response.pendingCount ?? 0,
+        });
       },
       onFailure: (failure) {
         showError(failure);
-        projects.clear();
-        consultants.clear();
+        consultations.clear();
+        _hasMoreConsultations = false;
+      },
+    );
+
+    isProjectLoading.value = false;
+  }
+
+  Future<void> loadMoreConsultations() async {
+    if (isProjectLoading.value || !_hasMoreConsultations) return;
+    final nextPage = _consultationPage + 1;
+    final prevPage = _consultationPage;
+    _consultationPage = nextPage;
+    isProjectLoading.value = true;
+
+    await handleAsync<ConsultationsResponse>(
+      () => _getConsultationsUseCase(
+        GetConsultationsParams(
+          status: consultationStatus.value.id,
+          page: _consultationPage,
+        ),
+      ),
+      onSuccess: (data) {
+        consultations.addAll(data.projects?.content ?? []);
+        final isLast = data.projects?.last ?? true;
+        _hasMoreConsultations = !isLast;
+      },
+      onFailure: (failure) {
+        showError(failure);
+        _consultationPage = prevPage;
+        _hasMoreConsultations = false;
       },
     );
 
@@ -179,29 +210,22 @@ class HomeController extends BaseController {
     navigateTo(AppRoutes.chats);
   }
 
-  void onSelectProject(Project project) {
-    if (project.status == "CREATED") {
-      navigateTo(AppRoutes.consultation);
-    } else if (project.status == 'PENDING') {
+  void onSelectConsultation(Project project) {
+    final status = (project.consultationInfo?.consultationStatus ?? '')
+        .toUpperCase();
+    final isConsultant = userRole.value == UserRole.consultant;
+    final isWaitingConfirmation = status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
+    final isActive = status == 'AKTIF';
+
+    if (isConsultant && isWaitingConfirmation) {
       navigateTo(
         AppRoutes.consultationConfirmation,
         arguments: ConsultationDetailsArgs(project: project),
       );
-    } else if (project.status == 'ACTIVE') {
+    } else if (isActive) {
       navigateTo(
         AppRoutes.consultationDetails,
         arguments: ConsultationDetailsArgs(project: project),
-      );
-    } else {
-      navigateTo(
-        AppRoutes.projectHistory,
-        arguments: {
-          'projectId': project.projectId,
-          'homeOwnerId': project.consultationInfo?.homeOwnerId,
-          'homeOwnerName': project.consultationInfo?.homeOwnerName,
-          'consultantId': project.consultationInfo?.consultantId,
-          'consultantName': project.consultationInfo?.consultantName,
-        },
       );
     }
   }

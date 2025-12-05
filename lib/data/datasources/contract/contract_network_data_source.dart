@@ -1,31 +1,49 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
+import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:retrofit/dio.dart';
 
 abstract class ContractNetworkDataSource {
   Future<Result<Contract, Failure>> getContract(String consultationId);
+
+  Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
+    required String projectId,
+    required String consultationId,
+  });
+
   Future<Result<Contract, Failure>> signContract(String contractId);
+
   Future<Result<Contract, Failure>> rejectContract(
     String contractId, {
     String reason,
   });
-  Future<Result<Contract, Failure>> approveContract(String contractId);
+
+  Future<Result<Contract, Failure>> approveContract({
+    required String contractId,
+    required ApproveContractRequest request,
+  });
+
   Future<Result<Contract, Failure>> requestRevision(
     String contractId, {
     String? revisionNotes,
   });
+
   Future<Result<Contract, Failure>> requestPayment(String contractId);
+
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
   );
+
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
     required String consultationId,
     required GenerateContractDraftRequest request,
@@ -35,7 +53,28 @@ abstract class ContractNetworkDataSource {
 class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   final ApiClient _apiClient;
   final ContractApiService _contractApi;
+
   ContractNetworkDataSourceImpl(this._apiClient, this._contractApi);
+
+  @override
+  Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
+    required String projectId,
+    required String consultationId,
+  }) async {
+    try {
+      final response = await _contractApi.getContractVersions(
+        projectId,
+        consultationId,
+      );
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(message: 'Failed to parse contract versions: $e'),
+      );
+    }
+  }
 
   @override
   Future<Result<Contract, Failure>> getContract(String consultationId) async {
@@ -79,9 +118,12 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   }
 
   @override
-  Future<Result<Contract, Failure>> approveContract(String contractId) async {
+  Future<Result<Contract, Failure>> approveContract({
+    required String contractId,
+    required ApproveContractRequest request,
+  }) async {
     try {
-      final response = await _contractApi.approve(contractId);
+      final response = await _contractApi.approve(contractId, request);
       return Success(response);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
@@ -130,7 +172,7 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   ) async {
     try {
       // Build JSON string for the 'request' part (include fileUrl null per backend spec)
-      final requestMap = param.generateContractRequest.toJson();
+      final requestMap = param.request.toJson();
       final requestJson = jsonEncode(requestMap);
 
       final draft = await _contractApi.createDraft(

@@ -115,6 +115,7 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                             filePickerType: PkpFilePickerType.pdf,
                             onFilePicked: controller.onIncomeProofPicked,
                             filled: true,
+                            errorText: controller.incomeProofError.value,
                           ),
                           const SizedBox(height: 16),
                         ],

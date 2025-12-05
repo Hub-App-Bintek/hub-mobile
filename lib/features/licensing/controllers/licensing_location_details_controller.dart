@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
-import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
@@ -305,28 +304,33 @@ class LicensingLocationDetailsController extends BaseController {
     // Optional: Add a final check, though the button is disabled
     if (!isFormValid.value) return;
 
+    final locationDetail =
+        '${villageController.text}, ${subdistrictController.text}, ${cityController.text}, ${provinceController.text}';
+    final projectName = locationDetail.trim().isNotEmpty
+        ? locationDetail.trim()
+        : 'Project';
+
     // 3. Build the request object from the controller's state
     //    You need to map your selected dropdown values and LatLng to a request model.
     //    This is an example structure.
     final request = CreateProjectRequest(
       type: isPrototype ? 'PROTOTYPE' : 'NON_PROTOTYPE',
-      locationDetail:
-          '${villageController.text}, ${subdistrictController.text}, ${cityController.text}, ${provinceController.text}',
+      locationDetail: locationDetail,
       landArea: 1,
       income: 1,
       latitude: selectedLocation.value!.latitude,
       longitude: selectedLocation.value!.longitude,
-      name: 'GENERATED-Hardcoded first',
-      provinceId: selectedProvince.value?.id ?? 0,
-      regencyId: selectedCity.value?.id ?? 0,
-      districtId: selectedSubdistrict.value?.id ?? 0,
-      villageId: selectedVillage.value?.id ?? 0,
+      name: projectName,
+      provinceId: selectedProvince.value?.id.toString() ?? '',
+      regencyId: selectedCity.value?.id.toString() ?? '',
+      districtId: selectedSubdistrict.value?.id.toString() ?? '',
+      villageId: selectedVillage.value?.id.toString() ?? '',
       // ... include IDs and any other required fields ...
     );
 
     // 4. Use handleAsync to call the use case
     await handleAsync(
-      () => _createProjectUseCase.repository.createProject(request),
+      () => _createProjectUseCase(CreateProjectParams(request: request)),
       onSuccess: (response) {
         // 5. On success, navigate to the SIMBG form with the new projectId
         Get.toNamed(

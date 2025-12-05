@@ -21,17 +21,29 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedStep = controller.selectedStep;
-    final consultantName =
-        controller.project.consultationInfo?.consultantName?.trim() ??
-        'Konsultan';
-
     return Scaffold(
-      appBar: PkpAppBar(title: controller.project.name?.trim() ?? 'Proyek'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Obx(
+          () => PkpAppBar(
+            title: controller.project.value?.projectName?.trim() ?? 'Proyek',
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Obx(() {
+          final selectedStep = controller.selectedStep;
           final currentStep = selectedStep.value;
           final sectionTitle = controller.sectionTitle(currentStep);
+          final consultation = controller.consultation.value;
+          final consultantName = consultation?.consultantName?.trim() ?? '';
+          final homeOwnerName = consultation?.homeOwnerName?.trim() ?? '';
+          final consultationStatus = consultation?.status?.trim() ?? '';
+
+          if (controller.isLoading.value && consultation == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
           return RefreshIndicator(
             onRefresh: controller.handleRefresh,
             child: Column(
@@ -45,7 +57,11 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _buildConsultantCard(consultantName),
+                  child: _buildConsultantCard(
+                    consultantName,
+                    homeOwnerName,
+                    consultationStatus,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -57,7 +73,9 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [_buildStepContent(currentStep, consultantName)],
+                      children: [
+                        _buildStepContent(currentStep, consultantName),
+                      ],
                     ),
                   ),
                 ),
@@ -78,6 +96,8 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     final draftCount = controller.draftDesigns.length;
     final finalCount = controller.finalDesigns.length;
     final invoiceCount = controller.invoices.length;
+    final isPaid =
+        controller.consultation.value?.consultationType == 'BERBAYAR';
 
     final states = [
       (
@@ -98,12 +118,13 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         step: ConsultationDetailStep.finalDesign,
         badge: finalCount,
       ),
-      (
-        label: 'Invoice',
-        icon: Icons.receipt_long_outlined,
-        step: ConsultationDetailStep.invoice,
-        badge: invoiceCount,
-      ),
+      if (isPaid)
+        (
+          label: 'Invoice',
+          icon: Icons.receipt_long_outlined,
+          step: ConsultationDetailStep.invoice,
+          badge: invoiceCount,
+        ),
     ];
 
     return Row(
@@ -136,17 +157,18 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     );
   }
 
-  Widget _buildConsultantCard(String consultantName) {
+  Widget _buildConsultantCard(
+    String consultantName,
+    String homeOwnerName,
+    String consultationStatus,
+  ) {
     final initial = consultantName.isNotEmpty
         ? consultantName.characters.first.toUpperCase()
         : 'I';
-    final avatarUrl = controller.project.consultationInfo?.consultantId
-        ?.toString();
+    final avatarUrl = controller.consultation.value?.consultantId?.toString();
 
-    final cName = controller.consultationInfo.value?.consultantName;
-    consultantName = cName ?? 'Konsultan';
-
-    return Obx( () => Container(
+    return Obx(
+      () => Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: AppColors.inputSurface,
@@ -162,16 +184,15 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.isConsultant
-                        ? controller.homeOwnerName.value
-                        : consultantName,
+                    controller.isConsultant ? homeOwnerName : consultantName,
                     style: AppTextStyles.h4.copyWith(
                       color: AppColors.neutralDarkest,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    controller.isConsultant ? '' : 'Consultant Speciality',
+                    consultationStatus.replaceAll('_', ' ').capitalizeFirst ??
+                        '',
                     style: AppTextStyles.bodyS.copyWith(
                       color: AppColors.neutralMediumLight,
                     ),
@@ -221,6 +242,9 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
       case ConsultationDetailStep.finalDesign:
         return _buildFinalDesignSection();
       case ConsultationDetailStep.invoice:
+        if (controller.consultation.value?.consultationType != 'BERBAYAR') {
+          return _buildEmptyState(message: 'Tidak ada invoice');
+        }
         return _buildInvoiceSection();
     }
   }
@@ -338,7 +362,14 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   Widget _buildApprovalActions({
     required VoidCallback onApprove,
     required VoidCallback onReject,
+    bool canRequestRevision = true,
   }) {
+    if (!canRequestRevision) {
+      return PkpBottomActions(
+        primaryText: 'Setujui',
+        onPrimaryPressed: onApprove,
+      );
+    }
     return PkpBottomActions(
       secondaryText: 'Minta Revisi',
       onSecondaryPressed: onReject,
@@ -392,14 +423,18 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
 
   ProjectItemStatus _mapContractStatus(ContractStatus status) {
     switch (status) {
-      case ContractStatus.awaitingApproval:
+      case ContractStatus.requestForApproval:
         return ProjectItemStatus.awaitingApproval;
-      case ContractStatus.needsRevision:
+      case ContractStatus.revisionRequested:
         return ProjectItemStatus.revisionRequired;
-      case ContractStatus.approvedNeedSign:
+      case ContractStatus.approved:
+      case ContractStatus.homeownerSigned:
+      case ContractStatus.consultantSigned:
         return ProjectItemStatus.approved;
-      case ContractStatus.approvedSigned:
+      case ContractStatus.signed:
         return ProjectItemStatus.signed;
+      case ContractStatus.unknown:
+        return ProjectItemStatus.awaitingApproval;
     }
   }
 
@@ -414,7 +449,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     }
   }
 
-  void _showUploadContractSheet(BuildContext context) {
+  void _showUploadContractSheet() {
     controller.showBottomSheet(
       SafeArea(
         child: Padding(
@@ -430,7 +465,6 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                 titleTextColor: AppColors.neutralDarkest,
                 leadingColor: AppColors.neutralDarkest,
               ),
-              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: PkpTextFormField(
@@ -439,22 +473,23 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                   hintText: 'Pilih Dokumen Kontrak',
                   type: PkpTextFormFieldType.filePicker,
                   customPickFile: controller.pickContractFileCustom,
-                  allowedFileLabel: 'PDF (Maks 5MB)',
+                  allowedFileLabel: 'Pilih File (Maks 5MB)',
                   filePickerType: PkpFilePickerType.pdf,
                   allowedFileExtensions: const ['pdf'],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                child: PkpBottomActions(
+              Obx(
+                () => PkpBottomActions(
                   primaryText: 'Submit',
+                  primaryEnabled:
+                      (controller.selectedContractPath.value?.isNotEmpty ??
+                          false) &&
+                      !controller.isUploadingContract.value,
+                  primaryLoading: controller.isUploadingContract.value,
                   onPrimaryPressed: () {
-                    controller.submitContractUpload();
+                    if (!controller.canSubmitContractUpload()) return;
                     Get.back();
-                    Future.microtask(() {
-                      final ctx = Get.context;
-                      if (ctx != null) _showPaymentTermsSheet(ctx);
-                    });
+                    _showPaymentTermsSheet();
                   },
                 ),
               ),
@@ -465,72 +500,73 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     );
   }
 
-  void _showPaymentTermsSheet(BuildContext context) {
+  void _showPaymentTermsSheet() {
     controller.showBottomSheet(
       SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final maxHeight = constraints.maxHeight * 0.95;
-            return SizedBox(
-              height: maxHeight,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const PkpAppBar(
-                    title: 'Termin Pembayaran',
-                    leading: Icons.close_rounded,
-                    backgroundColor: AppColors.white,
-                    titleTextColor: AppColors.neutralDarkest,
-                    leadingColor: AppColors.neutralDarkest,
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildPaymentTermSection(
-                            title: 'Termin 1',
-                            amountController:
-                                controller.termAmountControllers[0],
-                            dueDateController:
-                                controller.termDueDateControllers[0],
-                            onPickDate: () => controller.selectTermDueDate(0),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildPaymentTermSection(
-                            title: 'Termin 2',
-                            amountController:
-                                controller.termAmountControllers[1],
-                            dueDateController:
-                                controller.termDueDateControllers[1],
-                            onPickDate: () => controller.selectTermDueDate(1),
-                          ),
-                          const SizedBox(height: 16),
-                          _buildPaymentTermSection(
-                            title: 'Termin 3',
-                            amountController:
-                                controller.termAmountControllers[2],
-                            dueDateController:
-                                controller.termDueDateControllers[2],
-                            onPickDate: () => controller.selectTermDueDate(2),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
-                    ),
-                  ),
-                  PkpBottomActions(
-                    primaryText: 'Submit',
-                    onPrimaryPressed: () {
-                      controller.submitPaymentTerms();
-                      Get.back();
-                    },
-                  ),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const PkpAppBar(
+                title: 'Termin Pembayaran',
+                leading: Icons.close_rounded,
+                backgroundColor: AppColors.white,
+                titleTextColor: AppColors.neutralDarkest,
+                leadingColor: AppColors.neutralDarkest,
               ),
-            );
-          },
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      PkpTextFormField(
+                        controller: controller.contractValueController,
+                        labelText: 'Nilai Kontrak',
+                        hintText: 'Masukkan nilai kontrak',
+                        type: PkpTextFormFieldType.currency,
+                        borderRadius: 12,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildPaymentTermSection(
+                        title: 'Termin 1',
+                        amountController: controller.termAmountControllers[0],
+                        dueDateController: controller.termDueDateControllers[0],
+                        onPickDate: () => controller.selectTermDueDate(0),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildPaymentTermSection(
+                        title: 'Termin 2',
+                        amountController: controller.termAmountControllers[1],
+                        dueDateController: controller.termDueDateControllers[1],
+                        onPickDate: () => controller.selectTermDueDate(1),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildPaymentTermSection(
+                        title: 'Termin 3',
+                        amountController: controller.termAmountControllers[2],
+                        dueDateController: controller.termDueDateControllers[2],
+                        onPickDate: () => controller.selectTermDueDate(2),
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
+                ),
+              ),
+              Obx(
+                () => PkpBottomActions(
+                  primaryText: 'Submit',
+                  primaryLoading: controller.isUploadingContract.value,
+                  primaryEnabled:
+                      !controller.isUploadingContract.value &&
+                      controller.isPaymentTermsValid.value,
+                  onPrimaryPressed: () async {
+                    await controller.submitPaymentTerms();
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -586,12 +622,18 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
                   ],
                 ),
               ),
-              PkpBottomActions(
-                primaryText: 'Submit',
-                onPrimaryPressed: () {
-                  controller.submitDraftDesigns();
-                  Get.back();
-                },
+              Obx(
+                () => PkpBottomActions(
+                  primaryText: 'Submit',
+                  primaryLoading: controller.isUploadingDesign.value,
+                  primaryEnabled: !controller.isUploadingDesign.value,
+                  onPrimaryPressed: controller.isUploadingDesign.value
+                      ? () {}
+                      : () async {
+                          await controller.submitDraftDesigns();
+                          Get.back();
+                        },
+                ),
               ),
             ],
           ),
@@ -661,43 +703,77 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
       final step = controller.selectedStep.value;
       final hasContracts = controller.contracts.isNotEmpty;
       final lastContract = hasContracts ? controller.contracts.last : null;
+      final lastStatus = lastContract?.status;
+      final isAwaitingApproval =
+          lastStatus == ContractStatus.requestForApproval;
+      final isApproved = lastStatus == ContractStatus.approved;
+      final homeownerSigned = lastStatus == ContractStatus.homeownerSigned;
+      final consultantSigned = lastStatus == ContractStatus.consultantSigned;
+      final isPendingSign = isApproved || homeownerSigned || consultantSigned;
+      final isSigned = lastStatus == ContractStatus.signed;
       final isConsultantAwaitingApproval =
-          isConsultant &&
-          lastContract != null &&
-          lastContract.status == ContractStatus.awaitingApproval;
+          isConsultant && lastContract != null && isAwaitingApproval;
       final hasPendingContractApproval =
           step == ConsultationDetailStep.contract &&
-          lastContract?.status == ContractStatus.awaitingApproval;
-      final hasPendingContractSign =
+          isAwaitingApproval &&
+          !isConsultant;
+      final shouldConsultantSign =
           step == ConsultationDetailStep.contract &&
-          lastContract?.status == ContractStatus.approvedNeedSign;
+          (isApproved || homeownerSigned) &&
+          isConsultant;
+      final shouldHomeOwnerSign =
+          step == ConsultationDetailStep.contract &&
+          (isApproved || consultantSigned) &&
+          !isConsultant;
+      final hasPendingContractSign =
+          shouldConsultantSign || shouldHomeOwnerSign;
       final hasApprovedContract =
           step == ConsultationDetailStep.contract &&
           lastContract != null &&
-          (lastContract.status == ContractStatus.approvedNeedSign ||
-              lastContract.status == ContractStatus.approvedSigned);
-      final isApprovedSigned =
-          lastContract?.status == ContractStatus.approvedSigned;
+          (isPendingSign || isSigned);
+      final isApprovedSigned = isSigned;
+      final revisionAttemptsContract = controller.revisionAttemptsUsed;
+      final revisionAttemptsDesign = controller.designRevisionAttemptsUsed;
+      final canRequestRevision =
+          revisionAttemptsContract <
+          ConsultationDetailsController.maxRevisionAttempts;
+      final canRequestDesignRevision =
+          revisionAttemptsDesign <
+          ConsultationDetailsController.maxRevisionAttempts;
       final canCancel =
           step == ConsultationDetailStep.contract &&
           !hasApprovedContract &&
           !isConsultant;
-      final showDraftUploadCta =
-          isApprovedSigned &&
-          controller.draftDesigns.isEmpty &&
-          step == ConsultationDetailStep.contract;
-      final showDraftUploadOnDraftTab =
-          isConsultant &&
-          isApprovedSigned &&
-          controller.draftDesigns.isEmpty &&
-          step == ConsultationDetailStep.draftDesign;
       final lastDraft = controller.draftDesigns.isNotEmpty
           ? controller.draftDesigns.last
           : null;
+      final needsDraftUpload =
+          controller.draftDesigns.isEmpty ||
+          lastDraft?.status == DesignStatus.needsRevision;
+      final showDraftUploadCta =
+          isApprovedSigned &&
+          needsDraftUpload &&
+          step == ConsultationDetailStep.contract &&
+          isConsultant;
+      final showDraftUploadOnDraftTab =
+          isConsultant &&
+          isApprovedSigned &&
+          needsDraftUpload &&
+          step == ConsultationDetailStep.draftDesign;
+      final isDraftAwaitingApproval =
+          step == ConsultationDetailStep.draftDesign &&
+          lastDraft?.status == DesignStatus.awaitingApproval &&
+          !isConsultant;
       final showHomeOwnerDraftApproval =
           !isConsultant &&
           step == ConsultationDetailStep.draftDesign &&
           lastDraft?.status == DesignStatus.awaitingApproval;
+
+      if (step == ConsultationDetailStep.contract &&
+          hasContracts &&
+          lastStatus == ContractStatus.unknown) {
+        return const SizedBox.shrink();
+      }
 
       if (isConsultantAwaitingApproval) {
         return const SizedBox.shrink();
@@ -724,21 +800,32 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         );
       }
 
-      if (showDraftUploadOnDraftTab) {
-        return PkpBottomActions(
-          primaryText: 'Unggah Draft Desain',
-          onPrimaryPressed: () {
-            final ctx = Get.context;
-            if (ctx != null) _showUploadDraftSheet(ctx);
-          },
-        );
-      }
-
-      if (showHomeOwnerDraftApproval) {
-        return _buildApprovalActions(
-          onApprove: controller.approveLatestDraft,
-          onReject: controller.reviseLatestDraft,
-        );
+      if (step == ConsultationDetailStep.draftDesign) {
+        if (showDraftUploadOnDraftTab) {
+          return PkpBottomActions(
+            primaryText: 'Unggah Draft Desain',
+            onPrimaryPressed: () {
+              final ctx = Get.context;
+              if (ctx != null) _showUploadDraftSheet(ctx);
+            },
+          );
+        }
+        if (isDraftAwaitingApproval) {
+          return _buildApprovalActions(
+            onApprove: controller.approveLatestDraft,
+            onReject: controller.reviseLatestDraft,
+            canRequestRevision: canRequestDesignRevision,
+          );
+        }
+        if (lastDraft?.status == DesignStatus.needsRevision && isConsultant) {
+          return PkpBottomActions(
+            primaryText: 'Unggah Revisi Desain',
+            onPrimaryPressed: () {
+              final ctx = Get.context;
+              if (ctx != null) _showUploadDraftSheet(ctx);
+            },
+          );
+        }
       }
 
       if (isConsultant &&
@@ -749,7 +836,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
           onSecondaryPressed: controller.downloadContractTemplate,
           primaryText: 'Unggah Kontrak',
           onPrimaryPressed: () {
-            _showUploadContractSheet(context);
+            _showUploadContractSheet();
           },
         );
       }
@@ -761,6 +848,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
             _buildApprovalActions(
               onApprove: controller.approveLatestContract,
               onReject: controller.reviseLatestContract,
+              canRequestRevision: canRequestRevision,
             ),
             _buildCancelConsultation(),
           ],

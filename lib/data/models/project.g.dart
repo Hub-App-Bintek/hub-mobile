@@ -9,16 +9,11 @@ part of 'project.dart';
 _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
     _$ProjectImpl(
       projectId: json['projectId'] as String?,
-      name: json['name'] as String?,
-      type: json['type'] as String?,
-      status: json['status'] as String?,
-      location: json['location'] == null
-          ? null
-          : ProjectLocation.fromJson(json['location'] as Map<String, dynamic>),
-      landArea: (json['landArea'] as num?)?.toDouble(),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
+      projectName: json['projectName'] as String?,
+      city: json['city'] as String?,
+      projectStatus: json['projectStatus'] as String?,
+      state: json['state'] as String?,
+      stateDescription: json['stateDescription'] as String?,
       consultationInfo: json['consultationInfo'] == null
           ? null
           : ConsultationInfo.fromJson(
@@ -29,11 +24,10 @@ _$ProjectImpl _$$ProjectImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$ProjectImplToJson(_$ProjectImpl instance) =>
     <String, dynamic>{
       'projectId': instance.projectId,
-      'name': instance.name,
-      'type': instance.type,
-      'status': instance.status,
-      'location': instance.location,
-      'landArea': instance.landArea,
-      'createdAt': instance.createdAt?.toIso8601String(),
+      'projectName': instance.projectName,
+      'city': instance.city,
+      'projectStatus': instance.projectStatus,
+      'state': instance.state,
+      'stateDescription': instance.stateDescription,
       'consultationInfo': instance.consultationInfo,
     };

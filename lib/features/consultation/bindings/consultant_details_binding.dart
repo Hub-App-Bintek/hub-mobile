@@ -16,14 +16,17 @@ class ConsultantDetailsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<GetConsultantPortfoliosUseCase>(
       () => GetConsultantPortfoliosUseCase(Get.find<ConsultantRepository>()),
+      fenix: true,
     );
 
     // Register create consultation use case
     Get.lazyPut<CreateConsultationUseCase>(
       () => CreateConsultationUseCase(Get.find<ConsultationRepository>()),
+      fenix: true,
     );
     Get.lazyPut<CreateDirectChatRoomUseCase>(
       () => CreateDirectChatRoomUseCase(Get.find<ChatRepository>()),
+      fenix: true,
     );
 
     Get.lazyPut<ConsultantDetailsController>(() {

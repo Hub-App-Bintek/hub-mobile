@@ -6,17 +6,17 @@ part 'create_project_request.g.dart';
 @freezed
 class CreateProjectRequest with _$CreateProjectRequest {
   const factory CreateProjectRequest({
+    required String name,
     required double longitude,
     required double latitude,
     required String locationDetail,
-    required String type, // 'PROTOTYPE' or 'NON_PROTOTYPE'
+    required String type, // e.g. 'CONSULTATION', 'PROTOTYPE', 'NON_PROTOTYPE'
     required double landArea,
     required double income,
-    required String name,
-    required int provinceId,
-    required int regencyId,
-    required int districtId,
-    required int villageId,
+    required String provinceId,
+    required String regencyId,
+    required String districtId,
+    required String villageId,
   }) = _CreateProjectRequest;
 
   factory CreateProjectRequest.fromJson(Map<String, dynamic> json) =>

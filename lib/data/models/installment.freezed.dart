@@ -21,7 +21,8 @@ Installment _$InstallmentFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Installment {
-  double? get percentage => throw _privateConstructorUsedError;
+  double? get value => throw _privateConstructorUsedError;
+  bool? get percentage => throw _privateConstructorUsedError;
   String? get dueDate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +38,7 @@ abstract class $InstallmentCopyWith<$Res> {
     $Res Function(Installment) then,
   ) = _$InstallmentCopyWithImpl<$Res, Installment>;
   @useResult
-  $Res call({double? percentage, String? dueDate});
+  $Res call({double? value, bool? percentage, String? dueDate});
 }
 
 /// @nodoc
@@ -52,13 +53,21 @@ class _$InstallmentCopyWithImpl<$Res, $Val extends Installment>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? percentage = freezed, Object? dueDate = freezed}) {
+  $Res call({
+    Object? value = freezed,
+    Object? percentage = freezed,
+    Object? dueDate = freezed,
+  }) {
     return _then(
       _value.copyWith(
+            value: freezed == value
+                ? _value.value
+                : value // ignore: cast_nullable_to_non_nullable
+                      as double?,
             percentage: freezed == percentage
                 ? _value.percentage
                 : percentage // ignore: cast_nullable_to_non_nullable
-                      as double?,
+                      as bool?,
             dueDate: freezed == dueDate
                 ? _value.dueDate
                 : dueDate // ignore: cast_nullable_to_non_nullable
@@ -78,7 +87,7 @@ abstract class _$$InstallmentImplCopyWith<$Res>
   ) = __$$InstallmentImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double? percentage, String? dueDate});
+  $Res call({double? value, bool? percentage, String? dueDate});
 }
 
 /// @nodoc
@@ -92,13 +101,21 @@ class __$$InstallmentImplCopyWithImpl<$Res>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? percentage = freezed, Object? dueDate = freezed}) {
+  $Res call({
+    Object? value = freezed,
+    Object? percentage = freezed,
+    Object? dueDate = freezed,
+  }) {
     return _then(
       _$InstallmentImpl(
+        value: freezed == value
+            ? _value.value
+            : value // ignore: cast_nullable_to_non_nullable
+                  as double?,
         percentage: freezed == percentage
             ? _value.percentage
             : percentage // ignore: cast_nullable_to_non_nullable
-                  as double?,
+                  as bool?,
         dueDate: freezed == dueDate
             ? _value.dueDate
             : dueDate // ignore: cast_nullable_to_non_nullable
@@ -111,19 +128,21 @@ class __$$InstallmentImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$InstallmentImpl implements _Installment {
-  const _$InstallmentImpl({this.percentage, this.dueDate});
+  const _$InstallmentImpl({this.value, this.percentage, this.dueDate});
 
   factory _$InstallmentImpl.fromJson(Map<String, dynamic> json) =>
       _$$InstallmentImplFromJson(json);
 
   @override
-  final double? percentage;
+  final double? value;
+  @override
+  final bool? percentage;
   @override
   final String? dueDate;
 
   @override
   String toString() {
-    return 'Installment(percentage: $percentage, dueDate: $dueDate)';
+    return 'Installment(value: $value, percentage: $percentage, dueDate: $dueDate)';
   }
 
   @override
@@ -131,6 +150,7 @@ class _$InstallmentImpl implements _Installment {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$InstallmentImpl &&
+            (identical(other.value, value) || other.value == value) &&
             (identical(other.percentage, percentage) ||
                 other.percentage == percentage) &&
             (identical(other.dueDate, dueDate) || other.dueDate == dueDate));
@@ -138,7 +158,7 @@ class _$InstallmentImpl implements _Installment {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, percentage, dueDate);
+  int get hashCode => Object.hash(runtimeType, value, percentage, dueDate);
 
   @JsonKey(ignore: true)
   @override
@@ -154,7 +174,8 @@ class _$InstallmentImpl implements _Installment {
 
 abstract class _Installment implements Installment {
   const factory _Installment({
-    final double? percentage,
+    final double? value,
+    final bool? percentage,
     final String? dueDate,
   }) = _$InstallmentImpl;
 
@@ -162,7 +183,9 @@ abstract class _Installment implements Installment {
       _$InstallmentImpl.fromJson;
 
   @override
-  double? get percentage;
+  double? get value;
+  @override
+  bool? get percentage;
   @override
   String? get dueDate;
   @override

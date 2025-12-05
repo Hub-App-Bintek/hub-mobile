@@ -1,9 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
+import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/location_permission_helper.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
@@ -20,7 +22,6 @@ class ConsultationController extends BaseController {
   final RxString selectedSort = ''.obs;
   final bool showCreateCta;
   final bool requireLoginForAction;
-  final String designTypeId;
 
   ConsultationController(
     this._getConsultantsUseCase,
@@ -31,7 +32,6 @@ class ConsultationController extends BaseController {
     String? initialSort,
     this.showCreateCta,
     this.requireLoginForAction,
-    this.designTypeId,
   );
 
   // Reactive state
@@ -40,6 +40,7 @@ class ConsultationController extends BaseController {
   final hasMore = true.obs; // mirrors _done inverse
 
   final _logger = Logger();
+
   // Scroll
   final scrollController = ScrollController();
   static const double _prefetchExtentPx = 600; // load when < this remains below
@@ -122,8 +123,24 @@ class ConsultationController extends BaseController {
     isLoading.value = false;
   }
 
+  String get _effectiveProjectId {
+    if (projectId.isNotEmpty) return projectId;
+
+    final args = Get.arguments;
+    if (args is ConsultationArgs && args.projectId.isNotEmpty) {
+      return args.projectId;
+    }
+    if (args is Map<String, dynamic>) {
+      final argProjectId = (args['projectId'] ?? '').toString();
+      if (argProjectId.isNotEmpty) return argProjectId;
+    }
+
+    return '';
+  }
+
   void goToPortfolio(Consultant consultant) {
     final consultantId = consultant.id ?? '';
+    final targetProjectId = _effectiveProjectId;
     () async {
       if (requireLoginForAction) {
         final loggedIn = await _ensureLoggedIn();
@@ -133,7 +150,7 @@ class ConsultationController extends BaseController {
         AppRoutes.consultantDetails,
         arguments: ConsultantDetailsArgs(
           consultantId: consultantId,
-          projectId: projectId,
+          projectId: targetProjectId,
           isPaidConsultation: (consultant.packageCost ?? 0) > 0.0,
           consultation: consultant,
           requireLoginForAction: requireLoginForAction,
@@ -149,7 +166,10 @@ class ConsultationController extends BaseController {
       final hasPermission =
           await LocationPermissionHelper.ensureLocationPermission();
       if (!hasPermission) return;
-      navigateOff(AppRoutes.createProject, arguments: {'type': designTypeId});
+      navigateOff(
+        AppRoutes.locationDetails,
+        arguments: LocationDetailsArgs(type: consultation.name),
+      );
     }();
   }
 

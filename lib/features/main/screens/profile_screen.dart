@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/features/main/controllers/profile_controller.dart';
 
@@ -35,7 +36,10 @@ class ProfileScreen extends GetView<ProfileController> {
                           ? AppStrings.verificationCompleted
                           : AppStrings.verificationPending,
                       subtitleColor: AppColors.neutralMedium,
-                      onTap: controller.onVerifyProfilePressed,
+                      onTap: () {
+                        // TODO: Implement verification functionality
+                        // controller.onVerifyProfilePressed();
+                      },
                     ),
                   ),
                   Obx(
@@ -60,7 +64,15 @@ class ProfileScreen extends GetView<ProfileController> {
                     subtitle: '',
                     subtitleColor: AppColors.neutralMediumLight,
                     iconColor: AppColors.neutralDarkest,
-                    onTap: controller.onLogoutPressed,
+                    onTap: () => {
+                      PkpConfirmationDialog.show(
+                        title: 'Keluar Akun',
+                        message: 'Anda yakin ingin keluar dari akun ini?',
+                        confirmLabel: 'Keluar',
+                        cancelLabel: 'Batal',
+                        onConfirm: controller.onLogoutPressed,
+                      ),
+                    },
                   ),
                 ],
               ),

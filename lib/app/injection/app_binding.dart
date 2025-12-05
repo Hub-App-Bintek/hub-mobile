@@ -101,6 +101,5 @@ class AppBinding extends Bindings {
     NetworkServiceInjection.init();
     DataSourceInjection.init();
     RepositoryInjection.init();
-    // UseCaseInjection.init(); // removed to avoid duplicate registration; feature bindings register use cases as needed.
   }
 }

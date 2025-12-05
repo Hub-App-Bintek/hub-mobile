@@ -26,14 +26,12 @@ abstract class AppRoutes {
   static const monitoringDetailReport = _Paths.monitoringDetailReport;
   static const licensingLocation = _Paths.licensingLocation;
   static const kyc = _Paths.kyc;
-  static const createProject = _Paths.createProject;
-  static const projectHistory = _Paths.projectHistory;
+  static const locationDetails = _Paths.locationDetails;
   static const projectContracts = _Paths.projectContracts;
   static const projectDraftDesign = _Paths.projectDraftDesign;
   static const projectFinalDesign = _Paths.projectFinalDesign;
   static const projectInvoice = _Paths.projectInvoice;
-  static const projectReview = _Paths.projectReview;
-  static const projects = _Paths.projects;
+  // static const projects = _Paths.projects;
   static const designType = _Paths.designType;
   static const prototypeDesigns = _Paths.prototypeDesigns;
   static const prototypeDesignDetails = _Paths.prototypeDesignDetails;
@@ -68,9 +66,7 @@ abstract class _Paths {
   static const monitoringDetailReport = '/monitoring/detail/report';
   static const licensingLocation = '/licensing/location';
   static const kyc = '/kyc';
-  static const createProject = '/create-project';
-  static const projectHistory = '/project-history';
-  static const projectReview = '/project-review';
+  static const locationDetails = '/location-details';
   static const projectContracts = '/project-contracts';
   static const projectDraftDesign = '/project-draft-design';
   static const projectFinalDesign = '/project-final-design';
