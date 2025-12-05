@@ -168,6 +168,7 @@ class ConsultantDetailsController extends BaseController {
             'projectId': _projectId,
             'consultationId': response.id,
             'projectName': null,
+            'homeOwnerName': response.homeOwnerName,
           },
         );
       },

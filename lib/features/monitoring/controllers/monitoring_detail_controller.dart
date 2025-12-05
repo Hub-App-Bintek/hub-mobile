@@ -1,13 +1,20 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/network/result.dart';
-
 import '../../../core/base/base_controller.dart';
 import 'supervisor_screen_controller.dart';
 
 enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
 
-enum ContractStatus { approved, pending }
+enum ContractStatus { approved, pending, rejected }
 
 class ContractItem {
   ContractItem({
@@ -22,8 +29,17 @@ class ContractItem {
   final DateTime date;
   final ContractStatus status;
 
-  String get statusLabel =>
-      status == ContractStatus.approved ? 'DISETUJUI' : 'MENUNGGU PERSETUJUAN';
+  String getStatusLabel(){
+    switch(status){
+      case ContractStatus.approved:
+        return 'DISETUJUI';
+      case ContractStatus.pending:
+        return 'MENUNGGU PERSETUJUAN';
+      default:
+        return 'TIDAK DISETUJUI';
+    }
+  }
+
 }
 
 class DocumentItem {
@@ -68,6 +84,7 @@ class MonitoringDetailController extends BaseController {
   }
 
   final selectedStage = MonitoringStage.kontrak.obs;
+  final hasApprovedContract = false.obs;
 
   ConstructionSupervisor? supervisor;
 
@@ -85,6 +102,7 @@ class MonitoringDetailController extends BaseController {
       status: ContractStatus.pending,
     ),
   ].obs;
+
 
   final documents = <DocumentItem>[
     DocumentItem(title: 'Bill Of Quantities'),
@@ -153,9 +171,83 @@ class MonitoringDetailController extends BaseController {
   int get temuanCount => temuanItems.length;
   int get invoiceCount => invoiceItems.length;
 
-  void downloadContract(ContractItem item) {
-    // TODO: integrate real download
-    Get.snackbar('Download', 'Downloading ${item.title}');
+  void downloadContract (ContractItem item) async {
+    // var status = await Permission.storage.request();
+    // if (!status.isGranted) {
+    //   Get.snackbar('Izin Ditolak', 'Izin penyimpanan dibutuhkan untuk mengunduh file.');
+    //   return;
+    // }
+
+    // 2. Define URL and prepare file path
+    const url = 'https://hub-dev.editnest.online/api/download/contract-1.pdf';
+    final fileName = 'kontrak_${item.title.replaceAll(' ', '_')}.pdf';
+
+    try {
+      Directory? downloadsDir;
+      if (Platform.isAndroid) {
+        // On Android, get the public downloads directory.
+        downloadsDir = await getDownloadsDirectory();
+      } else {
+        // On iOS, get the app's documents directory, which is accessible via the Files app.
+        downloadsDir = await getApplicationDocumentsDirectory();
+      }
+
+      final savePath = '${downloadsDir!.path}/$fileName';
+
+      // 3. Show "Starting Download" snackbar
+      Get.snackbar(
+        'Mengunduh',
+        'Memulai unduhan file: ${item.title}',
+        snackPosition: SnackPosition.BOTTOM,
+        showProgressIndicator: true,
+        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+      );
+
+      // 4. Perform download with Dio
+      await Dio().download(
+        url,
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            // You can optionally update a progress variable here
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+      );
+
+      // 5. Show "Completed" snackbar and offer to open the file
+      Get.back(); // Close the progress snackbar
+      Get.snackbar(
+        'Unduhan Selesai',
+        'File "${item.title}" berhasil diunduh.',
+        snackPosition: SnackPosition.BOTTOM,
+        mainButton: TextButton(
+          onPressed: () => OpenFilex.open(savePath),
+          child: const Text(
+            'BUKA',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        duration: const Duration(seconds: 5),
+      );
+
+    } on DioException catch (e) {
+      Get.back(); // Close any open snackbar
+      Get.snackbar(
+        'Gagal Mengunduh',
+        'Terjadi kesalahan: ${e.message}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    } catch (e) {
+      Get.back();
+      Get.snackbar(
+        'Gagal Mengunduh',
+        'Terjadi kesalahan yang tidak diketahui.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+      );
+    }
   }
 
   void downloadDocument(DocumentItem item) {
@@ -163,35 +255,26 @@ class MonitoringDetailController extends BaseController {
   }
 
   void requestRevision() {
-    // Call handleAsync with a function that returns a Future<Result>
-    handleAsync(
-      () async {
-        // TODO: Replace with actual use case: _requestRevisionUseCase(contractId)
-        await Future.delayed(
-          const Duration(seconds: 1),
-        ); // Simulate network latency
-        // Return a mock Success object to satisfy the handleAsync signature
-        return Success('Permintaan revisi berhasil dikirim');
-      },
-      onSuccess: (message) {
-        Get.snackbar('Kontrak', message);
-        // TODO: Optionally, re-fetch data to update UI state
-      },
+    final ContractItem last = contracts.last;
+    contracts[contracts.length - 1] = ContractItem(
+      title: last.title,
+      company: last.company,
+      date: last.date,
+      status: ContractStatus.rejected,
     );
+
+    hasApprovedContract.value = true;
   }
 
   void approveContract() {
-    handleAsync(
-      () async {
-        // TODO: Replace with actual use case: _approveContractUseCase(contractId)
-        await Future.delayed(const Duration(seconds: 1));
-        return Success('Kontrak berhasil disetujui');
-      },
-      onSuccess: (message) {
-        Get.snackbar('Kontrak', message);
-        // TODO: Optionally, re-fetch data or update local state
-      },
+    final ContractItem last = contracts.last;
+    contracts[contracts.length - 1] = ContractItem(
+      title: last.title,
+      company: last.company,
+      date: last.date,
+      status: ContractStatus.approved,
     );
+    hasApprovedContract.value = true;
   }
 
   void uploadDocument() {

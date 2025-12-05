@@ -28,6 +28,7 @@ enum InvoiceStatus { unpaid, paid }
 
 class ConsultationDetailsController extends BaseController {
   late final Project project;
+  String homeOwnerName = '';
   final Rx<ConsultationDetailStep> selectedStep =
       ConsultationDetailStep.contract.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
@@ -90,6 +91,7 @@ class ConsultationDetailsController extends BaseController {
     } else if (args is Map<String, dynamic>) {
       final mapProject = args['project'] as Project?;
       final projectId = args['projectId'] as String?;
+      homeOwnerName = args['homeOwnerName'];
       project =
           mapProject ??
           Project(

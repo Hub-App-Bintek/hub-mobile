@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
@@ -15,6 +17,7 @@ import 'package:pkp_hub/domain/usecases/project/create_project_use_case.dart';
 
 class LicensingLocationDetailsController extends BaseController {
   bool isPrototype = true;
+  final _logger = Logger();
   final TextEditingController provinceController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController subdistrictController = TextEditingController();
@@ -77,9 +80,11 @@ class LicensingLocationDetailsController extends BaseController {
   void onInit() {
     super.onInit();
     final arg = Get.arguments;
+    _logger.d("arguments : $arg");
     if (arg is bool) {
       isPrototype = arg;
     }
+    _logger.d("prototype : $isPrototype");
     selectedLocation.value = _defaultLocation;
     provinceController.addListener(_validateProvince);
     cityController.addListener(_validateCity);
@@ -243,6 +248,7 @@ class LicensingLocationDetailsController extends BaseController {
     } else {
       _resetCitySelection();
     }
+    _updateFormValid();
   }
 
   void selectCity(String? value) async {
@@ -257,6 +263,7 @@ class LicensingLocationDetailsController extends BaseController {
     } else {
       _resetSubdistrictSelection();
     }
+    _updateFormValid();
   }
 
   void selectSubdistrict(String? value) async {
@@ -271,6 +278,7 @@ class LicensingLocationDetailsController extends BaseController {
     } else {
       _resetVillageSelection();
     }
+    _updateFormValid();
   }
 
   void selectVillage(String? value) {
@@ -279,6 +287,7 @@ class LicensingLocationDetailsController extends BaseController {
     selectedVillage.value = village;
     villageController.text = village?.name ?? value;
     _validateVillage();
+    _updateFormValid();
   }
 
   void onMapCreated(GoogleMapController controller) {
@@ -323,6 +332,7 @@ class LicensingLocationDetailsController extends BaseController {
         Get.toNamed(
           AppRoutes.simbgForm,
           arguments: {
+            'isPrototype': isPrototype,
             'projectId': response.projectId, // Get projectId from the response
           },
         );

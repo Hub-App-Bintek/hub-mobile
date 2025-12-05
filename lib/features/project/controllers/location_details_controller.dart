@@ -668,7 +668,7 @@ class LocationDetailsController extends BaseController {
         navigateAndClearUntil(
           AppRoutes.consultationDetails,
           untilRoute: AppRoutes.main,
-          arguments: {'projectId': projectId},
+          arguments: {'projectId': projectId, 'homeOwnerName':response.homeOwnerName},
         );
       },
       onFailure: (failure) {
