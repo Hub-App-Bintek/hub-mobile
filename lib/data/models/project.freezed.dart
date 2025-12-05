@@ -22,12 +22,11 @@ Project _$ProjectFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Project {
   String? get projectId => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  String? get type => throw _privateConstructorUsedError;
-  String? get status => throw _privateConstructorUsedError;
-  ProjectLocation? get location => throw _privateConstructorUsedError;
-  double? get landArea => throw _privateConstructorUsedError;
-  DateTime? get createdAt => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
+  String? get city => throw _privateConstructorUsedError;
+  String? get projectStatus => throw _privateConstructorUsedError;
+  String? get state => throw _privateConstructorUsedError;
+  String? get stateDescription => throw _privateConstructorUsedError;
   ConsultationInfo? get consultationInfo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,16 +41,14 @@ abstract class $ProjectCopyWith<$Res> {
   @useResult
   $Res call({
     String? projectId,
-    String? name,
-    String? type,
-    String? status,
-    ProjectLocation? location,
-    double? landArea,
-    DateTime? createdAt,
+    String? projectName,
+    String? city,
+    String? projectStatus,
+    String? state,
+    String? stateDescription,
     ConsultationInfo? consultationInfo,
   });
 
-  $ProjectLocationCopyWith<$Res>? get location;
   $ConsultationInfoCopyWith<$Res>? get consultationInfo;
 }
 
@@ -69,12 +66,11 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
   @override
   $Res call({
     Object? projectId = freezed,
-    Object? name = freezed,
-    Object? type = freezed,
-    Object? status = freezed,
-    Object? location = freezed,
-    Object? landArea = freezed,
-    Object? createdAt = freezed,
+    Object? projectName = freezed,
+    Object? city = freezed,
+    Object? projectStatus = freezed,
+    Object? state = freezed,
+    Object? stateDescription = freezed,
     Object? consultationInfo = freezed,
   }) {
     return _then(
@@ -83,30 +79,26 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
                 ? _value.projectId
                 : projectId // ignore: cast_nullable_to_non_nullable
                       as String?,
-            name: freezed == name
-                ? _value.name
-                : name // ignore: cast_nullable_to_non_nullable
+            projectName: freezed == projectName
+                ? _value.projectName
+                : projectName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            type: freezed == type
-                ? _value.type
-                : type // ignore: cast_nullable_to_non_nullable
+            city: freezed == city
+                ? _value.city
+                : city // ignore: cast_nullable_to_non_nullable
                       as String?,
-            status: freezed == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
+            projectStatus: freezed == projectStatus
+                ? _value.projectStatus
+                : projectStatus // ignore: cast_nullable_to_non_nullable
                       as String?,
-            location: freezed == location
-                ? _value.location
-                : location // ignore: cast_nullable_to_non_nullable
-                      as ProjectLocation?,
-            landArea: freezed == landArea
-                ? _value.landArea
-                : landArea // ignore: cast_nullable_to_non_nullable
-                      as double?,
-            createdAt: freezed == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
+            state: freezed == state
+                ? _value.state
+                : state // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            stateDescription: freezed == stateDescription
+                ? _value.stateDescription
+                : stateDescription // ignore: cast_nullable_to_non_nullable
+                      as String?,
             consultationInfo: freezed == consultationInfo
                 ? _value.consultationInfo
                 : consultationInfo // ignore: cast_nullable_to_non_nullable
@@ -114,18 +106,6 @@ class _$ProjectCopyWithImpl<$Res, $Val extends Project>
           )
           as $Val,
     );
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $ProjectLocationCopyWith<$Res>? get location {
-    if (_value.location == null) {
-      return null;
-    }
-
-    return $ProjectLocationCopyWith<$Res>(_value.location!, (value) {
-      return _then(_value.copyWith(location: value) as $Val);
-    });
   }
 
   @override
@@ -151,17 +131,14 @@ abstract class _$$ProjectImplCopyWith<$Res> implements $ProjectCopyWith<$Res> {
   @useResult
   $Res call({
     String? projectId,
-    String? name,
-    String? type,
-    String? status,
-    ProjectLocation? location,
-    double? landArea,
-    DateTime? createdAt,
+    String? projectName,
+    String? city,
+    String? projectStatus,
+    String? state,
+    String? stateDescription,
     ConsultationInfo? consultationInfo,
   });
 
-  @override
-  $ProjectLocationCopyWith<$Res>? get location;
   @override
   $ConsultationInfoCopyWith<$Res>? get consultationInfo;
 }
@@ -179,12 +156,11 @@ class __$$ProjectImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? projectId = freezed,
-    Object? name = freezed,
-    Object? type = freezed,
-    Object? status = freezed,
-    Object? location = freezed,
-    Object? landArea = freezed,
-    Object? createdAt = freezed,
+    Object? projectName = freezed,
+    Object? city = freezed,
+    Object? projectStatus = freezed,
+    Object? state = freezed,
+    Object? stateDescription = freezed,
     Object? consultationInfo = freezed,
   }) {
     return _then(
@@ -193,30 +169,26 @@ class __$$ProjectImplCopyWithImpl<$Res>
             ? _value.projectId
             : projectId // ignore: cast_nullable_to_non_nullable
                   as String?,
-        name: freezed == name
-            ? _value.name
-            : name // ignore: cast_nullable_to_non_nullable
+        projectName: freezed == projectName
+            ? _value.projectName
+            : projectName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        type: freezed == type
-            ? _value.type
-            : type // ignore: cast_nullable_to_non_nullable
+        city: freezed == city
+            ? _value.city
+            : city // ignore: cast_nullable_to_non_nullable
                   as String?,
-        status: freezed == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
+        projectStatus: freezed == projectStatus
+            ? _value.projectStatus
+            : projectStatus // ignore: cast_nullable_to_non_nullable
                   as String?,
-        location: freezed == location
-            ? _value.location
-            : location // ignore: cast_nullable_to_non_nullable
-                  as ProjectLocation?,
-        landArea: freezed == landArea
-            ? _value.landArea
-            : landArea // ignore: cast_nullable_to_non_nullable
-                  as double?,
-        createdAt: freezed == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
+        state: freezed == state
+            ? _value.state
+            : state // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        stateDescription: freezed == stateDescription
+            ? _value.stateDescription
+            : stateDescription // ignore: cast_nullable_to_non_nullable
+                  as String?,
         consultationInfo: freezed == consultationInfo
             ? _value.consultationInfo
             : consultationInfo // ignore: cast_nullable_to_non_nullable
@@ -231,12 +203,11 @@ class __$$ProjectImplCopyWithImpl<$Res>
 class _$ProjectImpl implements _Project {
   const _$ProjectImpl({
     this.projectId,
-    this.name,
-    this.type,
-    this.status,
-    this.location,
-    this.landArea,
-    this.createdAt,
+    this.projectName,
+    this.city,
+    this.projectStatus,
+    this.state,
+    this.stateDescription,
     this.consultationInfo,
   });
 
@@ -246,23 +217,21 @@ class _$ProjectImpl implements _Project {
   @override
   final String? projectId;
   @override
-  final String? name;
+  final String? projectName;
   @override
-  final String? type;
+  final String? city;
   @override
-  final String? status;
+  final String? projectStatus;
   @override
-  final ProjectLocation? location;
+  final String? state;
   @override
-  final double? landArea;
-  @override
-  final DateTime? createdAt;
+  final String? stateDescription;
   @override
   final ConsultationInfo? consultationInfo;
 
   @override
   String toString() {
-    return 'Project(projectId: $projectId, name: $name, type: $type, status: $status, location: $location, landArea: $landArea, createdAt: $createdAt, consultationInfo: $consultationInfo)';
+    return 'Project(projectId: $projectId, projectName: $projectName, city: $city, projectStatus: $projectStatus, state: $state, stateDescription: $stateDescription, consultationInfo: $consultationInfo)';
   }
 
   @override
@@ -272,15 +241,14 @@ class _$ProjectImpl implements _Project {
             other is _$ProjectImpl &&
             (identical(other.projectId, projectId) ||
                 other.projectId == projectId) &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.location, location) ||
-                other.location == location) &&
-            (identical(other.landArea, landArea) ||
-                other.landArea == landArea) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
+            (identical(other.projectName, projectName) ||
+                other.projectName == projectName) &&
+            (identical(other.city, city) || other.city == city) &&
+            (identical(other.projectStatus, projectStatus) ||
+                other.projectStatus == projectStatus) &&
+            (identical(other.state, state) || other.state == state) &&
+            (identical(other.stateDescription, stateDescription) ||
+                other.stateDescription == stateDescription) &&
             (identical(other.consultationInfo, consultationInfo) ||
                 other.consultationInfo == consultationInfo));
   }
@@ -290,12 +258,11 @@ class _$ProjectImpl implements _Project {
   int get hashCode => Object.hash(
     runtimeType,
     projectId,
-    name,
-    type,
-    status,
-    location,
-    landArea,
-    createdAt,
+    projectName,
+    city,
+    projectStatus,
+    state,
+    stateDescription,
     consultationInfo,
   );
 
@@ -314,12 +281,11 @@ class _$ProjectImpl implements _Project {
 abstract class _Project implements Project {
   const factory _Project({
     final String? projectId,
-    final String? name,
-    final String? type,
-    final String? status,
-    final ProjectLocation? location,
-    final double? landArea,
-    final DateTime? createdAt,
+    final String? projectName,
+    final String? city,
+    final String? projectStatus,
+    final String? state,
+    final String? stateDescription,
     final ConsultationInfo? consultationInfo,
   }) = _$ProjectImpl;
 
@@ -328,17 +294,15 @@ abstract class _Project implements Project {
   @override
   String? get projectId;
   @override
-  String? get name;
+  String? get projectName;
   @override
-  String? get type;
+  String? get city;
   @override
-  String? get status;
+  String? get projectStatus;
   @override
-  ProjectLocation? get location;
+  String? get state;
   @override
-  double? get landArea;
-  @override
-  DateTime? get createdAt;
+  String? get stateDescription;
   @override
   ConsultationInfo? get consultationInfo;
   @override

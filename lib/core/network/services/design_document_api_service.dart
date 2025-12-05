@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
-import 'package:pkp_hub/data/models/design_document.dart';
+import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'design_document_api_service.g.dart';
@@ -14,7 +14,7 @@ abstract class DesignDocumentApiService {
 
   @MultiPart()
   @POST(ApiEndpoints.designDocumentsUpload)
-  Future<DesignDocument> uploadDesignDocuments(
+  Future<UploadDesignDocumentResponse> uploadDesignDocuments(
     @Part(name: 'consultationId') String consultationId,
     @Part(name: 'fileDed') File fileDed,
     @Part(name: 'fileRab') File fileRab,

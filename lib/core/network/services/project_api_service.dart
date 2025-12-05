@@ -1,8 +1,6 @@
-// Retrofit API service for project-related endpoints.
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
-import 'package:pkp_hub/data/models/response/get_projects_response.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -16,17 +14,8 @@ abstract class ProjectApiService {
   @POST(ApiEndpoints.projectsV1)
   Future<CreateProjectResponse> createProject(@Body() FormData body);
 
-  @GET(ApiEndpoints.projects)
-  Future<GetProjectsResponse> getProjects(
-    @Query('page') int? page,
-    @Query('size') int? size,
-    @Query('type') String? type,
-    @Query('status') String? status,
-  );
-
-  // New: Get project details by ID
-  @GET('${ApiEndpoints.projects}/{projectId}')
-  Future<ProjectDetailsResponse> getProjectDetail(
+  @GET(ApiEndpoints.projectDetailV2)
+  Future<ProjectDetailsResponse> getProjectV2(
     @Path('projectId') String projectId,
   );
 }

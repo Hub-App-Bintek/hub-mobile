@@ -1,5 +1,3 @@
-// lib/features/licensing/bindings/simbg_form_binding.dart
-
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/widgets/controllers/location_selector_controller.dart';
 import 'package:pkp_hub/domain/repositories/location_repository.dart';
@@ -27,20 +25,19 @@ class SimbgFormBinding extends Bindings {
     const locationTag = 'simbgForm';
 
     Get.lazyPut<GetProvincesUseCase>(
-          () => GetProvincesUseCase(Get.find<LocationRepository>()),
+      () => GetProvincesUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetRegenciesUseCase>(
-          () => GetRegenciesUseCase(Get.find<LocationRepository>()),
+      () => GetRegenciesUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetDistrictsUseCase>(
-          () => GetDistrictsUseCase(Get.find<LocationRepository>()),
+      () => GetDistrictsUseCase(Get.find<LocationRepository>()),
     );
     Get.lazyPut<GetVillagesUseCase>(
-          () => GetVillagesUseCase(Get.find<LocationRepository>()),
+      () => GetVillagesUseCase(Get.find<LocationRepository>()),
     );
-
     Get.lazyPut<LocationSelectorController>(
-          () => LocationSelectorController(
+      () => LocationSelectorController(
         Get.find<GetProvincesUseCase>(),
         Get.find<GetRegenciesUseCase>(),
         Get.find<GetDistrictsUseCase>(),
@@ -48,7 +45,6 @@ class SimbgFormBinding extends Bindings {
       ),
       tag: locationTag, // Use the unique tag
     );
-
     Get.lazyPut<SubmitSimbgFormUseCase>(
       () => SubmitSimbgFormUseCase(Get.find<PermitRepository>()),
     );

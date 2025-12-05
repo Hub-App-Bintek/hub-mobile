@@ -1,47 +1,25 @@
-class Contract {
-  final String? id;
-  final String? consultationId;
-  final String? pdfUrl; // backward-compat
-  final String? fileUrl; // new API field
-  final bool? digitalSignature;
-  final String? status;
-  final String? createdAt;
-  final String? updatedAt;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Contract({
-    this.id,
-    this.consultationId,
-    this.pdfUrl,
-    this.fileUrl,
-    this.digitalSignature,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
-  });
+part 'contract.freezed.dart';
+part 'contract.g.dart';
 
-  factory Contract.fromJson(Map<String, dynamic> json) => Contract(
-    id: json['id']?.toString(),
-    consultationId: json['consultationId']?.toString(),
-    pdfUrl: json['pdfUrl']?.toString(),
-    fileUrl: json['fileUrl']?.toString() ?? json['pdfUrl']?.toString(),
-    digitalSignature: json['digitalSignature'] is bool
-        ? json['digitalSignature'] as bool
-        : json['digitalSignature'] == null
-        ? null
-        : json['digitalSignature'].toString().toLowerCase() == 'true',
-    status: json['status']?.toString(),
-    createdAt: json['createdAt']?.toString(),
-    updatedAt: json['updatedAt']?.toString(),
-  );
+@freezed
+class Contract with _$Contract {
+  const factory Contract({
+    String? id,
+    String? consultationId,
+    String? documentType,
+    String? version,
+    String? fileUrl,
+    String? fileId,
+    String? uploadedBy,
+    String? status,
+    String? notes,
+    String? uploadedAt,
+    String? createdAt,
+    String? updatedAt,
+  }) = _Contract;
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'consultationId': consultationId,
-    'pdfUrl': pdfUrl,
-    'fileUrl': fileUrl,
-    'digitalSignature': digitalSignature,
-    'status': status,
-    'createdAt': createdAt,
-    'updatedAt': updatedAt,
-  };
+  factory Contract.fromJson(Map<String, dynamic> json) =>
+      _$ContractFromJson(json);
 }

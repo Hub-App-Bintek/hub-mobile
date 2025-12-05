@@ -1,29 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
-import 'package:pkp_hub/core/utils/logger.dart';
-import 'package:pkp_hub/data/models/consultation.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/data/models/project.dart';
+import 'package:pkp_hub/data/models/request/create_contract_draft_request.dart';
+import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
+import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
-import 'package:pkp_hub/data/models/response/project_details_response.dart';
+import 'package:pkp_hub/data/models/response/design_document_response.dart';
+import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
-import 'package:pkp_hub/domain/usecases/project/get_project_details_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/get_contract_versions_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
+import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/download_design_version_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/get_design_document_versions_use_case.dart';
+import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
+import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
 
 enum ContractStatus {
-  awaitingApproval,
-  needsRevision,
-  approvedNeedSign,
-  approvedSigned,
+  requestForApproval,
+  revisionRequested,
+  approved,
+  homeownerSigned,
+  consultantSigned,
+  signed,
+  unknown,
 }
 
 enum DesignStatus { awaitingApproval, approved, needsRevision }
@@ -31,14 +54,22 @@ enum DesignStatus { awaitingApproval, approved, needsRevision }
 enum InvoiceStatus { unpaid, paid }
 
 class ConsultationDetailsController extends BaseController {
-  late final Project project;
-  final RxString homeOwnerName = ''.obs;
+  static const int maxRevisionAttempts = 3;
   final Rx<ConsultationDetailStep> selectedStep =
       ConsultationDetailStep.contract.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
+  final RxBool isLoading = false.obs;
+  final RxBool isLoadingContracts = false.obs;
+  final RxBool isLoadingDesigns = false.obs;
+  final RxBool isUploadingContract = false.obs;
+  final RxBool isUploadingDesign = false.obs;
+  final RxBool isDownloadingContract = false.obs;
+  final RxBool isDownloadingDesign = false.obs;
   final RxBool hasUploadedContract = false.obs;
   final UserStorage _userStorage;
-  final Rxn<Consultation> consultationInfo = Rxn<Consultation>();
+  final Rxn<ConsultationDetailsResponse> consultation =
+      Rxn<ConsultationDetailsResponse>();
+  final Rxn<Project> project = Rxn<Project>();
 
   final RxList<ConsultationContractItem> contracts =
       <ConsultationContractItem>[].obs;
@@ -50,6 +81,8 @@ class ConsultationDetailsController extends BaseController {
       <ConsultationInvoiceItem>[].obs;
 
   final RxnString selectedContractName = RxnString();
+  final RxnString selectedContractPath = RxnString();
+  final TextEditingController contractValueController = TextEditingController();
   final List<TextEditingController> termAmountControllers = List.generate(
     3,
     (_) => TextEditingController(),
@@ -63,21 +96,51 @@ class ConsultationDetailsController extends BaseController {
     (_) => TextEditingController(),
   );
   final List<RxnString> draftFileNames = List.generate(3, (_) => RxnString());
+  final List<RxnString> draftFilePaths = List.generate(3, (_) => RxnString());
   final TextEditingController draftNotesController = TextEditingController();
-
-  final GetProjectDetailsUseCase _getDetailsUseCase;
-
-  final _logger = Logger();
 
   ConsultationDetailsController(
     this._userStorage,
     this._createDirectChatRoomUseCase,
-    this._getDetailsUseCase,
+    this._getConsultationDetailUseCase,
+    this._getContractVersionsUseCase,
+    this._createContractDraftUseCase,
+    this._approveContractUseCase,
+    this._askContractRevisionUseCase,
+    this._signContractUseCase,
+    this._uploadDesignDocumentsUseCase,
+    this._approveDesignDocumentsUseCase,
+    this._askDesignRevisionUseCase,
+    this._getDesignDocumentVersionsUseCase,
+    this._downloadDesignVersionUseCase,
+    this._downloadFileUseCase,
   );
 
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
+  final GetConsultationDetailUseCase _getConsultationDetailUseCase;
+  final GetContractVersionsUseCase _getContractVersionsUseCase;
+  final CreateContractDraftUseCase _createContractDraftUseCase;
+  final ApproveContractUseCase _approveContractUseCase;
+  final AskContractRevisionUseCase _askContractRevisionUseCase;
+  final SignContractUseCase _signContractUseCase;
+  final UploadDesignDocumentsUseCase _uploadDesignDocumentsUseCase;
+  final ApproveDesignDocumentsUseCase _approveDesignDocumentsUseCase;
+  final AskDesignRevisionUseCase _askDesignRevisionUseCase;
+  final GetDesignDocumentVersionsUseCase _getDesignDocumentVersionsUseCase;
+  final DownloadDesignVersionUseCase _downloadDesignVersionUseCase;
+  final DownloadFileUseCase _downloadFileUseCase;
 
   final TextEditingController contractController = TextEditingController();
+  final RxBool isPaymentTermsValid = false.obs;
+
+  void _hydrateFromArgs() {
+    final args = Get.arguments;
+    if (args is ConsultationDetailsArgs) {
+      project.value = args.project;
+    } else if (args is Map<String, dynamic>) {
+      project.value = args['project'] as Project?;
+    }
+  }
 
   String sectionTitle(ConsultationDetailStep step) {
     switch (step) {
@@ -95,27 +158,20 @@ class ConsultationDetailsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments;
-    if (args is ConsultationDetailsArgs) {
-      project = args.project;
-    } else if (args is Map<String, dynamic>) {
-      final mapProject = args['project'] as Project?;
-      final projectId = args['projectId'] as String?;
-      homeOwnerName.value = args['homeOwnerName'] ?? 'Pemilik Rumah';
-      project =
-          mapProject ??
-          Project(
-            projectId: projectId,
-            name: args['projectName'] as String?,
-            location: null,
-          );
-    } else {
-      project = const Project();
-    }
-
-    fetchDetails();
-    _applyMockScenario(project.projectId);
+    _setupPaymentTermListeners();
+    _hydrateFromArgs();
     _loadUserRole();
+    fetchDetails(isInitialLoad: true);
+  }
+
+  void _setupPaymentTermListeners() {
+    contractValueController.addListener(_recomputePaymentValidation);
+    for (final controller in termAmountControllers) {
+      controller.addListener(_recomputePaymentValidation);
+    }
+    for (final controller in termDueDateControllers) {
+      controller.addListener(_recomputePaymentValidation);
+    }
   }
 
   Future<void> _loadUserRole() async {
@@ -124,58 +180,367 @@ class ConsultationDetailsController extends BaseController {
 
   void selectStep(ConsultationDetailStep step) {
     selectedStep.value = step;
+    if (step == ConsultationDetailStep.contract &&
+        contracts.isEmpty &&
+        !isLoadingContracts.value) {
+      _fetchContractsIfNeeded();
+    } else if (step == ConsultationDetailStep.draftDesign &&
+        draftDesigns.isEmpty &&
+        !isLoadingDesigns.value) {
+      _fetchDesignDocumentsIfNeeded();
+    } else if (step == ConsultationDetailStep.finalDesign &&
+        finalDesigns.isEmpty &&
+        !isLoadingDesigns.value) {
+      _fetchDesignDocumentsIfNeeded();
+    }
   }
 
   Future<void> handleRefresh() async {
-    // We call fetchDetails and let it handle the loading state and updates.
     await fetchDetails();
   }
 
   Future<void> fetchDetails({bool isInitialLoad = false}) async {
-    await handleAsync<ProjectDetailsResponse>(
-      () => _getDetailsUseCase(project.projectId!),
-      onSuccess: (data) {
-        final newName = data.userInfo?['name'];
+    final id = project.value?.consultationInfo?.consultationId;
+    if (id == null || id.isEmpty) {
+      if (!isInitialLoad) {
+        showError(
+          const ServerFailure(message: 'ID konsultasi tidak ditemukan'),
+        );
+      }
+      return;
+    }
+    if (isLoading.value) return;
 
-        homeOwnerName.value = newName ?? 'Pemilik Rumah';
-
-        final consultation = data.consultation;
-        _logger.d('Consultation: ${consultation?.consultantName}');
-        if(consultation != null){
-          consultationInfo.value = consultation;
+    isLoading.value = true;
+    await handleAsync<ConsultationDetailsResponse>(
+      () => _getConsultationDetailUseCase(id),
+      onSuccess: (detail) {
+        consultation.value = detail;
+        if (selectedStep.value == ConsultationDetailStep.contract &&
+            !isLoadingContracts.value) {
+          _fetchContractsIfNeeded(
+            consultationId: detail.consultationId,
+            projectId: detail.projectId ?? project.value?.projectId,
+            status: detail.status,
+          );
+        } else if ((selectedStep.value == ConsultationDetailStep.draftDesign ||
+                selectedStep.value == ConsultationDetailStep.finalDesign) &&
+            !isLoadingDesigns.value) {
+          _fetchDesignDocumentsIfNeeded(consultationId: detail.consultationId);
         }
       },
+      onFailure: showError,
     );
+    isLoading.value = false;
   }
 
-  // --- Mocked download helpers ---
+  Future<void> _fetchContractsIfNeeded({
+    String? consultationId,
+    String? projectId,
+    String? status,
+  }) async {
+    final effectiveConsultationId =
+        consultationId ?? project.value?.consultationInfo?.consultationId;
+    final effectiveProjectId = projectId ?? project.value?.projectId;
+    if (status == 'MENYIAPKAN_KONTRAK') return;
+    if (effectiveConsultationId == null ||
+        effectiveConsultationId.isEmpty ||
+        effectiveProjectId == null ||
+        effectiveProjectId.isEmpty ||
+        isLoadingContracts.value) {
+      return;
+    }
+
+    isLoadingContracts.value = true;
+    await handleAsync<List<ContractVersionResponse>>(
+      () => _getContractVersionsUseCase(
+        GetContractVersionsParams(
+          projectId: effectiveProjectId,
+          consultationId: effectiveConsultationId,
+        ),
+      ),
+      onSuccess: (response) {
+        final mapped = response.asMap().entries.map((entry) {
+          final index = entry.key;
+          final contract = entry.value;
+          final info = contract.documentInfo;
+          return ConsultationContractItem(
+            id: contract.id,
+            fileId: info?.fileId,
+            title: _contractTitleForIndex(index),
+            dateLabel: Formatters.formatIsoDate(info?.uploadedAt ?? '') ?? '',
+            status: _mapContractStatus(contract.contractStatus),
+            rawStatus: contract.contractStatus,
+          );
+        }).toList();
+        contracts
+          ..clear()
+          ..addAll(mapped);
+        _updateHasUploadedContract();
+      },
+      onFailure: showError,
+    );
+    isLoadingContracts.value = false;
+  }
+
+  Future<void> _fetchDesignDocumentsIfNeeded({String? consultationId}) async {
+    final effectiveConsultationId =
+        consultationId ?? project.value?.consultationInfo?.consultationId;
+    if (effectiveConsultationId == null ||
+        effectiveConsultationId.isEmpty ||
+        isLoadingDesigns.value) {
+      return;
+    }
+
+    isLoadingDesigns.value = true;
+    await handleAsync<List<DesignDocumentResponse>>(
+      () => _getDesignDocumentVersionsUseCase(
+        GetDesignDocumentVersionsParams(
+          consultationId: effectiveConsultationId,
+        ),
+      ),
+      onSuccess: (versions) {
+        draftDesigns.clear();
+        finalDesigns.clear();
+        for (final version in versions) {
+          for (final doc in version.documents) {
+            final status = _mapDesignStatusFromApi(doc.status);
+            final item = ConsultationDocumentItem(
+              id: doc.id,
+              title:
+                  '${doc.documentType ?? 'Desain'} v${doc.version ?? version.version ?? ''}',
+              dateLabel:
+                  Formatters.formatIsoDateTime(doc.uploadedAt ?? '') ?? '',
+              status: status,
+              rawStatus: doc.status,
+              documentType: doc.documentType,
+              fileUrl: doc.fileUrl,
+              fileId: doc.fileId,
+              version: doc.version ?? version.version,
+            );
+            if (status == DesignStatus.approved) {
+              finalDesigns.add(item);
+            } else {
+              draftDesigns.add(item);
+            }
+          }
+        }
+      },
+      onFailure: showError,
+    );
+    isLoadingDesigns.value = false;
+  }
+
+  ContractStatus _mapContractStatus(String? status) {
+    switch ((status ?? '').toUpperCase()) {
+      case 'UPLOADED':
+        return ContractStatus.requestForApproval;
+      case 'MENUNGGU_APPROVAL_KONTRAK':
+      case 'REQUEST_FOR_APPROVAL':
+        return ContractStatus.requestForApproval;
+      case 'REVISION_REQUESTED':
+        return ContractStatus.revisionRequested;
+      case 'APPROVED':
+        return ContractStatus.approved;
+      case 'HOMEOWNER_SIGNED':
+        return ContractStatus.homeownerSigned;
+      case 'CONSULTANT_SIGNED':
+        return ContractStatus.consultantSigned;
+      case 'SIGNED':
+        return ContractStatus.signed;
+      default:
+        return ContractStatus.unknown;
+    }
+  }
+
+  DesignStatus _mapDesignStatusFromApi(String? status) {
+    switch ((status ?? '').toUpperCase()) {
+      case 'SUBMITTED':
+      case 'UPLOADED':
+        return DesignStatus.awaitingApproval;
+      case 'REVISION_REQUESTED':
+        return DesignStatus.needsRevision;
+      case 'APPROVED':
+        return DesignStatus.approved;
+      default:
+        return DesignStatus.awaitingApproval;
+    }
+  }
+
+  double _sumTermAmounts() {
+    double total = 0;
+    for (final controller in termAmountControllers) {
+      final parsed = _parseAmount(controller.text);
+      if (parsed != null) total += parsed;
+    }
+    return total;
+  }
+
+  void _recomputePaymentValidation() {
+    final contractValue = _parseAmount(contractValueController.text);
+    final totalTerms = _sumTermAmounts();
+    var datesValid = true;
+    for (var i = 0; i < termAmountControllers.length; i++) {
+      final amount = _parseAmount(termAmountControllers[i].text) ?? 0;
+      final due = termDueDateControllers[i].text.trim();
+      final hasDate = due.isNotEmpty;
+      if ((amount > 0 && !hasDate) || (amount <= 0 && hasDate)) {
+        datesValid = false;
+        break;
+      }
+    }
+    final isValid =
+        contractValue != null &&
+        contractValue > 0 &&
+        totalTerms > 0 &&
+        datesValid &&
+        (contractValue - totalTerms).abs() < 0.01;
+    isPaymentTermsValid.value = isValid;
+  }
+
+  double? _parseAmount(String text) {
+    final cleaned = text.replaceAll(RegExp('[^0-9]'), '').trim();
+    if (cleaned.isEmpty) return null;
+    return double.tryParse(cleaned);
+  }
+
+  List<Installment> _buildInstallments() {
+    final installments = <Installment>[];
+    for (var i = 0; i < termAmountControllers.length; i++) {
+      final amount = _parseAmount(termAmountControllers[i].text);
+      final due = Formatters.toIsoDate(termDueDateControllers[i].text.trim());
+      if (amount != null && amount > 0 && due != null) {
+        installments.add(
+          Installment(value: amount, percentage: false, dueDate: due),
+        );
+      }
+    }
+    return installments;
+  }
 
   Future<void> downloadContract(ConsultationContractItem item) async {
-    _showDownloadSnack('Dokumen kontrak "${item.title}" berhasil diunduh');
+    if (isDownloadingContract.value) return;
+    final fileId = item.fileId;
+    if (fileId == null || fileId.isEmpty) {
+      showError(const ServerFailure(message: 'File kontrak tidak tersedia'));
+      return;
+    }
+    isDownloadingContract.value = true;
+    showLoadingOverlay(message: 'Mengunduh kontrak...', delay: Duration.zero);
+    try {
+      await handleAsync<DownloadedFile>(
+        () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
+        onSuccess: (file) async {
+          hideLoadingOverlay();
+          final projectName = project.value?.projectName ?? 'Konsultasi';
+          final bytes = file.bytes;
+          final saved = await saveToExternalProjectDocuments(
+            projectName: projectName,
+            fileName: file.fileName,
+            bytes: bytes,
+            subDirectory: 'Kontrak',
+            mimeType: 'application/pdf',
+          );
+
+          if (saved != null && saved.isNotEmpty) {
+            final where = Platform.isAndroid
+                ? 'Dokumen > PKP > $projectName > Kontrak'
+                : 'Files app (lokasi yang Anda pilih)';
+            Get.snackbar(
+              'Berhasil',
+              'File disimpan di: $where',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.successDark,
+              colorText: AppColors.white,
+            );
+          } else {
+            Get.snackbar(
+              'Gagal',
+              'File gagal disimpan.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.errorDark,
+              colorText: AppColors.white,
+            );
+          }
+        },
+        onFailure: (failure) {
+          hideLoadingOverlay();
+          showError(failure);
+        },
+      );
+    } finally {
+      hideLoadingOverlay();
+      isDownloadingContract.value = false;
+    }
   }
 
   Future<void> downloadDesign(ConsultationDocumentItem item) async {
-    _showDownloadSnack('Dokumen desain "${item.title}" berhasil diunduh');
-  }
+    if (isDownloadingDesign.value) return;
+    final version = item.version;
+    if (version == null || version.isEmpty) {
+      showError(const ServerFailure(message: 'Versi desain tidak tersedia'));
+      return;
+    }
+    isDownloadingDesign.value = true;
+    showLoadingOverlay(message: 'Mengunduh desain...', delay: Duration.zero);
+    try {
+      await handleAsync<DownloadedFile>(
+        () =>
+            _downloadDesignVersionUseCase(DownloadDesignVersionParams(version)),
+        onSuccess: (file) async {
+          hideLoadingOverlay();
+          final projectName = project.value?.projectName ?? 'Konsultasi';
+          final bytes = file.bytes;
+          final saved = await saveToExternalProjectDocuments(
+            projectName: projectName,
+            fileName: file.fileName,
+            bytes: bytes,
+            subDirectory: 'Desain',
+            mimeType: 'application/zip',
+          );
 
-  void _showDownloadSnack(String message) {
-    Get.snackbar(
-      'Unduh Dokumen',
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.successDark,
-      colorText: AppColors.white,
-    );
+          if (saved != null && saved.isNotEmpty) {
+            final where = Platform.isAndroid
+                ? 'Dokumen > PKP > $projectName > Desain'
+                : 'Files app (lokasi yang Anda pilih)';
+            Get.snackbar(
+              'Berhasil',
+              'File disimpan di: $where',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.successDark,
+              colorText: AppColors.white,
+            );
+          } else {
+            Get.snackbar(
+              'Gagal',
+              'File gagal disimpan.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: AppColors.errorDark,
+              colorText: AppColors.white,
+            );
+          }
+        },
+        onFailure: (failure) {
+          hideLoadingOverlay();
+          showError(failure);
+        },
+      );
+    } finally {
+      hideLoadingOverlay();
+      isDownloadingDesign.value = false;
+    }
   }
 
   bool get isConsultant => userRole.value == UserRole.consultant;
 
   void downloadContractTemplate() {
-    _showDownloadSnack('Template kontrak berhasil diunduh');
-  }
-
-  void pickContractFile() {
-    pickContractFileCustom();
+    Get.snackbar(
+      'Unduh Berhasil',
+      'Template kontrak berhasil diunduh',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.successDark,
+      colorText: AppColors.white,
+    );
   }
 
   Future<String?> pickContractFileCustom() async {
@@ -189,81 +554,157 @@ class ConsultationDetailsController extends BaseController {
 
     final name = file.name;
     selectedContractName.value = name;
+    selectedContractPath.value = file.path;
     contractController.text = name;
     return name;
   }
 
-  void submitContractUpload() {
-    markContractUploaded();
+  bool canSubmitContractUpload() {
+    if ((selectedContractPath.value ?? '').isEmpty) {
+      showError(
+        const ServerFailure(message: 'Pilih dokumen kontrak terlebih dahulu'),
+      );
+      return false;
+    }
+    return true;
+  }
+
+  Future<bool> submitPaymentTerms() async {
+    if (isUploadingContract.value) return false;
+    final consultationId = project.value?.consultationInfo?.consultationId;
+    final path = selectedContractPath.value;
+    if (consultationId == null || consultationId.isEmpty) {
+      showError(const ServerFailure(message: 'ID konsultasi tidak ditemukan'));
+      return false;
+    }
+    if (path == null || path.isEmpty) {
+      showError(
+        const ServerFailure(message: 'Pilih dokumen kontrak terlebih dahulu'),
+      );
+      return false;
+    }
+
+    final file = File(path);
+    if (!file.existsSync()) {
+      showError(const ServerFailure(message: 'File kontrak tidak ditemukan'));
+      return false;
+    }
+
+    final contractValue =
+        _parseAmount(contractValueController.text) ?? _sumTermAmounts();
+    if (contractValue <= 0) {
+      showError(const ServerFailure(message: 'Nilai kontrak harus diisi'));
+      return false;
+    }
+    final installments = _buildInstallments();
+
+    final request = CreateContractDraftRequest(
+      contractValue: contractValue,
+      installments: installments,
+      fileUrl: null,
+    );
+
+    isUploadingContract.value = true;
+    var success = false;
+    await handleAsync(
+      () => _createContractDraftUseCase(
+        UploadContractParam(
+          consultationId: consultationId,
+          file: file,
+          request: request,
+        ),
+      ),
+      onSuccess: (_) async {
+        await _fetchContractsIfNeeded(
+          consultationId: consultationId,
+          projectId: project.value?.projectId,
+        );
+        markContractUploaded();
+        success = true;
+        // Close payment terms sheet after successful upload
+        Get.back();
+      },
+      onFailure: showError,
+    );
+    isUploadingContract.value = false;
+    return success;
+  }
+
+  @override
+  void onClose() {
+    contractValueController.removeListener(_recomputePaymentValidation);
+    for (final controller in termAmountControllers) {
+      controller.removeListener(_recomputePaymentValidation);
+    }
+    for (final controller in termDueDateControllers) {
+      controller.removeListener(_recomputePaymentValidation);
+      controller.dispose();
+    }
+    contractValueController.dispose();
+    super.onClose();
   }
 
   void markContractUploaded() {
     _updateHasUploadedContract();
   }
 
-  void submitPaymentTerms() {
-    _addUploadedContract();
-    _updateHasUploadedContract();
-  }
-
   void approveLatestContract() {
-    if (contracts.isEmpty) return;
-    final last = contracts.last;
-    contracts[contracts.length - 1] = ConsultationContractItem(
-      title: last.title,
-      dateLabel: last.dateLabel,
-      status: ContractStatus.approvedNeedSign,
-    );
-    _updateHasUploadedContract();
+    _handleHomeOwnerApproval();
   }
 
   void signLatestContract() {
-    if (contracts.isEmpty) return;
-    final last = contracts.last;
-    contracts[contracts.length - 1] = ConsultationContractItem(
-      title: last.title,
-      dateLabel: last.dateLabel,
-      status: ContractStatus.approvedSigned,
-    );
-    _updateHasUploadedContract();
+    _handleSignContract();
   }
 
   void reviseLatestContract() {
-    if (contracts.isEmpty) return;
-    final last = contracts.last;
-    contracts[contracts.length - 1] = ConsultationContractItem(
-      title: last.title,
-      dateLabel: last.dateLabel,
-      status: ContractStatus.needsRevision,
-    );
-    _updateHasUploadedContract();
+    _handleRequestRevision();
   }
 
-  void approveLatestDraft() {
-    if (draftDesigns.isEmpty) return;
-    final last = draftDesigns.last;
-    draftDesigns[draftDesigns.length - 1] = ConsultationDocumentItem(
-      title: last.title,
-      dateLabel: last.dateLabel,
-      status: DesignStatus.approved,
+  Future<void> approveLatestDraft() async {
+    final item = _latestDraftAwaitingAction();
+    final designId = item?.id;
+    if (designId == null || designId.isEmpty) {
+      showError(const ServerFailure(message: 'Dokumen desain tidak ditemukan'));
+      return;
+    }
+    isLoadingDesigns.value = true;
+    await handleAsync<void>(
+      () => _approveDesignDocumentsUseCase(designId),
+      onSuccess: (_) async {
+        await _fetchDesignDocumentsIfNeeded(
+          consultationId: project.value?.consultationInfo?.consultationId,
+        );
+      },
+      onFailure: showError,
     );
-    finalDesigns.add(
-      ConsultationDocumentItem(
-        title: last.title,
-        dateLabel: last.dateLabel,
-        status: DesignStatus.approved,
+    isLoadingDesigns.value = false;
+  }
+
+  Future<void> reviseLatestDraft() async {
+    final item = _latestDraftAwaitingAction();
+    final designId = item?.id;
+    if (designId == null || designId.isEmpty) {
+      showError(const ServerFailure(message: 'Dokumen desain tidak ditemukan'));
+      return;
+    }
+    isLoadingDesigns.value = true;
+    await handleAsync<void>(
+      () => _askDesignRevisionUseCase(
+        AskDesignRevisionParams(
+          designDocumentId: designId,
+          notes: draftNotesController.text.isNotEmpty
+              ? draftNotesController.text
+              : null,
+        ),
       ),
+      onSuccess: (_) async {
+        await _fetchDesignDocumentsIfNeeded(
+          consultationId: project.value?.consultationInfo?.consultationId,
+        );
+      },
+      onFailure: showError,
     );
-  }
-
-  void reviseLatestDraft() {
-    if (draftDesigns.isEmpty) return;
-    final last = draftDesigns.last;
-    draftDesigns[draftDesigns.length - 1] = ConsultationDocumentItem(
-      title: last.title,
-      dateLabel: last.dateLabel,
-      status: DesignStatus.needsRevision,
-    );
+    isLoadingDesigns.value = false;
   }
 
   Future<String?> pickDraftFileCustom(int index) async {
@@ -278,42 +719,189 @@ class ConsultationDetailsController extends BaseController {
     final name = file.name;
     draftFileNames[index].value = name;
     draftFileControllers[index].text = name;
+    draftFilePaths[index].value = file.path;
     return name;
   }
 
-  void submitDraftDesigns() {
-    final now = DateFormat('dd MMM yyyy').format(DateTime.now());
-    final names = draftFileControllers
-        .map((c) => c.text.trim())
-        .where((t) => t.isNotEmpty)
-        .toList();
-    final title = names.isNotEmpty
-        ? 'Draft Desain (${names.length} file)'
-        : 'Draft Desain';
+  Future<void> submitDraftDesigns() async {
+    if (isUploadingDesign.value) return;
+    final consultationId = project.value?.consultationInfo?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
+      showError(const ServerFailure(message: 'ID konsultasi tidak ditemukan'));
+      return;
+    }
 
-    draftDesigns.add(
-      _designItem(title, DesignStatus.awaitingApproval, date: now),
+    final fileDedPath = draftFilePaths[0].value;
+    final fileRabPath = draftFilePaths[1].value;
+    final fileBoqPath = draftFilePaths[2].value;
+
+    if ((fileDedPath ?? '').isEmpty &&
+        (fileRabPath ?? '').isEmpty &&
+        (fileBoqPath ?? '').isEmpty) {
+      showError(
+        const ServerFailure(
+          message: 'Minimal satu dokumen desain harus dipilih',
+        ),
+      );
+      return;
+    }
+
+    File? dedFile;
+    File? rabFile;
+    File? boqFile;
+    if (fileDedPath != null && fileDedPath.isNotEmpty) {
+      dedFile = File(fileDedPath);
+    }
+    if (fileRabPath != null && fileRabPath.isNotEmpty) {
+      rabFile = File(fileRabPath);
+    }
+    if (fileBoqPath != null && fileBoqPath.isNotEmpty) {
+      boqFile = File(fileBoqPath);
+    }
+
+    isUploadingDesign.value = true;
+    await handleAsync<UploadDesignDocumentResponse>(
+      () => _uploadDesignDocumentsUseCase(
+        UploadDesignDocumentsParams(
+          consultationId: consultationId,
+          fileDed: dedFile,
+          fileRab: rabFile,
+          fileBoq: boqFile,
+        ),
+      ),
+      onSuccess: (_) async {
+        _clearDraftInputs();
+        await _fetchDesignDocumentsIfNeeded(consultationId: consultationId);
+      },
+      onFailure: showError,
     );
+    isUploadingDesign.value = false;
   }
 
-  void _addUploadedContract() {
-    final title = selectedContractName.value?.isNotEmpty == true
-        ? selectedContractName.value!
-        : 'Kontrak Baru';
-    contracts.add(
-      _contractItem(
-        title,
-        ContractStatus.awaitingApproval,
-        date: DateFormat('dd MMM yyyy').format(DateTime.now()),
-      ),
-    );
-    _updateHasUploadedContract();
+  void _clearDraftInputs() {
+    for (final controller in draftFileControllers) {
+      controller.clear();
+    }
+    for (final name in draftFileNames) {
+      name.value = null;
+    }
+    for (final path in draftFilePaths) {
+      path.value = null;
+    }
+    draftNotesController.clear();
   }
 
   void _updateHasUploadedContract() {
     hasUploadedContract.value =
         contracts.isNotEmpty &&
-        contracts.last.status == ContractStatus.awaitingApproval;
+        contracts.last.status != ContractStatus.revisionRequested &&
+        contracts.last.status != ContractStatus.unknown;
+  }
+
+  ConsultationDocumentItem? _latestDraftAwaitingAction() {
+    if (draftDesigns.isEmpty) return null;
+    for (final item in draftDesigns.reversed) {
+      if (item.status == DesignStatus.awaitingApproval ||
+          item.status == DesignStatus.needsRevision) {
+        return item;
+      }
+    }
+    return null;
+  }
+
+  int get revisionAttemptsUsed => contracts
+      .where((c) => (c.rawStatus ?? '').toUpperCase().contains('REVISION'))
+      .length;
+
+  int get designRevisionAttemptsUsed => draftDesigns
+      .where((d) => (d.rawStatus ?? '').toUpperCase().contains('REVISION'))
+      .length;
+
+  String _contractTitleForIndex(int index) {
+    if (index == 0) return 'Kontrak Awal';
+    if (index == 1) return 'Revisi Kontrak Pertama';
+    if (index == 2) return 'Revisi Kontrak Kedua';
+    return 'Final Kontrak';
+  }
+
+  Future<void> _handleHomeOwnerApproval() async {
+    if (contracts.isEmpty) return;
+    final latest = contracts.last;
+    final contractId = latest.id;
+    if (contractId == null || contractId.isEmpty) {
+      showError(const ServerFailure(message: 'ID kontrak tidak ditemukan'));
+      return;
+    }
+    final approvedVersionId = latest.id;
+    if (approvedVersionId == null || approvedVersionId.isEmpty) {
+      showError(
+        const ServerFailure(message: 'Versi dokumen kontrak tidak ditemukan'),
+      );
+      return;
+    }
+    isLoadingContracts.value = true;
+    await handleAsync<Contract>(
+      () => _approveContractUseCase(
+        ApproveContractParams(
+          contractId: contractId,
+          approvedDocumentVersionId: approvedVersionId,
+        ),
+      ),
+      onSuccess: (_) async {
+        await _fetchContractsIfNeeded(
+          consultationId: project.value?.consultationInfo?.consultationId,
+          projectId: project.value?.projectId,
+        );
+      },
+      onFailure: showError,
+    );
+    isLoadingContracts.value = false;
+  }
+
+  Future<void> _handleRequestRevision({String? notes}) async {
+    if (contracts.isEmpty) return;
+    final latest = contracts.last;
+    final contractId = latest.id;
+    if (contractId == null || contractId.isEmpty) {
+      showError(const ServerFailure(message: 'ID kontrak tidak ditemukan'));
+      return;
+    }
+    isLoadingContracts.value = true;
+    await handleAsync<Contract>(
+      () => _askContractRevisionUseCase(
+        AskContractRevisionParams(contractId: contractId, revisionNotes: notes),
+      ),
+      onSuccess: (_) async {
+        await _fetchContractsIfNeeded(
+          consultationId: project.value?.consultationInfo?.consultationId,
+          projectId: project.value?.projectId,
+        );
+      },
+      onFailure: showError,
+    );
+    isLoadingContracts.value = false;
+  }
+
+  Future<void> _handleSignContract() async {
+    if (contracts.isEmpty) return;
+    final latest = contracts.last;
+    final contractId = latest.id;
+    if (contractId == null || contractId.isEmpty) {
+      showError(const ServerFailure(message: 'ID kontrak tidak ditemukan'));
+      return;
+    }
+    isLoadingContracts.value = true;
+    await handleAsync<Contract>(
+      () => _signContractUseCase(contractId),
+      onSuccess: (_) async {
+        await _fetchContractsIfNeeded(
+          consultationId: project.value?.consultationInfo?.consultationId,
+          projectId: project.value?.projectId,
+        );
+      },
+      onFailure: showError,
+    );
+    isLoadingContracts.value = false;
   }
 
   Future<void> selectTermDueDate(int index) async {
@@ -329,17 +917,18 @@ class ConsultationDetailsController extends BaseController {
     if (picked != null) {
       final formatted = DateFormat('dd MMM yyyy').format(picked);
       termDueDateControllers[index].text = formatted;
+      _recomputePaymentValidation();
     }
   }
 
   Future<void> startChatWithConsultant() async {
-    final consultantId = consultationInfo.value?.consultantId;
+    final consultantId = consultation.value?.consultantId;
     if (consultantId == null) {
       showError(const ServerFailure(message: 'Konsultan tidak ditemukan'));
       return;
     }
     final consultantName =
-        consultationInfo.value?.consultantName?.trim() ?? 'Konsultan';
+        consultation.value?.consultantName?.trim() ?? 'Konsultan';
 
     await handleAsync<CreateChatRoomResponse>(
       () => _createDirectChatRoomUseCase(consultantId),
@@ -356,26 +945,44 @@ class ConsultationDetailsController extends BaseController {
 
 class ConsultationContractItem {
   const ConsultationContractItem({
+    required this.id,
+    this.fileId,
     required this.title,
     required this.dateLabel,
     required this.status,
+    required this.rawStatus,
   });
 
+  final String? id;
+  final String? fileId;
   final String title;
   final String dateLabel;
   final ContractStatus status;
+  final String? rawStatus;
 }
 
 class ConsultationDocumentItem {
   const ConsultationDocumentItem({
+    required this.id,
     required this.title,
     required this.dateLabel,
     required this.status,
+    this.rawStatus,
+    this.documentType,
+    this.fileUrl,
+    this.fileId,
+    this.version,
   });
 
+  final String? id;
   final String title;
   final String dateLabel;
   final DesignStatus status;
+  final String? rawStatus;
+  final String? documentType;
+  final String? fileUrl;
+  final String? fileId;
+  final String? version;
 }
 
 class ConsultationInvoiceItem {
@@ -392,231 +999,4 @@ class ConsultationInvoiceItem {
   final InvoiceStatus status;
   final double amount;
   final String method;
-}
-
-ConsultationContractItem _contractItem(
-  String title,
-  ContractStatus status, {
-  String date = '15 Nov 2025',
-}) {
-  return ConsultationContractItem(
-    title: title,
-    dateLabel: date,
-    status: status,
-  );
-}
-
-ConsultationDocumentItem _designItem(
-  String title,
-  DesignStatus status, {
-  String date = '20 Nov 2025',
-}) {
-  return ConsultationDocumentItem(
-    title: title,
-    dateLabel: date,
-    status: status,
-  );
-}
-
-ConsultationInvoiceItem _invoiceItem(
-  String title,
-  InvoiceStatus status, {
-  String date = '10 Des 2025',
-  double amount = 5000000,
-  String method = 'QRIS',
-}) {
-  return ConsultationInvoiceItem(
-    title: title,
-    dateLabel: date,
-    status: status,
-    amount: amount,
-    method: method,
-  );
-}
-
-extension on ConsultationDetailsController {
-  void _applyMockScenario(String? scenarioId) {
-    contracts.clear();
-    draftDesigns.clear();
-    finalDesigns.clear();
-    invoices.clear();
-
-    switch (scenarioId) {
-      case 'A0':
-        break;
-      case 'A1':
-        contracts.add(
-          _contractItem('Kontrak 1', ContractStatus.awaitingApproval),
-        );
-        break;
-      case 'A2':
-        contracts.addAll([
-          _contractItem('Kontrak Revisi 1', ContractStatus.needsRevision),
-          _contractItem('Kontrak Approval 1', ContractStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A3':
-        contracts.addAll([
-          _contractItem('Kontrak Revisi 1', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 2', ContractStatus.needsRevision),
-          _contractItem('Kontrak Approval 1', ContractStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A4':
-        contracts.addAll([
-          _contractItem('Kontrak Revisi 1', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 2', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 3', ContractStatus.needsRevision),
-          _contractItem('Kontrak Approval 1', ContractStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A5':
-        contracts.addAll([
-          _contractItem('Kontrak Revisi 1', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 2', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 3', ContractStatus.needsRevision),
-          _contractItem('Kontrak Disetujui', ContractStatus.approvedNeedSign),
-        ]);
-        break;
-      case 'A6':
-        contracts.addAll([
-          _contractItem('Kontrak Revisi 1', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 2', ContractStatus.needsRevision),
-          _contractItem('Kontrak Revisi 3', ContractStatus.needsRevision),
-          _contractItem(
-            'Kontrak Ditandatangani',
-            ContractStatus.approvedSigned,
-          ),
-        ]);
-        break;
-      case 'A7':
-        _applyMockScenario('A6');
-        draftDesigns.add(
-          _designItem('Draft Desain 1', DesignStatus.awaitingApproval),
-        );
-        break;
-      case 'A8':
-        _applyMockScenario('A6');
-        draftDesigns.addAll([
-          _designItem('Draft Desain Revisi 1', DesignStatus.needsRevision),
-          _designItem('Draft Desain Approval 1', DesignStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A9':
-        _applyMockScenario('A6');
-        draftDesigns.addAll([
-          _designItem('Draft Desain Revisi 1', DesignStatus.needsRevision),
-          _designItem('Draft Desain Revisi 2', DesignStatus.needsRevision),
-          _designItem('Draft Desain Approval 1', DesignStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A10':
-      case 'A11':
-        _applyMockScenario('A6');
-        draftDesigns.addAll([
-          _designItem('Draft Desain Revisi 1', DesignStatus.needsRevision),
-          _designItem('Draft Desain Revisi 2', DesignStatus.needsRevision),
-          _designItem('Draft Desain Revisi 3', DesignStatus.needsRevision),
-          _designItem('Draft Desain Approval 1', DesignStatus.awaitingApproval),
-        ]);
-        break;
-      case 'A12':
-        _applyMockScenario('A6');
-        draftDesigns.addAll([
-          _designItem('Draft Desain Revisi 1', DesignStatus.needsRevision),
-          _designItem('Draft Desain Revisi 2', DesignStatus.needsRevision),
-          _designItem('Draft Desain Revisi 3', DesignStatus.needsRevision),
-          _designItem('Draft Desain Disetujui', DesignStatus.approved),
-        ]);
-        break;
-      case 'A13':
-        _applyMockScenario('A12');
-        finalDesigns.add(
-          _designItem(
-            'Final Desain 1',
-            DesignStatus.approved,
-            date: '05 Des 2025',
-          ),
-        );
-        break;
-      case 'A14':
-        _applyMockScenario('A13');
-        invoices.add(
-          _invoiceItem(
-            'Invoice 1',
-            InvoiceStatus.unpaid,
-            date: '10 Des 2025',
-            amount: 5000000,
-          ),
-        );
-        break;
-      case 'A15':
-        _applyMockScenario('A13');
-        invoices.addAll([
-          _invoiceItem(
-            'Invoice 1',
-            InvoiceStatus.paid,
-            date: '10 Des 2025',
-            amount: 5000000,
-          ),
-          _invoiceItem(
-            'Invoice 2',
-            InvoiceStatus.unpaid,
-            date: '20 Des 2025',
-            amount: 3500000,
-          ),
-        ]);
-        break;
-      case 'A16':
-        _applyMockScenario('A13');
-        invoices.addAll([
-          _invoiceItem(
-            'Invoice 1',
-            InvoiceStatus.paid,
-            date: '10 Des 2025',
-            amount: 5000000,
-          ),
-          _invoiceItem(
-            'Invoice 2',
-            InvoiceStatus.paid,
-            date: '20 Des 2025',
-            amount: 3500000,
-          ),
-          _invoiceItem(
-            'Invoice 3',
-            InvoiceStatus.unpaid,
-            date: '30 Des 2025',
-            amount: 2500000,
-          ),
-        ]);
-        break;
-      case 'A17':
-        _applyMockScenario('A13');
-        invoices.addAll([
-          _invoiceItem(
-            'Invoice 1',
-            InvoiceStatus.paid,
-            date: '10 Des 2025',
-            amount: 5000000,
-          ),
-          _invoiceItem(
-            'Invoice 2',
-            InvoiceStatus.paid,
-            date: '20 Des 2025',
-            amount: 3500000,
-          ),
-          _invoiceItem(
-            'Invoice 3',
-            InvoiceStatus.paid,
-            date: '30 Des 2025',
-            amount: 2500000,
-          ),
-        ]);
-        break;
-      default:
-        break;
-    }
-
-    _updateHasUploadedContract();
-  }
 }

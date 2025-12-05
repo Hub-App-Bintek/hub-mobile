@@ -21,11 +21,18 @@ ConsultationInfo _$ConsultationInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ConsultationInfo {
+  String? get consultationId => throw _privateConstructorUsedError;
   int? get homeOwnerId => throw _privateConstructorUsedError;
   String? get homeOwnerName => throw _privateConstructorUsedError;
   int? get consultantId => throw _privateConstructorUsedError;
   String? get consultantName => throw _privateConstructorUsedError;
-  String? get status => throw _privateConstructorUsedError;
+  String? get consultationStatus => throw _privateConstructorUsedError;
+  String? get consultationType => throw _privateConstructorUsedError;
+  String? get channel => throw _privateConstructorUsedError;
+  String? get startedAt => throw _privateConstructorUsedError;
+  String? get completedAt => throw _privateConstructorUsedError;
+  String? get createdAt => throw _privateConstructorUsedError;
+  String? get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,11 +48,18 @@ abstract class $ConsultationInfoCopyWith<$Res> {
   ) = _$ConsultationInfoCopyWithImpl<$Res, ConsultationInfo>;
   @useResult
   $Res call({
+    String? consultationId,
     int? homeOwnerId,
     String? homeOwnerName,
     int? consultantId,
     String? consultantName,
-    String? status,
+    String? consultationStatus,
+    String? consultationType,
+    String? channel,
+    String? startedAt,
+    String? completedAt,
+    String? createdAt,
+    String? updatedAt,
   });
 }
 
@@ -62,14 +76,25 @@ class _$ConsultationInfoCopyWithImpl<$Res, $Val extends ConsultationInfo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? consultationId = freezed,
     Object? homeOwnerId = freezed,
     Object? homeOwnerName = freezed,
     Object? consultantId = freezed,
     Object? consultantName = freezed,
-    Object? status = freezed,
+    Object? consultationStatus = freezed,
+    Object? consultationType = freezed,
+    Object? channel = freezed,
+    Object? startedAt = freezed,
+    Object? completedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(
       _value.copyWith(
+            consultationId: freezed == consultationId
+                ? _value.consultationId
+                : consultationId // ignore: cast_nullable_to_non_nullable
+                      as String?,
             homeOwnerId: freezed == homeOwnerId
                 ? _value.homeOwnerId
                 : homeOwnerId // ignore: cast_nullable_to_non_nullable
@@ -86,9 +111,33 @@ class _$ConsultationInfoCopyWithImpl<$Res, $Val extends ConsultationInfo>
                 ? _value.consultantName
                 : consultantName // ignore: cast_nullable_to_non_nullable
                       as String?,
-            status: freezed == status
-                ? _value.status
-                : status // ignore: cast_nullable_to_non_nullable
+            consultationStatus: freezed == consultationStatus
+                ? _value.consultationStatus
+                : consultationStatus // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            consultationType: freezed == consultationType
+                ? _value.consultationType
+                : consultationType // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            channel: freezed == channel
+                ? _value.channel
+                : channel // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            startedAt: freezed == startedAt
+                ? _value.startedAt
+                : startedAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            completedAt: freezed == completedAt
+                ? _value.completedAt
+                : completedAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdAt: freezed == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            updatedAt: freezed == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -106,11 +155,18 @@ abstract class _$$ConsultationInfoImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
+    String? consultationId,
     int? homeOwnerId,
     String? homeOwnerName,
     int? consultantId,
     String? consultantName,
-    String? status,
+    String? consultationStatus,
+    String? consultationType,
+    String? channel,
+    String? startedAt,
+    String? completedAt,
+    String? createdAt,
+    String? updatedAt,
   });
 }
 
@@ -126,14 +182,25 @@ class __$$ConsultationInfoImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? consultationId = freezed,
     Object? homeOwnerId = freezed,
     Object? homeOwnerName = freezed,
     Object? consultantId = freezed,
     Object? consultantName = freezed,
-    Object? status = freezed,
+    Object? consultationStatus = freezed,
+    Object? consultationType = freezed,
+    Object? channel = freezed,
+    Object? startedAt = freezed,
+    Object? completedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(
       _$ConsultationInfoImpl(
+        consultationId: freezed == consultationId
+            ? _value.consultationId
+            : consultationId // ignore: cast_nullable_to_non_nullable
+                  as String?,
         homeOwnerId: freezed == homeOwnerId
             ? _value.homeOwnerId
             : homeOwnerId // ignore: cast_nullable_to_non_nullable
@@ -150,9 +217,33 @@ class __$$ConsultationInfoImplCopyWithImpl<$Res>
             ? _value.consultantName
             : consultantName // ignore: cast_nullable_to_non_nullable
                   as String?,
-        status: freezed == status
-            ? _value.status
-            : status // ignore: cast_nullable_to_non_nullable
+        consultationStatus: freezed == consultationStatus
+            ? _value.consultationStatus
+            : consultationStatus // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        consultationType: freezed == consultationType
+            ? _value.consultationType
+            : consultationType // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        channel: freezed == channel
+            ? _value.channel
+            : channel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        startedAt: freezed == startedAt
+            ? _value.startedAt
+            : startedAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        completedAt: freezed == completedAt
+            ? _value.completedAt
+            : completedAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdAt: freezed == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        updatedAt: freezed == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
                   as String?,
       ),
     );
@@ -163,16 +254,25 @@ class __$$ConsultationInfoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConsultationInfoImpl implements _ConsultationInfo {
   const _$ConsultationInfoImpl({
+    this.consultationId,
     this.homeOwnerId,
     this.homeOwnerName,
     this.consultantId,
     this.consultantName,
-    this.status,
+    this.consultationStatus,
+    this.consultationType,
+    this.channel,
+    this.startedAt,
+    this.completedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory _$ConsultationInfoImpl.fromJson(Map<String, dynamic> json) =>
       _$$ConsultationInfoImplFromJson(json);
 
+  @override
+  final String? consultationId;
   @override
   final int? homeOwnerId;
   @override
@@ -182,11 +282,23 @@ class _$ConsultationInfoImpl implements _ConsultationInfo {
   @override
   final String? consultantName;
   @override
-  final String? status;
+  final String? consultationStatus;
+  @override
+  final String? consultationType;
+  @override
+  final String? channel;
+  @override
+  final String? startedAt;
+  @override
+  final String? completedAt;
+  @override
+  final String? createdAt;
+  @override
+  final String? updatedAt;
 
   @override
   String toString() {
-    return 'ConsultationInfo(homeOwnerId: $homeOwnerId, homeOwnerName: $homeOwnerName, consultantId: $consultantId, consultantName: $consultantName, status: $status)';
+    return 'ConsultationInfo(consultationId: $consultationId, homeOwnerId: $homeOwnerId, homeOwnerName: $homeOwnerName, consultantId: $consultantId, consultantName: $consultantName, consultationStatus: $consultationStatus, consultationType: $consultationType, channel: $channel, startedAt: $startedAt, completedAt: $completedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -194,6 +306,8 @@ class _$ConsultationInfoImpl implements _ConsultationInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ConsultationInfoImpl &&
+            (identical(other.consultationId, consultationId) ||
+                other.consultationId == consultationId) &&
             (identical(other.homeOwnerId, homeOwnerId) ||
                 other.homeOwnerId == homeOwnerId) &&
             (identical(other.homeOwnerName, homeOwnerName) ||
@@ -202,18 +316,37 @@ class _$ConsultationInfoImpl implements _ConsultationInfo {
                 other.consultantId == consultantId) &&
             (identical(other.consultantName, consultantName) ||
                 other.consultantName == consultantName) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.consultationStatus, consultationStatus) ||
+                other.consultationStatus == consultationStatus) &&
+            (identical(other.consultationType, consultationType) ||
+                other.consultationType == consultationType) &&
+            (identical(other.channel, channel) || other.channel == channel) &&
+            (identical(other.startedAt, startedAt) ||
+                other.startedAt == startedAt) &&
+            (identical(other.completedAt, completedAt) ||
+                other.completedAt == completedAt) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
     runtimeType,
+    consultationId,
     homeOwnerId,
     homeOwnerName,
     consultantId,
     consultantName,
-    status,
+    consultationStatus,
+    consultationType,
+    channel,
+    startedAt,
+    completedAt,
+    createdAt,
+    updatedAt,
   );
 
   @JsonKey(ignore: true)
@@ -233,16 +366,25 @@ class _$ConsultationInfoImpl implements _ConsultationInfo {
 
 abstract class _ConsultationInfo implements ConsultationInfo {
   const factory _ConsultationInfo({
+    final String? consultationId,
     final int? homeOwnerId,
     final String? homeOwnerName,
     final int? consultantId,
     final String? consultantName,
-    final String? status,
+    final String? consultationStatus,
+    final String? consultationType,
+    final String? channel,
+    final String? startedAt,
+    final String? completedAt,
+    final String? createdAt,
+    final String? updatedAt,
   }) = _$ConsultationInfoImpl;
 
   factory _ConsultationInfo.fromJson(Map<String, dynamic> json) =
       _$ConsultationInfoImpl.fromJson;
 
+  @override
+  String? get consultationId;
   @override
   int? get homeOwnerId;
   @override
@@ -252,7 +394,19 @@ abstract class _ConsultationInfo implements ConsultationInfo {
   @override
   String? get consultantName;
   @override
-  String? get status;
+  String? get consultationStatus;
+  @override
+  String? get consultationType;
+  @override
+  String? get channel;
+  @override
+  String? get startedAt;
+  @override
+  String? get completedAt;
+  @override
+  String? get createdAt;
+  @override
+  String? get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$ConsultationInfoImplCopyWith<_$ConsultationInfoImpl> get copyWith =>

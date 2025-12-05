@@ -10,10 +10,6 @@ import 'package:intl/intl.dart';
 
 import 'app/navigation/app_pages.dart';
 import 'app/theme/app_colors.dart';
-import 'features/main/bindings/projects_binding.dart';
-import 'features/main/controllers/home_controller.dart';
-import 'features/main/controllers/main_controller.dart';
-import 'features/main/controllers/projects_controller.dart';
 
 Future<void> startApp({required String flavor}) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,33 +40,6 @@ Future<void> startApp({required String flavor}) async {
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
       initialBinding: AppBinding(flavor: flavor),
-      routingCallback: (routing) {
-        final isBackToMain =
-            routing?.current == AppRoutes.main && routing?.previous != null;
-        if (!isBackToMain) return;
-
-        if (!Get.isRegistered<MainController>()) return;
-        final mainController = Get.find<MainController>();
-
-        switch (mainController.selectedIndex.value) {
-          case 0:
-            if (Get.isRegistered<HomeController>()) {
-              Get.find<HomeController>().refresh();
-            }
-            break;
-          case 1:
-            if (Get.isRegistered<ProjectsController>(
-              tag: ProjectsBinding.mainTag,
-            )) {
-              Get.find<ProjectsController>(
-                tag: ProjectsBinding.mainTag,
-              ).refreshProjects();
-            }
-            break;
-          default:
-            break;
-        }
-      },
     ),
   );
 }

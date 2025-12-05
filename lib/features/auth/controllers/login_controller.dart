@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
-import 'package:pkp_hub/core/utils/form_validators.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
@@ -42,7 +41,8 @@ class LoginController extends BaseController {
   final RxString passwordText = ''.obs;
 
   // Observable form state
-  bool get isFormValid => emailText.value.isNotEmpty && passwordText.value.isNotEmpty;
+  bool get isFormValid =>
+      emailText.value.isNotEmpty && passwordText.value.isNotEmpty;
 
   final emailError = RxnString();
   final passwordError = RxnString();

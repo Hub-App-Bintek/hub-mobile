@@ -8,7 +8,15 @@ class ProjectLocation with _$ProjectLocation {
   const factory ProjectLocation({
     double? latitude,
     double? longitude,
-    String? address,
+    String? provinceId,
+    String? provinceName,
+    String? regencyId,
+    String? regencyName,
+    String? districtId,
+    String? districtName,
+    String? villageId,
+    String? villageName,
+    String? locationDetail,
   }) = _ProjectLocation;
 
   factory ProjectLocation.fromJson(Map<String, dynamic> json) =>

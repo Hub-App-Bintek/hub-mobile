@@ -6,11 +6,13 @@ part 'create_consultation_response.g.dart';
 @freezed
 class CreateConsultationResponse with _$CreateConsultationResponse {
   const factory CreateConsultationResponse({
-    String? id,
+    String? consultationId,
     int? homeOwnerId,
     String? homeOwnerName,
     int? consultantId,
     String? consultantName,
+    String? designId,
+    String? designName,
     String? consultationType,
     String? channel,
     String? status,
@@ -18,6 +20,7 @@ class CreateConsultationResponse with _$CreateConsultationResponse {
     String? completedAt,
     String? createdAt,
     String? updatedAt,
+    String? projectId,
   }) = _CreateConsultationResponse;
 
   factory CreateConsultationResponse.fromJson(Map<String, dynamic> json) =>

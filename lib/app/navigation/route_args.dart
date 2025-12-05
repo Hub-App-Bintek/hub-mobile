@@ -1,10 +1,11 @@
+import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 
 class ConsultationDetailsArgs {
-  const ConsultationDetailsArgs({required this.project});
+  const ConsultationDetailsArgs({this.project});
 
-  final Project project;
+  final Project? project;
 }
 
 class ChatArgs {
@@ -32,12 +33,6 @@ class ProjectsRouteArgs {
   const ProjectsRouteArgs({this.status});
 
   final String? status;
-}
-
-class ProjectReviewArgs {
-  const ProjectReviewArgs({required this.project});
-
-  final Project project;
 }
 
 class ConsultantDetailsArgs {
@@ -116,4 +111,11 @@ class LoginArgs {
 
   final String? fromRoute;
   final dynamic returnArguments;
+}
+
+class MainNavigationArgs {
+  const MainNavigationArgs({this.selectedIndex, this.consultationStatus});
+
+  final int? selectedIndex;
+  final ConsultationFilterStatus? consultationStatus;
 }

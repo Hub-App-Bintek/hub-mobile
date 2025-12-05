@@ -8,10 +8,16 @@ import 'package:pkp_hub/features/chat/services/chat_websocket_service.dart';
 class ChatBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ChatWebSocketService>(() => ChatWebSocketService());
+    Get.lazyPut<ChatWebSocketService>(
+      () => ChatWebSocketService(),
+      fenix: true,
+    );
+
     Get.lazyPut<GetChatRoomDetailUseCase>(
       () => GetChatRoomDetailUseCase(Get.find<ChatRepository>()),
+      fenix: true,
     );
+
     Get.lazyPut<ChatController>(
       () => ChatController(
         Get.find<ChatWebSocketService>(),

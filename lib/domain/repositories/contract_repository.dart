@@ -2,6 +2,8 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
 import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
+import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:retrofit/dio.dart';
 import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
@@ -11,7 +13,10 @@ abstract class ContractRepository {
   Future<Result<Contract, Failure>> getContract(String consultationId);
   Future<Result<Contract, Failure>> signContract(String contractId);
   Future<Result<Contract, Failure>> rejectContract(String contractId);
-  Future<Result<Contract, Failure>> approveContract(String contractId);
+  Future<Result<Contract, Failure>> approveContract({
+    required String contractId,
+    required ApproveContractRequest request,
+  });
   Future<Result<Contract, Failure>> requestRevision(
     String contractId,
     String? revisionNotes,
@@ -24,6 +29,11 @@ abstract class ContractRepository {
   Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
     required String consultationId,
     required GenerateContractDraftRequest request,
+  });
+
+  Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
+    required String projectId,
+    required String consultationId,
   });
 }
 
@@ -44,8 +54,13 @@ class ContractRepositoryImpl implements ContractRepository {
       _remoteDataSource.rejectContract(contractId);
 
   @override
-  Future<Result<Contract, Failure>> approveContract(String contractId) =>
-      _remoteDataSource.approveContract(contractId);
+  Future<Result<Contract, Failure>> approveContract({
+    required String contractId,
+    required ApproveContractRequest request,
+  }) => _remoteDataSource.approveContract(
+    contractId: contractId,
+    request: request,
+  );
 
   @override
   Future<Result<Contract, Failure>> requestRevision(
@@ -73,4 +88,15 @@ class ContractRepositoryImpl implements ContractRepository {
     consultationId: consultationId,
     request: request,
   );
+
+  @override
+  Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
+    required String projectId,
+    required String consultationId,
+  }) {
+    return _remoteDataSource.getContractVersions(
+      projectId: projectId,
+      consultationId: consultationId,
+    );
+  }
 }

@@ -4,6 +4,6 @@ import 'package:pkp_hub/features/monitoring/controllers/supervisor_screen_contro
 class SupervisorBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => SupervisorController());
+    Get.lazyPut(() => SupervisorController(), fenix: true);
   }
 }

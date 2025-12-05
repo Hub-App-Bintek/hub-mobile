@@ -2,17 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:meta/meta.dart';
-import 'package:pkp_hub/core/utils/logger.dart';
-import 'package:pkp_hub/app/navigation/app_pages.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
-import 'package:pkp_hub/core/utils/location_permission_helper.dart';
-import 'package:pkp_hub/data/models/project_type.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 import 'package:pkp_hub/domain/usecases/design/download_prototype_design_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design/get_prototype_design_detail_use_case.dart';
@@ -164,19 +159,6 @@ class PrototypeDesignDetailsController extends BaseController {
       hideLoadingOverlay();
       downloadLoading.value = false;
     }
-  }
-
-  void onSelectDesign() {
-    () async {
-      final hasPermission =
-          await LocationPermissionHelper.ensureLocationPermission();
-      if (!hasPermission) return;
-
-      navigateTo(
-        AppRoutes.createProject,
-        arguments: LocationDetailsArgs(type: prototype.id),
-      );
-    }();
   }
 
   void _hydrateFromDesign(PrototypeDesign data) {

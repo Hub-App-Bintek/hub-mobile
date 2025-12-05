@@ -10,7 +10,9 @@ abstract class ApiEndpoints {
   // TODO: Update this later since it doesn't exist in the backend yet.
   static const String resendOtp = '/api/auth/resend-otp';
   static const projects = '/api/projects/v2';
+  static const projectDetailV2 = '/api/projects/{projectId}/v2';
   static const projectsV1 = '/api/projects';
+  static const consultationProjects = '/api/consultations/projects';
 
   // --- User ---
   static const String consultants = '/api/users/consultants';
@@ -61,6 +63,8 @@ abstract class ApiEndpoints {
   static const String contractSign = '/api/contracts/{contractId}/sign';
   static const String contractRequestPayment =
       '/api/contracts/{contractId}/request-payment';
+  static const String contractVersions =
+      '/api/contracts/projects/{projectId}/consultations/{consultationId}/versions';
 
   // --- Files ---
   static const String filesUpload = '/api/files/upload';
@@ -96,6 +100,10 @@ abstract class ApiEndpoints {
       '/api/design-documents/{designDocumentId}/approve';
   static const String designDocumentsRevisionRequest =
       '/api/design-documents/{designDocumentId}/revision-request';
+  static const String designDocumentsVersions =
+      '/api/design-documents/versions';
+  static const String designDocumentsVersionDownload =
+      '/api/design-documents/versions/{version}/download';
 
   // --- Prototype Designs (Catalog) ---
   static const String prototypeDesigns = '/api/prototypes';

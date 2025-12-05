@@ -18,7 +18,7 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<DesignDocument> uploadDesignDocuments(
+  Future<UploadDesignDocumentResponse> uploadDesignDocuments(
     String consultationId,
     File fileDed,
     File fileRab,
@@ -56,7 +56,7 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
         ),
       ),
     );
-    final _options = _setStreamType<DesignDocument>(
+    final _options = _setStreamType<UploadDesignDocumentResponse>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -72,9 +72,9 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late DesignDocument _value;
+    late UploadDesignDocumentResponse _value;
     try {
-      _value = DesignDocument.fromJson(_result.data!);
+      _value = UploadDesignDocumentResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

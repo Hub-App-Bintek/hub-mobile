@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -12,13 +12,17 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
-import 'package:pkp_hub/data/models/project_type.dart';
+import 'package:pkp_hub/core/enums/consultation_type.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/data/models/response/create_consultation_response.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
+import 'package:pkp_hub/features/main/controllers/main_controller.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
 import 'package:pkp_hub/domain/usecases/location/get_provinces_use_case.dart';
@@ -71,8 +75,9 @@ class LocationDetailsController extends BaseController {
   RxBool isSubdistrictValid = false.obs;
   RxBool isVillageValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
-  RxBool isLandAreaValid = true.obs;
+  RxBool isLandAreaValid = false.obs;
   RxBool isIncomeValid = true.obs;
+  RxBool isIncomeProofValid = false.obs;
   RxnString incomeProofPath = RxnString();
 
   Rxn<LatLng> selectedLocation = Rxn<LatLng>();
@@ -83,8 +88,9 @@ class LocationDetailsController extends BaseController {
   RxnString locationDetailsError = RxnString();
   RxnString landAreaError = RxnString();
   RxnString incomeError = RxnString();
+  RxnString incomeProofError = RxnString();
 
-  Rxn<ProjectType> selectedProjectType = Rxn<ProjectType>(nonPrototype);
+  Rxn<ProjectType> selectedProjectType = Rxn<ProjectType>(consultation);
 
   final RxBool _isFormValid = false.obs;
 
@@ -138,17 +144,17 @@ class LocationDetailsController extends BaseController {
     villageController.addListener(_validateVillage);
     locationDetailsController.addListener(_validateLocationDetails);
     incomeController.addListener(_validateIncome);
-    landAreaController.text = '0';
-    incomeController.text = '';
+    landAreaController.addListener(_validateLandArea);
+    incomeController.addListener(_validateIncome);
   }
 
   void _hydrateInitialType() {
     if (_initialProjectTypeId == null || _initialProjectTypeId.isEmpty) {
       return;
     }
-    final match = projectTypeList.firstWhere(
-      (type) => type.id.toUpperCase() == _initialProjectTypeId.toUpperCase(),
-      orElse: () => prototype,
+    final match = projectTypes.firstWhere(
+      (type) => type.name == _initialProjectTypeId,
+      orElse: () => consultation,
     );
     selectedProjectType.value = match;
   }
@@ -217,53 +223,10 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
-  Future<File?> pickIncomeProof() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        type: FileType.custom,
-        allowedExtensions: const ['pdf'],
-      );
-      if (result != null && result.files.isNotEmpty) {
-        final path = result.files.single.path;
-        if (path != null) {
-          final file = File(path);
-          incomeProofPath.value = path;
-          Get.snackbar(
-            'Berhasil',
-            'Bukti pendapatan berhasil dipilih',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: AppColors.successDark,
-            colorText: AppColors.white,
-          );
-          return file;
-        }
-      }
-    } catch (e) {
-      Get.snackbar(
-        'Gagal',
-        'Tidak dapat memilih bukti pendapatan',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: AppColors.errorDark,
-        colorText: AppColors.white,
-      );
-    }
-    return null;
-  }
-
   void onIncomeProofPicked(String path) {
     incomeProofPath.value = path;
     incomeProofController.text = path.split(Platform.pathSeparator).last;
-    Get.snackbar(
-      'Berhasil',
-      'Bukti pendapatan berhasil dipilih',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.successDark,
-      colorText: AppColors.white,
-    );
   }
-
-  void _showSnack(String title, String message) {}
 
   void _validateProvince() {
     final value = provinceController.text.trim();
@@ -322,6 +285,20 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
+  void _validateLandArea() {
+    final value = landAreaController.text.trim();
+    if (value.isEmpty) {
+      landAreaError.value = AppStrings.landAreaRequired;
+      isLandAreaValid.value = false;
+    } else {
+      final parsed = double.tryParse(value.replaceAll('.', ''));
+      final valid = parsed != null && parsed > 0;
+      landAreaError.value = valid ? null : AppStrings.landAreaRequired;
+      isLandAreaValid.value = valid;
+    }
+    _updateFormValidity();
+  }
+
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
@@ -330,6 +307,7 @@ class LocationDetailsController extends BaseController {
         isSubdistrictValid.value &&
         isVillageValid.value &&
         isLocationDetailsValid.value &&
+        isLandAreaValid.value &&
         isIncomeValid.value &&
         selectedProjectType.value != null &&
         !isLoadingLocation.value;
@@ -428,15 +406,12 @@ class LocationDetailsController extends BaseController {
     locationErrorMessage.value = errorMessage;
     _updateFormValidity();
 
-    // Show error notification to user
     Get.snackbar(
       'Perhatian Lokasi',
       errorMessage,
-      duration: const Duration(seconds: 4),
-    );
-
-    debugPrint(
-      'Fallback location set: ${_defaultLocation.latitude}, ${_defaultLocation.longitude}',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.errorDark,
+      colorText: AppColors.white,
     );
   }
 
@@ -457,15 +432,11 @@ class LocationDetailsController extends BaseController {
   }
 
   void updatePosition(LatLng location) {
-    // Don't update position while location is still loading to prevent state issues
     if (isLoadingLocation.value) {
       return;
     }
 
-    // Cancel previous timer to debounce rapid updates
     _positionUpdateTimer?.cancel();
-
-    // Debounce position updates to prevent excessive state changes
     _positionUpdateTimer = Timer(_positionUpdateDebounce, () {
       selectedLocation.value = location;
       _updateFormValidity();
@@ -519,10 +490,6 @@ class LocationDetailsController extends BaseController {
     return villages.firstWhereOrNull(
       (village) => village.name.toLowerCase() == query,
     );
-  }
-
-  void updateProjectType(ProjectType? value) {
-    selectedProjectType.value = value;
   }
 
   void selectProvince(String? value) async {
@@ -585,6 +552,7 @@ class LocationDetailsController extends BaseController {
       _validateSubdistrict();
       _validateVillage();
       _validateLocationDetails();
+      _validateLandArea();
       _validateIncome();
       return;
     }
@@ -593,6 +561,10 @@ class LocationDetailsController extends BaseController {
     final income =
         double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
         0.0;
+    final projectName = locationDetailsController.text.trim();
+    final incomeProofFile = (incomeProofPath.value ?? '').isNotEmpty
+        ? File(incomeProofPath.value!)
+        : null;
 
     final combinedLocationDetail = [
       locationDetailsController.text.trim(),
@@ -614,13 +586,14 @@ class LocationDetailsController extends BaseController {
               income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
-              type: selectedProjectType.value?.id ?? '',
-              name: 'GENERATED-Hardcoded first',
-              provinceId: selectedProvince.value?.id ?? 0,
-              regencyId: selectedCity.value?.id ?? 0,
-              districtId: selectedSubdistrict.value?.id ?? 0,
-              villageId: selectedVillage.value?.id ?? 0,
+              type: 'NON_PROTOTYPE',
+              name: projectName.isNotEmpty ? projectName : 'Project',
+              provinceId: selectedProvince.value?.id.toString() ?? '',
+              regencyId: selectedCity.value?.id.toString() ?? '',
+              districtId: selectedSubdistrict.value?.id.toString() ?? '',
+              villageId: selectedVillage.value?.id.toString() ?? '',
             ),
+            incomeProofFile: incomeProofFile,
           ),
         ),
         onSuccess: (response) {
@@ -660,16 +633,18 @@ class LocationDetailsController extends BaseController {
         CreateConsultationRequest(
           consultantId: consultantId,
           projectId: projectId,
-          consultationType: _isPaidConsultation ? 'BERBAYAR' : 'GRATIS',
+          consultationType: _isPaidConsultation
+              ? consultationPaid.name
+              : consultationFree.name,
           channel: 'CHAT',
         ),
       ),
       onSuccess: (response) {
-        navigateAndClearUntil(
-          AppRoutes.consultationDetails,
-          untilRoute: AppRoutes.main,
-          arguments: {'projectId': projectId, 'homeOwnerName':response.homeOwnerName},
+        const mainArgs = MainNavigationArgs(
+          selectedIndex: 1,
+          consultationStatus: consultationFilterWaitingConfirmation,
         );
+        Get.offAllNamed(AppRoutes.main, arguments: mainArgs);
       },
       onFailure: (failure) {
         showError(failure);

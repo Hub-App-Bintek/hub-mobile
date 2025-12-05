@@ -243,10 +243,10 @@ void _showConsultationPicker(
 ) async {
   // 1. Ask the controller to fetch the data.
   //    The controller will show a loading indicator on the main screen.
-  final bool isDataAvailable = await controller.fetchConsultations();
+  // final bool isDataAvailable = await controller.fetchConsultations();
 
   // 2. Only show the bottom sheet if the data fetch was successful.
-  if (!isDataAvailable) return;
+  // if (!isDataAvailable) return;
 
   // 3. Show the bottom sheet, which is pure UI and reads state from the controller.
   showModalBottomSheet<void>(
@@ -288,15 +288,17 @@ void _showConsultationPicker(
                               : 0,
                         ),
                         child: ProjectInfoCard(
-                          title: item.name ?? 'No Name',
+                          title: item.projectName ?? 'No Name',
                           primaryLine: ProjectInfoLine(
                             icon: Icons.calendar_today_outlined,
                             // Use your actual data model fields
-                            text: item.status ?? 'No Status',
+                            text:
+                                item.consultationInfo?.consultationStatus ??
+                                'No Status',
                           ),
                           secondaryLine: ProjectInfoLine(
                             icon: Icons.place_outlined,
-                            text: item.location?.address ?? 'No Location',
+                            text: item.city ?? 'No Location',
                           ),
                           onTap: () => controller.selectConsultation(index),
                           isSelected: selected,

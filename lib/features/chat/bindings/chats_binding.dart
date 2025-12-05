@@ -9,9 +9,11 @@ class ChatsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<CreateDirectChatRoomUseCase>(
       () => CreateDirectChatRoomUseCase(Get.find<ChatRepository>()),
+      fenix: true,
     );
     Get.lazyPut<GetIncomingChatsUseCase>(
       () => GetIncomingChatsUseCase(Get.find<ChatRepository>()),
+      fenix: true,
     );
     Get.lazyPut<ChatsController>(
       () => ChatsController(

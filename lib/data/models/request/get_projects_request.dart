@@ -9,7 +9,7 @@ class GetProjectsRequest with _$GetProjectsRequest {
     int? page,
     int? size,
     String? type, // PROTOTYPE or NON_PROTOTYPE
-    String? status, // ACTIVE, COMPLETED, CANCELLED
+    String? status, // SEDANG_BERJALAN, MENUNGGU_KONFIRMASI, SELESAI
   }) = _GetProjectsRequest;
 
   factory GetProjectsRequest.fromJson(Map<String, dynamic> json) =>

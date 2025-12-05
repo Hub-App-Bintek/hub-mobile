@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/project.dart';
-import 'package:pkp_hub/data/models/request/get_projects_request.dart';
-import 'package:pkp_hub/domain/usecases/project/get_project_list_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 
 class LicensingController extends BaseController {
-  final GetProjectsUseCase _getProjectsUseCase;
+  final GetConsultationsUseCase _getProjectsUseCase;
+
   LicensingController(this._getProjectsUseCase);
 
   // --- STATE ---
@@ -17,40 +17,40 @@ class LicensingController extends BaseController {
 
   // --- LOGIC ---
   // Fetches data and populates the state. Returns true on success.
-  Future<bool> fetchConsultations() async {
-    // Reset state before fetching
-    consultations.clear();
-    selectedConsultationIndex.value = -1;
-    bool success = false;
+  // Future<bool> fetchConsultations() async {
+  //   // Reset state before fetching
+  //   consultations.clear();
+  //   selectedConsultationIndex.value = -1;
+  //   bool success = false;
 
-    await handleAsync(
-      () => _getProjectsUseCase(
-        const GetProjectsRequest(
-          page: 0,
-          size: 10,
-          // type: 'PROTOTYPE',
-          // status: 'ACTIVE',
-        ),
-      ),
-      onSuccess: (response) {
-        if (response.projects.isEmpty) {
-          Get.snackbar(
-            'Info',
-            'Tidak ada proyek konsultasi yang dapat dipilih.',
-          );
-          success = false;
-        } else {
-          consultations.assignAll(response.projects);
-          success = true;
-        }
-      },
-      onFailure: (failure) {
-        // The BaseController's showError is called automatically by handleAsync's default behavior
-        success = false;
-      },
-    );
-    return success;
-  }
+  //   await handleAsync(
+  //     () => _getProjectsUseCase(
+  //       const GetProjectsRequest(
+  //         page: 0,
+  //         size: 10,
+  //         // type: 'PROTOTYPE',
+  //         // status: 'ACTIVE',
+  //       ),
+  //     ),
+  //     onSuccess: (response) {
+  //       if (response.projects.isEmpty) {
+  //         Get.snackbar(
+  //           'Info',
+  //           'Tidak ada proyek konsultasi yang dapat dipilih.',
+  //         );
+  //         success = false;
+  //       } else {
+  //         consultations.assignAll(response.projects);
+  //         success = true;
+  //       }
+  //     },
+  //     onFailure: (failure) {
+  //       // The BaseController's showError is called automatically by handleAsync's default behavior
+  //       success = false;
+  //     },
+  //   );
+  //   return success;
+  // }
 
   // Manages the selection state within the bottom sheet
   void selectConsultation(int index) {
@@ -66,9 +66,10 @@ class LicensingController extends BaseController {
         AppRoutes.simbgForm,
         arguments: {
           'projectId': project.projectId,
-          'isPrototype': project.type!.toUpperCase() == "PROTOTYPE"
-              ? true
-              : false,
+          // 'isPrototype': project.type!.toUpperCase() == "PROTOTYPE"
+          //     ? true
+          //     : false,
+          'isPrototype': false,
         },
       );
     }

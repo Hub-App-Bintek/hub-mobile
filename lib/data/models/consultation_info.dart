@@ -6,11 +6,18 @@ part 'consultation_info.g.dart';
 @freezed
 class ConsultationInfo with _$ConsultationInfo {
   const factory ConsultationInfo({
+    String? consultationId,
     int? homeOwnerId,
     String? homeOwnerName,
     int? consultantId,
     String? consultantName,
-    String? status,
+    String? consultationStatus,
+    String? consultationType,
+    String? channel,
+    String? startedAt,
+    String? completedAt,
+    String? createdAt,
+    String? updatedAt,
   }) = _ConsultationInfo;
 
   factory ConsultationInfo.fromJson(Map<String, dynamic> json) =>

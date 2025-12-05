@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
 import 'package:pkp_hub/domain/usecases/location/get_provinces_use_case.dart';
@@ -15,10 +14,12 @@ class LocationSelectorController extends BaseController {
   final GetDistrictsUseCase _getDistrictsUseCase;
   final GetVillagesUseCase _getVillagesUseCase;
 
-  LocationSelectorController(this._getProvincesUseCase,
-      this._getRegenciesUseCase,
-      this._getDistrictsUseCase,
-      this._getVillagesUseCase,);
+  LocationSelectorController(
+    this._getProvincesUseCase,
+    this._getRegenciesUseCase,
+    this._getDistrictsUseCase,
+    this._getVillagesUseCase,
+  );
 
   // --- STATE ---
   final TextEditingController provinceController = TextEditingController();
@@ -54,7 +55,8 @@ class LocationSelectorController extends BaseController {
   }
 
   void _updateFormValidity() {
-    isLocationFormValid.value = selectedProvince.value != null &&
+    isLocationFormValid.value =
+        selectedProvince.value != null &&
         selectedCity.value != null &&
         selectedSubdistrict.value != null &&
         selectedVillage.value != null;
@@ -62,34 +64,42 @@ class LocationSelectorController extends BaseController {
 
   // --- API Calls ---
   Future<void> _fetchProvinces() async {
-    await handleAsync(() => _getProvincesUseCase(),
-        onSuccess: provinces.assignAll);
+    await handleAsync(
+      () => _getProvincesUseCase(),
+      onSuccess: provinces.assignAll,
+    );
   }
 
   Future<void> _fetchRegencies(int provinceId) async {
     _resetCitySelection();
-    await handleAsync(() => _getRegenciesUseCase(provinceId),
-        onSuccess: regencies.assignAll);
+    await handleAsync(
+      () => _getRegenciesUseCase(provinceId),
+      onSuccess: regencies.assignAll,
+    );
   }
 
   Future<void> _fetchDistricts(int regencyId) async {
     _resetSubdistrictSelection();
-    await handleAsync(() => _getDistrictsUseCase(regencyId),
-        onSuccess: districts.assignAll);
+    await handleAsync(
+      () => _getDistrictsUseCase(regencyId),
+      onSuccess: districts.assignAll,
+    );
   }
 
   Future<void> _fetchVillages(int districtId) async {
     _resetVillageSelection();
-    await handleAsync(() => _getVillagesUseCase(districtId),
-        onSuccess: villages.assignAll);
+    await handleAsync(
+      () => _getVillagesUseCase(districtId),
+      onSuccess: villages.assignAll,
+    );
   }
-
 
   // --- SELECTION LOGIC ---
   void onProvinceSelected(String? value) async {
     if (value == null) return;
-    final province = provinces.firstWhereOrNull((p) =>
-    p.name.toLowerCase() == value.toLowerCase());
+    final province = provinces.firstWhereOrNull(
+      (p) => p.name.toLowerCase() == value.toLowerCase(),
+    );
     selectedProvince.value = province;
     provinceController.text = province?.name ?? value;
     if (province?.id != null) {
@@ -100,8 +110,9 @@ class LocationSelectorController extends BaseController {
 
   void onCitySelected(String? value) async {
     if (value == null) return;
-    final regency = regencies.firstWhereOrNull((r) =>
-    r.name.toLowerCase() == value.toLowerCase());
+    final regency = regencies.firstWhereOrNull(
+      (r) => r.name.toLowerCase() == value.toLowerCase(),
+    );
     selectedCity.value = regency;
     cityController.text = regency?.name ?? value;
     if (regency?.id != null) {
@@ -112,8 +123,9 @@ class LocationSelectorController extends BaseController {
 
   void onSubdistrictSelected(String? value) async {
     if (value == null) return;
-    final district = districts.firstWhereOrNull((d) =>
-    d.name.toLowerCase() == value.toLowerCase());
+    final district = districts.firstWhereOrNull(
+      (d) => d.name.toLowerCase() == value.toLowerCase(),
+    );
     selectedSubdistrict.value = district;
     subdistrictController.text = district?.name ?? value;
     if (district?.id != null) {
@@ -124,8 +136,9 @@ class LocationSelectorController extends BaseController {
 
   void onVillageSelected(String? value) {
     if (value == null) return;
-    final village = villages.firstWhereOrNull((v) =>
-    v.name.toLowerCase() == value.toLowerCase());
+    final village = villages.firstWhereOrNull(
+      (v) => v.name.toLowerCase() == value.toLowerCase(),
+    );
     selectedVillage.value = village;
     villageController.text = village?.name ?? value;
     _updateFormValidity();

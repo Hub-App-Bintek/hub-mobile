@@ -5,6 +5,6 @@ class MonitoringDetailBinding extends Bindings {
   @override
   void dependencies() {
     // TODO: Inject use cases for fetching details, approving contracts, etc.
-    Get.lazyPut(() => MonitoringDetailController());
+    Get.lazyPut(() => MonitoringDetailController(), fenix: true);
   }
 }

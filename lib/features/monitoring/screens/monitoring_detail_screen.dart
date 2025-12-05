@@ -44,7 +44,9 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
       bottomNavigationBar: Obx(() {
         switch (controller.selectedStage.value) {
           case MonitoringStage.kontrak:
-            return controller.hasApprovedContract.value ? const SizedBox.shrink() : _KontrakActions();
+            return controller.hasApprovedContract.value
+                ? const SizedBox.shrink()
+                : _KontrakActions();
           case MonitoringStage.dokumen:
             return _UploadDokumenAction();
           default:
@@ -71,7 +73,7 @@ class _StageSelector extends GetView<MonitoringDetailController> {
       final isActive = controller.selectedStage.value == stage;
       final circleColor = isActive
           ? theme.colorScheme.primary
-          : theme.colorScheme.surfaceVariant;
+          : theme.colorScheme.surfaceContainerHighest;
       final iconColor = isActive
           ? theme.colorScheme.onPrimary
           : theme.colorScheme.onSurface;
@@ -260,29 +262,32 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: Obx(() => controller.hasApprovedContract.value ? const SizedBox() : Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: controller.requestRevision,
-                  icon: const Icon(Icons.close),
-                  label: const Text('Minta Revisi'),
+        child: Obx(
+          () => controller.hasApprovedContract.value
+              ? const SizedBox()
+              : Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: controller.requestRevision,
+                        icon: const Icon(Icons.close),
+                        label: const Text('Minta Revisi'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: controller.approveContract,
+                        icon: const Icon(Icons.check_circle_outline),
+                        label: const Text('Setujui'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: theme.colorScheme.primary,
+                          foregroundColor: theme.colorScheme.onPrimary,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: controller.approveContract,
-                  icon: const Icon(Icons.check_circle_outline),
-                  label: const Text('Setujui'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: theme.colorScheme.primary,
-                    foregroundColor: theme.colorScheme.onPrimary,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

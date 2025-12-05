@@ -23,7 +23,15 @@ ProjectLocation _$ProjectLocationFromJson(Map<String, dynamic> json) {
 mixin _$ProjectLocation {
   double? get latitude => throw _privateConstructorUsedError;
   double? get longitude => throw _privateConstructorUsedError;
-  String? get address => throw _privateConstructorUsedError;
+  String? get provinceId => throw _privateConstructorUsedError;
+  String? get provinceName => throw _privateConstructorUsedError;
+  String? get regencyId => throw _privateConstructorUsedError;
+  String? get regencyName => throw _privateConstructorUsedError;
+  String? get districtId => throw _privateConstructorUsedError;
+  String? get districtName => throw _privateConstructorUsedError;
+  String? get villageId => throw _privateConstructorUsedError;
+  String? get villageName => throw _privateConstructorUsedError;
+  String? get locationDetail => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,7 +46,19 @@ abstract class $ProjectLocationCopyWith<$Res> {
     $Res Function(ProjectLocation) then,
   ) = _$ProjectLocationCopyWithImpl<$Res, ProjectLocation>;
   @useResult
-  $Res call({double? latitude, double? longitude, String? address});
+  $Res call({
+    double? latitude,
+    double? longitude,
+    String? provinceId,
+    String? provinceName,
+    String? regencyId,
+    String? regencyName,
+    String? districtId,
+    String? districtName,
+    String? villageId,
+    String? villageName,
+    String? locationDetail,
+  });
 }
 
 /// @nodoc
@@ -56,7 +76,15 @@ class _$ProjectLocationCopyWithImpl<$Res, $Val extends ProjectLocation>
   $Res call({
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? address = freezed,
+    Object? provinceId = freezed,
+    Object? provinceName = freezed,
+    Object? regencyId = freezed,
+    Object? regencyName = freezed,
+    Object? districtId = freezed,
+    Object? districtName = freezed,
+    Object? villageId = freezed,
+    Object? villageName = freezed,
+    Object? locationDetail = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -68,9 +96,41 @@ class _$ProjectLocationCopyWithImpl<$Res, $Val extends ProjectLocation>
                 ? _value.longitude
                 : longitude // ignore: cast_nullable_to_non_nullable
                       as double?,
-            address: freezed == address
-                ? _value.address
-                : address // ignore: cast_nullable_to_non_nullable
+            provinceId: freezed == provinceId
+                ? _value.provinceId
+                : provinceId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            provinceName: freezed == provinceName
+                ? _value.provinceName
+                : provinceName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            regencyId: freezed == regencyId
+                ? _value.regencyId
+                : regencyId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            regencyName: freezed == regencyName
+                ? _value.regencyName
+                : regencyName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            districtId: freezed == districtId
+                ? _value.districtId
+                : districtId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            districtName: freezed == districtName
+                ? _value.districtName
+                : districtName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            villageId: freezed == villageId
+                ? _value.villageId
+                : villageId // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            villageName: freezed == villageName
+                ? _value.villageName
+                : villageName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            locationDetail: freezed == locationDetail
+                ? _value.locationDetail
+                : locationDetail // ignore: cast_nullable_to_non_nullable
                       as String?,
           )
           as $Val,
@@ -87,7 +147,19 @@ abstract class _$$ProjectLocationImplCopyWith<$Res>
   ) = __$$ProjectLocationImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double? latitude, double? longitude, String? address});
+  $Res call({
+    double? latitude,
+    double? longitude,
+    String? provinceId,
+    String? provinceName,
+    String? regencyId,
+    String? regencyName,
+    String? districtId,
+    String? districtName,
+    String? villageId,
+    String? villageName,
+    String? locationDetail,
+  });
 }
 
 /// @nodoc
@@ -104,7 +176,15 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
   $Res call({
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? address = freezed,
+    Object? provinceId = freezed,
+    Object? provinceName = freezed,
+    Object? regencyId = freezed,
+    Object? regencyName = freezed,
+    Object? districtId = freezed,
+    Object? districtName = freezed,
+    Object? villageId = freezed,
+    Object? villageName = freezed,
+    Object? locationDetail = freezed,
   }) {
     return _then(
       _$ProjectLocationImpl(
@@ -116,9 +196,41 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
             ? _value.longitude
             : longitude // ignore: cast_nullable_to_non_nullable
                   as double?,
-        address: freezed == address
-            ? _value.address
-            : address // ignore: cast_nullable_to_non_nullable
+        provinceId: freezed == provinceId
+            ? _value.provinceId
+            : provinceId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        provinceName: freezed == provinceName
+            ? _value.provinceName
+            : provinceName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        regencyId: freezed == regencyId
+            ? _value.regencyId
+            : regencyId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        regencyName: freezed == regencyName
+            ? _value.regencyName
+            : regencyName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        districtId: freezed == districtId
+            ? _value.districtId
+            : districtId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        districtName: freezed == districtName
+            ? _value.districtName
+            : districtName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        villageId: freezed == villageId
+            ? _value.villageId
+            : villageId // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        villageName: freezed == villageName
+            ? _value.villageName
+            : villageName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        locationDetail: freezed == locationDetail
+            ? _value.locationDetail
+            : locationDetail // ignore: cast_nullable_to_non_nullable
                   as String?,
       ),
     );
@@ -128,7 +240,19 @@ class __$$ProjectLocationImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ProjectLocationImpl implements _ProjectLocation {
-  const _$ProjectLocationImpl({this.latitude, this.longitude, this.address});
+  const _$ProjectLocationImpl({
+    this.latitude,
+    this.longitude,
+    this.provinceId,
+    this.provinceName,
+    this.regencyId,
+    this.regencyName,
+    this.districtId,
+    this.districtName,
+    this.villageId,
+    this.villageName,
+    this.locationDetail,
+  });
 
   factory _$ProjectLocationImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProjectLocationImplFromJson(json);
@@ -138,11 +262,27 @@ class _$ProjectLocationImpl implements _ProjectLocation {
   @override
   final double? longitude;
   @override
-  final String? address;
+  final String? provinceId;
+  @override
+  final String? provinceName;
+  @override
+  final String? regencyId;
+  @override
+  final String? regencyName;
+  @override
+  final String? districtId;
+  @override
+  final String? districtName;
+  @override
+  final String? villageId;
+  @override
+  final String? villageName;
+  @override
+  final String? locationDetail;
 
   @override
   String toString() {
-    return 'ProjectLocation(latitude: $latitude, longitude: $longitude, address: $address)';
+    return 'ProjectLocation(latitude: $latitude, longitude: $longitude, provinceId: $provinceId, provinceName: $provinceName, regencyId: $regencyId, regencyName: $regencyName, districtId: $districtId, districtName: $districtName, villageId: $villageId, villageName: $villageName, locationDetail: $locationDetail)';
   }
 
   @override
@@ -154,12 +294,42 @@ class _$ProjectLocationImpl implements _ProjectLocation {
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
-            (identical(other.address, address) || other.address == address));
+            (identical(other.provinceId, provinceId) ||
+                other.provinceId == provinceId) &&
+            (identical(other.provinceName, provinceName) ||
+                other.provinceName == provinceName) &&
+            (identical(other.regencyId, regencyId) ||
+                other.regencyId == regencyId) &&
+            (identical(other.regencyName, regencyName) ||
+                other.regencyName == regencyName) &&
+            (identical(other.districtId, districtId) ||
+                other.districtId == districtId) &&
+            (identical(other.districtName, districtName) ||
+                other.districtName == districtName) &&
+            (identical(other.villageId, villageId) ||
+                other.villageId == villageId) &&
+            (identical(other.villageName, villageName) ||
+                other.villageName == villageName) &&
+            (identical(other.locationDetail, locationDetail) ||
+                other.locationDetail == locationDetail));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, latitude, longitude, address);
+  int get hashCode => Object.hash(
+    runtimeType,
+    latitude,
+    longitude,
+    provinceId,
+    provinceName,
+    regencyId,
+    regencyName,
+    districtId,
+    districtName,
+    villageId,
+    villageName,
+    locationDetail,
+  );
 
   @JsonKey(ignore: true)
   @override
@@ -180,7 +350,15 @@ abstract class _ProjectLocation implements ProjectLocation {
   const factory _ProjectLocation({
     final double? latitude,
     final double? longitude,
-    final String? address,
+    final String? provinceId,
+    final String? provinceName,
+    final String? regencyId,
+    final String? regencyName,
+    final String? districtId,
+    final String? districtName,
+    final String? villageId,
+    final String? villageName,
+    final String? locationDetail,
   }) = _$ProjectLocationImpl;
 
   factory _ProjectLocation.fromJson(Map<String, dynamic> json) =
@@ -191,7 +369,23 @@ abstract class _ProjectLocation implements ProjectLocation {
   @override
   double? get longitude;
   @override
-  String? get address;
+  String? get provinceId;
+  @override
+  String? get provinceName;
+  @override
+  String? get regencyId;
+  @override
+  String? get regencyName;
+  @override
+  String? get districtId;
+  @override
+  String? get districtName;
+  @override
+  String? get villageId;
+  @override
+  String? get villageName;
+  @override
+  String? get locationDetail;
   @override
   @JsonKey(ignore: true)
   _$$ProjectLocationImplCopyWith<_$ProjectLocationImpl> get copyWith =>

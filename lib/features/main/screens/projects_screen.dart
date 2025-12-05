@@ -4,178 +4,98 @@ import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/core/constants/app_icons.dart';
+import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
+import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
 
 class ProjectsScreen extends GetView<ProjectsController> {
-  const ProjectsScreen({super.key, this.controllerTag});
-
-  final String? controllerTag;
-
-  @override
-  String? get tag => controllerTag;
+  const ProjectsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const categories = ['Konsultasi', 'Perizinan', 'Konstruksi', 'Pengawasan'];
-    final initialCategoryIndex = categories.indexOf(
-      controller.selectedCategory,
-    );
-    final safeInitialIndex = initialCategoryIndex >= 0
-        ? initialCategoryIndex
-        : 0;
-
-    Widget buildProjectCard(Project project, bool isConsultant) {
-      final isConsultationCategory =
-          controller.selectedCategory == 'Konsultasi';
-      final homeOwnerName =
-          project.consultationInfo?.homeOwnerName?.trim().isNotEmpty == true
-          ? project.consultationInfo?.homeOwnerName!
-          : 'Pemilik rumah belum ditentukan';
-      final consultantName =
-          project.consultationInfo?.consultantName?.trim().isNotEmpty == true
-          ? project.consultationInfo?.consultantName!
-          : 'Konsultan belum ditentukan';
-      final primaryName = isConsultant ? homeOwnerName ?? '' : consultantName;
-      final location = project.location?.address?.trim().isNotEmpty == true
-          ? project.location!.address!
-          : 'Lokasi belum tersedia';
-      final ctaText = isConsultant ? 'Tanya Pemilik' : 'Tanya Konsultan';
-
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: ProjectInfoCard(
-          title: project.name ?? '',
-          primaryLine: ProjectInfoLine(
-            icon: Icons.person_outline,
-            text: primaryName ?? '',
-            color: AppColors.neutralDarkest,
-          ),
-          secondaryLine: ProjectInfoLine(
-            icon: Icons.location_on_outlined,
-            text: location,
-            color: AppColors.neutralMediumLight,
-          ),
-          ctaLabel: isConsultationCategory ? ctaText : null,
-          onCtaTap: isConsultationCategory
-              ? () => controller.openChatWithConsultant(project)
-              : null,
-          onTap: () {
-            final status = project.status ?? '';
-            if (isConsultationCategory &&
-                controller.statusFilter == 'PENDING' &&
-                controller.userRole.value == UserRole.consultant) {
-              controller.openConsultationConfirmation(project);
-            } else if (isConsultationCategory &&
-                controller.statusFilter == 'COMPLETED') {
-              controller.openConsultationDetailsWithCompletedData(project);
-            } else if (isConsultationCategory &&
-                (status == 'ACTIVE' || status == 'COMPLETED')) {
-              controller.openConsultationDetails(project);
-            } else if (controller.selectedCategory == 'Perizinan') {
-              controller.openLicensingDetails(project);
-            } else if (controller.selectedCategory == 'Pengawasan') {
-              controller.openPengawasanDetails(project);
-            }
-          },
-        ),
-      );
-    }
-
-    String buildHeading(String? status) {
-      switch (status) {
-        case 'PENDING':
-          return 'Menunggu Konfirmasi';
-        case 'COMPLETED':
-          return 'Selesai';
-        case 'CANCELLED':
-          return 'Dibatalkan';
-        case 'CREATED':
-          return 'Baru Dibuat';
-        case 'ACTIVE':
-        default:
-          return 'Sedang Berjalan';
-      }
-    }
-
-    final tabChild = Scaffold(
-      appBar: PkpAppBar(
-        title: 'Proyek Saya',
-        showNavigation: controller.projectStatus != null,
-        backgroundColor: AppColors.primaryDark,
-        onLeadingPressed: () {
-          if (controller.projectStatus != null) {
-            Get.back();
-          }
-        },
-      ),
+    final content = Scaffold(
+      appBar: const PkpAppBar(title: 'Proyek Saya', showNavigation: false),
       body: SafeArea(
         child: Obx(() {
           final isConsultant = controller.userRole.value == UserRole.consultant;
-          if (controller.isLoading.value && controller.projects.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (controller.error.value != null && controller.projects.isEmpty) {
-            return Center(child: Text(controller.error.value?.message ?? ''));
-          }
+          final selectedType = controller.selectedType;
 
-          final projects = controller.projects;
-          final category = controller.selectedCategory;
-          final statusOptions = _statusOptionsForCategory(category);
-
-          final heading = buildHeading(controller.statusFilter);
+          if (selectedType != consultation) {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                if (!isConsultant) _buildTabs(projectTypes),
+                const SizedBox(height: 16),
+                if (selectedType == construction)
+                  Expanded(child: _buildFeatureUnavailable())
+                else
+                  const SizedBox.shrink(),
+              ],
+            );
+          }
 
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (!isConsultant) _buildCategoryTabsSection(categories),
-              if (controller.projectStatus == null &&
-                  statusOptions.isNotEmpty) ...[
-                const SizedBox(height: 16),
-                _buildStatusMenu(context, statusOptions),
-              ],
-              if (category == 'Konstruksi')
-                Expanded(child: _buildFeatureUnavailable())
-              else
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: controller.refreshProjects,
-                    child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            heading,
-                            style: AppTextStyles.h2.copyWith(
-                              color: AppColors.neutralDarkest,
-                            ),
-                          ),
-                        ),
-                        if (projects.isEmpty && !controller.isLoading.value)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              'Belum ada proyek untuk status ini.',
-                              style: AppTextStyles.bodyM.copyWith(
-                                color: AppColors.neutralMediumLight,
+              if (!isConsultant) _buildTabs(projectTypes),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _buildStatusMenu(selectedType),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    _buildHeading(controller.consultationFilterStatus),
+                    style: AppTextStyles.h3,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: controller.refreshConsultations,
+                  child: CustomScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    slivers: [
+                      if (controller.projects.isEmpty)
+                        SliverToBoxAdapter(
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                'Belum ada konsultasi.',
+                                style: AppTextStyles.bodyM.copyWith(
+                                  color: AppColors.neutralMediumLight,
+                                ),
                               ),
                             ),
                           ),
-                        ...projects.map(
-                          (p) => buildProjectCard(p, isConsultant),
+                        )
+                      else
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          sliver: _buildConsultationSliverList(isConsultant),
                         ),
-                        if (controller.hasMore && controller.isLoading.value)
-                          const Padding(
+                      if (controller.hasMore && controller.projects.isNotEmpty)
+                        const SliverToBoxAdapter(
+                          child: Padding(
                             padding: EdgeInsets.symmetric(vertical: 16),
                             child: Center(child: CircularProgressIndicator()),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
                 ),
+              ),
             ],
           );
         }),
@@ -185,20 +105,146 @@ class ProjectsScreen extends GetView<ProjectsController> {
     return Obx(() {
       final isConsultant = controller.userRole.value == UserRole.consultant;
       if (isConsultant) {
-        return tabChild;
+        return content;
       }
       return DefaultTabController(
-        length: categories.length,
-        initialIndex: safeInitialIndex,
-        child: tabChild,
+        length: projectTypes.length,
+        initialIndex: 0,
+        child: content,
       );
     });
   }
 
-  Widget _buildStatusMenu(
-    BuildContext context,
-    List<_ProjectStatusOption> options,
-  ) {
+  String _buildHeading(ConsultationFilterStatus? status) {
+    switch (status) {
+      case consultationFilterWaitingConfirmation:
+        return consultationFilterWaitingConfirmation.name;
+      case consultationFilterDone:
+        return 'Selesai';
+      case consultationFilterInProgress:
+      default:
+        return 'Sedang Berjalan';
+    }
+  }
+
+  Widget _buildProjectCard(Project? project, bool isConsultant) {
+    if (project != null) {
+      final homeOwnerName =
+          project.consultationInfo?.homeOwnerName?.trim() ?? '-';
+      final consultantName =
+          project.consultationInfo?.consultantName?.trim() ?? '-';
+      final primaryName = isConsultant ? homeOwnerName : consultantName;
+      final location = project.city?.trim() ?? '-';
+      final buttonText = isConsultant ? 'Tanya Pemilik' : 'Tanya Konsultan';
+      final status = (project.consultationInfo?.consultationStatus ?? '')
+          .toUpperCase();
+      final state = (project.state ?? '').toUpperCase();
+      final isWaitingConfirmation =
+          controller.consultationFilterStatus ==
+              consultationFilterWaitingConfirmation ||
+          status == consultationFilterWaitingConfirmation.id ||
+          state == 'WAITING_CONFIRMATION' ||
+          status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: ProjectInfoCard(
+          title: project.projectName ?? '',
+          primaryLine: ProjectInfoLine(
+            icon: Icons.person_outline,
+            text: primaryName,
+            color: AppColors.neutralDarkest,
+          ),
+          secondaryLine: ProjectInfoLine(
+            icon: Icons.location_on_outlined,
+            text: location,
+            color: AppColors.neutralMediumLight,
+          ),
+          buttonText: buttonText,
+          onButtonTap: () {
+            controller.openChat(project);
+          },
+          onTap: () {
+            if (controller.selectedType == consultation &&
+                isWaitingConfirmation &&
+                controller.userRole.value == UserRole.consultant) {
+              controller.openConsultationConfirmation(project);
+            } else if (controller.selectedType == consultation &&
+                controller.consultationFilterStatus !=
+                    consultationFilterWaitingConfirmation) {
+              controller.openConsultationDetails(project);
+            }
+          },
+        ),
+      );
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildStatusMenu(ProjectType projectType) {
+    var statusOptions = [];
+    switch (projectType) {
+      case consultation:
+        statusOptions = [
+          _ConsultationStatusOption(
+            status: consultationFilterInProgress,
+            icon: AppIcons.clock,
+            onTap: (status) {
+              controller.updateConsultationStatusFilter(status);
+            },
+          ),
+          _ConsultationStatusOption(
+            status: consultationFilterWaitingConfirmation,
+            icon: AppIcons.hourglass,
+            onTap: (status) {
+              controller.updateConsultationStatusFilter(status);
+            },
+          ),
+          _ConsultationStatusOption(
+            status: consultationFilterDone,
+            icon: AppIcons.checkCircle,
+            onTap: (status) {
+              controller.updateConsultationStatusFilter(status);
+            },
+          ),
+        ];
+
+        break;
+      case licensing:
+        statusOptions = [
+          _ConsultationStatusOption(
+            status: consultationFilterInProgress,
+            icon: AppIcons.clock,
+            onTap: (status) {
+              // TODO: Handle status tap
+            },
+          ),
+          _ConsultationStatusOption(
+            status: consultationFilterWaitingConfirmation,
+            icon: AppIcons.hourglass,
+            onTap: (status) {
+              // TODO: Handle status tap
+            },
+          ),
+          _ConsultationStatusOption(
+            status: consultationFilterDone,
+            icon: AppIcons.checkCircle,
+            onTap: (status) {
+              // TODO: Handle status tap
+            },
+          ),
+        ];
+
+        break;
+      case construction:
+        return const SizedBox.shrink();
+      case monitoring:
+        return const SizedBox.shrink();
+      default:
+        return const SizedBox.shrink();
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Obx(() {
@@ -206,9 +252,10 @@ class ProjectsScreen extends GetView<ProjectsController> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: options.map((option) {
-            final isSelected = controller.statusFilter == option.status;
-            final count = controller.projectCounts[option.status] ?? 0;
+          children: statusOptions.map((option) {
+            final isSelected =
+                controller.consultationFilterStatus == option.status;
+            final count = controller.projectCounts[option.status.id] ?? 0;
             final labelColor = isSelected
                 ? AppColors.neutralDarkest
                 : AppColors.inputBorder;
@@ -217,12 +264,12 @@ class ProjectsScreen extends GetView<ProjectsController> {
                 : AppColors.inputBorder;
 
             return SizedBox(
-              width: (MediaQuery.of(context).size.width - 32) / options.length,
+              width: 110,
               child: FeatureCircleCard(
-                label: option.label,
-                icon: option.icon,
+                label: option.status.name,
+                iconAsset: option.icon,
                 labelOutside: true,
-                labelStyle: AppTextStyles.bodyS.copyWith(color: labelColor),
+                labelStyle: AppTextStyles.bodyM.copyWith(color: labelColor),
                 backgroundColor: isSelected
                     ? AppColors.primaryDark
                     : AppColors.primaryLightest,
@@ -231,9 +278,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
                 badgeValue: count.toString(),
                 showBadge: count > 0,
                 onTap: () {
-                  if (!isSelected) {
-                    controller.updateStatusFilter(option.status);
-                  }
+                  option.onTap(option.status);
                 },
               ),
             );
@@ -243,95 +288,78 @@ class ProjectsScreen extends GetView<ProjectsController> {
     );
   }
 
-  Widget _buildCategoryTabsSection(List<String> categories) {
+  Widget _buildTabs(List<ProjectType> projectType) {
     return Container(
       color: AppColors.primaryDark,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: TabBar(
-          onTap: (index) => controller.updateCategory(categories[index]),
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(color: AppColors.white, width: 2),
-            insets: EdgeInsets.symmetric(horizontal: 8),
-          ),
-          tabAlignment: TabAlignment.fill,
-          indicatorSize: TabBarIndicatorSize.tab,
-          isScrollable: false,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-          labelColor: AppColors.white,
-          unselectedLabelColor: AppColors.white.withOpacity(0.6),
-          labelStyle: AppTextStyles.actionM,
-          tabs: categories.map((label) => Tab(text: label)).toList(),
+      child: TabBar(
+        onTap: (index) => controller.updateCategory(projectType[index]),
+        indicator: const UnderlineTabIndicator(
+          borderSide: BorderSide(color: AppColors.white, width: 2),
+          insets: EdgeInsets.symmetric(horizontal: 8),
         ),
+        tabAlignment: TabAlignment.fill,
+        indicatorSize: TabBarIndicatorSize.tab,
+        isScrollable: false,
+        labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+        labelColor: AppColors.white,
+        unselectedLabelColor: AppColors.white.withOpacity(0.6),
+        labelStyle: AppTextStyles.actionM,
+        tabs: projectType.map((category) => Tab(text: category.name)).toList(),
       ),
     );
   }
 
-  List<_ProjectStatusOption> _statusOptionsForCategory(String category) {
-    switch (category) {
-      case 'Konsultasi':
-        return const [
-          _ProjectStatusOption('Sedang Berjalan', 'ACTIVE', Icons.schedule),
-          _ProjectStatusOption(
-            'Menunggu Konfirmasi',
-            'PENDING',
-            Icons.hourglass_top_outlined,
+  Widget _buildFeatureUnavailable() {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.inputBorder),
           ),
-          _ProjectStatusOption(
-            'Selesai',
-            'COMPLETED',
-            Icons.check_circle_outline,
+          child: const Center(
+            child: Icon(Icons.close, color: AppColors.inputBorder),
           ),
-        ];
-      case 'Perizinan':
-      case 'Pengawasan':
-        return const [
-          _ProjectStatusOption('Sedang Berjalan', 'ACTIVE', Icons.schedule),
-          _ProjectStatusOption(
-            'Selesai',
-            'COMPLETED',
-            Icons.check_circle_outline,
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Fitur belum tersedia',
+          style: AppTextStyles.bodyM.copyWith(
+            color: AppColors.neutralMediumLight,
           ),
-        ];
-      case 'Konstruksi':
-      default:
-        return const [];
-    }
+        ),
+      ],
+    );
   }
 
-  Widget _buildFeatureUnavailable() {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.inputBorder),
-            ),
-            child: const Center(
-              child: Icon(Icons.close, color: AppColors.inputBorder),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Fitur belum tersedia',
-            style: AppTextStyles.bodyM.copyWith(
-              color: AppColors.neutralMediumLight,
-            ),
-          ),
-        ],
-      ),
+  SliverList _buildConsultationSliverList(bool isConsultant) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        final projects = controller.projects;
+        if (index >= projects.length) return null;
+        if (index == projects.length - 1 &&
+            controller.hasMore &&
+            !controller.isLoading.value) {
+          controller.loadMoreProjects();
+        }
+        return _buildProjectCard(projects[index], isConsultant);
+      }, childCount: controller.projects.length),
     );
   }
 }
 
-class _ProjectStatusOption {
-  const _ProjectStatusOption(this.label, this.status, this.icon);
+class _ConsultationStatusOption {
+  const _ConsultationStatusOption({
+    required this.status,
+    required this.icon,
+    required this.onTap,
+  });
 
-  final String label;
-  final String status;
-  final IconData icon;
+  final ConsultationFilterStatus status;
+  final String icon;
+  final Function(ConsultationFilterStatus) onTap;
 }

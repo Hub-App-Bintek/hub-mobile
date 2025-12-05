@@ -111,7 +111,7 @@ class _ChooseProjectBottomSheetState extends State<ChooseProjectBottomSheet> {
           onChanged: (val) => setState(() => _selectedIndex = val!),
           title: Text(
             index < widget.projects.length
-                ? widget.projects[index].name ?? ''
+                ? widget.projects[index].projectName ?? ''
                 : 'New Project',
             style: AppTextStyles.bodyM,
           ),

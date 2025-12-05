@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:pkp_hub/data/models/consultation_info.dart';
-import 'package:pkp_hub/data/models/project_location.dart';
 
 part 'project.freezed.dart';
 part 'project.g.dart';
@@ -9,12 +8,11 @@ part 'project.g.dart';
 class Project with _$Project {
   const factory Project({
     String? projectId,
-    String? name,
-    String? type,
-    String? status,
-    ProjectLocation? location,
-    double? landArea,
-    DateTime? createdAt,
+    String? projectName,
+    String? city,
+    String? projectStatus,
+    String? state,
+    String? stateDescription,
     ConsultationInfo? consultationInfo,
   }) = _Project;
 
