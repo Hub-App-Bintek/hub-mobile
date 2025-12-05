@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/contract.dart';
+import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
 import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
-import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'contract_api_service.g.dart';
@@ -64,4 +64,11 @@ abstract class ContractApiService {
 
   @POST(ApiEndpoints.contractRequestPayment)
   Future<Contract> requestPayment(@Path('contractId') String contractId);
+
+  @MultiPart()
+  @POST(ApiEndpoints.contractRevisedUpload)
+  Future<UploadContractResponse> uploadRevisedContract(
+    @Part(name: 'request', contentType: 'application/json') String requestJson,
+    @Part(name: 'file') File file,
+  );
 }

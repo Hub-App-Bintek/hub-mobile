@@ -10,6 +10,7 @@ class DesignDocument with _$DesignDocument {
     String? consultationId,
     String? documentType,
     String? version,
+    String? versionId,
     String? fileUrl,
     String? fileId,
     String? uploadedBy,
