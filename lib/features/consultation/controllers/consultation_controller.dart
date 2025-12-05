@@ -6,6 +6,7 @@ import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/location_permission_helper.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
@@ -38,6 +39,7 @@ class ConsultationController extends BaseController {
   final isLoading = false.obs; // any fetch in progress
   final hasMore = true.obs; // mirrors _done inverse
 
+  final _logger = Logger();
   // Scroll
   final scrollController = ScrollController();
   static const double _prefetchExtentPx = 600; // load when < this remains below
@@ -84,6 +86,7 @@ class ConsultationController extends BaseController {
   }
 
   Future<void> fetchConsultants() async {
+    _logger.d('project ID : $projectId');
     if (isLoading.value || _done) return;
 
     isLoading.value = true;
@@ -146,7 +149,7 @@ class ConsultationController extends BaseController {
       final hasPermission =
           await LocationPermissionHelper.ensureLocationPermission();
       if (!hasPermission) return;
-      navigateTo(AppRoutes.createProject, arguments: {'type': designTypeId});
+      navigateOff(AppRoutes.createProject, arguments: {'type': designTypeId});
     }();
   }
 
