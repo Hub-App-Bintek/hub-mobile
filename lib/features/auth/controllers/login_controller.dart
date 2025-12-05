@@ -38,8 +38,12 @@ class LoginController extends BaseController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  final RxString emailText = ''.obs;
+  final RxString passwordText = ''.obs;
+
   // Observable form state
-  final isFormValid = false.obs;
+  bool get isFormValid => emailText.value.isNotEmpty && passwordText.value.isNotEmpty;
+
   final emailError = RxnString();
   final passwordError = RxnString();
 
@@ -49,37 +53,41 @@ class LoginController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    emailController.addListener(_onEmailChanged);
-    passwordController.addListener(_onPasswordChanged);
-    _validateForm(runValidators: false);
+    emailController.addListener(() {
+      emailText.value = emailController.text;
+    });
+    passwordController.addListener(() {
+      passwordText.value = passwordController.text;
+    });
+    // _validateForm(runValidators: false);
   }
 
-  void _onEmailChanged() {
-    emailError.value = FormValidators.email(emailController.text.trim());
-    _validateForm(runValidators: false);
-  }
-
-  void _onPasswordChanged() {
-    passwordError.value = FormValidators.password(passwordController.text);
-    _validateForm(runValidators: false);
-  }
-
-  void _validateForm({bool runValidators = true}) {
-    if (runValidators) {
-      emailError.value = FormValidators.email(emailController.text.trim());
-      passwordError.value = FormValidators.password(passwordController.text);
-    }
-    isFormValid.value =
-        emailError.value == null &&
-        passwordError.value == null &&
-        emailController.text.trim().isNotEmpty &&
-        passwordController.text.isNotEmpty;
-  }
+  // void _onEmailChanged() {
+  //   emailError.value = FormValidators.email(emailController.text.trim());
+  //   _validateForm(runValidators: false);
+  // }
+  //
+  // void _onPasswordChanged() {
+  //   passwordError.value = FormValidators.password(passwordController.text);
+  //   _validateForm(runValidators: false);
+  // }
+  //
+  // void _validateForm({bool runValidators = true}) {
+  //   if (runValidators) {
+  //     emailError.value = FormValidators.email(emailController.text.trim());
+  //     passwordError.value = FormValidators.password(passwordController.text);
+  //   }
+  //   isFormValid.value =
+  //       emailError.value == null &&
+  //       passwordError.value == null &&
+  //       emailController.text.trim().isNotEmpty &&
+  //       passwordController.text.isNotEmpty;
+  // }
 
   /// Executes the login flow using the new callback-based handleAsync pattern.
   Future<void> login() async {
-    _validateForm();
-    if (!isFormValid.value || isRequesting.value) return;
+    // _validateForm();
+    if (!isFormValid || isRequesting.value) return;
 
     isRequesting.value = true;
     try {

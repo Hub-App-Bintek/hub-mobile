@@ -32,33 +32,37 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
         child: Obx(() {
           final currentStep = selectedStep.value;
           final sectionTitle = controller.sectionTitle(currentStep);
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: _buildConsultationState(
-                  currentStep,
-                  controller.selectStep,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildConsultantCard(consultantName),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: _buildSectionTitle(sectionTitle),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
+          return RefreshIndicator(
+            onRefresh: controller.handleRefresh,
+            child: Column(
+              children: [
+                Padding(
                   padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [_buildStepContent(currentStep, consultantName)],
+                  child: _buildConsultationState(
+                    currentStep,
+                    controller.selectStep,
                   ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _buildConsultantCard(consultantName),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _buildSectionTitle(sectionTitle),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [_buildStepContent(currentStep, consultantName)],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         }),
       ),
@@ -139,66 +143,68 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     final avatarUrl = controller.project.consultationInfo?.consultantId
         ?.toString();
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.inputSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.inputBorder),
-      ),
-      child: Row(
-        children: [
-          _Avatar(initial: initial, imageUrl: avatarUrl),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  controller.isConsultant
-                      ? (controller.homeOwnerName == ''
-                            ? 'Pemilik Rumah'
-                            : controller.homeOwnerName)
-                      : consultantName,
-                  style: AppTextStyles.h4.copyWith(
-                    color: AppColors.neutralDarkest,
+    final cName = controller.consultationInfo.value?.consultantName;
+    consultantName = cName ?? 'Konsultan';
+
+    return Obx( () => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppColors.inputSurface,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.inputBorder),
+        ),
+        child: Row(
+          children: [
+            _Avatar(initial: initial, imageUrl: avatarUrl),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    controller.isConsultant
+                        ? controller.homeOwnerName.value
+                        : consultantName,
+                    style: AppTextStyles.h4.copyWith(
+                      color: AppColors.neutralDarkest,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  controller.isConsultant ? '' : 'Consultant Speciality',
-                  style: AppTextStyles.bodyS.copyWith(
-                    color: AppColors.neutralMediumLight,
+                  const SizedBox(height: 4),
+                  Text(
+                    controller.isConsultant ? '' : 'Consultant Speciality',
+                    style: AppTextStyles.bodyS.copyWith(
+                      color: AppColors.neutralMediumLight,
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              controller.startChatWithConsultant();
-            },
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: const BoxDecoration(
-                color: AppColors.primaryDark,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  AppIcons.chat,
-                  width: 20,
-                  height: 20,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.white,
-                    BlendMode.srcIn,
-                  ),
-                ),
+                ],
               ),
             ),
-          ),
-        ],
+            InkWell(
+              onTap: () {
+                controller.startChatWithConsultant();
+              },
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryDark,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: SvgPicture.asset(
+                    AppIcons.chat,
+                    width: 20,
+                    height: 20,
+                    colorFilter: const ColorFilter.mode(
+                      AppColors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

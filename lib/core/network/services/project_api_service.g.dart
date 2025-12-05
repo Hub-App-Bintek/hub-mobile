@@ -97,7 +97,7 @@ class _ProjectApiService implements ProjectApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/projects/v2/${projectId}',
+            '/api/projects/${projectId}',
             queryParameters: queryParameters,
             data: _data,
           )

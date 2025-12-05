@@ -13,6 +13,28 @@ class ProjectsBinding extends Bindings {
   static const String mainTag = 'projects_main';
   static const String routeTag = 'projects_route';
 
+  static void registerMainController() {
+    // 1. Register the required UseCase first.
+    //    Use fenix:true so it can be re-used by the route binding later.
+    Get.lazyPut<CreateDirectChatRoomUseCase>(
+          () => CreateDirectChatRoomUseCase(Get.find<ChatRepository>()),
+      fenix: true,
+    );
+
+    // 2. Register the ProjectsController for the main screen.
+    //    This one does not have a status filter.
+    Get.lazyPut<ProjectsController>(
+          () => ProjectsController(
+        Get.find<GetProjectsUseCase>(),
+        null, // No status for the main projects tab
+        Get.find<UserStorage>(),
+        Get.find<CreateDirectChatRoomUseCase>(),
+      ),
+      tag: mainTag,
+      fenix: true,
+    );
+  }
+
   static void register({required String tag, String? status}) {
     Get.lazyPut<CreateDirectChatRoomUseCase>(
       () => CreateDirectChatRoomUseCase(Get.find<ChatRepository>()),
