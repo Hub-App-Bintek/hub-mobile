@@ -7,6 +7,7 @@ import 'package:pkp_hub/core/config/app_config.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/network_manager.dart';
+import 'package:pkp_hub/core/services/notification_service.dart';
 import 'package:pkp_hub/core/storage/secure_storage.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
@@ -77,6 +78,8 @@ class AppBinding extends Bindings {
       const FlutterSecureStorage(),
       permanent: true,
     );
+
+    Get.put<NotificationService>(NotificationService(), permanent: true);
 
     // Local Storage
     Get.put<SecureStorage>(

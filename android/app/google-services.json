@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "969290299365",
+    "project_id": "pkp-hub",
+    "storage_bucket": "pkp-hub.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969290299365:android:991f5a9e3840c8c0e7a10c",
+        "android_client_info": {
+          "package_name": "id.go.pkp.hub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDazyW_iDOyNADarLPCCEwtIvOZq6fd1gM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969290299365:android:62b50845cc9241cde7a10c",
+        "android_client_info": {
+          "package_name": "id.go.pkp.hub.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDazyW_iDOyNADarLPCCEwtIvOZq6fd1gM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
