@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/services/notification_service.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
@@ -13,6 +15,8 @@ class LoginController extends BaseController {
 
   // Constructor
   LoginController(this._loginUseCase);
+
+  final _logger = Logger();
 
   Map<String, dynamic>? get _navigationArgs {
     final args = Get.arguments;
@@ -134,6 +138,11 @@ class LoginController extends BaseController {
       goBack(result: true);
       return;
     }
+
+    final notificationService = Get.find<NotificationService>();
+    notificationService.getFcmToken().then((token) {
+      _logger.d('FCM Token: $token');
+    });
 
     navigateOffAll(AppRoutes.main);
   }
