@@ -66,6 +66,7 @@ dependencies:
   firebase_core: ^4.2.1
   firebase_messaging: ^16.0.4
   flutter_local_notifications: ^19.5.0
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,37 @@ flutter:
     - .env.staging
     - .env.production
     - assets/icons/
+    - assets/splash/
+
+flutter_native_splash:
+  # The background color for your splash screen.
+  # Use a color that matches your app's branding.
+  # Use "#RRGGBB" format. Your AppColors.primary is a good source.
+  color: "#006A7A"
+
+  # The path to your splash screen image asset.
+  image: assets/splash/logo.png
+
+  # (Optional) For a dark mode splash screen.
+  color_dark: "#0D2E32"
+  image_dark: assets/splash/logo.png # Can be a different logo for dark mode
+
+  branding: assets/splash/logo.png
+  branding_dark: assets/splash/logo.png
+  branding_mode: center
+
+  # --- ANDROID 12+ CONFIGURATION ---
+  # On Android 12+, the splash screen is slightly different. This configures it.
+  android_12:
+    # The image to show on the Android 12 splash screen
+    image: assets/splash/logo.png
+
+    # (Optional) The color of the icon background.
+    icon_background_color: "#006A7A"
+
+    # (Optional) Dark mode versions for Android 12.
+    image_dark: assets/splash/logo.png
+    icon_background_color_dark: "#0D2E32"
 
 dependency_overrides:
   geolocator_android: ^5.0.2
