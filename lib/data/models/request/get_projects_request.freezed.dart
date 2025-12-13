@@ -23,8 +23,7 @@ GetProjectsRequest _$GetProjectsRequestFromJson(Map<String, dynamic> json) {
 mixin _$GetProjectsRequest {
   int? get page => throw _privateConstructorUsedError;
   int? get size => throw _privateConstructorUsedError;
-  String? get type =>
-      throw _privateConstructorUsedError; // PROTOTYPE or NON_PROTOTYPE
+  String? get type => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -156,7 +155,6 @@ class _$GetProjectsRequestImpl implements _GetProjectsRequest {
   final int? size;
   @override
   final String? type;
-  // PROTOTYPE or NON_PROTOTYPE
   @override
   final String? status;
 
@@ -212,7 +210,7 @@ abstract class _GetProjectsRequest implements GetProjectsRequest {
   int? get size;
   @override
   String? get type;
-  @override // PROTOTYPE or NON_PROTOTYPE
+  @override
   String? get status;
   @override
   @JsonKey(ignore: true)

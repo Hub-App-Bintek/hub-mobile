@@ -197,8 +197,7 @@ class _ContractApiService implements ContractApiService {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
+    final _data = body;
     final _options = _setStreamType<Contract>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
@@ -334,6 +333,7 @@ class _ContractApiService implements ContractApiService {
 
   @override
   Future<UploadContractResponse> uploadRevisedContract(
+    String consultationId,
     String requestJson,
     File file,
   ) async {
@@ -360,7 +360,7 @@ class _ContractApiService implements ContractApiService {
           )
           .compose(
             _dio.options,
-            '/api/contracts/revised-upload',
+            '/api/contracts/consultations/${consultationId}/revised-upload',
             queryParameters: queryParameters,
             data: _data,
           )

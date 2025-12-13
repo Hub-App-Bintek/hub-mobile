@@ -10,7 +10,7 @@ import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
 import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultant_details_binding.dart';
-import 'package:pkp_hub/features/consultation/bindings/consultation_binding.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultants_binding.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultation_confirmation_binding.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultation_details_binding.dart';
 import 'package:pkp_hub/features/consultation/screens/consultant_details_screen.dart';
@@ -104,12 +104,12 @@ class AppPages {
     GetPage(
       name: _Paths.consultation,
       page: () => const ConsultationScreen(),
-      binding: ConsultationBinding(),
+      binding: ConsultantsBinding(),
     ),
     GetPage(
       name: _Paths.consultants,
       page: () => const ConsultantsScreen(),
-      binding: ConsultationBinding(),
+      binding: ConsultantsBinding(),
     ),
     GetPage(
       name: _Paths.projects,

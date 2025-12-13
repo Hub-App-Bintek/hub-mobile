@@ -2,13 +2,14 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 import 'package:pkp_hub/domain/repositories/design_repository.dart';
+import 'package:pkp_hub/core/usecases/use_case.dart';
 
-class GetPrototypeDesignsUseCase {
+class GetPrototypeDesignsUseCase extends UseCase<List<PrototypeDesign>, void> {
   GetPrototypeDesignsUseCase(this._repository);
 
   final DesignRepository _repository;
 
-  Future<Result<List<PrototypeDesign>, Failure>> call() {
-    return _repository.getPrototypeDesigns();
-  }
+  @override
+  Future<Result<List<PrototypeDesign>, Failure>> call([void params]) =>
+      _repository.getPrototypeDesigns();
 }

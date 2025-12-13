@@ -68,6 +68,7 @@ abstract class ContractApiService {
   @MultiPart()
   @POST(ApiEndpoints.contractRevisedUpload)
   Future<UploadContractResponse> uploadRevisedContract(
+    @Path('consultationId') String consultationId,
     @Part(name: 'request', contentType: 'application/json') String requestJson,
     @Part(name: 'file') File file,
   );

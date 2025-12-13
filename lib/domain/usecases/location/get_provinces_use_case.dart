@@ -4,7 +4,7 @@ import 'package:pkp_hub/core/usecases/use_case.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
 import 'package:pkp_hub/domain/repositories/location_repository.dart';
 
-class GetProvincesUseCase extends UseCaseNoParams<List<Province>> {
+class GetProvincesUseCase extends UseCaseNoPayload<List<Province>> {
   final LocationRepository _repository;
 
   GetProvincesUseCase(this._repository);

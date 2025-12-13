@@ -7,9 +7,9 @@ import 'package:pkp_hub/app/widgets/pkp_elevated_button.dart';
 import 'package:pkp_hub/app/widgets/consultant_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_outlined_button.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
-import 'package:pkp_hub/features/consultation/controllers/consultation_controller.dart';
+import 'package:pkp_hub/features/consultation/controllers/consultants_controller.dart';
 
-class ConsultationScreen extends GetView<ConsultationController> {
+class ConsultationScreen extends GetView<ConsultantsController> {
   const ConsultationScreen({super.key});
 
   @override

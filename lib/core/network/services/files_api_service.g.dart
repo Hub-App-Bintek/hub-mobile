@@ -71,7 +71,7 @@ class _FilesApiService implements FilesApiService {
             method: 'GET',
             headers: _headers,
             extra: _extra,
-            responseType: ResponseType.bytes,
+            responseType: ResponseType.stream,
           )
           .compose(
             _dio.options,

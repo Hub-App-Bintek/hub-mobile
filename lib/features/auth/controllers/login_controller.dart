@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/services/notification_service.dart';
-import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
 
 class LoginController extends BaseController {
+  // Constructor
+  LoginController(this._loginUseCase, this._notificationService);
+
   // Dependencies
   final LoginUseCase _loginUseCase;
-
-  // Constructor
-  LoginController(this._loginUseCase);
-
-  final _logger = Logger();
+  final NotificationService _notificationService;
 
   Map<String, dynamic>? get _navigationArgs {
     final args = Get.arguments;
@@ -94,12 +92,14 @@ class LoginController extends BaseController {
     if (!isFormValid || isRequesting.value) return;
 
     isRequesting.value = true;
+    final fcmToken = await _notificationService.getFcmToken();
     try {
       await handleAsync(
         () => _loginUseCase(
           LoginRequest(
             email: emailController.text.trim(),
             password: passwordController.text,
+            deviceToken: fcmToken ?? '',
           ),
         ),
         onSuccess: (loginResponse) async {
@@ -139,10 +139,10 @@ class LoginController extends BaseController {
       return;
     }
 
-    final notificationService = Get.find<NotificationService>();
-    notificationService.getFcmToken().then((token) {
-      _logger.d('FCM Token: $token');
-    });
+    // final notificationService = Get.find<NotificationService>();
+    // notificationService.getFcmToken().then((token) {
+    //   _logger.d('FCM Token: $token');
+    // });
 
     navigateOffAll(AppRoutes.main);
   }

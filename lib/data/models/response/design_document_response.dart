@@ -7,10 +7,12 @@ part 'design_document_response.g.dart';
 @freezed
 class DesignDocumentResponse with _$DesignDocumentResponse {
   const factory DesignDocumentResponse({
+    String? designDocumentId,
     String? version,
     String? versionName,
     String? latestUploadedAt,
     @Default(<DesignDocument>[]) List<DesignDocument> documents,
+    String? designDocumentStatus,
     bool? canDownload,
   }) = _DesignDocumentResponse;
 

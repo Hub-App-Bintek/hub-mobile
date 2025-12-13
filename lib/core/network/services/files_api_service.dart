@@ -19,7 +19,7 @@ abstract class FilesApiService {
   );
 
   // Download a file by its id. Returns raw bytes in the HTTP response.
-  @DioResponseType(ResponseType.bytes)
+  @DioResponseType(ResponseType.stream)
   @GET(ApiEndpoints.filesDownload)
   Future<HttpResponse<List<int>>> downloadFile(@Path('fileId') String fileId);
 }

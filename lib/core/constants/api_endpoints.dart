@@ -11,6 +11,8 @@ abstract class ApiEndpoints {
   static const String resendOtp = '/api/auth/resend-otp';
   static const projects = '/api/projects/v2';
   static const projectDetailV2 = '/api/projects/{projectId}/v2';
+
+  /// Obsolete, remove it later
   static const projectsV1 = '/api/projects';
   static const consultationProjects = '/api/consultations/projects';
 
@@ -65,7 +67,8 @@ abstract class ApiEndpoints {
       '/api/contracts/{contractId}/request-payment';
   static const String contractVersions =
       '/api/contracts/projects/{projectId}/consultations/{consultationId}/versions';
-  static const String contractRevisedUpload = '/api/contracts/revised-upload';
+  static const String contractRevisedUpload =
+      '/api/contracts/consultations/{consultationId}/revised-upload';
 
   // --- Files ---
   static const String filesUpload = '/api/files/upload';
@@ -100,7 +103,7 @@ abstract class ApiEndpoints {
   static const String designDocumentsApprove =
       '/api/design-documents/{designDocumentId}/approve';
   static const String designDocumentsRevisionRequest =
-      '/api/design-documents/{designDocumentId}/revision-request';
+      '/api/design-documents/{consultationId}/revision-request';
   static const String designDocumentsVersions =
       '/api/design-documents/versions';
   static const String designDocumentsVersionDownload =

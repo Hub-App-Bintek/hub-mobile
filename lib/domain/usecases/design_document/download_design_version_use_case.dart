@@ -6,18 +6,24 @@ import 'package:pkp_hub/domain/repositories/design_document_repository.dart';
 
 class DownloadDesignVersionParams {
   final String version;
-  DownloadDesignVersionParams(this.version);
+  final String consultationId;
+
+  DownloadDesignVersionParams(this.version, this.consultationId);
 }
 
 class DownloadDesignVersionUseCase
     extends UseCase<DownloadedFile, DownloadDesignVersionParams> {
   final DesignDocumentRepository _repository;
+
   DownloadDesignVersionUseCase(this._repository);
 
   @override
   Future<Result<DownloadedFile, Failure>> call(
     DownloadDesignVersionParams params,
   ) {
-    return _repository.downloadDesignVersionZip(params.version);
+    return _repository.downloadDesignVersionZip(
+      params.version,
+      params.consultationId,
+    );
   }
 }

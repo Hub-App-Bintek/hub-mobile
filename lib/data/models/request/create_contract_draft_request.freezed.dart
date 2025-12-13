@@ -15,34 +15,30 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-CreateContractDraftRequest _$CreateContractDraftRequestFromJson(
+UploadContractRequest _$UploadContractRequestFromJson(
   Map<String, dynamic> json,
 ) {
-  return _CreateContractDraftRequest.fromJson(json);
+  return _UploadContractRequest.fromJson(json);
 }
 
 /// @nodoc
-mixin _$CreateContractDraftRequest {
+mixin _$UploadContractRequest {
   double get contractValue => throw _privateConstructorUsedError;
   List<Installment> get installments => throw _privateConstructorUsedError;
   String? get fileUrl => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $CreateContractDraftRequestCopyWith<CreateContractDraftRequest>
-  get copyWith => throw _privateConstructorUsedError;
+  $UploadContractRequestCopyWith<UploadContractRequest> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $CreateContractDraftRequestCopyWith<$Res> {
-  factory $CreateContractDraftRequestCopyWith(
-    CreateContractDraftRequest value,
-    $Res Function(CreateContractDraftRequest) then,
-  ) =
-      _$CreateContractDraftRequestCopyWithImpl<
-        $Res,
-        CreateContractDraftRequest
-      >;
+abstract class $UploadContractRequestCopyWith<$Res> {
+  factory $UploadContractRequestCopyWith(
+    UploadContractRequest value,
+    $Res Function(UploadContractRequest) then,
+  ) = _$UploadContractRequestCopyWithImpl<$Res, UploadContractRequest>;
   @useResult
   $Res call({
     double contractValue,
@@ -52,12 +48,12 @@ abstract class $CreateContractDraftRequestCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CreateContractDraftRequestCopyWithImpl<
+class _$UploadContractRequestCopyWithImpl<
   $Res,
-  $Val extends CreateContractDraftRequest
+  $Val extends UploadContractRequest
 >
-    implements $CreateContractDraftRequestCopyWith<$Res> {
-  _$CreateContractDraftRequestCopyWithImpl(this._value, this._then);
+    implements $UploadContractRequestCopyWith<$Res> {
+  _$UploadContractRequestCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -92,12 +88,12 @@ class _$CreateContractDraftRequestCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$CreateContractDraftRequestImplCopyWith<$Res>
-    implements $CreateContractDraftRequestCopyWith<$Res> {
-  factory _$$CreateContractDraftRequestImplCopyWith(
-    _$CreateContractDraftRequestImpl value,
-    $Res Function(_$CreateContractDraftRequestImpl) then,
-  ) = __$$CreateContractDraftRequestImplCopyWithImpl<$Res>;
+abstract class _$$UploadContractRequestImplCopyWith<$Res>
+    implements $UploadContractRequestCopyWith<$Res> {
+  factory _$$UploadContractRequestImplCopyWith(
+    _$UploadContractRequestImpl value,
+    $Res Function(_$UploadContractRequestImpl) then,
+  ) = __$$UploadContractRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -108,16 +104,13 @@ abstract class _$$CreateContractDraftRequestImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$CreateContractDraftRequestImplCopyWithImpl<$Res>
+class __$$UploadContractRequestImplCopyWithImpl<$Res>
     extends
-        _$CreateContractDraftRequestCopyWithImpl<
-          $Res,
-          _$CreateContractDraftRequestImpl
-        >
-    implements _$$CreateContractDraftRequestImplCopyWith<$Res> {
-  __$$CreateContractDraftRequestImplCopyWithImpl(
-    _$CreateContractDraftRequestImpl _value,
-    $Res Function(_$CreateContractDraftRequestImpl) _then,
+        _$UploadContractRequestCopyWithImpl<$Res, _$UploadContractRequestImpl>
+    implements _$$UploadContractRequestImplCopyWith<$Res> {
+  __$$UploadContractRequestImplCopyWithImpl(
+    _$UploadContractRequestImpl _value,
+    $Res Function(_$UploadContractRequestImpl) _then,
   ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -128,7 +121,7 @@ class __$$CreateContractDraftRequestImplCopyWithImpl<$Res>
     Object? fileUrl = freezed,
   }) {
     return _then(
-      _$CreateContractDraftRequestImpl(
+      _$UploadContractRequestImpl(
         contractValue: null == contractValue
             ? _value.contractValue
             : contractValue // ignore: cast_nullable_to_non_nullable
@@ -148,16 +141,15 @@ class __$$CreateContractDraftRequestImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$CreateContractDraftRequestImpl implements _CreateContractDraftRequest {
-  const _$CreateContractDraftRequestImpl({
+class _$UploadContractRequestImpl implements _UploadContractRequest {
+  const _$UploadContractRequestImpl({
     required this.contractValue,
     final List<Installment> installments = const <Installment>[],
     this.fileUrl,
   }) : _installments = installments;
 
-  factory _$CreateContractDraftRequestImpl.fromJson(
-    Map<String, dynamic> json,
-  ) => _$$CreateContractDraftRequestImplFromJson(json);
+  factory _$UploadContractRequestImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UploadContractRequestImplFromJson(json);
 
   @override
   final double contractValue;
@@ -175,14 +167,14 @@ class _$CreateContractDraftRequestImpl implements _CreateContractDraftRequest {
 
   @override
   String toString() {
-    return 'CreateContractDraftRequest(contractValue: $contractValue, installments: $installments, fileUrl: $fileUrl)';
+    return 'UploadContractRequest(contractValue: $contractValue, installments: $installments, fileUrl: $fileUrl)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$CreateContractDraftRequestImpl &&
+            other is _$UploadContractRequestImpl &&
             (identical(other.contractValue, contractValue) ||
                 other.contractValue == contractValue) &&
             const DeepCollectionEquality().equals(
@@ -204,28 +196,28 @@ class _$CreateContractDraftRequestImpl implements _CreateContractDraftRequest {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$CreateContractDraftRequestImplCopyWith<_$CreateContractDraftRequestImpl>
+  _$$UploadContractRequestImplCopyWith<_$UploadContractRequestImpl>
   get copyWith =>
-      __$$CreateContractDraftRequestImplCopyWithImpl<
-        _$CreateContractDraftRequestImpl
-      >(this, _$identity);
+      __$$UploadContractRequestImplCopyWithImpl<_$UploadContractRequestImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CreateContractDraftRequestImplToJson(this);
+    return _$$UploadContractRequestImplToJson(this);
   }
 }
 
-abstract class _CreateContractDraftRequest
-    implements CreateContractDraftRequest {
-  const factory _CreateContractDraftRequest({
+abstract class _UploadContractRequest implements UploadContractRequest {
+  const factory _UploadContractRequest({
     required final double contractValue,
     final List<Installment> installments,
     final String? fileUrl,
-  }) = _$CreateContractDraftRequestImpl;
+  }) = _$UploadContractRequestImpl;
 
-  factory _CreateContractDraftRequest.fromJson(Map<String, dynamic> json) =
-      _$CreateContractDraftRequestImpl.fromJson;
+  factory _UploadContractRequest.fromJson(Map<String, dynamic> json) =
+      _$UploadContractRequestImpl.fromJson;
 
   @override
   double get contractValue;
@@ -235,6 +227,6 @@ abstract class _CreateContractDraftRequest
   String? get fileUrl;
   @override
   @JsonKey(ignore: true)
-  _$$CreateContractDraftRequestImplCopyWith<_$CreateContractDraftRequestImpl>
+  _$$UploadContractRequestImplCopyWith<_$UploadContractRequestImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

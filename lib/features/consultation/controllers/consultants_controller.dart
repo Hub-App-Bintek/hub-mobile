@@ -13,7 +13,7 @@ import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 
-class ConsultationController extends BaseController {
+class ConsultantsController extends BaseController {
   final GetConsultantsUseCase _getConsultantsUseCase;
   final UserStorage _userStorage;
   final String projectId;
@@ -23,7 +23,7 @@ class ConsultationController extends BaseController {
   final bool showCreateCta;
   final bool requireLoginForAction;
 
-  ConsultationController(
+  ConsultantsController(
     this._getConsultantsUseCase,
     this._userStorage,
     this.projectId,
@@ -93,11 +93,13 @@ class ConsultationController extends BaseController {
     isLoading.value = true;
     await handleAsync<ConsultantsResponse>(
       () => _getConsultantsUseCase(
-        lat: _lat,
-        long: _long,
-        page: _page,
-        size: _pageSize,
-        sortBy: selectedSort.value.isNotEmpty ? selectedSort.value : null,
+        GetConsultantsParams(
+          lat: _lat,
+          long: _long,
+          page: _page,
+          size: _pageSize,
+          sortBy: selectedSort.value.isNotEmpty ? selectedSort.value : null,
+        ),
       ),
       onSuccess: (response) {
         final result = response.consultants;
@@ -127,7 +129,7 @@ class ConsultationController extends BaseController {
     if (projectId.isNotEmpty) return projectId;
 
     final args = Get.arguments;
-    if (args is ConsultationArgs && args.projectId.isNotEmpty) {
+    if (args is ConsultantsArgs && args.projectId.isNotEmpty) {
       return args.projectId;
     }
     if (args is Map<String, dynamic>) {

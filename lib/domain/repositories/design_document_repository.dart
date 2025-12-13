@@ -1,12 +1,14 @@
-import 'package:dio/dio.dart';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/design_document/design_document_network_data_source.dart';
-import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
+import 'package:pkp_hub/data/models/response/design_document_approval_response.dart';
 import 'package:pkp_hub/data/models/response/design_document_response.dart';
+import 'package:pkp_hub/data/models/response/design_document_revision_response.dart';
+import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 
 abstract class DesignDocumentRepository {
   Future<Result<UploadDesignDocumentResponse, Failure>> uploadDesignDocuments({
@@ -20,10 +22,17 @@ abstract class DesignDocumentRepository {
     String documentId,
   );
 
-  Future<Result<void, Failure>> approveDesignDocuments(String designDocumentId);
-  Future<Result<void, Failure>> askDesignRevision({
+  Future<Result<DesignDocumentApprovalResponse, Failure>>
+  approveDesignDocuments(
+    String designDocumentId, {
+    String? approvedVersion,
+    String? revisionNotes,
+  });
+
+  Future<Result<DesignDocumentRevisionResponse, Failure>> askDesignRevision({
+    required String consultationId,
     required String designDocumentId,
-    String? notes,
+    required String notes,
   });
 
   Future<Result<List<DesignDocumentResponse>, Failure>>
@@ -34,11 +43,13 @@ abstract class DesignDocumentRepository {
 
   Future<Result<DownloadedFile, Failure>> downloadDesignVersionZip(
     String version,
+    String consultationId,
   );
 }
 
 class DesignDocumentRepositoryImpl implements DesignDocumentRepository {
   final DesignDocumentNetworkDataSource _ds;
+
   DesignDocumentRepositoryImpl(this._ds);
 
   @override
@@ -60,15 +71,23 @@ class DesignDocumentRepositoryImpl implements DesignDocumentRepository {
   ) => _ds.downloadDesignDocument(documentId);
 
   @override
-  Future<Result<void, Failure>> approveDesignDocuments(
-    String designDocumentId,
-  ) => _ds.approveDesignDocuments(designDocumentId);
+  Future<Result<DesignDocumentApprovalResponse, Failure>>
+  approveDesignDocuments(
+    String designDocumentId, {
+    String? approvedVersion,
+    String? revisionNotes,
+  }) => _ds.approveDesignDocuments(
+    designDocumentId,
+    approvedVersion: approvedVersion,
+    revisionNotes: revisionNotes,
+  );
 
   @override
-  Future<Result<void, Failure>> askDesignRevision({
+  Future<Result<DesignDocumentRevisionResponse, Failure>> askDesignRevision({
+    required String consultationId,
     required String designDocumentId,
-    String? notes,
-  }) => _ds.askDesignRevision(designDocumentId, notes: notes);
+    required String notes,
+  }) => _ds.askDesignRevision(consultationId, designDocumentId, notes);
 
   @override
   Future<Result<List<DesignDocumentResponse>, Failure>>
@@ -83,5 +102,6 @@ class DesignDocumentRepositoryImpl implements DesignDocumentRepository {
   @override
   Future<Result<DownloadedFile, Failure>> downloadDesignVersionZip(
     String version,
-  ) => _ds.downloadVersionZip(version);
+    String consultationId,
+  ) => _ds.downloadVersionZip(version, consultationId);
 }

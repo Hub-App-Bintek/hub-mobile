@@ -74,7 +74,7 @@ class PrototypeDesignsController extends BaseController {
           hideLoadingOverlay();
           final projectName = design.name ?? 'Prototype';
           String? saved;
-          if (file.path != null) {
+          if (file.path != null && file.path!.isNotEmpty) {
             final source = File(file.path!);
             if (await source.exists()) {
               try {
@@ -90,25 +90,23 @@ class PrototypeDesignsController extends BaseController {
                 // Clean up temp file
                 source.delete().catchError((e) {
                   Logger().e('Failed to delete temp file: $e');
-                  return null;
+                  return source;
                 });
               }
             }
           }
-          saved ??= await saveToExternalProjectDocuments(
-            projectName: projectName,
-            fileName: file.fileName,
-            bytes: file.bytes,
-            subDirectory: 'Prototype Designs',
-            mimeType: 'application/zip',
-          );
-          if (saved != null && saved.isNotEmpty) {
+          if ((saved == null || saved.isEmpty) && file.bytes.isNotEmpty) {
             saved = await saveToExternalProjectDocuments(
               projectName: projectName,
               fileName: file.fileName,
               bytes: file.bytes,
               subDirectory: 'Prototype Designs',
               mimeType: 'application/zip',
+            );
+          }
+          if (saved == null || saved.isEmpty) {
+            Logger().e(
+              'Gagal menyimpan prototype design untuk $projectName (id: $id)',
             );
           }
           if (saved != null && saved.isNotEmpty) {
@@ -134,6 +132,9 @@ class PrototypeDesignsController extends BaseController {
         },
         onFailure: (failure) {
           hideLoadingOverlay();
+          Logger().e(
+            'Download prototype design gagal (id: $id): ${failure.message}',
+          );
           showError(failure);
         },
       );

@@ -9,6 +9,7 @@ import 'package:pkp_hub/data/models/request/create_project_request.dart';
 import 'package:pkp_hub/data/models/response/create_project_response.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 
+/// Obsolete, remove it later
 abstract class ProjectNetworkDataSource {
   Future<Result<CreateProjectResponse, Failure>> createProject(
     CreateProjectRequest request, {
@@ -20,6 +21,7 @@ abstract class ProjectNetworkDataSource {
   );
 }
 
+/// Obsolete, remove it later
 class ProjectNetworkDataSourceImpl implements ProjectNetworkDataSource {
   final ApiClient _apiClient;
   final ProjectApiService _projectApi;

@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
+import 'package:pkp_hub/data/models/request/approve_design_request.dart';
+import 'package:pkp_hub/data/models/request/design_document_revision_request.dart';
+import 'package:pkp_hub/data/models/response/design_document_approval_response.dart';
+import 'package:pkp_hub/data/models/response/design_document_revision_response.dart';
 import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -22,13 +26,21 @@ abstract class DesignDocumentApiService {
   );
 
   @POST(ApiEndpoints.designDocumentsApprove)
-  Future<void> approveDesignDocuments(
+  Future<DesignDocumentApprovalResponse> approveDesignDocuments(
     @Path('designDocumentId') String designDocumentId,
+    @Body() ApproveDesignRequest body,
   );
 
   @POST(ApiEndpoints.designDocumentsRevisionRequest)
-  Future<void> requestDesignRevision(
-    @Path('designDocumentId') String designDocumentId,
-    @Body() Map<String, dynamic> body,
+  Future<DesignDocumentRevisionResponse> requestDesignRevision(
+    @Path('consultationId') String consultationId,
+    @Body() DesignDocumentRevisionRequest body,
+  );
+
+  @DioResponseType(ResponseType.stream)
+  @GET(ApiEndpoints.designDocumentsVersionDownload)
+  Future<HttpResponse<List<int>>> downloadVersionZip(
+    @Path('version') String version,
+    @Query('consultationId') String consultationId,
   );
 }

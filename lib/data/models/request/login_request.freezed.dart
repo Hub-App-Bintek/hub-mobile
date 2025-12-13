@@ -23,6 +23,7 @@ LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) {
 mixin _$LoginRequest {
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get deviceToken => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +38,7 @@ abstract class $LoginRequestCopyWith<$Res> {
     $Res Function(LoginRequest) then,
   ) = _$LoginRequestCopyWithImpl<$Res, LoginRequest>;
   @useResult
-  $Res call({String email, String password});
+  $Res call({String email, String password, String deviceToken});
 }
 
 /// @nodoc
@@ -52,7 +53,11 @@ class _$LoginRequestCopyWithImpl<$Res, $Val extends LoginRequest>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? email = null, Object? password = null}) {
+  $Res call({
+    Object? email = null,
+    Object? password = null,
+    Object? deviceToken = null,
+  }) {
     return _then(
       _value.copyWith(
             email: null == email
@@ -62,6 +67,10 @@ class _$LoginRequestCopyWithImpl<$Res, $Val extends LoginRequest>
             password: null == password
                 ? _value.password
                 : password // ignore: cast_nullable_to_non_nullable
+                      as String,
+            deviceToken: null == deviceToken
+                ? _value.deviceToken
+                : deviceToken // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -78,7 +87,7 @@ abstract class _$$LoginRequestImplCopyWith<$Res>
   ) = __$$LoginRequestImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String email, String password});
+  $Res call({String email, String password, String deviceToken});
 }
 
 /// @nodoc
@@ -92,7 +101,11 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? email = null, Object? password = null}) {
+  $Res call({
+    Object? email = null,
+    Object? password = null,
+    Object? deviceToken = null,
+  }) {
     return _then(
       _$LoginRequestImpl(
         email: null == email
@@ -103,6 +116,10 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
             ? _value.password
             : password // ignore: cast_nullable_to_non_nullable
                   as String,
+        deviceToken: null == deviceToken
+            ? _value.deviceToken
+            : deviceToken // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -111,7 +128,11 @@ class __$$LoginRequestImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$LoginRequestImpl implements _LoginRequest {
-  const _$LoginRequestImpl({required this.email, required this.password});
+  const _$LoginRequestImpl({
+    required this.email,
+    required this.password,
+    required this.deviceToken,
+  });
 
   factory _$LoginRequestImpl.fromJson(Map<String, dynamic> json) =>
       _$$LoginRequestImplFromJson(json);
@@ -120,10 +141,12 @@ class _$LoginRequestImpl implements _LoginRequest {
   final String email;
   @override
   final String password;
+  @override
+  final String deviceToken;
 
   @override
   String toString() {
-    return 'LoginRequest(email: $email, password: $password)';
+    return 'LoginRequest(email: $email, password: $password, deviceToken: $deviceToken)';
   }
 
   @override
@@ -133,12 +156,14 @@ class _$LoginRequestImpl implements _LoginRequest {
             other is _$LoginRequestImpl &&
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
-                other.password == password));
+                other.password == password) &&
+            (identical(other.deviceToken, deviceToken) ||
+                other.deviceToken == deviceToken));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, email, password);
+  int get hashCode => Object.hash(runtimeType, email, password, deviceToken);
 
   @JsonKey(ignore: true)
   @override
@@ -156,6 +181,7 @@ abstract class _LoginRequest implements LoginRequest {
   const factory _LoginRequest({
     required final String email,
     required final String password,
+    required final String deviceToken,
   }) = _$LoginRequestImpl;
 
   factory _LoginRequest.fromJson(Map<String, dynamic> json) =
@@ -165,6 +191,8 @@ abstract class _LoginRequest implements LoginRequest {
   String get email;
   @override
   String get password;
+  @override
+  String get deviceToken;
   @override
   @JsonKey(ignore: true)
   _$$LoginRequestImplCopyWith<_$LoginRequestImpl> get copyWith =>

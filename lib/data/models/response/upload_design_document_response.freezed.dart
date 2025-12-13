@@ -25,14 +25,14 @@ UploadDesignDocumentResponse _$UploadDesignDocumentResponseFromJson(
 mixin _$UploadDesignDocumentResponse {
   String? get id => throw _privateConstructorUsedError;
   String? get consultationId => throw _privateConstructorUsedError;
-  String? get consultantId => throw _privateConstructorUsedError;
+  int? get consultantId => throw _privateConstructorUsedError;
   String? get fileDedName => throw _privateConstructorUsedError;
   String? get fileDedUrl => throw _privateConstructorUsedError;
   String? get fileRabName => throw _privateConstructorUsedError;
   String? get fileRabUrl => throw _privateConstructorUsedError;
   String? get fileBoqName => throw _privateConstructorUsedError;
   String? get fileBoqUrl => throw _privateConstructorUsedError;
-  String? get version => throw _privateConstructorUsedError;
+  int? get version => throw _privateConstructorUsedError;
   String? get status => throw _privateConstructorUsedError;
   String? get createdAt => throw _privateConstructorUsedError;
   String? get updatedAt => throw _privateConstructorUsedError;
@@ -57,14 +57,14 @@ abstract class $UploadDesignDocumentResponseCopyWith<$Res> {
   $Res call({
     String? id,
     String? consultationId,
-    String? consultantId,
+    int? consultantId,
     String? fileDedName,
     String? fileDedUrl,
     String? fileRabName,
     String? fileRabUrl,
     String? fileBoqName,
     String? fileBoqUrl,
-    String? version,
+    int? version,
     String? status,
     String? createdAt,
     String? updatedAt,
@@ -114,7 +114,7 @@ class _$UploadDesignDocumentResponseCopyWithImpl<
             consultantId: freezed == consultantId
                 ? _value.consultantId
                 : consultantId // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as int?,
             fileDedName: freezed == fileDedName
                 ? _value.fileDedName
                 : fileDedName // ignore: cast_nullable_to_non_nullable
@@ -142,7 +142,7 @@ class _$UploadDesignDocumentResponseCopyWithImpl<
             version: freezed == version
                 ? _value.version
                 : version // ignore: cast_nullable_to_non_nullable
-                      as String?,
+                      as int?,
             status: freezed == status
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
@@ -173,14 +173,14 @@ abstract class _$$UploadDesignDocumentImplCopyWith<$Res>
   $Res call({
     String? id,
     String? consultationId,
-    String? consultantId,
+    int? consultantId,
     String? fileDedName,
     String? fileDedUrl,
     String? fileRabName,
     String? fileRabUrl,
     String? fileBoqName,
     String? fileBoqUrl,
-    String? version,
+    int? version,
     String? status,
     String? createdAt,
     String? updatedAt,
@@ -230,7 +230,7 @@ class __$$UploadDesignDocumentImplCopyWithImpl<$Res>
         consultantId: freezed == consultantId
             ? _value.consultantId
             : consultantId // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as int?,
         fileDedName: freezed == fileDedName
             ? _value.fileDedName
             : fileDedName // ignore: cast_nullable_to_non_nullable
@@ -258,7 +258,7 @@ class __$$UploadDesignDocumentImplCopyWithImpl<$Res>
         version: freezed == version
             ? _value.version
             : version // ignore: cast_nullable_to_non_nullable
-                  as String?,
+                  as int?,
         status: freezed == status
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
@@ -303,7 +303,7 @@ class _$UploadDesignDocumentImpl implements _UploadDesignDocument {
   @override
   final String? consultationId;
   @override
-  final String? consultantId;
+  final int? consultantId;
   @override
   final String? fileDedName;
   @override
@@ -317,7 +317,7 @@ class _$UploadDesignDocumentImpl implements _UploadDesignDocument {
   @override
   final String? fileBoqUrl;
   @override
-  final String? version;
+  final int? version;
   @override
   final String? status;
   @override
@@ -399,14 +399,14 @@ abstract class _UploadDesignDocument implements UploadDesignDocumentResponse {
   const factory _UploadDesignDocument({
     final String? id,
     final String? consultationId,
-    final String? consultantId,
+    final int? consultantId,
     final String? fileDedName,
     final String? fileDedUrl,
     final String? fileRabName,
     final String? fileRabUrl,
     final String? fileBoqName,
     final String? fileBoqUrl,
-    final String? version,
+    final int? version,
     final String? status,
     final String? createdAt,
     final String? updatedAt,
@@ -420,7 +420,7 @@ abstract class _UploadDesignDocument implements UploadDesignDocumentResponse {
   @override
   String? get consultationId;
   @override
-  String? get consultantId;
+  int? get consultantId;
   @override
   String? get fileDedName;
   @override
@@ -434,7 +434,7 @@ abstract class _UploadDesignDocument implements UploadDesignDocumentResponse {
   @override
   String? get fileBoqUrl;
   @override
-  String? get version;
+  int? get version;
   @override
   String? get status;
   @override

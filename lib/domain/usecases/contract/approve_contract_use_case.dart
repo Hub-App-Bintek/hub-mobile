@@ -25,10 +25,10 @@ class ApproveContractParams {
   ApproveContractParams({
     required this.contractId,
     required this.approvedDocumentVersionId,
-    this.revisionNotes,
+    required this.revisionNotes,
   });
 
   final String contractId;
   final String approvedDocumentVersionId;
-  final String? revisionNotes;
+  final String revisionNotes;
 }

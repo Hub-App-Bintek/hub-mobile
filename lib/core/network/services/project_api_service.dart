@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 part 'project_api_service.g.dart';
 
+/// Obsolete, remove it later
 @RestApi()
 abstract class ProjectApiService {
   factory ProjectApiService(Dio dio, {String? baseUrl}) = _ProjectApiService;

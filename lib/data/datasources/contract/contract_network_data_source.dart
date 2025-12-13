@@ -1,18 +1,20 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
+import 'package:pkp_hub/core/network/download_helper.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
-import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
+import 'package:pkp_hub/data/models/request/create_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/contract_version_response.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_param.dart';
-import 'package:retrofit/dio.dart';
 
 abstract class ContractNetworkDataSource {
   Future<Result<Contract, Failure>> getContract(String consultationId);
@@ -49,9 +51,9 @@ abstract class ContractNetworkDataSource {
     UploadRevisedContractParam param,
   );
 
-  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+  Future<Result<DownloadedFile, Failure>> generateDraft({
     required String consultationId,
-    required GenerateContractDraftRequest request,
+    required UploadContractRequest request,
   });
 }
 
@@ -200,6 +202,7 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
     try {
       final requestJson = jsonEncode(param.request.toJson());
       final response = await _contractApi.uploadRevisedContract(
+        param.consultationId,
         requestJson,
         param.file,
       );
@@ -214,22 +217,22 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
   }
 
   @override
-  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+  Future<Result<DownloadedFile, Failure>> generateDraft({
     required String consultationId,
-    required GenerateContractDraftRequest request,
+    required UploadContractRequest request,
   }) async {
-    try {
-      final res = await _contractApi.generateDraft(
-        consultationId,
-        request.toJson(),
-      );
-      return Success(res);
-    } on DioException catch (e) {
-      return Error(_apiClient.toFailure(e));
-    } catch (e) {
-      return Error(
-        ServerFailure(message: 'Failed to generate contract draft: $e'),
-      );
-    }
+    final url = ApiEndpoints.contractGenerateDraft.replaceFirst(
+      '{consultationId}',
+      consultationId,
+    );
+
+    return downloadToTempFile(
+      apiClient: _apiClient,
+      url: url,
+      data: request.toJson(),
+      prefix: 'contract-draft',
+      fallbackFileName: 'contract-draft.docx',
+      options: Options(method: 'POST', responseType: ResponseType.stream),
+    );
   }
 }

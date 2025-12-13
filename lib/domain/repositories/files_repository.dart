@@ -1,10 +1,10 @@
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart';
-import 'package:retrofit/dio.dart';
 
 abstract class FilesRepository {
-  Future<Result<HttpResponse<List<int>>, Failure>> downloadFile(String fileId);
+  Future<Result<DownloadedFile, Failure>> downloadFile(String fileId);
 }
 
 class FilesRepositoryImpl implements FilesRepository {
@@ -13,7 +13,6 @@ class FilesRepositoryImpl implements FilesRepository {
   FilesRepositoryImpl(this._networkDataSource);
 
   @override
-  Future<Result<HttpResponse<List<int>>, Failure>> downloadFile(
-    String fileId,
-  ) => _networkDataSource.downloadFile(fileId);
+  Future<Result<DownloadedFile, Failure>> downloadFile(String fileId) =>
+      _networkDataSource.downloadFile(fileId);
 }

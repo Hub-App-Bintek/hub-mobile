@@ -616,7 +616,16 @@ class LocationDetailsController extends BaseController {
   }
 
   void _navigateToConsultants(String projectId) {
-    navigateOff(AppRoutes.consultants, arguments: {'projectId': projectId});
+    final coordinates = selectedLocation.value;
+    navigateOff(
+      AppRoutes.consultants,
+      arguments: ConsultantsArgs(
+        projectId: projectId,
+        lat: coordinates?.latitude ?? 0.0,
+        long: coordinates?.longitude ?? 0.0,
+        type: selectedProjectType.value?.name ?? consultation.name,
+      ),
+    );
   }
 
   Future<void> _createConsultationForProject(String projectId) async {
