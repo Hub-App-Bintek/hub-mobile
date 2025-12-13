@@ -13,7 +13,6 @@ import 'package:pkp_hub/core/network/services/permit_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
-import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
@@ -134,10 +133,7 @@ class DataSourceInjection {
 
     // Files network datasource (uses ApiClient and FilesApiService)
     Get.lazyPut<FilesNetworkDataSource>(
-      () => FilesNetworkDataSourceImpl(
-        Get.find<ApiClient>(),
-        Get.find<FilesApiService>(),
-      ),
+      () => FilesNetworkDataSourceImpl(Get.find<ApiClient>()),
       fenix: true,
     );
 

@@ -1,8 +1,15 @@
-class ChatSendMessageRequest {
-  ChatSendMessageRequest({required this.content, this.type = 'text'});
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String content;
-  final String type;
+part 'chat_send_message_request.freezed.dart';
+part 'chat_send_message_request.g.dart';
 
-  Map<String, dynamic> toJson() => {'content': content, 'type': type};
+@freezed
+class ChatSendMessageRequest with _$ChatSendMessageRequest {
+  const factory ChatSendMessageRequest({
+    required String content,
+    @Default('text') String type,
+  }) = _ChatSendMessageRequest;
+
+  factory ChatSendMessageRequest.fromJson(Map<String, dynamic> json) =>
+      _$ChatSendMessageRequestFromJson(json);
 }

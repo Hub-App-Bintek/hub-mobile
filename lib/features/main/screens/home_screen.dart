@@ -264,18 +264,6 @@ class HomeScreen extends GetView<HomeController> {
     return role != null && role != UserRole.unknown;
   }
 
-  Widget _buildRoleSpecificSection() {
-    return Obx(() {
-      final role = controller.userRole.value;
-
-      if (role == UserRole.consultant) {
-        return const SizedBox.shrink();
-      }
-
-      return const SizedBox.shrink();
-    });
-  }
-
   Widget _buildFeatureGrid() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),

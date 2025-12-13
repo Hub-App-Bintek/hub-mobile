@@ -83,12 +83,15 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
   }
 
   @override
-  Future<void> approveDesignDocuments(String designDocumentId) async {
+  Future<DesignDocumentApprovalResponse> approveDesignDocuments(
+    String designDocumentId,
+    ApproveDesignRequest body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<void>(
+    final _data = body;
+    final _options = _setStreamType<DesignDocumentApprovalResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -98,30 +101,83 @@ class _DesignDocumentApiService implements DesignDocumentApiService {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DesignDocumentApprovalResponse _value;
+    try {
+      _value = DesignDocumentApprovalResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override
-  Future<void> requestDesignRevision(
-    String designDocumentId,
-    Map<String, dynamic> body,
+  Future<DesignDocumentRevisionResponse> requestDesignRevision(
+    String consultationId,
+    DesignDocumentRevisionRequest body,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(body);
-    final _options = _setStreamType<void>(
+    final _data = body;
+    final _options = _setStreamType<DesignDocumentRevisionResponse>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/design-documents/${designDocumentId}/revision-request',
+            '/api/design-documents/${consultationId}/revision-request',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late DesignDocumentRevisionResponse _value;
+    try {
+      _value = DesignDocumentRevisionResponse.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<HttpResponse<List<int>>> downloadVersionZip(
+    String version,
+    String consultationId,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'consultationId': consultationId,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<List<int>>>(
+      Options(
+            method: 'GET',
+            headers: _headers,
+            extra: _extra,
+            responseType: ResponseType.stream,
+          )
+          .compose(
+            _dio.options,
+            '/api/design-documents/versions/${version}/download',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<int> _value;
+    try {
+      _value = _result.data!.cast<int>();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

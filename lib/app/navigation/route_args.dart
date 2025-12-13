@@ -51,8 +51,8 @@ class ConsultantDetailsArgs {
   final bool requireLoginForAction;
 }
 
-class ConsultationArgs {
-  const ConsultationArgs({
+class ConsultantsArgs {
+  const ConsultantsArgs({
     required this.projectId,
     this.lat = 0.0,
     this.long = 0.0,

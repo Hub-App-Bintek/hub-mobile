@@ -13,6 +13,7 @@ import 'package:pkp_hub/domain/usecases/contract/get_contract_versions_use_case.
 import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
@@ -40,6 +41,10 @@ class ConsultationDetailsBinding extends Bindings {
     );
     Get.lazyPut<CreateContractDraftUseCase>(
       () => CreateContractDraftUseCase(Get.find<ContractRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut<GenerateContractDraftUseCase>(
+      () => GenerateContractDraftUseCase(Get.find<ContractRepository>()),
       fenix: true,
     );
     Get.lazyPut<UploadRevisedContractUseCase>(
@@ -146,6 +151,7 @@ class ConsultationDetailsBinding extends Bindings {
         Get.find<GetContractVersionsUseCase>(),
         Get.find<CreateContractDraftUseCase>(),
         Get.find<UploadRevisedContractUseCase>(),
+        Get.find<GenerateContractDraftUseCase>(),
         Get.find<ApproveContractUseCase>(),
         Get.find<AskContractRevisionUseCase>(),
         Get.find<SignContractUseCase>(),

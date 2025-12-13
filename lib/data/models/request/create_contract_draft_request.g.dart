@@ -6,9 +6,9 @@ part of 'create_contract_draft_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$CreateContractDraftRequestImpl _$$CreateContractDraftRequestImplFromJson(
+_$UploadContractRequestImpl _$$UploadContractRequestImplFromJson(
   Map<String, dynamic> json,
-) => _$CreateContractDraftRequestImpl(
+) => _$UploadContractRequestImpl(
   contractValue: (json['contractValue'] as num).toDouble(),
   installments:
       (json['installments'] as List<dynamic>?)
@@ -18,8 +18,8 @@ _$CreateContractDraftRequestImpl _$$CreateContractDraftRequestImplFromJson(
   fileUrl: json['fileUrl'] as String?,
 );
 
-Map<String, dynamic> _$$CreateContractDraftRequestImplToJson(
-  _$CreateContractDraftRequestImpl instance,
+Map<String, dynamic> _$$UploadContractRequestImplToJson(
+  _$UploadContractRequestImpl instance,
 ) => <String, dynamic>{
   'contractValue': instance.contractValue,
   'installments': instance.installments,

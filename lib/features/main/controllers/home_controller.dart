@@ -211,19 +211,16 @@ class HomeController extends BaseController {
   }
 
   void onSelectConsultation(Project project) {
-    final status = (project.consultationInfo?.consultationStatus ?? '')
-        .toUpperCase();
-    final isConsultant = userRole.value == UserRole.consultant;
-    final isWaitingConfirmation = status == 'MENUNGGU_KONFIRMASI_KONSULTAN';
-    final isActive = status == 'AKTIF';
+    final status = project.projectStatus?.toUpperCase();
+    final isWaitingConfirmation = status == 'PENDING';
+    final isActive = status == 'ACTIVE';
 
-    // Consultants should always land on consultation details, regardless of status
-    if (isConsultant) {
+    if (isWaitingConfirmation) {
       navigateTo(
-        AppRoutes.consultationDetails,
+        AppRoutes.consultationConfirmation,
         arguments: ConsultationDetailsArgs(project: project),
       );
-    } else if (isActive || isWaitingConfirmation) {
+    } else if (isActive) {
       navigateTo(
         AppRoutes.consultationDetails,
         arguments: ConsultationDetailsArgs(project: project),

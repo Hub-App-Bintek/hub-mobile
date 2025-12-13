@@ -1,14 +1,18 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
+import 'package:pkp_hub/core/network/download_helper.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
-import 'package:pkp_hub/core/constants/api_endpoints.dart';
+import 'package:pkp_hub/data/models/request/approve_design_request.dart';
+import 'package:pkp_hub/data/models/request/design_document_revision_request.dart';
+import 'package:pkp_hub/data/models/response/design_document_approval_response.dart';
 import 'package:pkp_hub/data/models/response/design_document_response.dart';
-import 'package:pkp_hub/core/models/downloaded_file.dart';
+import 'package:pkp_hub/data/models/response/design_document_revision_response.dart';
 import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 
 abstract class DesignDocumentNetworkDataSource {
@@ -23,11 +27,18 @@ abstract class DesignDocumentNetworkDataSource {
     String documentId,
   );
 
-  Future<Result<void, Failure>> approveDesignDocuments(String designDocumentId);
-  Future<Result<void, Failure>> askDesignRevision(
+  Future<Result<DesignDocumentApprovalResponse, Failure>>
+  approveDesignDocuments(
     String designDocumentId, {
-    String? notes,
+    String? approvedVersion,
+    String? revisionNotes,
   });
+
+  Future<Result<DesignDocumentRevisionResponse, Failure>> askDesignRevision(
+    String consultationId,
+    String designDocumentId,
+    String notes,
+  );
 
   Future<Result<List<DesignDocumentResponse>, Failure>>
   getDesignDocumentVersions({
@@ -35,7 +46,10 @@ abstract class DesignDocumentNetworkDataSource {
     String? documentType,
   });
 
-  Future<Result<DownloadedFile, Failure>> downloadVersionZip(String version);
+  Future<Result<DownloadedFile, Failure>> downloadVersionZip(
+    String version,
+    String consultationId,
+  );
 }
 
 class DesignDocumentNetworkDataSourceImpl
@@ -114,12 +128,22 @@ class DesignDocumentNetworkDataSourceImpl
   }
 
   @override
-  Future<Result<void, Failure>> approveDesignDocuments(
-    String designDocumentId,
-  ) async {
+  Future<Result<DesignDocumentApprovalResponse, Failure>>
+  approveDesignDocuments(
+    String designDocumentId, {
+    String? approvedVersion,
+    String? revisionNotes,
+  }) async {
     try {
-      await _designDocumentApi.approveDesignDocuments(designDocumentId);
-      return const Success(null);
+      final request = ApproveDesignRequest(
+        approvedVersion: approvedVersion,
+        revisionNotes: revisionNotes,
+      );
+      final res = await _designDocumentApi.approveDesignDocuments(
+        designDocumentId,
+        request,
+      );
+      return Success(res);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -130,16 +154,21 @@ class DesignDocumentNetworkDataSourceImpl
   }
 
   @override
-  Future<Result<void, Failure>> askDesignRevision(
-    String designDocumentId, {
+  Future<Result<DesignDocumentRevisionResponse, Failure>> askDesignRevision(
+    String consultationId,
+    String designDocumentId,
     String? notes,
-  }) async {
+  ) async {
     try {
-      final payload = notes == null
-          ? <String, dynamic>{}
-          : {'notes': notes, 'designDocumentId': designDocumentId};
-      await _designDocumentApi.requestDesignRevision(designDocumentId, payload);
-      return const Success(null);
+      final req = DesignDocumentRevisionRequest(
+        designDocumentId: designDocumentId,
+        notes: notes ?? '',
+      );
+      final res = await _designDocumentApi.requestDesignRevision(
+        consultationId,
+        req,
+      );
+      return Success(res);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
@@ -182,36 +211,18 @@ class DesignDocumentNetworkDataSourceImpl
   @override
   Future<Result<DownloadedFile, Failure>> downloadVersionZip(
     String version,
-  ) async {
-    try {
-      final url = ApiEndpoints.designDocumentsVersionDownload.replaceFirst(
+    String consultationId,
+  ) {
+    return downloadToTempFile(
+      apiClient: _apiClient,
+      prefix: 'design-doc',
+      url: ApiEndpoints.designDocumentsVersionDownload.replaceFirst(
         '{version}',
         version,
-      );
-      final res = await _apiClient.dio.get<List<int>>(
-        url,
-        options: Options(responseType: ResponseType.bytes),
-      );
-      final cd = res.headers.map['content-disposition']?.first;
-      String fileName = 'design-$version.zip';
-      if (cd != null) {
-        final match = RegExp(
-          r'''filename\*=UTF-8'[^']*'([^;]+)|filename="?([^";]+)"?''',
-        ).firstMatch(cd);
-        final fn1 = match?.group(1);
-        final fn2 = match?.group(2);
-        fileName = (fn1 ?? fn2 ?? fileName).trim();
-      }
-      return Success(
-        DownloadedFile(
-          fileName: fileName,
-          bytes: Uint8List.fromList(res.data ?? []),
-        ),
-      );
-    } on DioException catch (e) {
-      return Error(_apiClient.toFailure(e));
-    } catch (e) {
-      return Error(ServerFailure(message: 'Failed to download desain: $e'));
-    }
+      ),
+      fallbackFileName: 'design-$version.zip',
+      queryParameters: {'consultationId': consultationId},
+      options: Options(responseType: ResponseType.stream),
+    );
   }
 }

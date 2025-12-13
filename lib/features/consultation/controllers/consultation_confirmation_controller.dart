@@ -119,7 +119,7 @@ class ConsultationConfirmationController extends BaseController {
 
     await handleAsync<Consultation>(
       () => _acceptConsultationUseCase(
-        AcceptConsultationParams(
+        AcceptConsultationPayload(
           consultationId: consultationId,
           request: request,
         ),

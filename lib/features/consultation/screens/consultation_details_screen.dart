@@ -9,11 +9,13 @@ import 'package:pkp_hub/app/widgets/empty_placeholder.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
-import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_details_controller.dart';
+import 'package:pkp_hub/features/consultation/screens/sheets/choose_contract_bottom_sheet.dart';
+import 'package:pkp_hub/features/consultation/screens/sheets/choose_design_bottom_sheet.dart';
+import 'package:pkp_hub/features/consultation/screens/sheets/choose_payment_terms_sheet.dart';
 import 'package:pkp_hub/features/main/widgets/project_item.dart';
 
 class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
@@ -84,7 +86,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
           );
         }),
       ),
-      bottomNavigationBar: SafeArea(child: _buildBottomBar(context)),
+      bottomNavigationBar: SafeArea(child: _buildBottomAction(context)),
     );
   }
 
@@ -164,7 +166,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   ) {
     final initial = consultantName.isNotEmpty
         ? consultantName.characters.first.toUpperCase()
-        : 'I';
+        : 'C';
     final avatarUrl = controller.consultation.value?.consultantId?.toString();
 
     return Obx(
@@ -325,20 +327,20 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   ) {
     return ProjectItem(
       title: contract.title,
-      content: consultantName,
-      date: contract.dateLabel,
+      content: 'Diupload ${contract.dateLabel}',
+      date: contract.version,
       status: _mapContractStatus(contract.status),
       onDownloadTap: () => controller.downloadContract(contract),
     );
   }
 
-  Widget _buildDesignCard(ConsultationDesignItem item) {
+  Widget _buildDesignCard(ConsultationDesignItem design) {
     return ProjectItem(
-      title: item.title,
-      content: 'Diupload ${item.dateLabel}',
-      date: item.dateLabel,
-      status: _mapDesignStatus(item.status),
-      onDownloadTap: () => controller.downloadDesign(item),
+      title: design.title,
+      content: 'Diupload ${design.dateLabel}',
+      date: 'v${design.version}',
+      status: _mapDesignStatus(design.status),
+      onDownloadTap: () => controller.downloadDesign(design),
     );
   }
 
@@ -423,9 +425,9 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
 
   ProjectItemStatus _mapContractStatus(ContractStatus status) {
     switch (status) {
-      case ContractStatus.requestForApproval:
+      case ContractStatus.needApproval:
         return ProjectItemStatus.awaitingApproval;
-      case ContractStatus.revisionRequested:
+      case ContractStatus.needRevision:
         return ProjectItemStatus.revisionRequired;
       case ContractStatus.approved:
       case ContractStatus.homeownerSigned:
@@ -449,421 +451,197 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     }
   }
 
-  void _showUploadContractSheet() {
+  void _showChooseContractSheet() {
     controller.showBottomSheet(
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const PkpAppBar(
-                title: 'Termin Pembayaran',
-                leading: Icons.close_rounded,
-                backgroundColor: AppColors.white,
-                titleTextColor: AppColors.neutralDarkest,
-                leadingColor: AppColors.neutralDarkest,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: PkpTextFormField(
-                  controller: controller.contractController,
-                  labelText: 'Dokumen Kontrak',
-                  hintText: 'Pilih Dokumen Kontrak',
-                  type: PkpTextFormFieldType.filePicker,
-                  customPickFile: controller.pickContractFileCustom,
-                  allowedFileLabel: 'Pilih File (Maks 5MB)',
-                  filePickerType: PkpFilePickerType.pdf,
-                  allowedFileExtensions: const ['pdf'],
-                ),
-              ),
-              Obx(
-                () => PkpBottomActions(
-                  primaryText: 'Submit',
-                  primaryEnabled:
-                      (controller.selectedContractPath.value?.isNotEmpty ??
-                          false) &&
-                      !controller.isUploadingContract.value,
-                  primaryLoading: controller.isUploadingContract.value,
-                  onPrimaryPressed: () {
-                    if (!controller.canSubmitContractUpload()) return;
-                    Get.back();
-                    _showPaymentTermsSheet();
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+      ChooseContractBottomSheet(
+        contractController: controller.contractController,
+        isUploading: controller.isUploadingContract,
+        selectedContractPath: controller.selectedContractPath,
+        onPickFile: controller.pickContractFileCustom,
+        onSubmit: () async {
+          if (!controller.canSubmitContractUpload()) return;
+          if (controller.isPaidConsultation) {
+            Get.back();
+            _showPaymentTermsSheet(onSubmit: controller.submitContractDraft);
+          } else {
+            await controller.submitContractDraft();
+          }
+        },
       ),
     );
   }
 
-  void _showPaymentTermsSheet() {
+  void _showPaymentTermsSheet({required VoidCallback onSubmit}) {
     controller.showBottomSheet(
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const PkpAppBar(
-                title: 'Termin Pembayaran',
-                leading: Icons.close_rounded,
-                backgroundColor: AppColors.white,
-                titleTextColor: AppColors.neutralDarkest,
-                leadingColor: AppColors.neutralDarkest,
-              ),
-              Flexible(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      PkpTextFormField(
-                        controller: controller.contractValueController,
-                        labelText: 'Nilai Kontrak',
-                        hintText: 'Masukkan nilai kontrak',
-                        type: PkpTextFormFieldType.currency,
-                        borderRadius: 12,
-                      ),
-                      const SizedBox(height: 16),
-                      _buildPaymentTermSection(
-                        title: 'Termin 1',
-                        amountController: controller.termAmountControllers[0],
-                        dueDateController: controller.termDueDateControllers[0],
-                        onPickDate: () => controller.selectTermDueDate(0),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildPaymentTermSection(
-                        title: 'Termin 2',
-                        amountController: controller.termAmountControllers[1],
-                        dueDateController: controller.termDueDateControllers[1],
-                        onPickDate: () => controller.selectTermDueDate(1),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildPaymentTermSection(
-                        title: 'Termin 3',
-                        amountController: controller.termAmountControllers[2],
-                        dueDateController: controller.termDueDateControllers[2],
-                        onPickDate: () => controller.selectTermDueDate(2),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
-                ),
-              ),
-              Obx(
-                () => PkpBottomActions(
-                  primaryText: 'Submit',
-                  primaryLoading: controller.isUploadingContract.value,
-                  primaryEnabled:
-                      !controller.isUploadingContract.value &&
-                      controller.isPaymentTermsValid.value,
-                  onPrimaryPressed: () async {
-                    await controller.submitPaymentTerms();
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+      ChoosePaymentTermsSheet(
+        contractValueController: controller.contractValueController,
+        termAmountControllers: controller.termAmountControllers,
+        termDueDateControllers: controller.termDueDateControllers,
+        isPaymentTermsValid: controller.isPaymentTermsValid,
+        loadingFlag: controller.isUploadingContract,
+        onPickDate: controller.selectTermDueDate,
+        onSubmit: onSubmit,
       ),
     );
   }
 
-  void _showUploadDraftSheet(BuildContext context) {
+  void _showChooseDesignSheet() {
     controller.showBottomSheet(
-      SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const PkpAppBar(
-                title: 'Upload Draft Desain',
-                leading: Icons.close_rounded,
-                backgroundColor: AppColors.white,
-                titleTextColor: AppColors.neutralDarkest,
-                leadingColor: AppColors.neutralDarkest,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDraftUploadField(
-                      label: 'Dokumen DED',
-                      controller: controller.draftFileControllers[0],
-                      onPick: () => controller.pickDraftFileCustom(0),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildDraftUploadField(
-                      label: 'Dokumen RAB',
-                      controller: controller.draftFileControllers[1],
-                      onPick: () => controller.pickDraftFileCustom(1),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildDraftUploadField(
-                      label: 'Dokumen BOQ',
-                      controller: controller.draftFileControllers[2],
-                      onPick: () => controller.pickDraftFileCustom(2),
-                    ),
-                    const SizedBox(height: 12),
-                    PkpTextFormField(
-                      controller: controller.draftNotesController,
-                      labelText: 'Catatan',
-                      hintText: 'Tuliskan catatan untuk konsultan',
-                      type: PkpTextFormFieldType.multiline,
-                      borderRadius: 12,
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                ),
-              ),
-              Obx(
-                () => PkpBottomActions(
-                  primaryText: 'Submit',
-                  primaryLoading: controller.isUploadingDesign.value,
-                  primaryEnabled: !controller.isUploadingDesign.value,
-                  onPrimaryPressed: controller.isUploadingDesign.value
-                      ? () {}
-                      : () async {
-                          await controller.submitDraftDesigns();
-                          Get.back();
-                        },
-                ),
-              ),
-            ],
-          ),
-        ),
+      ChooseDesignBottomSheet(
+        draftFileControllers: controller.designFileControllers,
+        isFormValid: controller.isDesignFormValid,
+        onPickFile: (idx) => controller.pickDesignFile(idx),
+        loading: controller.isUploadingDesign,
+        onSubmit: controller.submitDesignsDraft,
       ),
     );
   }
 
-  Widget _buildDraftUploadField({
-    required String label,
-    required TextEditingController controller,
-    required Future<String?> Function() onPick,
-  }) {
-    return PkpTextFormField(
-      controller: controller,
-      labelText: label,
-      hintText: 'Pilih Dokumen (PDF)',
-      type: PkpTextFormFieldType.filePicker,
-      filePickerType: PkpFilePickerType.pdf,
-      allowedFileExtensions: const ['pdf'],
-      allowedFileLabel: 'PDF (Maks 5MB)',
-      customPickFile: onPick,
-    );
-  }
-
-  Widget _buildPaymentTermSection({
-    required String title,
-    required TextEditingController amountController,
-    required TextEditingController dueDateController,
-    required VoidCallback onPickDate,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.h4.copyWith(color: AppColors.neutralDarkest),
-        ),
-        const SizedBox(height: 8),
-        PkpTextFormField(
-          controller: amountController,
-          labelText: 'Nominal',
-          hintText: '123.456.789',
-          type: PkpTextFormFieldType.currency,
-          borderRadius: 12,
-        ),
-        const SizedBox(height: 12),
-        GestureDetector(
-          onTap: onPickDate,
-          child: AbsorbPointer(
-            child: PkpTextFormField(
-              controller: dueDateController,
-              labelText: 'Tanggal Jatuh Tempo',
-              hintText: 'Pilih Tanggal',
-              type: PkpTextFormFieldType.datetime,
-              borderRadius: 12,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottomBar(BuildContext context) {
+  Widget _buildBottomAction(BuildContext context) {
     return Obx(() {
       final isConsultant = controller.userRole.value == UserRole.consultant;
       final step = controller.selectedStep.value;
-      final hasContracts = controller.contracts.isNotEmpty;
-      final lastContract = hasContracts ? controller.contracts.last : null;
-      final lastStatus = lastContract?.status;
-      final isAwaitingApproval =
-          lastStatus == ContractStatus.requestForApproval;
-      final isApproved = lastStatus == ContractStatus.approved;
-      final homeownerSigned = lastStatus == ContractStatus.homeownerSigned;
-      final consultantSigned = lastStatus == ContractStatus.consultantSigned;
-      final isPendingSign = isApproved || homeownerSigned || consultantSigned;
-      final isSigned = lastStatus == ContractStatus.signed;
-      final isConsultantAwaitingApproval =
-          isConsultant && lastContract != null && isAwaitingApproval;
-      final hasPendingContractApproval =
-          step == ConsultationDetailStep.contract &&
-          isAwaitingApproval &&
-          !isConsultant;
-      final shouldConsultantSign =
-          step == ConsultationDetailStep.contract &&
-          (isApproved || homeownerSigned) &&
-          isConsultant;
-      final shouldHomeOwnerSign =
-          step == ConsultationDetailStep.contract &&
-          (isApproved || consultantSigned) &&
-          !isConsultant;
-      final hasPendingContractSign =
-          shouldConsultantSign || shouldHomeOwnerSign;
-      final hasApprovedContract =
-          step == ConsultationDetailStep.contract &&
-          lastContract != null &&
-          (isPendingSign || isSigned);
-      final isApprovedSigned = isSigned;
-      final revisionAttemptsContract = controller.revisionAttemptsUsed;
-      final revisionAttemptsDesign = controller.designRevisionAttemptsUsed;
-      final canRequestRevision =
-          revisionAttemptsContract <
-          ConsultationDetailsController.maxRevisionAttempts;
-      final canRequestDesignRevision =
-          revisionAttemptsDesign <
-          ConsultationDetailsController.maxRevisionAttempts;
-      final canCancel =
-          step == ConsultationDetailStep.contract &&
-          !hasApprovedContract &&
-          !isConsultant;
-      final lastDraft = controller.draftDesigns.isNotEmpty
-          ? controller.draftDesigns.last
-          : null;
-      final needsDraftUpload =
-          controller.draftDesigns.isEmpty ||
-          lastDraft?.status == DesignStatus.needsRevision;
-      final showDraftUploadCta =
-          isApprovedSigned &&
-          needsDraftUpload &&
-          step == ConsultationDetailStep.contract &&
-          isConsultant;
-      final showDraftUploadOnDraftTab =
-          isConsultant &&
-          isApprovedSigned &&
-          needsDraftUpload &&
-          step == ConsultationDetailStep.draftDesign;
-      final isDraftAwaitingApproval =
-          step == ConsultationDetailStep.draftDesign &&
-          lastDraft?.status == DesignStatus.awaitingApproval &&
-          !isConsultant;
-      final showHomeOwnerDraftApproval =
-          !isConsultant &&
-          step == ConsultationDetailStep.draftDesign &&
-          lastDraft?.status == DesignStatus.awaitingApproval;
-
-      if (step == ConsultationDetailStep.contract &&
-          hasContracts &&
-          lastStatus == ContractStatus.unknown) {
-        return const SizedBox.shrink();
+      if (step == ConsultationDetailStep.contract) {
+        return _buildContractBottomActions(isConsultant);
       }
-
-      if (isConsultantAwaitingApproval) {
-        return const SizedBox.shrink();
-      }
-
-      if (isApprovedSigned && step == ConsultationDetailStep.contract) {
-        return const SizedBox.shrink();
-      }
-
-      if (hasPendingContractSign) {
-        return PkpBottomActions(
-          primaryText: 'Tandatangani Kontrak',
-          onPrimaryPressed: controller.signLatestContract,
-        );
-      }
-
-      if (showDraftUploadCta) {
-        return PkpBottomActions(
-          primaryText: 'Unggah Draft Desain',
-          onPrimaryPressed: () {
-            final ctx = Get.context;
-            if (ctx != null) _showUploadDraftSheet(ctx);
-          },
-        );
-      }
-
       if (step == ConsultationDetailStep.draftDesign) {
-        if (showDraftUploadOnDraftTab) {
-          return PkpBottomActions(
-            primaryText: 'Unggah Draft Desain',
-            onPrimaryPressed: () {
-              final ctx = Get.context;
-              if (ctx != null) _showUploadDraftSheet(ctx);
-            },
-          );
-        }
-        if (isDraftAwaitingApproval) {
-          return _buildApprovalActions(
-            onApprove: controller.approveLatestDraft,
-            onReject: controller.reviseLatestDraft,
-            canRequestRevision: canRequestDesignRevision,
-          );
-        }
-        if (lastDraft?.status == DesignStatus.needsRevision && isConsultant) {
-          return PkpBottomActions(
-            primaryText: 'Unggah Revisi Desain',
-            onPrimaryPressed: () {
-              final ctx = Get.context;
-              if (ctx != null) _showUploadDraftSheet(ctx);
-            },
-          );
-        }
+        return _buildDesignBottomActions(isConsultant);
       }
-
-      if (isConsultant &&
-          step == ConsultationDetailStep.contract &&
-          !controller.hasUploadedContract.value) {
-        return PkpBottomActions(
-          secondaryText: 'Unduh Template',
-          onSecondaryPressed: controller.downloadContractTemplate,
-          primaryText: 'Unggah Kontrak',
-          onPrimaryPressed: () {
-            _showUploadContractSheet();
-          },
-        );
-      }
-
-      if (hasPendingContractApproval && canCancel) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _buildApprovalActions(
-              onApprove: controller.approveLatestContract,
-              onReject: controller.reviseLatestContract,
-              canRequestRevision: canRequestRevision,
-            ),
-            _buildCancelConsultation(),
-          ],
-        );
-      }
-
-      if (canCancel) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: _buildCancelConsultation(),
-        );
-      }
-
       return const SizedBox.shrink();
     });
+  }
+
+  Widget _buildContractBottomActions(bool isConsultant) {
+    final hasContracts = controller.contracts.isNotEmpty;
+    final lastContract = hasContracts ? controller.contracts.last : null;
+    final lastStatus = lastContract?.status;
+    final isAwaitingApproval = lastStatus == ContractStatus.needApproval;
+    final isApproved = lastStatus == ContractStatus.approved;
+    final homeownerSigned = lastStatus == ContractStatus.homeownerSigned;
+    final consultantSigned = lastStatus == ContractStatus.consultantSigned;
+    final isSigned = lastStatus == ContractStatus.signed;
+
+    if (hasContracts && lastStatus == ContractStatus.unknown) {
+      return const SizedBox.shrink();
+    }
+    if (isConsultant &&
+        lastContract != null &&
+        lastStatus == ContractStatus.needApproval) {
+      return const SizedBox.shrink();
+    }
+    if (isSigned) {
+      return const SizedBox.shrink();
+    }
+
+    final isPendingSign = isApproved || homeownerSigned || consultantSigned;
+    final shouldConsultantSign =
+        isConsultant && (isApproved || homeownerSigned);
+    final shouldHomeOwnerSign =
+        !isConsultant && (isApproved || consultantSigned);
+    final hasPendingContractSign = shouldConsultantSign || shouldHomeOwnerSign;
+
+    if (hasPendingContractSign) {
+      return PkpBottomActions(
+        primaryText: 'Tandatangani Kontrak',
+        onPrimaryPressed: controller.signLatestContract,
+      );
+    }
+
+    final hasApprovedContract = lastContract != null && isPendingSign;
+    final canCancel = !hasApprovedContract && !isConsultant;
+    final revisionAttemptsContract = controller.revisionAttemptsUsed;
+    final canRequestRevision =
+        revisionAttemptsContract <
+        ConsultationDetailsController.maxRevisionAttempts;
+    final hasPendingContractApproval = isAwaitingApproval && !isConsultant;
+
+    if (isConsultant && !controller.hasUploadedContract.value) {
+      return PkpBottomActions(
+        secondaryText: 'Unduh Template',
+        onSecondaryPressed: () {
+          if (controller.isPaidConsultation) {
+            _showPaymentTermsSheet(
+              onSubmit: controller.downloadContractTemplate,
+            );
+          } else {
+            controller.downloadContractTemplate();
+          }
+        },
+        primaryText: 'Unggah Kontrak',
+        onPrimaryPressed: _showChooseContractSheet,
+      );
+    }
+
+    if (hasPendingContractApproval && canCancel) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildApprovalActions(
+            onApprove: controller.approveLatestContract,
+            onReject: controller.reviseLatestContract,
+            canRequestRevision: canRequestRevision,
+          ),
+          _buildCancelConsultation(),
+        ],
+      );
+    }
+
+    if (canCancel) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: _buildCancelConsultation(),
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildDesignBottomActions(bool isConsultant) {
+    final lastDraft = controller.draftDesigns.isNotEmpty
+        ? controller.draftDesigns.last
+        : null;
+    final isApprovedSigned =
+        controller.contracts.isNotEmpty &&
+        controller.contracts.last.status == ContractStatus.signed;
+    final needsDraftUpload =
+        controller.draftDesigns.isEmpty ||
+        lastDraft?.status == DesignStatus.needsRevision;
+    final showDraftUploadCta =
+        isApprovedSigned && needsDraftUpload && isConsultant;
+    final isDraftAwaitingApproval =
+        lastDraft?.status == DesignStatus.awaitingApproval && !isConsultant;
+    final revisionAttemptsDesign = controller.designRevisionAttemptsUsed;
+    final canRequestDesignRevision =
+        revisionAttemptsDesign <
+        ConsultationDetailsController.maxRevisionAttempts;
+
+    if (showDraftUploadCta) {
+      return PkpBottomActions(
+        primaryText: 'Unggah Draft Desain',
+        onPrimaryPressed: () {
+          _showChooseDesignSheet();
+        },
+      );
+    }
+
+    if (isDraftAwaitingApproval) {
+      return _buildApprovalActions(
+        onApprove: controller.approveLatestDesign,
+        onReject: controller.reviseLatestDesign,
+        canRequestRevision: canRequestDesignRevision,
+      );
+    }
+
+    if (lastDraft?.status == DesignStatus.needsRevision && isConsultant) {
+      return PkpBottomActions(
+        primaryText: 'Unggah Revisi Desain',
+        onPrimaryPressed: () {
+          _showChooseDesignSheet();
+        },
+      );
+    }
+
+    return const SizedBox.shrink();
   }
 }
 
@@ -880,9 +658,9 @@ class _Avatar extends StatelessWidget {
         width: 48,
         height: 48,
         color: AppColors.primaryDark,
-        child: imageUrl != null && imageUrl!.isNotEmpty
+        child: imageUrl != null && imageUrl?.isNotEmpty == true
             ? Image.network(
-                imageUrl!,
+                imageUrl ?? '',
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => _fallback(),
               )

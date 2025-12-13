@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/core/services/notification_service.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/usecases/auth/login_use_case.dart';
 import 'package:pkp_hub/features/auth/controllers/login_controller.dart';
@@ -13,7 +14,10 @@ class LoginBinding extends Bindings {
     );
 
     Get.lazyPut<LoginController>(
-      () => LoginController(Get.find<LoginUseCase>()),
+      () => LoginController(
+        Get.find<LoginUseCase>(),
+        Get.find<NotificationService>(),
+      ),
       fenix: true,
     );
   }

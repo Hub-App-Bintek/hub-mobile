@@ -165,7 +165,7 @@ class ConsultantDetailsController extends BaseController {
         ),
       ),
       onSuccess: (response) {
-        final mainArgs = const MainNavigationArgs(
+        const mainArgs = MainNavigationArgs(
           selectedIndex: 1,
           consultationStatus: consultationFilterWaitingConfirmation,
         );

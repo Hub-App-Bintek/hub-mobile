@@ -1,29 +1,34 @@
 import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/contract/contract_network_data_source.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/request/approve_contract_request.dart';
+import 'package:pkp_hub/data/models/request/create_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/contract_version_response.dart';
-import 'package:retrofit/dio.dart';
-import 'package:pkp_hub/data/models/request/generate_contract_draft_request.dart';
 import 'package:pkp_hub/data/models/response/upload_contract_response.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_param.dart';
 
 abstract class ContractRepository {
   Future<Result<Contract, Failure>> getContract(String consultationId);
+
   Future<Result<Contract, Failure>> signContract(String contractId);
+
   Future<Result<Contract, Failure>> rejectContract(String contractId);
+
   Future<Result<Contract, Failure>> approveContract({
     required String contractId,
     required ApproveContractRequest request,
   });
+
   Future<Result<Contract, Failure>> requestRevision(
     String contractId,
     String? revisionNotes,
   );
 
   Future<Result<Contract, Failure>> requestPayment(String contractId);
+
   Future<Result<UploadContractResponse, Failure>> uploadContract(
     UploadContractParam param,
   );
@@ -31,9 +36,10 @@ abstract class ContractRepository {
   Future<Result<UploadContractResponse, Failure>> uploadRevisedContract(
     UploadRevisedContractParam param,
   );
-  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+
+  Future<Result<DownloadedFile, Failure>> generateDraft({
     required String consultationId,
-    required GenerateContractDraftRequest request,
+    required UploadContractRequest request,
   });
 
   Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
@@ -44,6 +50,7 @@ abstract class ContractRepository {
 
 class ContractRepositoryImpl implements ContractRepository {
   final ContractNetworkDataSource _remoteDataSource;
+
   ContractRepositoryImpl(this._remoteDataSource);
 
   @override
@@ -91,9 +98,9 @@ class ContractRepositoryImpl implements ContractRepository {
   ) => _remoteDataSource.uploadRevisedContract(param);
 
   @override
-  Future<Result<HttpResponse<List<int>>, Failure>> generateDraft({
+  Future<Result<DownloadedFile, Failure>> generateDraft({
     required String consultationId,
-    required GenerateContractDraftRequest request,
+    required UploadContractRequest request,
   }) => _remoteDataSource.generateDraft(
     consultationId: consultationId,
     request: request,

@@ -157,9 +157,9 @@ Create a revision request for a design document (Home Owner action).
 
 **Path Parameters:**
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| id | UUID | Yes | The design document ID |
+| Parameter | Type | Required | Description         |
+|-----------|------|----------|---------------------|
+| id | UUID | Yes | The consultation ID |
 
 **Request Body:**
 ```json

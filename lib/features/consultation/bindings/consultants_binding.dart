@@ -4,9 +4,9 @@ import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
-import 'package:pkp_hub/features/consultation/controllers/consultation_controller.dart';
+import 'package:pkp_hub/features/consultation/controllers/consultants_controller.dart';
 
-class ConsultationBinding extends Bindings {
+class ConsultantsBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<GetConsultantsUseCase>(
@@ -14,13 +14,13 @@ class ConsultationBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<ConsultationController>(() {
+    Get.lazyPut<ConsultantsController>(() {
       final rawArgs = Get.arguments;
-      ConsultationArgs args;
-      if (rawArgs is ConsultationArgs) {
+      ConsultantsArgs args;
+      if (rawArgs is ConsultantsArgs) {
         args = rawArgs;
       } else if (rawArgs is Map<String, dynamic>) {
-        args = ConsultationArgs(
+        args = ConsultantsArgs(
           projectId: (rawArgs['projectId'] ?? '').toString(),
           lat: (rawArgs['lat'] as num?)?.toDouble() ?? 0.0,
           long: (rawArgs['long'] as num?)?.toDouble() ?? 0.0,
@@ -31,9 +31,9 @@ class ConsultationBinding extends Bindings {
           type: rawArgs['type'] as String? ?? consultation.name,
         );
       } else {
-        args = ConsultationArgs(projectId: '', type: consultation.name);
+        args = ConsultantsArgs(projectId: '', type: consultation.name);
       }
-      return ConsultationController(
+      return ConsultantsController(
         Get.find<GetConsultantsUseCase>(),
         Get.find<UserStorage>(),
         args.projectId,
