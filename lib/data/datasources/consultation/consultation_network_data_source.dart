@@ -5,6 +5,7 @@ import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/request/accept_consultation_request.dart';
+import 'package:pkp_hub/data/models/request/cancel_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
 import 'package:pkp_hub/data/models/response/consultations_response.dart';
@@ -27,6 +28,11 @@ abstract class ConsultationNetworkDataSource {
   Future<Result<Consultation, Failure>> acceptConsultation(
     String consultationId,
     AcceptConsultationRequest request,
+  );
+
+  Future<Result<Consultation, Failure>> cancelConsultation(
+    String consultationId,
+    CancelConsultationRequest request,
   );
 }
 
@@ -105,6 +111,28 @@ class ConsultationNetworkDataSourceImpl
       return Error(
         ServerFailure(
           message: 'Failed to parse accept consultation response: $e',
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Consultation, Failure>> cancelConsultation(
+    String consultationId,
+    CancelConsultationRequest request,
+  ) async {
+    try {
+      final res = await _consultationApi.cancelConsultation(
+        consultationId,
+        request,
+      );
+      return Success(res);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(
+          message: 'Failed to parse cancel consultation response: $e',
         ),
       );
     }

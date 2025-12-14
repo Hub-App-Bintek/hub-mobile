@@ -13,6 +13,7 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/models/downloaded_file.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/contract.dart';
 import 'package:pkp_hub/data/models/installment.dart';
 import 'package:pkp_hub/data/models/payment.dart';
@@ -27,6 +28,7 @@ import 'package:pkp_hub/data/models/response/design_document_revision_response.d
 import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/cancel_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.dart';
@@ -76,6 +78,7 @@ class ConsultationDetailsController extends BaseController {
   final RxBool isGeneratingContractTemplate = false.obs;
   final RxBool isLoadingInvoices = false.obs;
   final RxBool hasUploadedContract = false.obs;
+  final RxBool isCancellingConsultation = false.obs;
   final UserStorage _userStorage;
   final Rxn<ConsultationDetailsResponse> consultation =
       Rxn<ConsultationDetailsResponse>();
@@ -114,6 +117,7 @@ class ConsultationDetailsController extends BaseController {
     this._userStorage,
     this._createDirectChatRoomUseCase,
     this._getConsultationDetailUseCase,
+    this._cancelConsultationUseCase,
     this._getContractVersionsUseCase,
     this._createContractDraftUseCase,
     this._uploadRevisedContractUseCase,
@@ -134,6 +138,7 @@ class ConsultationDetailsController extends BaseController {
 
   /// Consultation Details
   final GetConsultationDetailUseCase _getConsultationDetailUseCase;
+  final CancelConsultationUseCase _cancelConsultationUseCase;
 
   /// Contract
   final GetContractVersionsUseCase _getContractVersionsUseCase;
@@ -263,9 +268,7 @@ class ConsultationDetailsController extends BaseController {
           _fetchInvoicesIfNeeded(consultationId: detail.consultationId);
         }
       },
-      onFailure: (failure) {
-        showError(failure);
-      },
+      onFailure: showError,
     );
 
     isLoading.value = false;
@@ -317,9 +320,7 @@ class ConsultationDetailsController extends BaseController {
 
         _updateHasUploadedContract();
       },
-      onFailure: (failure) {
-        showError(failure);
-      },
+      onFailure: showError,
     );
 
     isLoadingContracts.value = false;
@@ -603,9 +604,7 @@ class ConsultationDetailsController extends BaseController {
         Get.back();
         await fetchDetails();
       },
-      onFailure: (failure) {
-        showError(failure);
-      },
+      onFailure: showError,
     );
     isUploadingContract.value = false;
   }
@@ -705,9 +704,7 @@ class ConsultationDetailsController extends BaseController {
       onSuccess: (_) async {
         await fetchDetails();
       },
-      onFailure: (failure) {
-        showError(failure);
-      },
+      onFailure: showError,
     );
     isLoadingContracts.value = false;
   }
@@ -728,9 +725,7 @@ class ConsultationDetailsController extends BaseController {
       onSuccess: (_) async {
         await fetchDetails();
       },
-      onFailure: (error) {
-        showError(error);
-      },
+      onFailure: showError,
     );
     isLoadingContracts.value = false;
   }
@@ -749,9 +744,7 @@ class ConsultationDetailsController extends BaseController {
       onSuccess: (_) async {
         await fetchDetails();
       },
-      onFailure: (error) {
-        showError(error);
-      },
+      onFailure: showError,
     );
     isLoadingContracts.value = false;
   }
@@ -804,9 +797,7 @@ class ConsultationDetailsController extends BaseController {
           );
         }
       },
-      onFailure: (error) {
-        showError(error);
-      },
+      onFailure: showError,
     );
     isLoadingDesigns.value = false;
   }
@@ -877,9 +868,7 @@ class ConsultationDetailsController extends BaseController {
           ..clear()
           ..addAll(mapped);
       },
-      onFailure: (error) {
-        showError(error);
-      },
+      onFailure: showError,
     );
     isLoadingInvoices.value = false;
   }
@@ -1130,9 +1119,7 @@ class ConsultationDetailsController extends BaseController {
         Get.back();
         fetchDetails();
       },
-      onFailure: (failure) {
-        showError(failure);
-      },
+      onFailure: showError,
     );
     isUploadingDesign.value = false;
   }
@@ -1191,6 +1178,77 @@ class ConsultationDetailsController extends BaseController {
     if (index == 1) return 'Revisi Desain Pertama';
     if (index == 2) return 'Revisi Desain Kedua';
     return 'Final Desain';
+  }
+
+  Future<void> cancelConsultation(
+    String reason, {
+    VoidCallback? onSuccess,
+  }) async {
+    if (isConsultant) {
+      showError(
+        const ServerFailure(
+          message: 'Konsultan tidak dapat membatalkan konsultasi',
+        ),
+      );
+      return;
+    }
+    final trimmed = reason.trim();
+    if (trimmed.isEmpty) {
+      showError(const ServerFailure(message: 'Alasan pembatalan wajib diisi'));
+      return;
+    }
+    if (trimmed.length > 500) {
+      showError(
+        const ServerFailure(message: 'Alasan pembatalan maksimal 500 karakter'),
+      );
+      return;
+    }
+
+    final latestStatus = contracts.isNotEmpty ? contracts.last.status : null;
+    if (latestStatus == ContractStatus.signed) {
+      showError(
+        const ServerFailure(
+          message:
+              'Konsultasi tidak dapat dibatalkan setelah kontrak ditandatangani',
+        ),
+      );
+      return;
+    }
+
+    final consultationId =
+        project.value?.consultationInfo?.consultationId ??
+        consultation.value?.consultationId;
+    if (consultationId == null || consultationId.isEmpty) {
+      showError(const ServerFailure(message: 'ID konsultasi tidak ditemukan'));
+      return;
+    }
+
+    if (isCancellingConsultation.value) return;
+
+    isCancellingConsultation.value = true;
+    showLoadingOverlay(
+      message: 'Membatalkan konsultasi...',
+      delay: Duration.zero,
+    );
+
+    try {
+      await handleAsync<Consultation>(
+        () => _cancelConsultationUseCase(
+          CancelConsultationParams(
+            consultationId: consultationId,
+            reason: trimmed,
+          ),
+        ),
+        onSuccess: (_) async {
+          onSuccess?.call();
+          Get.back();
+        },
+        onFailure: showError,
+      );
+    } finally {
+      hideLoadingOverlay();
+      isCancellingConsultation.value = false;
+    }
   }
 
   Future<void> startChatWithConsultant() async {

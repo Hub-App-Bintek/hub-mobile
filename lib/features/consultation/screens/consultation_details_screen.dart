@@ -16,6 +16,7 @@ import 'package:pkp_hub/features/consultation/controllers/consultation_details_c
 import 'package:pkp_hub/features/consultation/screens/sheets/choose_contract_bottom_sheet.dart';
 import 'package:pkp_hub/features/consultation/screens/sheets/choose_design_bottom_sheet.dart';
 import 'package:pkp_hub/features/consultation/screens/sheets/choose_payment_terms_sheet.dart';
+import 'package:pkp_hub/features/consultation/widgets/cancel_consultation_bottom_sheet.dart';
 import 'package:pkp_hub/features/main/widgets/project_item.dart';
 
 class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
@@ -381,16 +382,27 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
   }
 
   Widget _buildCancelConsultation() {
+    if (controller.userRole.value == UserRole.consultant) {
+      return const SizedBox.shrink();
+    }
     return SizedBox(
       width: double.infinity,
       child: TextButton(
-        onPressed: () {
-          Get.back();
-        },
+        onPressed: _showCancelConsultationSheet,
         child: Text(
           'Batalkan Konsultasi',
           style: AppTextStyles.actionM.copyWith(color: AppColors.errorDark),
         ),
+      ),
+    );
+  }
+
+  void _showCancelConsultationSheet() {
+    controller.showBottomSheet(
+      CancelConsultationBottomSheet(
+        onSubmit: (reason) =>
+            controller.cancelConsultation(reason, onSuccess: Get.back),
+        isLoading: controller.isCancellingConsultation,
       ),
     );
   }
@@ -524,9 +536,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
     if (hasContracts && lastStatus == ContractStatus.unknown) {
       return const SizedBox.shrink();
     }
-    if (isConsultant &&
-        lastContract != null &&
-        lastStatus == ContractStatus.needApproval) {
+    if (isConsultant && isAwaitingApproval) {
       return const SizedBox.shrink();
     }
     if (isSigned) {
@@ -547,8 +557,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
       );
     }
 
-    final hasApprovedContract = lastContract != null && isPendingSign;
-    final canCancel = !hasApprovedContract && !isConsultant;
+    final canCancel = !isSigned && !isConsultant;
     final revisionAttemptsContract = controller.revisionAttemptsUsed;
     final canRequestRevision =
         revisionAttemptsContract <

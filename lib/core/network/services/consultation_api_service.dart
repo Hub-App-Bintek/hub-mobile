@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:pkp_hub/core/constants/api_endpoints.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/request/accept_consultation_request.dart';
+import 'package:pkp_hub/data/models/request/cancel_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
 import 'package:pkp_hub/data/models/response/consultations_response.dart';
@@ -35,5 +36,11 @@ abstract class ConsultationApiService {
   Future<Consultation> acceptConsultation(
     @Path('consultationId') String consultationId,
     @Body() AcceptConsultationRequest body,
+  );
+
+  @POST(ApiEndpoints.consultationCancel)
+  Future<Consultation> cancelConsultation(
+    @Path('consultationId') String consultationId,
+    @Body() CancelConsultationRequest body,
   );
 }
