@@ -32,6 +32,10 @@ abstract class ConsultationRepository {
     String consultationId,
     CancelConsultationRequest request,
   );
+
+  Future<Result<Consultation, Failure>> rejectConsultation(
+    String consultationId,
+  );
 }
 
 class ConsultationRepositoryImpl implements ConsultationRepository {
@@ -77,5 +81,12 @@ class ConsultationRepositoryImpl implements ConsultationRepository {
     CancelConsultationRequest request,
   ) {
     return _dataSource.cancelConsultation(consultationId, request);
+  }
+
+  @override
+  Future<Result<Consultation, Failure>> rejectConsultation(
+    String consultationId,
+  ) {
+    return _dataSource.rejectConsultation(consultationId);
   }
 }

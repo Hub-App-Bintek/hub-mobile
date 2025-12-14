@@ -34,6 +34,10 @@ abstract class ConsultationNetworkDataSource {
     String consultationId,
     CancelConsultationRequest request,
   );
+
+  Future<Result<Consultation, Failure>> rejectConsultation(
+    String consultationId,
+  );
 }
 
 class ConsultationNetworkDataSourceImpl
@@ -133,6 +137,24 @@ class ConsultationNetworkDataSourceImpl
       return Error(
         ServerFailure(
           message: 'Failed to parse cancel consultation response: $e',
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Result<Consultation, Failure>> rejectConsultation(
+    String consultationId,
+  ) async {
+    try {
+      final res = await _consultationApi.rejectConsultation(consultationId);
+      return Success(res);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(
+        ServerFailure(
+          message: 'Failed to parse reject consultation response: $e',
         ),
       );
     }

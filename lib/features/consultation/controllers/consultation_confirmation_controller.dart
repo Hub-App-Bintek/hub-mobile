@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
@@ -10,11 +11,13 @@ import 'package:pkp_hub/data/models/request/accept_consultation_request.dart';
 import 'package:pkp_hub/data/models/response/project_details_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/accept_consultation_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/reject_consultation_use_case.dart';
 import 'package:pkp_hub/domain/usecases/project/get_project_v2_use_case.dart';
 
 class ConsultationConfirmationController extends BaseController {
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
   final AcceptConsultationUseCase _acceptConsultationUseCase;
+  final RejectConsultationUseCase _rejectConsultationUseCase;
   final GetProjectV2UseCase _getProjectV2UseCase;
 
   final Rxn<ProjectDetailsResponse> projectDetail =
@@ -23,6 +26,7 @@ class ConsultationConfirmationController extends BaseController {
   final RxString selectedSurveyOption = 'Tidak perlu survey'.obs;
   final Rxn<DateTime> selectedSurveyDate = Rxn<DateTime>();
   final Rxn<TimeOfDay> selectedSurveyTime = Rxn<TimeOfDay>();
+  final RxBool isRejecting = false.obs;
 
   final List<String> surveyOptions = const [
     'Tidak perlu survey',
@@ -43,6 +47,7 @@ class ConsultationConfirmationController extends BaseController {
   ConsultationConfirmationController(
     this._createDirectChatRoomUseCase,
     this._acceptConsultationUseCase,
+    this._rejectConsultationUseCase,
     this._getProjectV2UseCase,
   );
 
@@ -149,8 +154,32 @@ class ConsultationConfirmationController extends BaseController {
   }
 
   void onReject() {
-    // TODO: hook into reject flow
-    Get.back();
+    final consultationId =
+        projectDetail.value?.consultationInfo?.consultationId ??
+        projectDetail.value?.projectId;
+    if (consultationId == null || consultationId.isEmpty) {
+      showError(const ServerFailure(message: 'ID konsultasi tidak tersedia'));
+      return;
+    }
+    if (isRejecting.value) return;
+
+    isRejecting.value = true;
+    handleAsync<Consultation>(
+      () => _rejectConsultationUseCase(consultationId),
+      onSuccess: (_) {
+        Get.back();
+        Get.snackbar(
+          'Ditolak',
+          'Konsultasi berhasil ditolak.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.successDark,
+          colorText: AppColors.white,
+        );
+      },
+      onFailure: showError,
+    ).whenComplete(() {
+      isRejecting.value = false;
+    });
   }
 
   Future<void> startChatWithHomeOwner() async {

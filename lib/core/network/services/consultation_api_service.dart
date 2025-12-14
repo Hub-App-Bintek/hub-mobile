@@ -43,4 +43,9 @@ abstract class ConsultationApiService {
     @Path('consultationId') String consultationId,
     @Body() CancelConsultationRequest body,
   );
+
+  @POST(ApiEndpoints.consultationReject)
+  Future<Consultation> rejectConsultation(
+    @Path('consultationId') String consultationId,
+  );
 }
