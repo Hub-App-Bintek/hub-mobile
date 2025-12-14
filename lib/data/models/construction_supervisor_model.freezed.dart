@@ -25,13 +25,9 @@ mixin _$ConstructionSupervisorModel {
   String get name => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
   String get specialization => throw _privateConstructorUsedError;
-  double get rating => throw _privateConstructorUsedError;
-  double get hourlyRate => throw _privateConstructorUsedError;
-  double? get packageCost => throw _privateConstructorUsedError;
+  double get rate => throw _privateConstructorUsedError;
   String get availabilityStatus => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -52,13 +48,9 @@ abstract class $ConstructionSupervisorModelCopyWith<$Res> {
       String name,
       String type,
       String specialization,
-      double rating,
-      double hourlyRate,
-      double? packageCost,
+      double rate,
       String availabilityStatus,
-      String location,
-      double latitude,
-      double longitude});
+      String location});
 }
 
 /// @nodoc
@@ -79,13 +71,9 @@ class _$ConstructionSupervisorModelCopyWithImpl<$Res,
     Object? name = null,
     Object? type = null,
     Object? specialization = null,
-    Object? rating = null,
-    Object? hourlyRate = null,
-    Object? packageCost = freezed,
+    Object? rate = null,
     Object? availabilityStatus = null,
     Object? location = null,
-    Object? latitude = null,
-    Object? longitude = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -104,18 +92,10 @@ class _$ConstructionSupervisorModelCopyWithImpl<$Res,
           ? _value.specialization
           : specialization // ignore: cast_nullable_to_non_nullable
               as String,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
+      rate: null == rate
+          ? _value.rate
+          : rate // ignore: cast_nullable_to_non_nullable
               as double,
-      hourlyRate: null == hourlyRate
-          ? _value.hourlyRate
-          : hourlyRate // ignore: cast_nullable_to_non_nullable
-              as double,
-      packageCost: freezed == packageCost
-          ? _value.packageCost
-          : packageCost // ignore: cast_nullable_to_non_nullable
-              as double?,
       availabilityStatus: null == availabilityStatus
           ? _value.availabilityStatus
           : availabilityStatus // ignore: cast_nullable_to_non_nullable
@@ -124,14 +104,6 @@ class _$ConstructionSupervisorModelCopyWithImpl<$Res,
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
     ) as $Val);
   }
 }
@@ -150,13 +122,9 @@ abstract class _$$ConstructionSupervisorModelImplCopyWith<$Res>
       String name,
       String type,
       String specialization,
-      double rating,
-      double hourlyRate,
-      double? packageCost,
+      double rate,
       String availabilityStatus,
-      String location,
-      double latitude,
-      double longitude});
+      String location});
 }
 
 /// @nodoc
@@ -176,13 +144,9 @@ class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? type = null,
     Object? specialization = null,
-    Object? rating = null,
-    Object? hourlyRate = null,
-    Object? packageCost = freezed,
+    Object? rate = null,
     Object? availabilityStatus = null,
     Object? location = null,
-    Object? latitude = null,
-    Object? longitude = null,
   }) {
     return _then(_$ConstructionSupervisorModelImpl(
       id: null == id
@@ -201,18 +165,10 @@ class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
           ? _value.specialization
           : specialization // ignore: cast_nullable_to_non_nullable
               as String,
-      rating: null == rating
-          ? _value.rating
-          : rating // ignore: cast_nullable_to_non_nullable
+      rate: null == rate
+          ? _value.rate
+          : rate // ignore: cast_nullable_to_non_nullable
               as double,
-      hourlyRate: null == hourlyRate
-          ? _value.hourlyRate
-          : hourlyRate // ignore: cast_nullable_to_non_nullable
-              as double,
-      packageCost: freezed == packageCost
-          ? _value.packageCost
-          : packageCost // ignore: cast_nullable_to_non_nullable
-              as double?,
       availabilityStatus: null == availabilityStatus
           ? _value.availabilityStatus
           : availabilityStatus // ignore: cast_nullable_to_non_nullable
@@ -221,14 +177,6 @@ class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
     ));
   }
 }
@@ -242,13 +190,9 @@ class _$ConstructionSupervisorModelImpl
       required this.name,
       required this.type,
       required this.specialization,
-      required this.rating,
-      required this.hourlyRate,
-      this.packageCost,
+      required this.rate,
       required this.availabilityStatus,
-      required this.location,
-      required this.latitude,
-      required this.longitude});
+      required this.location});
 
   factory _$ConstructionSupervisorModelImpl.fromJson(
           Map<String, dynamic> json) =>
@@ -263,23 +207,15 @@ class _$ConstructionSupervisorModelImpl
   @override
   final String specialization;
   @override
-  final double rating;
-  @override
-  final double hourlyRate;
-  @override
-  final double? packageCost;
+  final double rate;
   @override
   final String availabilityStatus;
   @override
   final String location;
-  @override
-  final double latitude;
-  @override
-  final double longitude;
 
   @override
   String toString() {
-    return 'ConstructionSupervisorModel(id: $id, name: $name, type: $type, specialization: $specialization, rating: $rating, hourlyRate: $hourlyRate, packageCost: $packageCost, availabilityStatus: $availabilityStatus, location: $location, latitude: $latitude, longitude: $longitude)';
+    return 'ConstructionSupervisorModel(id: $id, name: $name, type: $type, specialization: $specialization, rate: $rate, availabilityStatus: $availabilityStatus, location: $location)';
   }
 
   @override
@@ -292,36 +228,17 @@ class _$ConstructionSupervisorModelImpl
             (identical(other.type, type) || other.type == type) &&
             (identical(other.specialization, specialization) ||
                 other.specialization == specialization) &&
-            (identical(other.rating, rating) || other.rating == rating) &&
-            (identical(other.hourlyRate, hourlyRate) ||
-                other.hourlyRate == hourlyRate) &&
-            (identical(other.packageCost, packageCost) ||
-                other.packageCost == packageCost) &&
+            (identical(other.rate, rate) || other.rate == rate) &&
             (identical(other.availabilityStatus, availabilityStatus) ||
                 other.availabilityStatus == availabilityStatus) &&
             (identical(other.location, location) ||
-                other.location == location) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
+                other.location == location));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      type,
-      specialization,
-      rating,
-      hourlyRate,
-      packageCost,
-      availabilityStatus,
-      location,
-      latitude,
-      longitude);
+  int get hashCode => Object.hash(runtimeType, id, name, type, specialization,
+      rate, availabilityStatus, location);
 
   @JsonKey(ignore: true)
   @override
@@ -345,13 +262,9 @@ abstract class _ConstructionSupervisorModel
       required final String name,
       required final String type,
       required final String specialization,
-      required final double rating,
-      required final double hourlyRate,
-      final double? packageCost,
+      required final double rate,
       required final String availabilityStatus,
-      required final String location,
-      required final double latitude,
-      required final double longitude}) = _$ConstructionSupervisorModelImpl;
+      required final String location}) = _$ConstructionSupervisorModelImpl;
 
   factory _ConstructionSupervisorModel.fromJson(Map<String, dynamic> json) =
       _$ConstructionSupervisorModelImpl.fromJson;
@@ -365,19 +278,11 @@ abstract class _ConstructionSupervisorModel
   @override
   String get specialization;
   @override
-  double get rating;
-  @override
-  double get hourlyRate;
-  @override
-  double? get packageCost;
+  double get rate;
   @override
   String get availabilityStatus;
   @override
   String get location;
-  @override
-  double get latitude;
-  @override
-  double get longitude;
   @override
   @JsonKey(ignore: true)
   _$$ConstructionSupervisorModelImplCopyWith<_$ConstructionSupervisorModelImpl>

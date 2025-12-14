@@ -325,8 +325,10 @@ class HomeScreen extends GetView<HomeController> {
             _buildFilterStatus(
               label: AppStrings.homeFeatureConstructionSupervision,
               iconAsset: AppIcons.supervision,
-              onTap: () {
-                // TODO: Show dialog
+              onTap: () async {
+                if (await controller.ensureLoggedIn()) {
+                  controller.navigateTo(AppRoutes.monitoring);
+                }
               },
             ),
           );

@@ -1,6 +1,7 @@
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/usecases/use_case.dart';
+import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
 import 'package:pkp_hub/domain/repositories/monitoring_repository.dart';
 
 class CreateMonitoringRequestUseCase
@@ -10,7 +11,7 @@ class CreateMonitoringRequestUseCase
   CreateMonitoringRequestUseCase(this._repository);
 
   @override
-  Future<Result<void, Failure>> call(CreateMonitoringRequestParams params) {
+  Future<Result<MonitoringResponse, Failure>> call(CreateMonitoringRequestParams params) {
     return _repository.createMonitoringRequest(
       supervisorId: params.supervisorId,
       projectId: params.projectId,

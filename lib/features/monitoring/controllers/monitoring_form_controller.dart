@@ -49,6 +49,7 @@ class MonitoringFormController extends BaseController {
   final TextEditingController cityController = TextEditingController();
   final TextEditingController subdistrictController = TextEditingController();
   final TextEditingController villageController = TextEditingController();
+  final TextEditingController projectTypeController = TextEditingController();
   final TextEditingController locationDetailsController =
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
@@ -87,6 +88,7 @@ class MonitoringFormController extends BaseController {
   bool get isFormValid => _isFormValid.value;
 
   RxBool isRequesting = false.obs;
+  final projectType = "".obs;
   final RxList<Province> provinces = <Province>[].obs;
   final RxList<Regency> regencies = <Regency>[].obs;
   final RxList<District> districts = <District>[].obs;
@@ -569,6 +571,12 @@ class MonitoringFormController extends BaseController {
     _validateVillage();
   }
 
+  void selectProjectType(String? value){
+    if (value == null || value.isEmpty) return;
+    projectType.value = value;
+    projectTypeController.text = value;
+  }
+
   Future<void> createProject() async {
     if (!isFormValid) {
       _validateProvince();
@@ -609,7 +617,7 @@ class MonitoringFormController extends BaseController {
               income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
-              type: selectedProjectType.value?.name ?? '',
+              type: projectType.value,
               name: projectName.isNotEmpty ? projectName : 'Project',
               provinceId: selectedProvince.value?.id.toString() ?? '',
               regencyId: selectedCity.value?.id.toString() ?? '',

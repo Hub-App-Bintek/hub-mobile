@@ -11,81 +11,141 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    final report = controller.report;
-    final titleDate =
-        '${report.date.day.toString().padLeft(2, '0')}-${report.date.month.toString().padLeft(2, '0')}-${report.date.year}';
-
     return Scaffold(
-      appBar: PkpAppBar(
-        title: 'Laporan $titleDate',
+      appBar: const PkpAppBar(
+        title: 'Laporan',
         backgroundColor: AppColors.primaryDark,
         leadingColor: AppColors.white,
         titleTextColor: AppColors.white,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Laporan', style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 4),
-            DropdownButtonFormField<String>(
-              initialValue: report.category,
-              items: const [
-                'Pondasi',
-                'Sloof',
-                'Kolom',
-                'Ring Balok',
-                'Rangka Atap',
-                'Pencahayaan',
-                'Penghawaan',
-                'Temuan',
-              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-              onChanged: null,
-            ),
-            const SizedBox(height: 16),
-            Text('Lokasi', style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 4),
-            TextFormField(
-              enabled: false,
-              initialValue: 'Lokasi Rumah Bagian ${report.category} $titleDate',
-            ),
-            const SizedBox(height: 16),
-            Text('Tenaga Ahli', style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 4),
-            TextFormField(enabled: false, initialValue: 'Galih Ramadan'),
-            const SizedBox(height: 16),
-            Text('Notes', style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 4),
-            TextFormField(
-              enabled: false,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                hintText: 'Tambahan isi Laporan',
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (controller.reportDetail.value == null) {
+          return const Center(child: Text('Gagal memuat detail laporan.'));
+        }
+
+        final report = controller.reportDetail.value;
+
+        final titleDate =
+            '${report?.createdAt.day.toString().padLeft(2, '0')}-${report?.createdAt.month.toString().padLeft(2, '0')}-${report?.createdAt.year}';
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /*const SizedBox(height: 4),
+              DropdownButtonFormField<String>(
+                initialValue: controller.reportDetail.value.category,
+                items: const [
+                  'Pondasi',
+                  'Sloof',
+                  'Kolom',
+                  'Ring Balok',
+                  'Rangka Atap',
+                  'Pencahayaan',
+                  'Penghawaan',
+                  'Temuan',
+                ]
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: null,
+              ),*/
+              const SizedBox(height: 16),
+              TextFormField(
+                enabled: false,
+                initialValue: 'Lokasi Rumah Bagian ${report?.title} $titleDate',
               ),
-            ),
-            const SizedBox(height: 16),
-            Text('Gambar Bukti', style: theme.textTheme.bodyMedium),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: List.generate(
-                3,
-                (index) => Container(
-                  width: 110,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: theme.colorScheme.surfaceContainerHighest,
-                  ),
-                  child: const Icon(Icons.image),
+              const SizedBox(height: 16),
+              Text('Tenaga Ahli', style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 4),
+              TextFormField(
+                enabled: false,
+                initialValue: report?.supervisorName,
+              ),
+              const SizedBox(height: 16),
+              Text('Notes', style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 4),
+              TextFormField(
+                enabled: false,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: report?.summary ?? "Tidak ada catatan",
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
+              const SizedBox(height: 16),
+              Text('Gambar Dokumentasi', style: theme.textTheme.bodyMedium),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: List.generate(
+                  report?.images.length ?? 0,
+                  (index) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      report!.images[index].url,
+                      width: 110,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      // Ensures the image fills the container without distortion
+
+                      // --- BUILT-IN LOADING WIDGET ---
+                      loadingBuilder:
+                          (
+                            BuildContext context,
+                            Widget child,
+                            ImageChunkEvent? loadingProgress,
+                          ) {
+                            if (loadingProgress == null) {
+                              return child; // The image is fully loaded, so we show it
+                            }
+                            return Container(
+                              width: 110,
+                              height: 80,
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  // Calculate the loading progress if available
+                                  value:
+                                      loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                      : null,
+                                  strokeWidth: 2.0,
+                                ),
+                              ),
+                            );
+                          },
+
+                      // --- BUILT-IN ERROR WIDGET ---
+                      errorBuilder:
+                          (
+                            BuildContext context,
+                            Object error,
+                            StackTrace? stackTrace,
+                          ) {
+                            return Container(
+                              width: 110,
+                              height: 80,
+                              color: theme.colorScheme.surfaceContainerHighest,
+                              child: const Icon(
+                                Icons.broken_image,
+                                color: Colors.red,
+                              ),
+                            );
+                          },
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

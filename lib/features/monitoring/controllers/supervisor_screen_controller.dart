@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/create_monitoring_request_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_supervisor_usecase.dart';
@@ -13,66 +14,101 @@ class SupervisorController extends BaseController {
   final GetProfessionalsUseCase _getProfessionalsUseCase;
 
   SupervisorController(
-      this._createMonitoringRequestUseCase,
-  this._getProfessionalsUseCase,
+    this._createMonitoringRequestUseCase,
+    this._getProfessionalsUseCase,
   );
 
   final selectedSupervisorId = Rxn<int>();
+  final isLoading = false.obs;
 
-  final supervisors = <ConstructionSupervisor>[
-    ConstructionSupervisor(
-      id: 1,
-      name: 'Dafni Romadhani',
-      specialization: 'Ahli Konstruksi',
-      price: 2.5,
-      distance: 1.0,
-    ),
-    ConstructionSupervisor(
-      id: 2,
-      name: 'Budi Santoso',
-      specialization: 'Ahli Arsitektur',
-      price: 5,
-      distance: 1.5,
-    ),
-    ConstructionSupervisor(
-      id: 3,
-      name: 'Aryo Timoteus',
-      specialization: 'Ahli Konstruksi',
-      price: 2.5,
-      distance: 3,
-    ),
-    ConstructionSupervisor(
-      id: 4,
-      name: 'Citra Dewi',
-      specialization: 'Ahli Struktur',
-      price: 8,
-      distance: 3,
-    ),
-    ConstructionSupervisor(
-      id: 5,
-      name: 'Danu Pranata',
-      specialization: 'Ahli Sipil Ahli Konstruksi',
-      price: 18,
-      distance: 7,
-    ),
-    ConstructionSupervisor(
-      id: 6,
-      name: 'Eko Prasetyo',
-      specialization: 'Ahli Mekanikal',
-      price: 6,
-      distance: 7,
-    ),
-  ].obs;
+  @override
+  void onInit() {
+    super.onInit();
+    // Call fetchSupervisors when the controller is initialized.
+    fetchSupervisors();
+  }
+
+  final _logger = Logger();
+
+  final supervisors = <ConstructionSupervisor>[].obs;
+
+  // final supervisors = <ConstructionSupervisor>[
+  //   ConstructionSupervisor(
+  //     id: 1,
+  //     name: 'Dafni Romadhani',
+  //     specialization: 'Ahli Konstruksi',
+  //     price: 2.5,
+  //     distance: 1.0,
+  //   ),
+  //   ConstructionSupervisor(
+  //     id: 2,
+  //     name: 'Budi Santoso',
+  //     specialization: 'Ahli Arsitektur',
+  //     price: 5,
+  //     distance: 1.5,
+  //   ),
+  //   ConstructionSupervisor(
+  //     id: 3,
+  //     name: 'Aryo Timoteus',
+  //     specialization: 'Ahli Konstruksi',
+  //     price: 2.5,
+  //     distance: 3,
+  //   ),
+  //   ConstructionSupervisor(
+  //     id: 4,
+  //     name: 'Citra Dewi',
+  //     specialization: 'Ahli Struktur',
+  //     price: 8,
+  //     distance: 3,
+  //   ),
+  //   ConstructionSupervisor(
+  //     id: 5,
+  //     name: 'Danu Pranata',
+  //     specialization: 'Ahli Sipil Ahli Konstruksi',
+  //     price: 18,
+  //     distance: 7,
+  //   ),
+  //   ConstructionSupervisor(
+  //     id: 6,
+  //     name: 'Eko Prasetyo',
+  //     specialization: 'Ahli Mekanikal',
+  //     price: 6,
+  //     distance: 7,
+  //   ),
+  // ].obs;
 
   final sortOption = SupervisorSortOption.distance.obs;
 
   Future<void> fetchSupervisors({String? query}) async {
+    // Let handleAsync manage the loading state for us.
+    // We can remove the manual `isLoading.value = true;` if handleAsync already does it.
+    // But keeping it is fine for pull-to-refresh responsiveness.
+    isLoading.value = true;
+
     // Use handleAsync from your BaseController
     await handleAsync(
           () => _getProfessionalsUseCase(GetProfessionalsParams(query: query)),
       onSuccess: (result) {
-        supervisors.assignAll(result.map((e) => e.toEntity()).toList());
-        // TODO: Apply sorting logic if needed
+        // THIS IS WHERE THE LOGGING SHOULD BE
+        _logger.d("onSuccess triggered. Result has ${result.length} items.");
+
+        // Ensure the result is not empty before accessing index 0
+        if (result.isNotEmpty) {
+          _logger.i("First supervisor from API: ${result[0].name}");
+        }
+
+        final entities = result.map((model) => model.toEntity()).toList();
+
+        // Use assignAll to efficiently update the reactive list
+        supervisors.assignAll(entities);
+
+        _logger.i("Internal 'supervisors' list updated. New length: ${supervisors.length}");
+
+        _sortSupervisors(); // Apply sort after fetching
+      },
+      onFailure: (failure) {
+        // Always good to have an error log
+        _logger.e("Failed to fetch supervisors: $failure");
       },
     );
   }
@@ -117,7 +153,10 @@ class SupervisorController extends BaseController {
     final supervisorId = selectedSupervisorId.value;
     if (supervisorId == null) {
       // This should not happen if the button is disabled, but it's good practice.
-      Get.snackbar('Error', 'Silakan pilih seorang supervisor terlebih dahulu.');
+      Get.snackbar(
+        'Error',
+        'Silakan pilih seorang supervisor terlebih dahulu.',
+      );
       return;
     }
 
@@ -127,19 +166,19 @@ class SupervisorController extends BaseController {
 
     // Use handleAsync from your BaseController for loading and error states
     await handleAsync(
-          () => _createMonitoringRequestUseCase(
+      () => _createMonitoringRequestUseCase(
         CreateMonitoringRequestParams(
           supervisorId: supervisorId,
           projectId: currentProjectId,
         ),
       ),
       onSuccess: (result) {
-        Get.snackbar(
-          'Sukses',
-          'Permintaan pengawasan berhasil dibuat.',
-        );
+        Get.snackbar('Sukses', 'Permintaan pengawasan berhasil dibuat.');
         // TODO: Navigate to the next screen upon success
-        Get.offNamed(AppRoutes.monitoringDetail, arguments: {"projectId":currentProjectId});
+        Get.offNamed(
+          AppRoutes.monitoringDetail,
+          arguments: {"projectId": currentProjectId},
+        );
       },
       // onFailure is handled automatically by BaseController's handleAsync
     );

@@ -6,10 +6,11 @@ import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
+import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
 
 // --- DEFINE THE CONTRACT ---
 abstract class MonitoringRemoteDataSource {
-  Future<Result<void, Failure>> createMonitoringRequest({
+  Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
     required int projectId,
   });
@@ -39,7 +40,7 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   MonitoringRemoteDataSourceImpl(this._apiService, this._apiClient);
 
   @override
-  Future<Result<void, Failure>> createMonitoringRequest({
+  Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
     required int projectId,
   }) async {
@@ -49,8 +50,8 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
         'supervisorId': supervisorId,
         'projectId': projectId,
       };
-      await _apiService.createMonitoringRequest(body);
-      return const Success(null); // Return success with no data
+      final result = await _apiService.createMonitoringRequest(body);
+      return Success(result); // Return success with no data
     } on DioException catch (e) {
       // Delegate error handling to the shared ApiClient
       return Error(_apiClient.toFailure(e));

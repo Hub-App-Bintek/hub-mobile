@@ -43,13 +43,9 @@ class ConstructionSupervisorModel with _$ConstructionSupervisorModel {
     required String name,
     required String type,
     required String specialization,
-    required double rating,
-    required double hourlyRate,
-    double? packageCost,
+    required double rate,
     required String availabilityStatus,
     required String location,
-    required double latitude,
-    required double longitude,
   }) = _ConstructionSupervisorModel;
 
   factory ConstructionSupervisorModel.fromJson(Map<String, dynamic> json) =>
@@ -63,7 +59,7 @@ extension ConstructionSupervisorModelX on ConstructionSupervisorModel {
       id: id,
       name: name,
       specialization: specialization,
-      price: packageCost ?? hourlyRate,
+      price: rate,
       // Prefer packageCost if available
       distance: 0, // Placeholder, will be calculated later
     );

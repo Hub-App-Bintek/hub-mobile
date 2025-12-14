@@ -83,6 +83,15 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
                             onChanged: controller.selectVillage,
                           ),
                           const SizedBox(height: 16),
+                          _dropdownField(
+                            label: 'Tipe Rumah',
+                            hint: 'PROTOTYPE/NON_PROTOTYPE',
+                            options: ["PROTOTYPE","NON_PROTOTYPE"],
+                            controller: controller.projectTypeController,
+                            enabled: true,
+                            onChanged: controller.selectProjectType,
+                          ),
+                          const SizedBox(height: 16),
                           PkpTextFormField(
                             controller: controller.locationDetailsController,
                             labelText: 'Detail Lokasi*',

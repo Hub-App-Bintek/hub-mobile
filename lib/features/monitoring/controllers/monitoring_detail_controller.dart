@@ -327,18 +327,12 @@ class MonitoringDetailController extends BaseController {
     Get.snackbar('Dokumen', 'Membuka pilihan file untuk diupload...');
   }
 
-  void openReportDetail(ReportItem item) {
-    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: item);
+  void openReportDetail(int id) {
+    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: id);
   }
 
-  void openFindingDetail(FindingItem item) {
-    // reuse same detail page as laporan
-    final reportLike = ReportItem(
-      title: item.title,
-      date: item.date,
-      category: 'Temuan',
-    );
-    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: reportLike);
+  void openFindingDetail(int id) {
+    Get.toNamed(AppRoutes.monitoringDetailReport, arguments: id);
   }
 
   void openInvoiceDetail(InvoiceItem item) {
