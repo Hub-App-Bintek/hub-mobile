@@ -127,4 +127,8 @@ abstract class ApiEndpoints {
 
   // Add other endpoints here as the app grows, for example:
   // static const String forgotPassword = '/api/auth/forgot-password';
+
+  // --- Monitoring ---
+  static const String monitoringRequests = '/api/monitoring/requests';
+  static const String getProfessionals = '/api/monitoring/professionals';
 }

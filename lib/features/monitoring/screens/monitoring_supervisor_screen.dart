@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/features/monitoring/controllers/supervisor_screen_controller.dart';
 
 class MonitoringSupervisorScreen extends GetView<SupervisorController> {
@@ -78,7 +79,7 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
                   child: ElevatedButton(
                     onPressed: controller.selectedSupervisorId.value == null
                         ? null
-                        : controller.goToPengawasanDetail,
+                        : controller.submitMonitoringRequest,
                     child: const Text('Lanjutkan'),
                   ),
                 ),

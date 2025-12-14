@@ -203,8 +203,8 @@ class ProjectsController extends BaseController {
         id: '5',
         name: 'Danu Pranata',
         specialization: 'Ahli Sipil Ahli Konstruksi',
-        priceJuta: 18,
-        distanceKm: 7,
+        price: 18,
+        distance: 7,
       ),
     );
   }

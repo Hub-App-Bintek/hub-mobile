@@ -8,6 +8,7 @@ import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/location_api_service.dart';
+import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/permit_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
@@ -78,6 +79,10 @@ class NetworkServiceInjection {
     );
     Get.lazyPut<PermitApiService>(
       () => PermitApiService(Get.find<ApiClient>().dio),
+      fenix: true,
+    );
+    Get.lazyPut<MonitoringApiService>(
+          () => MonitoringApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }
