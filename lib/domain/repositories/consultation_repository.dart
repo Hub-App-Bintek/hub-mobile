@@ -2,6 +2,7 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/consultation/consultation_network_data_source.dart';
 import 'package:pkp_hub/data/models/request/accept_consultation_request.dart';
+import 'package:pkp_hub/data/models/request/cancel_consultation_request.dart';
 import 'package:pkp_hub/data/models/request/create_consultation_request.dart';
 import 'package:pkp_hub/data/models/consultation.dart';
 import 'package:pkp_hub/data/models/response/consultation_details_response.dart';
@@ -25,6 +26,11 @@ abstract class ConsultationRepository {
   Future<Result<Consultation, Failure>> acceptConsultation(
     String consultationId,
     AcceptConsultationRequest request,
+  );
+
+  Future<Result<Consultation, Failure>> cancelConsultation(
+    String consultationId,
+    CancelConsultationRequest request,
   );
 }
 
@@ -63,5 +69,13 @@ class ConsultationRepositoryImpl implements ConsultationRepository {
     AcceptConsultationRequest request,
   ) {
     return _dataSource.acceptConsultation(consultationId, request);
+  }
+
+  @override
+  Future<Result<Consultation, Failure>> cancelConsultation(
+    String consultationId,
+    CancelConsultationRequest request,
+  ) {
+    return _dataSource.cancelConsultation(consultationId, request);
   }
 }

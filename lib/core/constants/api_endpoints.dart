@@ -27,6 +27,8 @@ abstract class ApiEndpoints {
       '/api/consultations/{consultationId}';
   static const String consultationAccept =
       '/api/consultations/{consultationId}/accept';
+  static const String consultationCancel =
+      '/api/consultations/{consultationId}/cancel';
   static const String consultationReject =
       '/api/consultations/{consultationId}/reject';
   static const String consultationStartActive =
