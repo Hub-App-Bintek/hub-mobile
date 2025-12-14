@@ -25,8 +25,8 @@ mixin _$MonitoringResponse {
   String get status => throw _privateConstructorUsedError;
   int get homeownerId => throw _privateConstructorUsedError;
   int? get supervisorId => throw _privateConstructorUsedError;
-  String get projectAddress => throw _privateConstructorUsedError;
-  String get projectDescription => throw _privateConstructorUsedError;
+  String? get projectAddress => throw _privateConstructorUsedError;
+  String? get projectDescription => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,8 +47,8 @@ abstract class $MonitoringResponseCopyWith<$Res> {
       String status,
       int homeownerId,
       int? supervisorId,
-      String projectAddress,
-      String projectDescription,
+      String? projectAddress,
+      String? projectDescription,
       DateTime createdAt});
 }
 
@@ -70,8 +70,8 @@ class _$MonitoringResponseCopyWithImpl<$Res, $Val extends MonitoringResponse>
     Object? status = null,
     Object? homeownerId = null,
     Object? supervisorId = freezed,
-    Object? projectAddress = null,
-    Object? projectDescription = null,
+    Object? projectAddress = freezed,
+    Object? projectDescription = freezed,
     Object? createdAt = null,
   }) {
     return _then(_value.copyWith(
@@ -95,14 +95,14 @@ class _$MonitoringResponseCopyWithImpl<$Res, $Val extends MonitoringResponse>
           ? _value.supervisorId
           : supervisorId // ignore: cast_nullable_to_non_nullable
               as int?,
-      projectAddress: null == projectAddress
+      projectAddress: freezed == projectAddress
           ? _value.projectAddress
           : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      projectDescription: null == projectDescription
+              as String?,
+      projectDescription: freezed == projectDescription
           ? _value.projectDescription
           : projectDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -125,8 +125,8 @@ abstract class _$$MonitoringResponseImplCopyWith<$Res>
       String status,
       int homeownerId,
       int? supervisorId,
-      String projectAddress,
-      String projectDescription,
+      String? projectAddress,
+      String? projectDescription,
       DateTime createdAt});
 }
 
@@ -146,8 +146,8 @@ class __$$MonitoringResponseImplCopyWithImpl<$Res>
     Object? status = null,
     Object? homeownerId = null,
     Object? supervisorId = freezed,
-    Object? projectAddress = null,
-    Object? projectDescription = null,
+    Object? projectAddress = freezed,
+    Object? projectDescription = freezed,
     Object? createdAt = null,
   }) {
     return _then(_$MonitoringResponseImpl(
@@ -171,14 +171,14 @@ class __$$MonitoringResponseImplCopyWithImpl<$Res>
           ? _value.supervisorId
           : supervisorId // ignore: cast_nullable_to_non_nullable
               as int?,
-      projectAddress: null == projectAddress
+      projectAddress: freezed == projectAddress
           ? _value.projectAddress
           : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      projectDescription: null == projectDescription
+              as String?,
+      projectDescription: freezed == projectDescription
           ? _value.projectDescription
           : projectDescription // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -196,8 +196,8 @@ class _$MonitoringResponseImpl implements _MonitoringResponse {
       required this.status,
       required this.homeownerId,
       this.supervisorId,
-      required this.projectAddress,
-      required this.projectDescription,
+      this.projectAddress,
+      this.projectDescription,
       required this.createdAt});
 
   factory _$MonitoringResponseImpl.fromJson(Map<String, dynamic> json) =>
@@ -214,9 +214,9 @@ class _$MonitoringResponseImpl implements _MonitoringResponse {
   @override
   final int? supervisorId;
   @override
-  final String projectAddress;
+  final String? projectAddress;
   @override
-  final String projectDescription;
+  final String? projectDescription;
   @override
   final DateTime createdAt;
 
@@ -272,8 +272,8 @@ abstract class _MonitoringResponse implements MonitoringResponse {
       required final String status,
       required final int homeownerId,
       final int? supervisorId,
-      required final String projectAddress,
-      required final String projectDescription,
+      final String? projectAddress,
+      final String? projectDescription,
       required final DateTime createdAt}) = _$MonitoringResponseImpl;
 
   factory _MonitoringResponse.fromJson(Map<String, dynamic> json) =
@@ -290,9 +290,9 @@ abstract class _MonitoringResponse implements MonitoringResponse {
   @override
   int? get supervisorId;
   @override
-  String get projectAddress;
+  String? get projectAddress;
   @override
-  String get projectDescription;
+  String? get projectDescription;
   @override
   DateTime get createdAt;
   @override

@@ -22,7 +22,7 @@ class CreateMonitoringRequestUseCase
 // A parameters class to make the use case call clean and type-safe.
 class CreateMonitoringRequestParams {
   final int supervisorId;
-  final int projectId;
+  final String projectId;
 
   CreateMonitoringRequestParams({
     required this.supervisorId,
