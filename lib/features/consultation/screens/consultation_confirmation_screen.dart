@@ -282,11 +282,17 @@ class ConsultationConfirmationScreen
   }
 
   Widget _buildActions() {
-    return PkpBottomActions(
-      secondaryText: 'Tolak Konsultasi',
-      onSecondaryPressed: controller.onReject,
-      primaryText: 'Terima Konsultasi',
-      onPrimaryPressed: controller.onAccept,
-    );
+    return Obx(() {
+      final isRejecting = controller.isRejecting.value;
+      return PkpBottomActions(
+        secondaryText: 'Tolak Konsultasi',
+        onSecondaryPressed: controller.onReject,
+        secondaryEnabled: !isRejecting,
+        secondaryLoading: isRejecting,
+        primaryText: 'Terima Konsultasi',
+        primaryEnabled: !isRejecting,
+        onPrimaryPressed: controller.onAccept,
+      );
+    });
   }
 }
