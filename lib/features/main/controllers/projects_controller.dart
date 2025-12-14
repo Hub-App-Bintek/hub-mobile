@@ -115,7 +115,6 @@ class ProjectsController extends BaseController {
   }
 
   void updateConsultationStatusFilter(ConsultationFilterStatus? status) {
-    if (_consultationStatus.value == status) return;
     _consultationStatus.value = status;
     refreshConsultations();
   }

@@ -24,17 +24,30 @@ class CancelConsultationBottomSheet extends StatefulWidget {
 class _CancelConsultationBottomSheetState
     extends State<CancelConsultationBottomSheet> {
   final TextEditingController _reasonController = TextEditingController();
+  final RxBool _canSubmit = false.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    _reasonController.addListener(_onReasonChanged);
+  }
 
   @override
   void dispose() {
+    _reasonController.removeListener(_onReasonChanged);
     _reasonController.dispose();
     super.dispose();
+  }
+
+  void _onReasonChanged() {
+    _canSubmit.value = _reasonController.text.trim().isNotEmpty;
   }
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final isLoading = widget.isLoading.value;
+      final canSubmit = _canSubmit.value;
       return SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 16),
@@ -63,7 +76,7 @@ class _CancelConsultationBottomSheetState
                 onSecondaryPressed: () => Get.back(),
                 secondaryEnabled: !isLoading,
                 primaryText: 'Kirim',
-                primaryEnabled: !isLoading,
+                primaryEnabled: !isLoading && canSubmit,
                 primaryLoading: isLoading,
                 onPrimaryPressed: () {
                   widget.onSubmit(_reasonController.text);
