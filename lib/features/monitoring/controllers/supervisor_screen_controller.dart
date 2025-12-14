@@ -21,9 +21,19 @@ class SupervisorController extends BaseController {
   final selectedSupervisorId = Rxn<int>();
   final isLoading = false.obs;
 
+  late final String projectId;
+
   @override
   void onInit() {
     super.onInit();
+
+    final args = Get.arguments;
+
+    if (args is Map<String, dynamic> && args.containsKey('projectId')) {
+      // If the argument is a Map (e.g., Get.toNamed(..., arguments: {'projectId': 123}))
+      projectId = args['projectId'];
+    }
+
     // Call fetchSupervisors when the controller is initialized.
     fetchSupervisors();
   }
@@ -160,16 +170,12 @@ class SupervisorController extends BaseController {
       return;
     }
 
-    // TODO: Get the actual projectId. It might be passed via Get.arguments
-    // For now, I'll use a placeholder.
-    const int currentProjectId = 555;
-
     // Use handleAsync from your BaseController for loading and error states
     await handleAsync(
       () => _createMonitoringRequestUseCase(
         CreateMonitoringRequestParams(
           supervisorId: supervisorId,
-          projectId: currentProjectId,
+          projectId: projectId,
         ),
       ),
       onSuccess: (result) {
@@ -177,7 +183,7 @@ class SupervisorController extends BaseController {
         // TODO: Navigate to the next screen upon success
         Get.offNamed(
           AppRoutes.monitoringDetail,
-          arguments: {"projectId": currentProjectId},
+          arguments: {"monitoringId": result.id},
         );
       },
       // onFailure is handled automatically by BaseController's handleAsync

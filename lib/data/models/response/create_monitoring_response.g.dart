@@ -14,8 +14,8 @@ _$MonitoringResponseImpl _$$MonitoringResponseImplFromJson(
       status: json['status'] as String,
       homeownerId: (json['homeownerId'] as num).toInt(),
       supervisorId: (json['supervisorId'] as num?)?.toInt(),
-      projectAddress: json['projectAddress'] as String,
-      projectDescription: json['projectDescription'] as String,
+      projectAddress: json['projectAddress'] as String?,
+      projectDescription: json['projectDescription'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
 

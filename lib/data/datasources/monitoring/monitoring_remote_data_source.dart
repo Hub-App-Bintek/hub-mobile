@@ -12,7 +12,7 @@ import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
 abstract class MonitoringRemoteDataSource {
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
-    required int projectId,
+    required String projectId,
   });
 
   Future<Result<List<ConstructionSupervisorModel>, Failure>> getProfessionals({
@@ -42,7 +42,7 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   @override
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
-    required int projectId,
+    required String projectId,
   }) async {
     try {
       final body = {

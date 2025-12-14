@@ -12,8 +12,8 @@ class MonitoringResponse with _$MonitoringResponse {
     required String status,
     required int homeownerId,
     int? supervisorId,
-    required String projectAddress,
-    required String projectDescription,
+    String? projectAddress,
+    String? projectDescription,
     required DateTime createdAt,
   }) = _MonitoringResponse;
 

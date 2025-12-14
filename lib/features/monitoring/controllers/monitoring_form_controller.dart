@@ -629,7 +629,7 @@ class MonitoringFormController extends BaseController {
         ),
         onSuccess: (response) {
           createdProject = response;
-          Get.toNamed(AppRoutes.monitoringSupervisor);
+          Get.toNamed(AppRoutes.monitoringSupervisor, arguments: {"projectId":createdProject?.projectId});
         },
         onFailure: (Failure failure) {
           showError(failure);

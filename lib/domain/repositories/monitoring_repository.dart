@@ -14,7 +14,7 @@ abstract class MonitoringRepository {
   // --- ADD THIS METHOD ---
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
-    required int projectId,
+    required String projectId,
   });
 
   Future<Result<List<ConstructionSupervisorModel>, Failure>> getProfessionals({
@@ -47,7 +47,7 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   @override
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
     required int supervisorId,
-    required int projectId,
+    required String projectId,
   }) {
     // Pass the call directly to the remote data source
     return _remoteDataSource.createMonitoringRequest(
