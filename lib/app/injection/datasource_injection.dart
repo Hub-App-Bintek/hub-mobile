@@ -8,6 +8,7 @@ import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
 import 'package:pkp_hub/core/network/services/location_api_service.dart';
+import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/permit_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
@@ -25,6 +26,7 @@ import 'package:pkp_hub/data/datasources/design/design_network_data_source.dart'
     as designds;
 import 'package:pkp_hub/data/datasources/design_document/design_document_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/location/location_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/monitoring/monitoring_remote_data_source.dart';
 import 'package:pkp_hub/data/datasources/payment/payment_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/permit/permit_remote_data_source.dart';
 import 'package:pkp_hub/data/datasources/project/project_network_data_source.dart';
@@ -156,6 +158,15 @@ class DataSourceInjection {
       () => PermitRemoteDataSourceImpl(
         Get.find<ApiClient>(),
         Get.find<PermitApiService>(),
+      ),
+      fenix: true,
+    );
+
+    // Monitoring datasource
+    Get.lazyPut<MonitoringRemoteDataSource>(
+      () => MonitoringRemoteDataSourceImpl(
+        Get.find<MonitoringApiService>(),
+        Get.find<ApiClient>(),
       ),
       fenix: true,
     );
