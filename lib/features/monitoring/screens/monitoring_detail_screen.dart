@@ -355,10 +355,10 @@ class _LaporanList extends GetView<MonitoringDetailController> {
     return Obx(
       () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        itemCount: controller.laporanItems.length,
+        itemCount: controller.reports.value.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, index) {
-          final item = controller.laporanItems[index];
+          final item = controller.reports.value[index];
           return Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),

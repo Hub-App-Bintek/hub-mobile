@@ -8,6 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
+import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_reports_usecase.dart';
 import 'supervisor_screen_controller.dart';
 
 enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
@@ -75,15 +78,64 @@ class InvoiceItem {
 }
 
 class MonitoringDetailController extends BaseController {
-  MonitoringDetailController() {
-    // get selected supervisor from previous screen if needed
-    supervisor = Get.arguments as ConstructionSupervisor?;
-  }
+
+  final GetReportsUseCase _getReportsUseCase;
+  final GetFindingsUseCase _getFindingsUseCase;
+
+  MonitoringDetailController(this._getReportsUseCase, this._getFindingsUseCase);
 
   final selectedStage = MonitoringStage.kontrak.obs;
   final hasApprovedContract = false.obs;
 
-  ConstructionSupervisor? supervisor;
+  final reports = Rx<List<MonitoringItemModel>>([]);
+  final findings = Rx<List<MonitoringItemModel>>([]);
+  late final int monitoringId;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Assuming the monitoringId is passed as an argument to the screen
+    monitoringId = Get.arguments['monitoringId'] as int;
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    // Fetch reports and findings in parallel
+    await Future.wait([
+      _fetchReports(),
+      _fetchFindings(),
+    ]);
+  }
+
+  Future<void> _fetchReports() async {
+    await handleAsync(
+          () => _getReportsUseCase(GetReportsParams(monitoringId: monitoringId)),
+      onSuccess: (result) {
+        reports.value = result;
+      },
+      // You can add a specific error handler if needed
+      // onError: (failure) => Get.snackbar('Error', 'Gagal memuat laporan.'),
+    );
+  }
+
+  Future<void> _fetchFindings() async {
+    await handleAsync(
+          () => _getFindingsUseCase(GetFindingsParams(monitoringId: monitoringId)),
+      onSuccess: (result) {
+        findings.value = result;
+      },
+    );
+  }
+
+  void onReportTap(int reportId) {
+    // TODO: Navigate to the report detail screen
+    Get.snackbar('Navigasi', 'Buka detail untuk ID: $reportId');
+  }
+
+  void onFindingTap(int findingId) {
+    // TODO: Navigate to the finding detail screen
+    Get.snackbar('Navigasi', 'Buka detail untuk ID: $findingId');
+  }
 
   final contracts = <ContractItem>[
     ContractItem(
