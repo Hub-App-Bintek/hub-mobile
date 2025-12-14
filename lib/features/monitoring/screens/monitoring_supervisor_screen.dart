@@ -19,74 +19,80 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
         leadingColor: AppColors.white,
         titleTextColor: AppColors.white,
       ),
-      body: Column(
-        children: [
-          Container(
-            color: theme.scaffoldBackgroundColor,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Daftar Supervisi Pekerjaan',
-                      style: theme.textTheme.titleMedium,
+      body: RefreshIndicator(
+        onRefresh: () => controller.fetchSupervisors(),
+        child: Column(
+          children: [
+            Container(
+              color: theme.scaffoldBackgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Daftar Supervisi Pekerjaan',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => _showSortBottomSheet(context),
+                      icon: const Icon(Icons.sort),
+                      label: const Text('Urutkan'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Obx(
+                () => GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 3 / 4,
+                  ),
+                  itemCount: controller.supervisors.length,
+                  itemBuilder: (_, index) {
+                    final supervisor = controller.supervisors[index];
+                    return  Obx( () => _SupervisorCard(
+                      supervisor: supervisor,
+                      isSelected:
+                          controller.selectedSupervisorId.value ==
+                          supervisor.id,
+                      onTap: () => controller.selectSupervisor(supervisor),
+                    ));
+                  },
+                ),
+              ),
+            ),
+            Obx(
+              () => Card(
+                margin: EdgeInsets.zero,
+                // Remove default card margins
+                elevation: 4,
+                // Add a slight shadow to lift it from the content
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero, // Make it a sharp rectangle
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: controller.selectedSupervisorId.value == null
+                          ? null
+                          : controller.submitMonitoringRequest,
+                      child: const Text('Lanjutkan'),
                     ),
                   ),
-                  OutlinedButton.icon(
-                    onPressed: () => _showSortBottomSheet(context),
-                    icon: const Icon(Icons.sort),
-                    label: const Text('Urutkan'),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            child: Obx(
-              () => GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 3 / 4,
-                ),
-                itemCount: controller.supervisors.length,
-                itemBuilder: (_, index) {
-                  final supervisor = controller.supervisors[index];
-                  return _SupervisorCard(
-                    supervisor: supervisor,
-                    isSelected:
-                        controller.selectedSupervisorId.value == supervisor.id,
-                    onTap: () => controller.selectSupervisor(supervisor),
-                  );
-                },
-              ),
-            ),
-          ),
-          Obx(
-            () => Card(
-              margin: EdgeInsets.zero, // Remove default card margins
-              elevation: 4, // Add a slight shadow to lift it from the content
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.zero, // Make it a sharp rectangle
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: controller.selectedSupervisorId.value == null
-                        ? null
-                        : controller.submitMonitoringRequest,
-                    child: const Text('Lanjutkan'),
-                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

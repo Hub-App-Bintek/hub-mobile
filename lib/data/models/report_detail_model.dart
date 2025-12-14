@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:pkp_hub/data/models/response/image_model.dart';
 
 part 'report_detail_model.freezed.dart';
 
@@ -11,7 +12,8 @@ class ReportDetailModel with _$ReportDetailModel {
     required int requestId,
     required String title,
     required String summary,
-    required String componentsJson,
+    @JsonKey(defaultValue: [])
+    required List<ImageModel> images,
     required DateTime createdAt,
     required int supervisorId,
     required String supervisorName,

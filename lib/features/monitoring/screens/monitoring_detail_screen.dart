@@ -365,7 +365,7 @@ class _LaporanList extends GetView<MonitoringDetailController> {
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
-              onTap: () => controller.openReportDetail(item),
+              onTap: () => controller.openReportDetail(item.id),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -376,7 +376,7 @@ class _LaporanList extends GetView<MonitoringDetailController> {
                     Text('Pengawas', style: theme.textTheme.bodySmall),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(item.date),
+                      _formatDate(item.createdAt),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.hintColor,
                       ),
@@ -402,17 +402,17 @@ class _TemuanList extends GetView<MonitoringDetailController> {
     return Obx(
       () => ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-        itemCount: controller.temuanItems.length,
+        itemCount: controller.findings.value.length,
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, index) {
-          final item = controller.temuanItems[index];
+          final item = controller.findings.value[index];
           return Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
-              onTap: () => controller.openFindingDetail(item),
+              onTap: () => controller.openFindingDetail(item.id),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -423,7 +423,7 @@ class _TemuanList extends GetView<MonitoringDetailController> {
                     Text('Pengawas', style: theme.textTheme.bodySmall),
                     const SizedBox(height: 4),
                     Text(
-                      _formatDate(item.date),
+                      _formatDate(item.createdAt),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.hintColor,
                       ),

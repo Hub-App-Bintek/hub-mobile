@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'monitoring_request_model.freezed.dart';
+part 'create_monitoring_response.freezed.dart';
 
-part 'monitoring_request_model.g.dart';
+part 'create_monitoring_response.g.dart';
 
 @freezed
 class MonitoringResponse with _$MonitoringResponse {
