@@ -4,6 +4,8 @@ import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
+import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/report_detail_model.dart';
 
 // --- DEFINE THE CONTRACT ---
 abstract class MonitoringRemoteDataSource {
@@ -14,6 +16,18 @@ abstract class MonitoringRemoteDataSource {
 
   Future<Result<List<ConstructionSupervisorModel>, Failure>> getProfessionals({
     String? query,
+  });
+
+  Future<Result<List<MonitoringItemModel>, Failure>> getReports({
+    required int monitoringId,
+  });
+
+  Future<Result<List<MonitoringItemModel>, Failure>> getFindings({
+    required int monitoringId,
+  });
+
+  Future<Result<ReportDetailModel, Failure>> getReportDetail({
+    required int reportId,
   });
 }
 
@@ -54,6 +68,42 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       return Success(result);
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse supervisor request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<MonitoringItemModel>, Failure>> getReports({
+    required int monitoringId,
+  }) async {
+    try {
+      final result = await _apiService.getReports(monitoringId);
+      return Success(result);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<MonitoringItemModel>, Failure>> getFindings({
+    required int monitoringId,
+  }) async {
+    try {
+      final result = await _apiService.getFindings(monitoringId);
+      return Success(result);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<ReportDetailModel, Failure>> getReportDetail({
+    required int reportId,
+  }) async {
+    try {
+      final result = await _apiService.getReportDetail(reportId);
+      return Success(result);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
@@ -200,7 +201,7 @@ class ProjectsController extends BaseController {
     navigateTo(
       AppRoutes.monitoringDetail,
       arguments: ConstructionSupervisor(
-        id: '5',
+        id: 5,
         name: 'Danu Pranata',
         specialization: 'Ahli Sipil Ahli Konstruksi',
         price: 18,

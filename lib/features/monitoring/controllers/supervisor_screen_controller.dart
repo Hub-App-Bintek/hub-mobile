@@ -17,46 +17,46 @@ class SupervisorController extends BaseController {
   this._getProfessionalsUseCase,
   );
 
-  final selectedId = Rxn<int>();
+  final selectedSupervisorId = Rxn<int>();
 
   final supervisors = <ConstructionSupervisor>[
     ConstructionSupervisor(
-      id: '1',
+      id: 1,
       name: 'Dafni Romadhani',
       specialization: 'Ahli Konstruksi',
       price: 2.5,
       distance: 1.0,
     ),
     ConstructionSupervisor(
-      id: '2',
+      id: 2,
       name: 'Budi Santoso',
       specialization: 'Ahli Arsitektur',
       price: 5,
       distance: 1.5,
     ),
     ConstructionSupervisor(
-      id: '3',
+      id: 3,
       name: 'Aryo Timoteus',
       specialization: 'Ahli Konstruksi',
       price: 2.5,
       distance: 3,
     ),
     ConstructionSupervisor(
-      id: '4',
+      id: 4,
       name: 'Citra Dewi',
       specialization: 'Ahli Struktur',
       price: 8,
       distance: 3,
     ),
     ConstructionSupervisor(
-      id: '5',
+      id: 5,
       name: 'Danu Pranata',
       specialization: 'Ahli Sipil Ahli Konstruksi',
       price: 18,
       distance: 7,
     ),
     ConstructionSupervisor(
-      id: '6',
+      id: 6,
       name: 'Eko Prasetyo',
       specialization: 'Ahli Mekanikal',
       price: 6,
@@ -64,7 +64,6 @@ class SupervisorController extends BaseController {
     ),
   ].obs;
 
-  final selectedSupervisorId = RxnString();
   final sortOption = SupervisorSortOption.distance.obs;
 
   Future<void> fetchSupervisors({String? query}) async {
@@ -115,7 +114,7 @@ class SupervisorController extends BaseController {
   }
 
   Future<void> submitMonitoringRequest() async {
-    final supervisorId = selectedId.value;
+    final supervisorId = selectedSupervisorId.value;
     if (supervisorId == null) {
       // This should not happen if the button is disabled, but it's good practice.
       Get.snackbar('Error', 'Silakan pilih seorang supervisor terlebih dahulu.');

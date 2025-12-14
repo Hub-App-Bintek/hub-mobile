@@ -13,7 +13,7 @@ class ConstructionSupervisor {
     required this.distance,
   });
 
-  final String id;
+  final int id;
   final String name;
   final String specialization;
   final double price;

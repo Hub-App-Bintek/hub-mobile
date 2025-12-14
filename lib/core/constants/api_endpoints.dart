@@ -131,4 +131,7 @@ abstract class ApiEndpoints {
   // --- Monitoring ---
   static const String monitoringRequests = '/api/monitoring/requests';
   static const String getProfessionals = '/api/monitoring/professionals';
+  static const String getMonitoringReports = '/api/monitoring/requests/{monitoringId}/reports';
+  static const String getMonitoringFindings = '/api/monitoring/requests/{monitoringId}/findings';
+  static const String getReportDetail = '/api/monitoring/reports/{reportId}';
 }
