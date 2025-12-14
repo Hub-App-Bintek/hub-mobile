@@ -69,6 +69,8 @@ abstract class ApiEndpoints {
       '/api/contracts/projects/{projectId}/consultations/{consultationId}/versions';
   static const String contractRevisedUpload =
       '/api/contracts/consultations/{consultationId}/revised-upload';
+  static const String contractVersionDownload =
+      '/api/contracts/{contractId}/versions/{documentVersionId}/download';
 
   // --- Files ---
   static const String filesUpload = '/api/files/upload';

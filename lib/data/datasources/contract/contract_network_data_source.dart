@@ -55,6 +55,11 @@ abstract class ContractNetworkDataSource {
     required String consultationId,
     required UploadContractRequest request,
   });
+
+  Future<Result<DownloadedFile, Failure>> downloadContractVersion({
+    required String contractId,
+    required String documentVersionId,
+  });
 }
 
 class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
@@ -233,6 +238,24 @@ class ContractNetworkDataSourceImpl implements ContractNetworkDataSource {
       prefix: 'contract-draft',
       fallbackFileName: 'contract-draft.docx',
       options: Options(method: 'POST', responseType: ResponseType.stream),
+    );
+  }
+
+  @override
+  Future<Result<DownloadedFile, Failure>> downloadContractVersion({
+    required String contractId,
+    required String documentVersionId,
+  }) {
+    final url = ApiEndpoints.contractVersionDownload
+        .replaceFirst('{contractId}', contractId.trim())
+        .replaceFirst('{documentVersionId}', documentVersionId.trim());
+
+    return downloadToTempFile(
+      apiClient: _apiClient,
+      url: url,
+      prefix: 'contract-$contractId',
+      fallbackFileName: 'contract-$documentVersionId.pdf',
+      options: Options(method: 'GET', responseType: ResponseType.stream),
     );
   }
 }

@@ -42,6 +42,11 @@ abstract class ContractRepository {
     required UploadContractRequest request,
   });
 
+  Future<Result<DownloadedFile, Failure>> downloadContractVersion({
+    required String contractId,
+    required String documentVersionId,
+  });
+
   Future<Result<List<ContractVersionResponse>, Failure>> getContractVersions({
     required String projectId,
     required String consultationId,
@@ -104,6 +109,15 @@ class ContractRepositoryImpl implements ContractRepository {
   }) => _remoteDataSource.generateDraft(
     consultationId: consultationId,
     request: request,
+  );
+
+  @override
+  Future<Result<DownloadedFile, Failure>> downloadContractVersion({
+    required String contractId,
+    required String documentVersionId,
+  }) => _remoteDataSource.downloadContractVersion(
+    contractId: contractId,
+    documentVersionId: documentVersionId,
   );
 
   @override
