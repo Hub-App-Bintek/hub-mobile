@@ -4,7 +4,6 @@ import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/repositories/contract_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/design_document_repository.dart';
-import 'package:pkp_hub/domain/repositories/files_repository.dart';
 import 'package:pkp_hub/domain/repositories/payment_repository.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
@@ -14,12 +13,12 @@ import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.
 import 'package:pkp_hub/domain/usecases/contract/upload_revised_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/download_contract_version_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/approve_design_documents_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/get_design_document_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/download_design_version_use_case.dart';
 import 'package:pkp_hub/domain/usecases/payment/get_payments_use_case.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultation_details_controller.dart';
@@ -131,16 +130,8 @@ class ConsultationDetailsBinding extends Bindings {
       () => DownloadDesignVersionUseCase(Get.find<DesignDocumentRepository>()),
       fenix: true,
     );
-    Get.lazyPut<DownloadFileUseCase>(
-      () => DownloadFileUseCase(Get.find<FilesRepository>()),
-      fenix: true,
-    );
-    Get.lazyPut<DownloadDesignVersionUseCase>(
-      () => DownloadDesignVersionUseCase(Get.find<DesignDocumentRepository>()),
-      fenix: true,
-    );
-    Get.lazyPut<DownloadFileUseCase>(
-      () => DownloadFileUseCase(Get.find<FilesRepository>()),
+    Get.lazyPut<DownloadContractVersionUseCase>(
+      () => DownloadContractVersionUseCase(Get.find<ContractRepository>()),
       fenix: true,
     );
     Get.lazyPut<ConsultationDetailsController>(
@@ -160,7 +151,7 @@ class ConsultationDetailsBinding extends Bindings {
         Get.find<AskDesignRevisionUseCase>(),
         Get.find<GetDesignDocumentVersionsUseCase>(),
         Get.find<DownloadDesignVersionUseCase>(),
-        Get.find<DownloadFileUseCase>(),
+        Get.find<DownloadContractVersionUseCase>(),
         Get.find<GetPaymentsUseCase>(),
       ),
       fenix: true,

@@ -31,6 +31,7 @@ import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart'
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/download_contract_version_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
@@ -41,7 +42,6 @@ import 'package:pkp_hub/domain/usecases/design_document/ask_design_revision_use_
 import 'package:pkp_hub/domain/usecases/design_document/download_design_version_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/get_design_document_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design_document/upload_design_documents_use_case.dart';
-import 'package:pkp_hub/domain/usecases/files/download_file_use_case.dart';
 import 'package:pkp_hub/domain/usecases/payment/get_payments_use_case.dart';
 
 enum ConsultationDetailStep { contract, draftDesign, finalDesign, invoice }
@@ -126,7 +126,7 @@ class ConsultationDetailsController extends BaseController {
     this._askDesignRevisionUseCase,
     this._getDesignDocumentVersionsUseCase,
     this._downloadDesignVersionUseCase,
-    this._downloadFileUseCase,
+    this._downloadContractVersionUseCase,
     this._getPaymentsUseCase,
   );
 
@@ -143,7 +143,7 @@ class ConsultationDetailsController extends BaseController {
   final UploadRevisedContractUseCase _uploadRevisedContractUseCase;
   final ApproveContractUseCase _approveContractUseCase;
   final SignContractUseCase _signContractUseCase;
-  final DownloadFileUseCase _downloadFileUseCase;
+  final DownloadContractVersionUseCase _downloadContractVersionUseCase;
 
   /// Design
   final GetDesignDocumentVersionsUseCase _getDesignDocumentVersionsUseCase;
@@ -612,9 +612,16 @@ class ConsultationDetailsController extends BaseController {
 
   Future<void> downloadContract(ConsultationContractItem item) async {
     if (isDownloadingContract.value) return;
-    final fileId = item.fileId;
-    if (fileId == null || fileId.isEmpty) {
-      showError(const ServerFailure(message: 'File kontrak tidak tersedia'));
+    final contractId = item.id;
+    if (contractId == null || contractId.isEmpty) {
+      showError(const ServerFailure(message: 'ID kontrak tidak tersedia'));
+      return;
+    }
+    final versionId = item.versionId;
+    if (versionId == null || versionId.isEmpty) {
+      showError(
+        const ServerFailure(message: 'Versi dokumen kontrak tidak tersedia'),
+      );
       return;
     }
 
@@ -623,7 +630,12 @@ class ConsultationDetailsController extends BaseController {
 
     try {
       await handleAsync<DownloadedFile>(
-        () => _downloadFileUseCase(DownloadFileParams(fileId: fileId)),
+        () => _downloadContractVersionUseCase(
+          DownloadContractVersionParams(
+            contractId: contractId,
+            documentVersionId: versionId,
+          ),
+        ),
         onSuccess: (file) async {
           hideLoadingOverlay();
           final projectName = project.value?.projectName ?? 'Konsultasi';
@@ -631,7 +643,7 @@ class ConsultationDetailsController extends BaseController {
             file: file,
             projectName: projectName,
             subDirectory: 'Kontrak',
-            mimeType: 'application/pdf',
+            mimeType: 'application/octet-stream',
           );
 
           if (saved != null && saved.isNotEmpty) {
