@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/config/environment.dart';
@@ -16,18 +17,12 @@ class PrototypeDesignDetailsController extends BaseController {
   PrototypeDesignDetailsController(
     this._getPrototypeDesignDetailUseCase,
     this._downloadPrototypeDesignUseCase,
-    this.prototypeId, {
-    PrototypeDesign? initialDesign,
-  }) {
-    if (initialDesign != null) {
-      design.value = initialDesign;
-      _hydrateFromDesign(initialDesign);
-    }
-  }
+  );
 
   final GetPrototypeDesignDetailUseCase _getPrototypeDesignDetailUseCase;
   final DownloadPrototypeDesignUseCase _downloadPrototypeDesignUseCase;
-  final String prototypeId;
+  late final String prototypeId;
+  PrototypeDesign? _initialDesign;
 
   final design = Rxn<PrototypeDesign>();
   final features = <String>[].obs;
@@ -55,7 +50,30 @@ class PrototypeDesignDetailsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    _hydrateArgs();
     fetchDesignDetail();
+  }
+
+  void _hydrateArgs() {
+    final rawArgs = Get.arguments;
+    if (rawArgs is PrototypeDesignDetailsArgs) {
+      prototypeId = rawArgs.designId.isNotEmpty
+          ? rawArgs.designId
+          : (rawArgs.design?.id ?? '');
+      _initialDesign = rawArgs.design;
+    } else if (rawArgs is Map<String, dynamic>) {
+      final design = rawArgs['design'] as PrototypeDesign?;
+      final rawId = (rawArgs['designId'] ?? rawArgs['id'] ?? '').toString();
+      prototypeId = rawId.isNotEmpty ? rawId : (design?.id ?? '');
+      _initialDesign = design;
+    } else {
+      prototypeId = '';
+    }
+
+    if (_initialDesign != null) {
+      design.value = _initialDesign;
+      _hydrateFromDesign(_initialDesign!);
+    }
   }
 
   Future<void> fetchDesignDetail() async {

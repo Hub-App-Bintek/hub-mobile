@@ -97,7 +97,7 @@ class SupervisorController extends BaseController {
 
     // Use handleAsync from your BaseController
     await handleAsync(
-          () => _getProfessionalsUseCase(GetProfessionalsParams(query: query)),
+      () => _getProfessionalsUseCase(GetProfessionalsParams(query: query)),
       onSuccess: (result) {
         // THIS IS WHERE THE LOGGING SHOULD BE
         _logger.d("onSuccess triggered. Result has ${result.length} items.");
@@ -112,7 +112,9 @@ class SupervisorController extends BaseController {
         // Use assignAll to efficiently update the reactive list
         supervisors.assignAll(entities);
 
-        _logger.i("Internal 'supervisors' list updated. New length: ${supervisors.length}");
+        _logger.i(
+          "Internal 'supervisors' list updated. New length: ${supervisors.length}",
+        );
 
         _sortSupervisors(); // Apply sort after fetching
       },

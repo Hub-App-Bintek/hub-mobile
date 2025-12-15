@@ -9,6 +9,7 @@ import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
 import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
 import 'package:pkp_hub/features/chat/screens/chats_screen.dart';
+import 'package:pkp_hub/features/consultation/bindings/consultation_binding.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultant_details_binding.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultants_binding.dart';
 import 'package:pkp_hub/features/consultation/bindings/consultation_confirmation_binding.dart';
@@ -104,7 +105,7 @@ class AppPages {
     GetPage(
       name: _Paths.consultation,
       page: () => const ConsultationScreen(),
-      binding: ConsultantsBinding(),
+      binding: ConsultationBinding(),
     ),
     GetPage(
       name: _Paths.consultants,

@@ -60,6 +60,7 @@ class ConsultantsArgs {
     this.showCreateCta = false,
     this.requireLoginForAction = false,
     this.type,
+    this.isPaidConsultation = false,
   });
 
   final String projectId;
@@ -69,6 +70,7 @@ class ConsultantsArgs {
   final bool showCreateCta;
   final bool requireLoginForAction;
   final String? type;
+  final bool isPaidConsultation;
 }
 
 class ProjectDetailsArgs {

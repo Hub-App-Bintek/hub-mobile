@@ -31,7 +31,7 @@ class ReportDetailController extends BaseController {
   Future<void> fetchReportDetail() async {
     isLoading.value = true;
     await handleAsync(
-          () => _getReportDetailUseCase(GetReportDetailParams(reportId: _reportId)),
+      () => _getReportDetailUseCase(GetReportDetailParams(reportId: _reportId)),
       onSuccess: (result) {
         reportDetail.value = result;
         isLoading.value = false;

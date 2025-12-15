@@ -12,8 +12,7 @@ class ReportDetailModel with _$ReportDetailModel {
     required int requestId,
     required String title,
     required String summary,
-    @JsonKey(defaultValue: [])
-    required List<ImageModel> images,
+    @JsonKey(defaultValue: []) required List<ImageModel> images,
     required DateTime createdAt,
     required int supervisorId,
     required String supervisorName,

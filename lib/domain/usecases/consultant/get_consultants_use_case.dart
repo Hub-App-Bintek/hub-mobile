@@ -10,6 +10,7 @@ class GetConsultantsParams {
     required this.long,
     required this.page,
     required this.size,
+    required this.type,
     this.sortBy,
   });
 
@@ -17,6 +18,7 @@ class GetConsultantsParams {
   final double long;
   final int page;
   final int size;
+  final String type;
   final String? sortBy;
 }
 
@@ -35,6 +37,7 @@ class GetConsultantsUseCase
       long: params.long,
       page: params.page,
       size: params.size,
+      type: params.type,
       sortBy: params.sortBy,
     );
   }

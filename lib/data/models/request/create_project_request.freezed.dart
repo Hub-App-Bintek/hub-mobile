@@ -28,6 +28,7 @@ mixin _$CreateProjectRequest {
   String get type =>
       throw _privateConstructorUsedError; // e.g. 'CONSULTATION', 'PROTOTYPE', 'NON_PROTOTYPE'
   double get landArea => throw _privateConstructorUsedError;
+  double get buildingArea => throw _privateConstructorUsedError;
   double get income => throw _privateConstructorUsedError;
   String get provinceId => throw _privateConstructorUsedError;
   String get regencyId => throw _privateConstructorUsedError;
@@ -54,6 +55,7 @@ abstract class $CreateProjectRequestCopyWith<$Res> {
     String locationDetail,
     String type,
     double landArea,
+    double buildingArea,
     double income,
     String provinceId,
     String regencyId,
@@ -84,6 +86,7 @@ class _$CreateProjectRequestCopyWithImpl<
     Object? locationDetail = null,
     Object? type = null,
     Object? landArea = null,
+    Object? buildingArea = null,
     Object? income = null,
     Object? provinceId = null,
     Object? regencyId = null,
@@ -115,6 +118,10 @@ class _$CreateProjectRequestCopyWithImpl<
             landArea: null == landArea
                 ? _value.landArea
                 : landArea // ignore: cast_nullable_to_non_nullable
+                      as double,
+            buildingArea: null == buildingArea
+                ? _value.buildingArea
+                : buildingArea // ignore: cast_nullable_to_non_nullable
                       as double,
             income: null == income
                 ? _value.income
@@ -158,6 +165,7 @@ abstract class _$$CreateProjectRequestImplCopyWith<$Res>
     String locationDetail,
     String type,
     double landArea,
+    double buildingArea,
     double income,
     String provinceId,
     String regencyId,
@@ -184,6 +192,7 @@ class __$$CreateProjectRequestImplCopyWithImpl<$Res>
     Object? locationDetail = null,
     Object? type = null,
     Object? landArea = null,
+    Object? buildingArea = null,
     Object? income = null,
     Object? provinceId = null,
     Object? regencyId = null,
@@ -215,6 +224,10 @@ class __$$CreateProjectRequestImplCopyWithImpl<$Res>
         landArea: null == landArea
             ? _value.landArea
             : landArea // ignore: cast_nullable_to_non_nullable
+                  as double,
+        buildingArea: null == buildingArea
+            ? _value.buildingArea
+            : buildingArea // ignore: cast_nullable_to_non_nullable
                   as double,
         income: null == income
             ? _value.income
@@ -251,6 +264,7 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
     required this.locationDetail,
     required this.type,
     required this.landArea,
+    required this.buildingArea,
     required this.income,
     required this.provinceId,
     required this.regencyId,
@@ -275,6 +289,8 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
   @override
   final double landArea;
   @override
+  final double buildingArea;
+  @override
   final double income;
   @override
   final String provinceId;
@@ -287,7 +303,7 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
 
   @override
   String toString() {
-    return 'CreateProjectRequest(name: $name, longitude: $longitude, latitude: $latitude, locationDetail: $locationDetail, type: $type, landArea: $landArea, income: $income, provinceId: $provinceId, regencyId: $regencyId, districtId: $districtId, villageId: $villageId)';
+    return 'CreateProjectRequest(name: $name, longitude: $longitude, latitude: $latitude, locationDetail: $locationDetail, type: $type, landArea: $landArea, buildingArea: $buildingArea, income: $income, provinceId: $provinceId, regencyId: $regencyId, districtId: $districtId, villageId: $villageId)';
   }
 
   @override
@@ -305,6 +321,8 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
             (identical(other.type, type) || other.type == type) &&
             (identical(other.landArea, landArea) ||
                 other.landArea == landArea) &&
+            (identical(other.buildingArea, buildingArea) ||
+                other.buildingArea == buildingArea) &&
             (identical(other.income, income) || other.income == income) &&
             (identical(other.provinceId, provinceId) ||
                 other.provinceId == provinceId) &&
@@ -326,6 +344,7 @@ class _$CreateProjectRequestImpl implements _CreateProjectRequest {
     locationDetail,
     type,
     landArea,
+    buildingArea,
     income,
     provinceId,
     regencyId,
@@ -357,6 +376,7 @@ abstract class _CreateProjectRequest implements CreateProjectRequest {
     required final String locationDetail,
     required final String type,
     required final double landArea,
+    required final double buildingArea,
     required final double income,
     required final String provinceId,
     required final String regencyId,
@@ -379,6 +399,8 @@ abstract class _CreateProjectRequest implements CreateProjectRequest {
   String get type;
   @override // e.g. 'CONSULTATION', 'PROTOTYPE', 'NON_PROTOTYPE'
   double get landArea;
+  @override
+  double get buildingArea;
   @override
   double get income;
   @override

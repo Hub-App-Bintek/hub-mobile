@@ -121,7 +121,7 @@ class RepositoryInjection {
 
     // Monitoring repository
     Get.lazyPut<MonitoringRepository>(
-          () => MonitoringRepositoryImpl(Get.find<MonitoringRemoteDataSource>()),
+      () => MonitoringRepositoryImpl(Get.find<MonitoringRemoteDataSource>()),
       fenix: true,
     );
   }

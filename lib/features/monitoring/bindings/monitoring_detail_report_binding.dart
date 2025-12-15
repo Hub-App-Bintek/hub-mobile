@@ -6,7 +6,12 @@ import 'package:pkp_hub/features/monitoring/controllers/report_detail_controller
 class MonitoringDetailReportBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => GetReportDetailUseCase(Get.find<MonitoringRepositoryImpl>()));
-    Get.lazyPut(() => ReportDetailController(Get.find<GetReportDetailUseCase>()), fenix: true);
+    Get.lazyPut(
+      () => GetReportDetailUseCase(Get.find<MonitoringRepositoryImpl>()),
+    );
+    Get.lazyPut(
+      () => ReportDetailController(Get.find<GetReportDetailUseCase>()),
+      fenix: true,
+    );
   }
 }

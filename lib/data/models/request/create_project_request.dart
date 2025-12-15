@@ -12,6 +12,7 @@ class CreateProjectRequest with _$CreateProjectRequest {
     required String locationDetail,
     required String type, // e.g. 'CONSULTATION', 'PROTOTYPE', 'NON_PROTOTYPE'
     required double landArea,
+    required double buildingArea,
     required double income,
     required String provinceId,
     required String regencyId,

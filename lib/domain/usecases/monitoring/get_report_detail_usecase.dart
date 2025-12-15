@@ -11,7 +11,9 @@ class GetReportDetailUseCase
   GetReportDetailUseCase(this._repository);
 
   @override
-  Future<Result<ReportDetailModel, Failure>> call(GetReportDetailParams params) {
+  Future<Result<ReportDetailModel, Failure>> call(
+    GetReportDetailParams params,
+  ) {
     return _repository.getReportDetail(reportId: params.reportId);
   }
 }

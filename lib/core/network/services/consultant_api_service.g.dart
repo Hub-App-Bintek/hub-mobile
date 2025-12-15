@@ -23,8 +23,7 @@ class _ConsultantApiService implements ConsultantApiService {
     required double long,
     required int page,
     required int size,
-    String? type,
-    String? specialty,
+    required String type,
     String? sortBy,
   }) async {
     final _extra = <String, dynamic>{};
@@ -34,7 +33,6 @@ class _ConsultantApiService implements ConsultantApiService {
       r'page': page,
       r'size': size,
       r'type': type,
-      r'specialty': specialty,
       r'sortBy': sortBy,
     };
     queryParameters.removeWhere((k, v) => v == null);

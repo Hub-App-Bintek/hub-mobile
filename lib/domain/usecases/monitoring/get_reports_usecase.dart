@@ -11,7 +11,9 @@ class GetReportsUseCase
   GetReportsUseCase(this._repository);
 
   @override
-  Future<Result<List<MonitoringItemModel>, Failure>> call(GetReportsParams params) {
+  Future<Result<List<MonitoringItemModel>, Failure>> call(
+    GetReportsParams params,
+  ) {
     return _repository.getReports(monitoringId: params.monitoringId);
   }
 }

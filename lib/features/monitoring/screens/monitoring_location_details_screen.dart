@@ -86,7 +86,7 @@ class MonitoringFormScreen extends GetView<MonitoringFormController> {
                           _dropdownField(
                             label: 'Tipe Rumah',
                             hint: 'PROTOTYPE/NON_PROTOTYPE',
-                            options: ["PROTOTYPE","NON_PROTOTYPE"],
+                            options: ["PROTOTYPE", "NON_PROTOTYPE"],
                             controller: controller.projectTypeController,
                             enabled: true,
                             onChanged: controller.selectProjectType,

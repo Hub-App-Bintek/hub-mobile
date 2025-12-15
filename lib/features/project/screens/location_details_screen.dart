@@ -100,6 +100,14 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
                           ),
                           const SizedBox(height: 16),
                           PkpTextFormField(
+                            controller: controller.buildingAreaController,
+                            labelText: 'Luas Bangunan (m²)*',
+                            hintText: 'Masukkan luas bangunan',
+                            type: PkpTextFormFieldType.number,
+                            errorText: controller.buildingAreaError.value,
+                          ),
+                          const SizedBox(height: 16),
+                          PkpTextFormField(
                             controller: controller.incomeController,
                             labelText: 'Pendapatan (Rp)*',
                             hintText: 'Masukkan pendapatan',

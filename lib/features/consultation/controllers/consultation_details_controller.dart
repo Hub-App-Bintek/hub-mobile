@@ -1121,6 +1121,7 @@ class ConsultationDetailsController extends BaseController {
       },
       onFailure: showError,
     );
+    isDesignFormValid.value = false;
     isUploadingDesign.value = false;
   }
 

@@ -7,8 +7,8 @@ part 'api_error_response.g.dart';
 @freezed
 class ApiErrorResponse with _$ApiErrorResponse {
   const factory ApiErrorResponse({
-    required String errorCode,
-    required String message,
+    required String? errorCode,
+    required String? message,
   }) = _ApiErrorResponse;
 
   factory ApiErrorResponse.fromJson(Map<String, dynamic> json) =>

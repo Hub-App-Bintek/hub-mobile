@@ -12,10 +12,12 @@ part of 'construction_supervisor_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ConstructionSupervisorModel _$ConstructionSupervisorModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ConstructionSupervisorModel.fromJson(json);
 }
 
@@ -32,30 +34,36 @@ mixin _$ConstructionSupervisorModel {
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $ConstructionSupervisorModelCopyWith<ConstructionSupervisorModel>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ConstructionSupervisorModelCopyWith<$Res> {
   factory $ConstructionSupervisorModelCopyWith(
-          ConstructionSupervisorModel value,
-          $Res Function(ConstructionSupervisorModel) then) =
-      _$ConstructionSupervisorModelCopyWithImpl<$Res,
-          ConstructionSupervisorModel>;
+    ConstructionSupervisorModel value,
+    $Res Function(ConstructionSupervisorModel) then,
+  ) =
+      _$ConstructionSupervisorModelCopyWithImpl<
+        $Res,
+        ConstructionSupervisorModel
+      >;
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String type,
-      String specialization,
-      double rate,
-      String availabilityStatus,
-      String location});
+  $Res call({
+    int id,
+    String name,
+    String type,
+    String specialization,
+    double rate,
+    String availabilityStatus,
+    String location,
+  });
 }
 
 /// @nodoc
-class _$ConstructionSupervisorModelCopyWithImpl<$Res,
-        $Val extends ConstructionSupervisorModel>
+class _$ConstructionSupervisorModelCopyWithImpl<
+  $Res,
+  $Val extends ConstructionSupervisorModel
+>
     implements $ConstructionSupervisorModelCopyWith<$Res> {
   _$ConstructionSupervisorModelCopyWithImpl(this._value, this._then);
 
@@ -75,36 +83,39 @@ class _$ConstructionSupervisorModelCopyWithImpl<$Res,
     Object? availabilityStatus = null,
     Object? location = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      specialization: null == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String,
-      rate: null == rate
-          ? _value.rate
-          : rate // ignore: cast_nullable_to_non_nullable
-              as double,
-      availabilityStatus: null == availabilityStatus
-          ? _value.availabilityStatus
-          : availabilityStatus // ignore: cast_nullable_to_non_nullable
-              as String,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            specialization: null == specialization
+                ? _value.specialization
+                : specialization // ignore: cast_nullable_to_non_nullable
+                      as String,
+            rate: null == rate
+                ? _value.rate
+                : rate // ignore: cast_nullable_to_non_nullable
+                      as double,
+            availabilityStatus: null == availabilityStatus
+                ? _value.availabilityStatus
+                : availabilityStatus // ignore: cast_nullable_to_non_nullable
+                      as String,
+            location: null == location
+                ? _value.location
+                : location // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -112,30 +123,34 @@ class _$ConstructionSupervisorModelCopyWithImpl<$Res,
 abstract class _$$ConstructionSupervisorModelImplCopyWith<$Res>
     implements $ConstructionSupervisorModelCopyWith<$Res> {
   factory _$$ConstructionSupervisorModelImplCopyWith(
-          _$ConstructionSupervisorModelImpl value,
-          $Res Function(_$ConstructionSupervisorModelImpl) then) =
-      __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>;
+    _$ConstructionSupervisorModelImpl value,
+    $Res Function(_$ConstructionSupervisorModelImpl) then,
+  ) = __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String type,
-      String specialization,
-      double rate,
-      String availabilityStatus,
-      String location});
+  $Res call({
+    int id,
+    String name,
+    String type,
+    String specialization,
+    double rate,
+    String availabilityStatus,
+    String location,
+  });
 }
 
 /// @nodoc
 class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
-    extends _$ConstructionSupervisorModelCopyWithImpl<$Res,
-        _$ConstructionSupervisorModelImpl>
+    extends
+        _$ConstructionSupervisorModelCopyWithImpl<
+          $Res,
+          _$ConstructionSupervisorModelImpl
+        >
     implements _$$ConstructionSupervisorModelImplCopyWith<$Res> {
   __$$ConstructionSupervisorModelImplCopyWithImpl(
-      _$ConstructionSupervisorModelImpl _value,
-      $Res Function(_$ConstructionSupervisorModelImpl) _then)
-      : super(_value, _then);
+    _$ConstructionSupervisorModelImpl _value,
+    $Res Function(_$ConstructionSupervisorModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -148,36 +163,38 @@ class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
     Object? availabilityStatus = null,
     Object? location = null,
   }) {
-    return _then(_$ConstructionSupervisorModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      specialization: null == specialization
-          ? _value.specialization
-          : specialization // ignore: cast_nullable_to_non_nullable
-              as String,
-      rate: null == rate
-          ? _value.rate
-          : rate // ignore: cast_nullable_to_non_nullable
-              as double,
-      availabilityStatus: null == availabilityStatus
-          ? _value.availabilityStatus
-          : availabilityStatus // ignore: cast_nullable_to_non_nullable
-              as String,
-      location: null == location
-          ? _value.location
-          : location // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$ConstructionSupervisorModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        specialization: null == specialization
+            ? _value.specialization
+            : specialization // ignore: cast_nullable_to_non_nullable
+                  as String,
+        rate: null == rate
+            ? _value.rate
+            : rate // ignore: cast_nullable_to_non_nullable
+                  as double,
+        availabilityStatus: null == availabilityStatus
+            ? _value.availabilityStatus
+            : availabilityStatus // ignore: cast_nullable_to_non_nullable
+                  as String,
+        location: null == location
+            ? _value.location
+            : location // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -185,18 +202,19 @@ class __$$ConstructionSupervisorModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ConstructionSupervisorModelImpl
     implements _ConstructionSupervisorModel {
-  const _$ConstructionSupervisorModelImpl(
-      {required this.id,
-      required this.name,
-      required this.type,
-      required this.specialization,
-      required this.rate,
-      required this.availabilityStatus,
-      required this.location});
+  const _$ConstructionSupervisorModelImpl({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.specialization,
+    required this.rate,
+    required this.availabilityStatus,
+    required this.location,
+  });
 
   factory _$ConstructionSupervisorModelImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$ConstructionSupervisorModelImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$ConstructionSupervisorModelImplFromJson(json);
 
   @override
   final int id;
@@ -237,34 +255,43 @@ class _$ConstructionSupervisorModelImpl
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, type, specialization,
-      rate, availabilityStatus, location);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    type,
+    specialization,
+    rate,
+    availabilityStatus,
+    location,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ConstructionSupervisorModelImplCopyWith<_$ConstructionSupervisorModelImpl>
-      get copyWith => __$$ConstructionSupervisorModelImplCopyWithImpl<
-          _$ConstructionSupervisorModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$ConstructionSupervisorModelImplCopyWithImpl<
+        _$ConstructionSupervisorModelImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ConstructionSupervisorModelImplToJson(
-      this,
-    );
+    return _$$ConstructionSupervisorModelImplToJson(this);
   }
 }
 
 abstract class _ConstructionSupervisorModel
     implements ConstructionSupervisorModel {
-  const factory _ConstructionSupervisorModel(
-      {required final int id,
-      required final String name,
-      required final String type,
-      required final String specialization,
-      required final double rate,
-      required final String availabilityStatus,
-      required final String location}) = _$ConstructionSupervisorModelImpl;
+  const factory _ConstructionSupervisorModel({
+    required final int id,
+    required final String name,
+    required final String type,
+    required final String specialization,
+    required final double rate,
+    required final String availabilityStatus,
+    required final String location,
+  }) = _$ConstructionSupervisorModelImpl;
 
   factory _ConstructionSupervisorModel.fromJson(Map<String, dynamic> json) =
       _$ConstructionSupervisorModelImpl.fromJson;
@@ -286,5 +313,5 @@ abstract class _ConstructionSupervisorModel
   @override
   @JsonKey(ignore: true)
   _$$ConstructionSupervisorModelImplCopyWith<_$ConstructionSupervisorModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
