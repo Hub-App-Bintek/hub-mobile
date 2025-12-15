@@ -11,7 +11,9 @@ class GetFindingsUseCase
   GetFindingsUseCase(this._repository);
 
   @override
-  Future<Result<List<MonitoringItemModel>, Failure>> call(GetFindingsParams params) {
+  Future<Result<List<MonitoringItemModel>, Failure>> call(
+    GetFindingsParams params,
+  ) {
     return _repository.getFindings(monitoringId: params.monitoringId);
   }
 }

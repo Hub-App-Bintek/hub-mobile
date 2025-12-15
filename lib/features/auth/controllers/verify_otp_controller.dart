@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
@@ -15,7 +16,7 @@ class VerifyOtpController extends BaseController {
   final ResendOtpUseCase _resendOtpUseCase;
   final UserStorage _userStorage;
 
-  final String email;
+  late final String email;
 
   // --- UI State ---
   final isRequesting = false.obs;
@@ -33,7 +34,6 @@ class VerifyOtpController extends BaseController {
   Timer? _timer;
 
   VerifyOtpController({
-    required this.email,
     required VerifyOtpUseCase verifyOtpUseCase,
     required ResendOtpUseCase resendOtpUseCase,
     required UserStorage authSession,
@@ -44,11 +44,23 @@ class VerifyOtpController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    email = _resolveEmailFromArgs();
     for (var i = 0; i < otpLength; i++) {
       otpControllers.add(TextEditingController());
       otpFocusNodes.add(FocusNode());
     }
     _startTimer();
+  }
+
+  String _resolveEmailFromArgs() {
+    final args = Get.arguments;
+    if (args is VerifyOtpArgs) {
+      return args.email;
+    }
+    if (args is String) {
+      return args;
+    }
+    return '';
   }
 
   /// Returns the completed OTP string.

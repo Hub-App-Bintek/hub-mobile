@@ -1,12 +1,10 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
-import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
-import 'package:pkp_hub/features/consultation/controllers/consultants_controller.dart';
+import 'package:pkp_hub/features/consultation/controllers/consultation_controller.dart';
 
-class ConsultantsBinding extends Bindings {
+class ConsultationBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<GetConsultantsUseCase>(
@@ -14,8 +12,8 @@ class ConsultantsBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<ConsultantsController>(
-      () => ConsultantsController(
+    Get.lazyPut<ConsultationController>(
+      () => ConsultationController(
         Get.find<GetConsultantsUseCase>(),
         Get.find<UserStorage>(),
       ),

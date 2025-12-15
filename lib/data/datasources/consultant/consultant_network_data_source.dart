@@ -12,6 +12,7 @@ abstract class ConsultantNetworkDataSource {
     required double long,
     required int page,
     required int size,
+    required String type,
     String? sortBy,
   });
   Future<Result<ConsultantPortfoliosResponse, Failure>>
@@ -30,6 +31,7 @@ class ConsultantNetworkDataSourceImpl implements ConsultantNetworkDataSource {
     required double long,
     required int page,
     required int size,
+    required String type,
     String? sortBy,
   }) async {
     try {
@@ -38,6 +40,7 @@ class ConsultantNetworkDataSourceImpl implements ConsultantNetworkDataSource {
         long: long,
         page: page,
         size: size,
+        type: type,
         sortBy: sortBy,
       );
       return Success(res);

@@ -57,13 +57,15 @@ class MonitoringSupervisorScreen extends GetView<SupervisorController> {
                   itemCount: controller.supervisors.length,
                   itemBuilder: (_, index) {
                     final supervisor = controller.supervisors[index];
-                    return  Obx( () => _SupervisorCard(
-                      supervisor: supervisor,
-                      isSelected:
-                          controller.selectedSupervisorId.value ==
-                          supervisor.id,
-                      onTap: () => controller.selectSupervisor(supervisor),
-                    ));
+                    return Obx(
+                      () => _SupervisorCard(
+                        supervisor: supervisor,
+                        isSelected:
+                            controller.selectedSupervisorId.value ==
+                            supervisor.id,
+                        onTap: () => controller.selectSupervisor(supervisor),
+                      ),
+                    );
                   },
                 ),
               ),

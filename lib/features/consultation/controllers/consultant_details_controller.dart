@@ -22,29 +22,25 @@ import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
 
 class ConsultantDetailsController extends BaseController {
-  final String _consultantId;
-  final String _projectId;
-  final bool _isPaidConsultation;
+  ConsultantDetailsController(
+    this._userStorage,
+    this._getPortfolioListUseCase,
+    this._createConsultationUseCase,
+    this._createDirectChatRoomUseCase,
+  );
+
   final UserStorage _userStorage;
   final GetConsultantPortfoliosUseCase _getPortfolioListUseCase;
-  final Consultant? _consultant;
-  final bool _requireLoginForAction;
 
   // Inject create consultation use case
   final CreateConsultationUseCase _createConsultationUseCase;
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
-  ConsultantDetailsController(
-    this._consultantId,
-    this._projectId,
-    this._isPaidConsultation,
-    this._userStorage,
-    this._getPortfolioListUseCase,
-    this._createConsultationUseCase,
-    this._createDirectChatRoomUseCase,
-    this._consultant,
-    this._requireLoginForAction,
-  );
+  String _consultantId = '';
+  String _projectId = '';
+  bool _isPaidConsultation = false;
+  bool _requireLoginForAction = false;
+  Consultant? _consultant;
 
   // Reactive state
   final portfolios = <Portfolio>[].obs;
@@ -77,9 +73,34 @@ class ConsultantDetailsController extends BaseController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    _hydrateArgs();
     scrollController.addListener(_onScroll);
     _hydrateConsultantFromArgument();
     await refreshList(); // fetch first page
+  }
+
+  void _hydrateArgs() {
+    final rawArgs = Get.arguments;
+    ConsultantDetailsArgs? args;
+    if (rawArgs is ConsultantDetailsArgs) {
+      args = rawArgs;
+    } else if (rawArgs is Map<String, dynamic>) {
+      args = ConsultantDetailsArgs(
+        consultantId: rawArgs['consultantId'] ?? '',
+        projectId: rawArgs['projectId'] ?? '',
+        isPaidConsultation: rawArgs['isPaidConsultation'] ?? false,
+        consultation: rawArgs['consultation'],
+        requireLoginForAction:
+            rawArgs['requireLoginForAction'] as bool? ?? false,
+      );
+    }
+    args ??= const ConsultantDetailsArgs(consultantId: '', projectId: '');
+
+    _consultantId = args.consultantId;
+    _projectId = args.projectId;
+    _isPaidConsultation = args.isPaidConsultation;
+    _consultant = args.consultation as Consultant?;
+    _requireLoginForAction = args.requireLoginForAction;
   }
 
   void _onScroll() {
@@ -254,15 +275,15 @@ class ConsultantDetailsController extends BaseController {
 
   void _hydrateConsultantFromArgument() {
     if (_consultant == null) return;
-    consultantName.value = _consultant.fullName ?? '';
-    consultantSpeciality.value = _consultant.specialty;
-    consultantRating.value = _consultant.rating;
-    consultantPrice.value = _consultant.hourlyRate;
-    consultantAvatarUrl.value = _consultant.avatarUrl;
+    consultantName.value = _consultant?.fullName ?? '';
+    consultantSpeciality.value = _consultant?.specialty;
+    consultantRating.value = _consultant?.rating;
+    consultantPrice.value = _consultant?.hourlyRate;
+    consultantAvatarUrl.value = _consultant?.avatarUrl;
     consultantLocation.value =
-        _consultant.location ?? _consultant.address ?? '-';
-    if ((_consultant.address ?? '').isNotEmpty) {
-      consultantAbout.value = _consultant.address!;
+        _consultant?.location ?? _consultant?.address ?? '-';
+    if ((_consultant?.address ?? '').isNotEmpty) {
+      consultantAbout.value = _consultant?.address ?? '-';
     }
   }
 
@@ -274,7 +295,7 @@ class ConsultantDetailsController extends BaseController {
   int get completedProjectsCount => portfolios.length;
 
   String get experienceText => _consultant?.experienceLevel?.isNotEmpty == true
-      ? _consultant!.experienceLevel!
+      ? _consultant?.experienceLevel ?? ''
       : '-';
 
   @override

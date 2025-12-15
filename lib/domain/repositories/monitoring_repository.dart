@@ -34,7 +34,6 @@ abstract class MonitoringRepository {
   });
 }
 
-
 class MonitoringRepositoryImpl implements MonitoringRepository {
   final MonitoringRemoteDataSource _remoteDataSource;
   // ... other datasources
@@ -62,6 +61,7 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }) async {
     return _remoteDataSource.getProfessionals(query: query);
   }
+
   @override
   Future<Result<List<MonitoringItemModel>, Failure>> getFindings({
     required int monitoringId,
@@ -82,5 +82,4 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }) async {
     return _remoteDataSource.getReportDetail(reportId: reportId);
   }
-
 }

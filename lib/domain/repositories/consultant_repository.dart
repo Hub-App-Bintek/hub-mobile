@@ -10,6 +10,7 @@ abstract class ConsultantRepository {
     required double long,
     required int page,
     required int size,
+    required String type,
     String? sortBy,
   });
 
@@ -28,6 +29,7 @@ class ConsultantRepositoryImpl implements ConsultantRepository {
     required double long,
     required int page,
     required int size,
+    required String type,
     String? sortBy,
   }) {
     return _dataSource.getConsultants(
@@ -35,6 +37,7 @@ class ConsultantRepositoryImpl implements ConsultantRepository {
       long: long,
       page: page,
       size: size,
+      type: type,
       sortBy: sortBy,
     );
   }

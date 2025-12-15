@@ -33,28 +33,15 @@ class MonitoringFormBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<MonitoringFormController>(() {
-      final rawArgs = Get.arguments;
-      LocationDetailsArgs args;
-      if (rawArgs is LocationDetailsArgs) {
-        args = rawArgs;
-      } else if (rawArgs is Map<String, dynamic>) {
-        args = LocationDetailsArgs(
-          consultantId: rawArgs['consultantId'] as String?,
-          isPaidConsultation: rawArgs['isPaidConsultation'] as bool? ?? false,
-          type: rawArgs['type'] as String?,
-        );
-      } else {
-        args = const LocationDetailsArgs();
-      }
-      return MonitoringFormController(
+    Get.lazyPut<MonitoringFormController>(
+      () => MonitoringFormController(
         Get.find<CreateProjectUseCase>(),
         Get.find<GetProvincesUseCase>(),
         Get.find<GetRegenciesUseCase>(),
         Get.find<GetDistrictsUseCase>(),
         Get.find<GetVillagesUseCase>(),
-        args.type,
-      );
-    }, fenix: true);
+      ),
+      fenix: true,
+    );
   }
 }

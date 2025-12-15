@@ -18,8 +18,7 @@ abstract class ConsultantApiService {
     @Query('long') required double long,
     @Query('page') required int page,
     @Query('size') required int size,
-    @Query('type') String? type,
-    @Query('specialty') String? specialty,
+    @Query('type') required String type,
     @Query('sortBy') String? sortBy,
   });
 

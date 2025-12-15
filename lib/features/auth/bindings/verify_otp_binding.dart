@@ -18,18 +18,8 @@ class VerifyOtpBinding extends Bindings {
       fenix: true,
     );
 
-    final args = Get.arguments;
-    String email;
-    if (args is VerifyOtpArgs) {
-      email = args.email;
-    } else if (args is String) {
-      email = args;
-    } else {
-      email = '';
-    }
     Get.lazyPut<VerifyOtpController>(
       () => VerifyOtpController(
-        email: email,
         verifyOtpUseCase: Get.find<VerifyOtpUseCase>(),
         resendOtpUseCase: Get.find<ResendOtpUseCase>(),
         authSession: Get.find<UserStorage>(),

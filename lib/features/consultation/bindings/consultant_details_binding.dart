@@ -29,33 +29,14 @@ class ConsultantDetailsBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<ConsultantDetailsController>(() {
-      final rawArgs = Get.arguments;
-      ConsultantDetailsArgs? args;
-      if (rawArgs is ConsultantDetailsArgs) {
-        args = rawArgs;
-      } else if (rawArgs is Map<String, dynamic>) {
-        args = ConsultantDetailsArgs(
-          consultantId: rawArgs['consultantId'] ?? '',
-          projectId: rawArgs['projectId'] ?? '',
-          isPaidConsultation: rawArgs['isPaidConsultation'] ?? false,
-          consultation: rawArgs['consultation'],
-          requireLoginForAction:
-              rawArgs['requireLoginForAction'] as bool? ?? false,
-        );
-      }
-      args ??= const ConsultantDetailsArgs(consultantId: '', projectId: '');
-      return ConsultantDetailsController(
-        args.consultantId,
-        args.projectId,
-        args.isPaidConsultation,
+    Get.lazyPut<ConsultantDetailsController>(
+      () => ConsultantDetailsController(
         Get.find<UserStorage>(),
         Get.find<GetConsultantPortfoliosUseCase>(),
         Get.find<CreateConsultationUseCase>(),
         Get.find<CreateDirectChatRoomUseCase>(),
-        args.consultation as Consultant?,
-        args.requireLoginForAction,
-      );
-    }, fenix: true);
+      ),
+      fenix: true,
+    );
   }
 }

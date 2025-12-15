@@ -40,31 +40,16 @@ class LocationDetailsBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<LocationDetailsController>(() {
-      final rawArgs = Get.arguments;
-      LocationDetailsArgs args;
-      if (rawArgs is LocationDetailsArgs) {
-        args = rawArgs;
-      } else if (rawArgs is Map<String, dynamic>) {
-        args = LocationDetailsArgs(
-          consultantId: rawArgs['consultantId'] as String?,
-          isPaidConsultation: rawArgs['isPaidConsultation'] as bool? ?? false,
-          type: rawArgs['type'] as String?,
-        );
-      } else {
-        args = const LocationDetailsArgs();
-      }
-      return LocationDetailsController(
+    Get.lazyPut<LocationDetailsController>(
+      () => LocationDetailsController(
         Get.find<CreateProjectUseCase>(),
         Get.find<CreateConsultationUseCase>(),
         Get.find<GetProvincesUseCase>(),
         Get.find<GetRegenciesUseCase>(),
         Get.find<GetDistrictsUseCase>(),
         Get.find<GetVillagesUseCase>(),
-        args.consultantId,
-        args.isPaidConsultation,
-        args.type,
-      );
-    }, fenix: true);
+      ),
+      fenix: true,
+    );
   }
 }

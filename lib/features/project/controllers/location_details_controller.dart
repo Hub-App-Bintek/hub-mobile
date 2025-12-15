@@ -36,9 +36,6 @@ class LocationDetailsController extends BaseController {
   final GetRegenciesUseCase _getRegenciesUseCase;
   final GetDistrictsUseCase _getDistrictsUseCase;
   final GetVillagesUseCase _getVillagesUseCase;
-  final String? _consultantId;
-  final bool _isPaidConsultation;
-  final String? _initialProjectTypeId;
 
   LocationDetailsController(
     this._createProjectUseCase,
@@ -47,10 +44,11 @@ class LocationDetailsController extends BaseController {
     this._getRegenciesUseCase,
     this._getDistrictsUseCase,
     this._getVillagesUseCase,
-    this._consultantId,
-    this._isPaidConsultation,
-    this._initialProjectTypeId,
   );
+
+  String? _consultantId;
+  bool? _isPaidConsultation = false;
+  String? _initialProjectTypeId;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -61,6 +59,7 @@ class LocationDetailsController extends BaseController {
   final TextEditingController locationDetailsController =
       TextEditingController();
   final TextEditingController landAreaController = TextEditingController();
+  final TextEditingController buildingAreaController = TextEditingController();
   final TextEditingController incomeController = TextEditingController();
   final TextEditingController incomeProofController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
@@ -75,6 +74,7 @@ class LocationDetailsController extends BaseController {
   RxBool isVillageValid = false.obs;
   RxBool isLocationDetailsValid = false.obs;
   RxBool isLandAreaValid = false.obs;
+  RxBool isBuildingAreaValid = false.obs;
   RxBool isIncomeValid = true.obs;
   RxBool isIncomeProofValid = false.obs;
   RxnString incomeProofPath = RxnString();
@@ -86,6 +86,7 @@ class LocationDetailsController extends BaseController {
   RxnString villageError = RxnString();
   RxnString locationDetailsError = RxnString();
   RxnString landAreaError = RxnString();
+  RxnString buildingAreaError = RxnString();
   RxnString incomeError = RxnString();
   RxnString incomeProofError = RxnString();
 
@@ -134,6 +135,7 @@ class LocationDetailsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    _hydrateArgs();
     _getUserLocation();
     _hydrateInitialType();
     _fetchProvinces();
@@ -144,11 +146,29 @@ class LocationDetailsController extends BaseController {
     locationDetailsController.addListener(_validateLocationDetails);
     incomeController.addListener(_validateIncome);
     landAreaController.addListener(_validateLandArea);
+    buildingAreaController.addListener(_validateBuildingArea);
+    incomeProofController.addListener(_validateIncomeProof);
     incomeController.addListener(_validateIncome);
   }
 
+  void _hydrateArgs() {
+    final rawArgs = Get.arguments;
+    if (rawArgs is LocationDetailsArgs) {
+      _consultantId = rawArgs.consultantId;
+      _isPaidConsultation = rawArgs.isPaidConsultation;
+      _initialProjectTypeId = rawArgs.type;
+      return;
+    }
+    if (rawArgs is Map<String, dynamic>) {
+      _consultantId = rawArgs['consultantId'] as String?;
+      _isPaidConsultation = rawArgs['isPaidConsultation'] as bool?;
+      _initialProjectTypeId = rawArgs['type'] as String?;
+    }
+  }
+
   void _hydrateInitialType() {
-    if (_initialProjectTypeId == null || _initialProjectTypeId.isEmpty) {
+    if (_initialProjectTypeId == null ||
+        _initialProjectTypeId?.isEmpty == true) {
       return;
     }
     final match = projectTypes.firstWhere(
@@ -225,6 +245,7 @@ class LocationDetailsController extends BaseController {
   void onIncomeProofPicked(String path) {
     incomeProofPath.value = path;
     incomeProofController.text = path.split(Platform.pathSeparator).last;
+    _validateIncomeProof();
   }
 
   void _validateProvince() {
@@ -284,6 +305,16 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
+  void _validateIncomeProof() {
+    final value = incomeProofController.text.trim();
+    final hasPath = (incomeProofPath.value ?? '').isNotEmpty;
+    incomeProofError.value = value.isEmpty && !hasPath
+        ? AppStrings.incomeProofLabel
+        : null;
+    isIncomeProofValid.value = value.isNotEmpty || hasPath;
+    _updateFormValidity();
+  }
+
   void _validateLandArea() {
     final value = landAreaController.text.trim();
     if (value.isEmpty) {
@@ -298,6 +329,20 @@ class LocationDetailsController extends BaseController {
     _updateFormValidity();
   }
 
+  void _validateBuildingArea() {
+    final value = buildingAreaController.text.trim();
+    if (value.isEmpty) {
+      buildingAreaError.value = 'Luas bangunan wajib diisi';
+      isBuildingAreaValid.value = false;
+    } else {
+      final parsed = double.tryParse(value.replaceAll('.', ''));
+      final valid = parsed != null && parsed > 0;
+      buildingAreaError.value = valid ? null : 'Luas bangunan wajib diisi';
+      isBuildingAreaValid.value = valid;
+    }
+    _updateFormValidity();
+  }
+
   void _updateFormValidity() {
     _isFormValid.value =
         selectedLocation.value != null &&
@@ -307,6 +352,7 @@ class LocationDetailsController extends BaseController {
         isVillageValid.value &&
         isLocationDetailsValid.value &&
         isLandAreaValid.value &&
+        isBuildingAreaValid.value &&
         isIncomeValid.value &&
         selectedProjectType.value != null &&
         !isLoadingLocation.value;
@@ -322,6 +368,7 @@ class LocationDetailsController extends BaseController {
     villageController.dispose();
     locationDetailsController.dispose();
     landAreaController.dispose();
+    buildingAreaController.dispose();
     incomeController.dispose();
     incomeProofController.dispose();
     searchController.dispose();
@@ -542,7 +589,7 @@ class LocationDetailsController extends BaseController {
   }
 
   bool get _shouldCreateConsultation =>
-      _consultantId != null && _consultantId.isNotEmpty;
+      _consultantId != null && _consultantId?.isNotEmpty == true;
 
   Future<void> createProject() async {
     if (!isFormValid) {
@@ -552,11 +599,32 @@ class LocationDetailsController extends BaseController {
       _validateVillage();
       _validateLocationDetails();
       _validateLandArea();
+      _validateBuildingArea();
       _validateIncome();
+      _validateIncomeProof();
       return;
     }
 
-    final landArea = double.tryParse(landAreaController.text.trim()) ?? 0.0;
+    final landArea =
+        double.tryParse(landAreaController.text.trim().replaceAll('.', '')) ??
+        0.0;
+    final buildingArea =
+        double.tryParse(
+          buildingAreaController.text.trim().replaceAll('.', ''),
+        ) ??
+        0.0;
+    if(_isPaidConsultation != null) {
+      if (_isPaidConsultation == true && buildingArea < 37) {
+        Get.snackbar(
+          'Gagal',
+          'Konsultasi gratis hanya untuk luas bangunan kurang dari 36 meter persegi',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: AppColors.errorDark,
+          colorText: AppColors.white,
+        );
+        return;
+      }
+    }
     final income =
         double.tryParse(incomeController.text.trim().replaceAll('.', '')) ??
         0.0;
@@ -582,6 +650,7 @@ class LocationDetailsController extends BaseController {
             request: CreateProjectRequest(
               locationDetail: combinedLocationDetail,
               landArea: landArea,
+              buildingArea: buildingArea,
               income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
@@ -624,6 +693,9 @@ class LocationDetailsController extends BaseController {
         lat: coordinates?.latitude ?? 0.0,
         long: coordinates?.longitude ?? 0.0,
         type: selectedProjectType.value?.name ?? consultation.name,
+        isPaidConsultation:
+            _isPaidConsultation == true ||
+            (int.tryParse(buildingAreaController.text.trim()) ?? 0) > 36,
       ),
     );
   }
@@ -641,7 +713,7 @@ class LocationDetailsController extends BaseController {
         CreateConsultationRequest(
           consultantId: consultantId,
           projectId: projectId,
-          consultationType: _isPaidConsultation
+          consultationType: _isPaidConsultation == true
               ? consultationPaid.name
               : consultationFree.name,
           channel: 'CHAT',

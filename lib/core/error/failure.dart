@@ -13,7 +13,7 @@ class ApiFailure extends Failure {
 
   /// Creates an ApiFailure, taking the full structured error response.
   /// The general failure message is automatically sourced from the response.
-  ApiFailure(this.error) : super(error.message);
+  ApiFailure(this.error) : super(error.message ?? 'Unknown error');
 }
 
 /// Represents a device-level network failure (e.g., no internet, timeout).

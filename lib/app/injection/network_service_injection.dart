@@ -82,7 +82,7 @@ class NetworkServiceInjection {
       fenix: true,
     );
     Get.lazyPut<MonitoringApiService>(
-          () => MonitoringApiService(Get.find<ApiClient>().dio),
+      () => MonitoringApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

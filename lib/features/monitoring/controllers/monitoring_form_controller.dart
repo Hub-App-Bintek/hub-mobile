@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
@@ -34,7 +35,6 @@ class MonitoringFormController extends BaseController {
   final GetRegenciesUseCase _getRegenciesUseCase;
   final GetDistrictsUseCase _getDistrictsUseCase;
   final GetVillagesUseCase _getVillagesUseCase;
-  final String? _initialProjectTypeId;
 
   MonitoringFormController(
     this._createProjectUseCase,
@@ -42,8 +42,9 @@ class MonitoringFormController extends BaseController {
     this._getRegenciesUseCase,
     this._getDistrictsUseCase,
     this._getVillagesUseCase,
-    this._initialProjectTypeId,
   );
+
+  String? _initialProjectTypeId;
 
   final TextEditingController provinceController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
@@ -127,6 +128,7 @@ class MonitoringFormController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    _hydrateArgs();
     _getUserLocation();
     _hydrateInitialType();
     _fetchProvinces();
@@ -140,8 +142,20 @@ class MonitoringFormController extends BaseController {
     incomeController.text = '';
   }
 
+  void _hydrateArgs() {
+    final rawArgs = Get.arguments;
+    if (rawArgs is LocationDetailsArgs) {
+      _initialProjectTypeId = rawArgs.type;
+      return;
+    }
+    if (rawArgs is Map<String, dynamic>) {
+      _initialProjectTypeId = rawArgs['type'] as String?;
+    }
+  }
+
   void _hydrateInitialType() {
-    if (_initialProjectTypeId == null || _initialProjectTypeId.isEmpty) {
+    if (_initialProjectTypeId == null ||
+        _initialProjectTypeId?.isEmpty == true) {
       return;
     }
     final match = projectTypes.firstWhere(
@@ -571,7 +585,7 @@ class MonitoringFormController extends BaseController {
     _validateVillage();
   }
 
-  void selectProjectType(String? value){
+  void selectProjectType(String? value) {
     if (value == null || value.isEmpty) return;
     projectType.value = value;
     projectTypeController.text = value;
@@ -614,6 +628,7 @@ class MonitoringFormController extends BaseController {
             request: CreateProjectRequest(
               locationDetail: combinedLocationDetail,
               landArea: landArea,
+              buildingArea: landArea,
               income: income,
               latitude: selectedLocation.value?.latitude ?? 0.0,
               longitude: selectedLocation.value?.longitude ?? 0.0,
@@ -629,7 +644,10 @@ class MonitoringFormController extends BaseController {
         ),
         onSuccess: (response) {
           createdProject = response;
-          Get.toNamed(AppRoutes.monitoringSupervisor, arguments: {"projectId":createdProject?.projectId});
+          Get.toNamed(
+            AppRoutes.monitoringSupervisor,
+            arguments: {"projectId": createdProject?.projectId},
+          );
         },
         onFailure: (Failure failure) {
           showError(failure);

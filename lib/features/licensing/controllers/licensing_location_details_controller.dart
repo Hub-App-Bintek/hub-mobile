@@ -317,6 +317,7 @@ class LicensingLocationDetailsController extends BaseController {
       type: isPrototype ? 'PROTOTYPE' : 'NON_PROTOTYPE',
       locationDetail: locationDetail,
       landArea: 1,
+      buildingArea: 1,
       income: 1,
       latitude: selectedLocation.value!.latitude,
       longitude: selectedLocation.value!.longitude,

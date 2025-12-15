@@ -9,6 +9,9 @@ class MonitoringDetailBinding extends Bindings {
     // TODO: Inject use cases for fetching details, approving contracts, etc.
     Get.lazyPut(() => GetReportsUseCase(Get.find()));
     Get.lazyPut(() => GetFindingsUseCase(Get.find()));
-    Get.lazyPut(() => MonitoringDetailController(Get.find(), Get.find()), fenix: true);
+    Get.lazyPut(
+      () => MonitoringDetailController(Get.find(), Get.find()),
+      fenix: true,
+    );
   }
 }

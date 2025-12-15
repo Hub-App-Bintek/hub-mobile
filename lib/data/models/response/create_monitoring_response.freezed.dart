@@ -12,7 +12,8 @@ part of 'create_monitoring_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringResponse _$MonitoringResponseFromJson(Map<String, dynamic> json) {
   return _MonitoringResponse.fromJson(json);
@@ -38,18 +39,20 @@ mixin _$MonitoringResponse {
 /// @nodoc
 abstract class $MonitoringResponseCopyWith<$Res> {
   factory $MonitoringResponseCopyWith(
-          MonitoringResponse value, $Res Function(MonitoringResponse) then) =
-      _$MonitoringResponseCopyWithImpl<$Res, MonitoringResponse>;
+    MonitoringResponse value,
+    $Res Function(MonitoringResponse) then,
+  ) = _$MonitoringResponseCopyWithImpl<$Res, MonitoringResponse>;
   @useResult
-  $Res call(
-      {int id,
-      String type,
-      String status,
-      int homeownerId,
-      int? supervisorId,
-      String? projectAddress,
-      String? projectDescription,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String type,
+    String status,
+    int homeownerId,
+    int? supervisorId,
+    String? projectAddress,
+    String? projectDescription,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
@@ -74,69 +77,75 @@ class _$MonitoringResponseCopyWithImpl<$Res, $Val extends MonitoringResponse>
     Object? projectDescription = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectAddress: freezed == projectAddress
-          ? _value.projectAddress
-          : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectDescription: freezed == projectDescription
-          ? _value.projectDescription
-          : projectDescription // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            homeownerId: null == homeownerId
+                ? _value.homeownerId
+                : homeownerId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            supervisorId: freezed == supervisorId
+                ? _value.supervisorId
+                : supervisorId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            projectAddress: freezed == projectAddress
+                ? _value.projectAddress
+                : projectAddress // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            projectDescription: freezed == projectDescription
+                ? _value.projectDescription
+                : projectDescription // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MonitoringResponseImplCopyWith<$Res>
     implements $MonitoringResponseCopyWith<$Res> {
-  factory _$$MonitoringResponseImplCopyWith(_$MonitoringResponseImpl value,
-          $Res Function(_$MonitoringResponseImpl) then) =
-      __$$MonitoringResponseImplCopyWithImpl<$Res>;
+  factory _$$MonitoringResponseImplCopyWith(
+    _$MonitoringResponseImpl value,
+    $Res Function(_$MonitoringResponseImpl) then,
+  ) = __$$MonitoringResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String type,
-      String status,
-      int homeownerId,
-      int? supervisorId,
-      String? projectAddress,
-      String? projectDescription,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String type,
+    String status,
+    int homeownerId,
+    int? supervisorId,
+    String? projectAddress,
+    String? projectDescription,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
 class __$$MonitoringResponseImplCopyWithImpl<$Res>
     extends _$MonitoringResponseCopyWithImpl<$Res, _$MonitoringResponseImpl>
     implements _$$MonitoringResponseImplCopyWith<$Res> {
-  __$$MonitoringResponseImplCopyWithImpl(_$MonitoringResponseImpl _value,
-      $Res Function(_$MonitoringResponseImpl) _then)
-      : super(_value, _then);
+  __$$MonitoringResponseImplCopyWithImpl(
+    _$MonitoringResponseImpl _value,
+    $Res Function(_$MonitoringResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -150,55 +159,58 @@ class __$$MonitoringResponseImplCopyWithImpl<$Res>
     Object? projectDescription = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_$MonitoringResponseImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      projectAddress: freezed == projectAddress
-          ? _value.projectAddress
-          : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectDescription: freezed == projectDescription
-          ? _value.projectDescription
-          : projectDescription // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MonitoringResponseImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        homeownerId: null == homeownerId
+            ? _value.homeownerId
+            : homeownerId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        supervisorId: freezed == supervisorId
+            ? _value.supervisorId
+            : supervisorId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        projectAddress: freezed == projectAddress
+            ? _value.projectAddress
+            : projectAddress // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        projectDescription: freezed == projectDescription
+            ? _value.projectDescription
+            : projectDescription // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringResponseImpl implements _MonitoringResponse {
-  const _$MonitoringResponseImpl(
-      {required this.id,
-      required this.type,
-      required this.status,
-      required this.homeownerId,
-      this.supervisorId,
-      this.projectAddress,
-      this.projectDescription,
-      required this.createdAt});
+  const _$MonitoringResponseImpl({
+    required this.id,
+    required this.type,
+    required this.status,
+    required this.homeownerId,
+    this.supervisorId,
+    this.projectAddress,
+    this.projectDescription,
+    required this.createdAt,
+  });
 
   factory _$MonitoringResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringResponseImplFromJson(json);
@@ -247,34 +259,44 @@ class _$MonitoringResponseImpl implements _MonitoringResponse {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, type, status, homeownerId,
-      supervisorId, projectAddress, projectDescription, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    type,
+    status,
+    homeownerId,
+    supervisorId,
+    projectAddress,
+    projectDescription,
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringResponseImplCopyWith<_$MonitoringResponseImpl> get copyWith =>
       __$$MonitoringResponseImplCopyWithImpl<_$MonitoringResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringResponseImplToJson(
-      this,
-    );
+    return _$$MonitoringResponseImplToJson(this);
   }
 }
 
 abstract class _MonitoringResponse implements MonitoringResponse {
-  const factory _MonitoringResponse(
-      {required final int id,
-      required final String type,
-      required final String status,
-      required final int homeownerId,
-      final int? supervisorId,
-      final String? projectAddress,
-      final String? projectDescription,
-      required final DateTime createdAt}) = _$MonitoringResponseImpl;
+  const factory _MonitoringResponse({
+    required final int id,
+    required final String type,
+    required final String status,
+    required final int homeownerId,
+    final int? supervisorId,
+    final String? projectAddress,
+    final String? projectDescription,
+    required final DateTime createdAt,
+  }) = _$MonitoringResponseImpl;
 
   factory _MonitoringResponse.fromJson(Map<String, dynamic> json) =
       _$MonitoringResponseImpl.fromJson;

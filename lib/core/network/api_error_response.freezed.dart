@@ -21,8 +21,8 @@ ApiErrorResponse _$ApiErrorResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ApiErrorResponse {
-  String get errorCode => throw _privateConstructorUsedError;
-  String get message => throw _privateConstructorUsedError;
+  String? get errorCode => throw _privateConstructorUsedError;
+  String? get message => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +37,7 @@ abstract class $ApiErrorResponseCopyWith<$Res> {
     $Res Function(ApiErrorResponse) then,
   ) = _$ApiErrorResponseCopyWithImpl<$Res, ApiErrorResponse>;
   @useResult
-  $Res call({String errorCode, String message});
+  $Res call({String? errorCode, String? message});
 }
 
 /// @nodoc
@@ -52,17 +52,17 @@ class _$ApiErrorResponseCopyWithImpl<$Res, $Val extends ApiErrorResponse>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? errorCode = null, Object? message = null}) {
+  $Res call({Object? errorCode = freezed, Object? message = freezed}) {
     return _then(
       _value.copyWith(
-            errorCode: null == errorCode
+            errorCode: freezed == errorCode
                 ? _value.errorCode
                 : errorCode // ignore: cast_nullable_to_non_nullable
-                      as String,
-            message: null == message
+                      as String?,
+            message: freezed == message
                 ? _value.message
                 : message // ignore: cast_nullable_to_non_nullable
-                      as String,
+                      as String?,
           )
           as $Val,
     );
@@ -78,7 +78,7 @@ abstract class _$$ApiErrorResponseImplCopyWith<$Res>
   ) = __$$ApiErrorResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String errorCode, String message});
+  $Res call({String? errorCode, String? message});
 }
 
 /// @nodoc
@@ -92,17 +92,17 @@ class __$$ApiErrorResponseImplCopyWithImpl<$Res>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? errorCode = null, Object? message = null}) {
+  $Res call({Object? errorCode = freezed, Object? message = freezed}) {
     return _then(
       _$ApiErrorResponseImpl(
-        errorCode: null == errorCode
+        errorCode: freezed == errorCode
             ? _value.errorCode
             : errorCode // ignore: cast_nullable_to_non_nullable
-                  as String,
-        message: null == message
+                  as String?,
+        message: freezed == message
             ? _value.message
             : message // ignore: cast_nullable_to_non_nullable
-                  as String,
+                  as String?,
       ),
     );
   }
@@ -120,9 +120,9 @@ class _$ApiErrorResponseImpl implements _ApiErrorResponse {
       _$$ApiErrorResponseImplFromJson(json);
 
   @override
-  final String errorCode;
+  final String? errorCode;
   @override
-  final String message;
+  final String? message;
 
   @override
   String toString() {
@@ -160,17 +160,17 @@ class _$ApiErrorResponseImpl implements _ApiErrorResponse {
 
 abstract class _ApiErrorResponse implements ApiErrorResponse {
   const factory _ApiErrorResponse({
-    required final String errorCode,
-    required final String message,
+    required final String? errorCode,
+    required final String? message,
   }) = _$ApiErrorResponseImpl;
 
   factory _ApiErrorResponse.fromJson(Map<String, dynamic> json) =
       _$ApiErrorResponseImpl.fromJson;
 
   @override
-  String get errorCode;
+  String? get errorCode;
   @override
-  String get message;
+  String? get message;
   @override
   @JsonKey(ignore: true)
   _$$ApiErrorResponseImplCopyWith<_$ApiErrorResponseImpl> get copyWith =>

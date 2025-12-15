@@ -18,26 +18,12 @@ class PrototypeDesignDetailsBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<PrototypeDesignDetailsController>(() {
-      final rawArgs = Get.arguments;
-      PrototypeDesign? design;
-      String designId = '';
-
-      if (rawArgs is PrototypeDesignDetailsArgs) {
-        design = rawArgs.design;
-        designId = rawArgs.designId;
-      } else if (rawArgs is Map<String, dynamic>) {
-        design = rawArgs['design'] as PrototypeDesign?;
-        designId = (rawArgs['designId'] ?? rawArgs['id'] ?? '').toString();
-      }
-      designId = designId.isEmpty ? (design?.id ?? '') : designId;
-
-      return PrototypeDesignDetailsController(
+    Get.lazyPut<PrototypeDesignDetailsController>(
+      () => PrototypeDesignDetailsController(
         Get.find<GetPrototypeDesignDetailUseCase>(),
         Get.find<DownloadPrototypeDesignUseCase>(),
-        designId,
-        initialDesign: design,
-      );
-    }, fenix: true);
+      ),
+      fenix: true,
+    );
   }
 }

@@ -16,19 +16,7 @@ class LoginController extends BaseController {
   final LoginUseCase _loginUseCase;
   final NotificationService _notificationService;
 
-  Map<String, dynamic>? get _navigationArgs {
-    final args = Get.arguments;
-    if (args is LoginArgs) {
-      return {
-        'fromRoute': args.fromRoute,
-        'returnArguments': args.returnArguments,
-      };
-    }
-    if (args is Map<String, dynamic>) {
-      return args;
-    }
-    return null;
-  }
+  Map<String, dynamic>? _navigationArgs;
 
   bool get _shouldReturnToCaller {
     final route = _navigationArgs?['fromRoute'];
@@ -55,6 +43,7 @@ class LoginController extends BaseController {
   @override
   void onInit() {
     super.onInit();
+    _navigationArgs = _resolveNavigationArgs();
     emailController.addListener(() {
       emailText.value = emailController.text;
     });
@@ -62,6 +51,20 @@ class LoginController extends BaseController {
       passwordText.value = passwordController.text;
     });
     // _validateForm(runValidators: false);
+  }
+
+  Map<String, dynamic>? _resolveNavigationArgs() {
+    final args = Get.arguments;
+    if (args is LoginArgs) {
+      return {
+        'fromRoute': args.fromRoute,
+        'returnArguments': args.returnArguments,
+      };
+    }
+    if (args is Map<String, dynamic>) {
+      return args;
+    }
+    return null;
   }
 
   // void _onEmailChanged() {

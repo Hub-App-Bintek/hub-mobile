@@ -13,37 +13,29 @@ import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';
 
-class ConsultantsController extends BaseController {
-  ConsultantsController(this._getConsultantsUseCase, this._userStorage);
+class ConsultationController extends BaseController {
+  ConsultationController(this._getConsultantsUseCase, this._userStorage);
 
   final GetConsultantsUseCase _getConsultantsUseCase;
   final UserStorage _userStorage;
 
-  final RxString selectedSort = ''.obs;
   String _projectId = '';
   double _lat = 0.0;
   double _long = 0.0;
   bool _isPaidConsultation = false;
-  bool _showCreateCta = false;
   bool _requireLoginForAction = false;
 
-  // Reactive state
   final consultants = <Consultant>[].obs;
-  final isLoading = false.obs; // any fetch in progress
-  final hasMore = true.obs; // mirrors _done inverse
+  final isLoading = false.obs;
+  final hasMore = true.obs;
 
-  final _logger = Logger();
-
-  // Scroll
   final scrollController = ScrollController();
-  static const double _prefetchExtentPx = 600; // load when < this remains below
+  static const double _prefetchExtentPx = 600;
 
-  // Paging
   static const int _pageSize = 10;
-  int _page = 0; // make sure backend expects 0-based; change to 1 if needed
-  bool _done = false; // true when we fetched the last page
-  bool _scheduled =
-      false; // micro-debounce to avoid duplicate calls in a single frame
+  int _page = 0;
+  bool _done = false;
+  bool _scheduled = false;
 
   @override
   void onInit() {
@@ -59,8 +51,6 @@ class ConsultantsController extends BaseController {
       _projectId = rawArgs.projectId;
       _lat = rawArgs.lat;
       _long = rawArgs.long;
-      selectedSort.value = rawArgs.sortBy ?? '';
-      _showCreateCta = rawArgs.showCreateCta;
       _requireLoginForAction = rawArgs.requireLoginForAction;
       _isPaidConsultation = rawArgs.isPaidConsultation;
       return;
@@ -70,8 +60,6 @@ class ConsultantsController extends BaseController {
       _projectId = (rawArgs['projectId'] ?? '').toString();
       _lat = (rawArgs['lat'] as num?)?.toDouble() ?? 0.0;
       _long = (rawArgs['long'] as num?)?.toDouble() ?? 0.0;
-      selectedSort.value = rawArgs['sortBy'] as String? ?? '';
-      _showCreateCta = rawArgs['showCreateCta'] as bool? ?? false;
       _requireLoginForAction =
           rawArgs['requireLoginForAction'] as bool? ?? false;
       _isPaidConsultation = rawArgs['isPaidConsultation'] as bool? ?? false;
@@ -83,10 +71,8 @@ class ConsultantsController extends BaseController {
     if (!scrollController.hasClients) return;
 
     final pos = scrollController.position;
-    // extentAfter: content distance below the viewport in px
     if (pos.extentAfter < _prefetchExtentPx) {
       _scheduled = true;
-      // Debounce to coalesce multiple notifications per frame
       Future.microtask(() {
         _scheduled = false;
         if (!isLoading.value && !_done) {
@@ -97,7 +83,6 @@ class ConsultantsController extends BaseController {
   }
 
   Future<void> refreshList() async {
-    // Optional: keep position, or scrollController.jumpTo(0);
     consultants.clear();
     _page = 0;
     _done = false;
@@ -106,7 +91,6 @@ class ConsultantsController extends BaseController {
   }
 
   Future<void> fetchConsultants() async {
-    _logger.d('project ID : $_projectId');
     if (isLoading.value || _done) return;
 
     isLoading.value = true;
@@ -117,30 +101,23 @@ class ConsultantsController extends BaseController {
           long: _long,
           page: _page,
           size: _pageSize,
-          type: isPaidConsultation ? 'PROFESSIONAL' : 'STUDENT',
-          sortBy: selectedSort.value.isNotEmpty ? selectedSort.value : null,
+          type: 'PROFESSIONAL',
         ),
       ),
       onSuccess: (response) {
         final result = response.consultants;
-
         if (result.isEmpty) {
           _done = true;
         } else {
           consultants.addAll(result);
           _page += 1;
-          // If server returns less than page size, we've reached the last page
           if (result.length < _pageSize) {
             _done = true;
           }
         }
-
         hasMore.value = !_done;
       },
-      onFailure: (failure) {
-        // Keep _done as-is so user can retry (via scroll or pull-to-refresh)
-        showError(failure);
-      },
+      onFailure: showError,
     );
     isLoading.value = false;
   }
@@ -173,8 +150,6 @@ class ConsultantsController extends BaseController {
         arguments: ConsultantDetailsArgs(
           consultantId: consultantId,
           projectId: targetProjectId,
-          isPaidConsultation:
-              isPaidConsultation || (consultant.packageCost ?? 0) > 0.0,
           consultation: consultant,
           requireLoginForAction: _requireLoginForAction,
         ),
@@ -220,19 +195,4 @@ class ConsultantsController extends BaseController {
     scrollController.dispose();
     super.onClose();
   }
-
-  void updateSort(String sortKey) {
-    if (selectedSort.value == sortKey) return;
-    selectedSort.value = sortKey;
-    refreshList();
-  }
-
-  void onSeeAllConsultants() {
-    navigateTo(AppRoutes.consultants);
-  }
-
-  String get projectId => _projectId;
-  bool get isPaidConsultation => _isPaidConsultation;
-  bool get showCreateCta => _showCreateCta;
-  bool get requireLoginForAction => _requireLoginForAction;
 }

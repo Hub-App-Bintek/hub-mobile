@@ -11,7 +11,9 @@ class CreateMonitoringRequestUseCase
   CreateMonitoringRequestUseCase(this._repository);
 
   @override
-  Future<Result<MonitoringResponse, Failure>> call(CreateMonitoringRequestParams params) {
+  Future<Result<MonitoringResponse, Failure>> call(
+    CreateMonitoringRequestParams params,
+  ) {
     return _repository.createMonitoringRequest(
       supervisorId: params.supervisorId,
       projectId: params.projectId,

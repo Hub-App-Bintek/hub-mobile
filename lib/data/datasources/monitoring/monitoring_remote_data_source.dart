@@ -56,7 +56,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       // Delegate error handling to the shared ApiClient
       return Error(_apiClient.toFailure(e));
     } catch (e) {
-      return Error(ServerFailure(message: 'Failed to parse monitoring request: $e'));
+      return Error(
+        ServerFailure(message: 'Failed to parse monitoring request: $e'),
+      );
     }
   }
 
@@ -68,7 +70,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       final result = await _apiService.getProfessionals(query);
       return Success(result);
     } catch (e) {
-      return Error(ServerFailure(message: 'Failed to parse supervisor request: $e'));
+      return Error(
+        ServerFailure(message: 'Failed to parse supervisor request: $e'),
+      );
     }
   }
 

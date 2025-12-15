@@ -78,7 +78,6 @@ class InvoiceItem {
 }
 
 class MonitoringDetailController extends BaseController {
-
   final GetReportsUseCase _getReportsUseCase;
   final GetFindingsUseCase _getFindingsUseCase;
 
@@ -101,15 +100,12 @@ class MonitoringDetailController extends BaseController {
 
   Future<void> fetchData() async {
     // Fetch reports and findings in parallel
-    await Future.wait([
-      _fetchReports(),
-      _fetchFindings(),
-    ]);
+    await Future.wait([_fetchReports(), _fetchFindings()]);
   }
 
   Future<void> _fetchReports() async {
     await handleAsync(
-          () => _getReportsUseCase(GetReportsParams(monitoringId: monitoringId)),
+      () => _getReportsUseCase(GetReportsParams(monitoringId: monitoringId)),
       onSuccess: (result) {
         reports.value = result;
       },
@@ -120,7 +116,7 @@ class MonitoringDetailController extends BaseController {
 
   Future<void> _fetchFindings() async {
     await handleAsync(
-          () => _getFindingsUseCase(GetFindingsParams(monitoringId: monitoringId)),
+      () => _getFindingsUseCase(GetFindingsParams(monitoringId: monitoringId)),
       onSuccess: (result) {
         findings.value = result;
       },

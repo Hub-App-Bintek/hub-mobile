@@ -10,32 +10,32 @@ part 'monitoring_api_service.g.dart'; // Ensure this matches your file name
 
 @RestApi()
 abstract class MonitoringApiService {
-  factory MonitoringApiService(Dio dio,
-      {String baseUrl}) = _MonitoringApiService;
+  factory MonitoringApiService(Dio dio, {String baseUrl}) =
+      _MonitoringApiService;
 
   // ... (any existing methods)
 
   // --- ADD THIS METHOD ---
   @POST(ApiEndpoints.monitoringRequests)
-  Future<MonitoringResponse> createMonitoringRequest(@Body() Map<String, dynamic> body);
+  Future<MonitoringResponse> createMonitoringRequest(
+    @Body() Map<String, dynamic> body,
+  );
 
   @GET(ApiEndpoints.getProfessionals)
   Future<List<ConstructionSupervisorModel>> getProfessionals(
-      @Query('query') String? query,
-      );
+    @Query('query') String? query,
+  );
 
   @GET(ApiEndpoints.getMonitoringReports)
   Future<List<MonitoringItemModel>> getReports(
-      @Path('monitoringId') int monitoringId,
-      );
+    @Path('monitoringId') int monitoringId,
+  );
 
   @GET(ApiEndpoints.getMonitoringFindings)
   Future<List<MonitoringItemModel>> getFindings(
-      @Path('monitoringId') int monitoringId,
-      );
+    @Path('monitoringId') int monitoringId,
+  );
 
   @GET(ApiEndpoints.getReportDetail)
-  Future<ReportDetailModel> getReportDetail(
-      @Path('reportId') int reportId,
-      );
+  Future<ReportDetailModel> getReportDetail(@Path('reportId') int reportId);
 }
