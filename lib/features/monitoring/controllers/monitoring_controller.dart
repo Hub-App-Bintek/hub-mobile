@@ -17,40 +17,39 @@ class MonitoringController extends BaseController {
 
   // --- LOGIC ---
   // Fetches data and populates the state. Returns true on success.
-  // Future<bool> fetchConsultations() async {
-  //   // Reset state before fetching
-  //   consultations.clear();
-  //   selectedConsultationIndex.value = -1;
-  //   bool success = false;
-  //
-  //   await handleAsync(
-  //     () => _getProjectsUseCase(
-  //       const GetProjectsRequest(
-  //         page: 0,
-  //         size: 10,
-  //         // type: 'PROTOTYPE',
-  //         // status: 'ACTIVE',
-  //       ),
-  //     ),
-  //     onSuccess: (response) {
-  //       if (response.projects.isEmpty) {
-  //         Get.snackbar(
-  //           'Info',
-  //           'Tidak ada proyek konsultasi yang dapat dipilih.',
-  //         );
-  //         success = false;
-  //       } else {
-  //         consultations.assignAll(response.projects);
-  //         success = true;
-  //       }
-  //     },
-  //     onFailure: (failure) {
-  //       // The BaseController's showError is called automatically by handleAsync's default behavior
-  //       success = false;
-  //     },
-  //   );
-  //   return success;
-  // }
+  Future<bool> fetchConsultations() async {
+    // Reset state before fetching
+    consultations.clear();
+    selectedConsultationIndex.value = -1;
+    bool success = false;
+
+    await handleAsync(
+      () => _getProjectsUseCase(
+        const GetConsultationsParams(
+          page: 0,
+          // size: 10,
+          // type: 'PROTOTYPE',
+          // status: 'ACTIVE',
+        ),
+      ),
+      onSuccess: (response) {
+        consultations.addAll(
+          response.projects?.content!
+                  .where(
+                    (e) => e.consultationInfo!.consultationStatus == 'SELESAI',
+                  )
+                  .toList() ??
+              [],
+        );
+        success = true;
+      },
+      onFailure: (failure) {
+        // The BaseController's showError is called automatically by handleAsync's default behavior
+        success = false;
+      },
+    );
+    return success;
+  }
 
   // Manages the selection state within the bottom sheet
   void selectConsultation(int index) {

@@ -155,39 +155,39 @@ class MonitoringDetailController extends BaseController {
   ].obs;
 
   final laporanItems = <ReportItem>[
-    ReportItem(
-      title: 'Pondasi',
-      date: DateTime(2025, 11, 18),
-      category: 'Pondasi',
-    ),
-    ReportItem(title: 'Sloof', date: DateTime(2025, 11, 22), category: 'Sloof'),
-    ReportItem(title: 'Kolom', date: DateTime(2025, 11, 25), category: 'Kolom'),
-    ReportItem(
-      title: 'Ring Balok',
-      date: DateTime(2025, 11, 26),
-      category: 'Ring Balok',
-    ),
-    ReportItem(
-      title: 'Rangka Atap / Kuda-kuda',
-      date: DateTime(2025, 11, 28),
-      category: 'Rangka Atap',
-    ),
-    ReportItem(
-      title: 'Pencahayaan',
-      date: DateTime(2025, 11, 30),
-      category: 'Pencahayaan',
-    ),
-    ReportItem(
-      title: 'Penghawaan',
-      date: DateTime(2025, 12, 2),
-      category: 'Penghawaan',
-    ),
+    // ReportItem(
+    //   title: 'Pondasi',
+    //   date: DateTime(2025, 11, 18),
+    //   category: 'Pondasi',
+    // ),
+    // ReportItem(title: 'Sloof', date: DateTime(2025, 11, 22), category: 'Sloof'),
+    // ReportItem(title: 'Kolom', date: DateTime(2025, 11, 25), category: 'Kolom'),
+    // ReportItem(
+    //   title: 'Ring Balok',
+    //   date: DateTime(2025, 11, 26),
+    //   category: 'Ring Balok',
+    // ),
+    // ReportItem(
+    //   title: 'Rangka Atap / Kuda-kuda',
+    //   date: DateTime(2025, 11, 28),
+    //   category: 'Rangka Atap',
+    // ),
+    // ReportItem(
+    //   title: 'Pencahayaan',
+    //   date: DateTime(2025, 11, 30),
+    //   category: 'Pencahayaan',
+    // ),
+    // ReportItem(
+    //   title: 'Penghawaan',
+    //   date: DateTime(2025, 12, 2),
+    //   category: 'Penghawaan',
+    // ),
   ].obs;
 
   final temuanItems = <FindingItem>[
-    FindingItem(title: 'Tembok tidak rata', date: DateTime(2025, 11, 18)),
-    FindingItem(title: 'Atap Bangunan ada bocor', date: DateTime(2025, 11, 22)),
-    FindingItem(title: 'Beton kolom keropos', date: DateTime(2025, 11, 25)),
+    // FindingItem(title: 'Tembok tidak rata', date: DateTime(2025, 11, 18)),
+    // FindingItem(title: 'Atap Bangunan ada bocor', date: DateTime(2025, 11, 22)),
+    // FindingItem(title: 'Beton kolom keropos', date: DateTime(2025, 11, 25)),
   ].obs;
 
   final invoiceItems = <InvoiceItem>[
