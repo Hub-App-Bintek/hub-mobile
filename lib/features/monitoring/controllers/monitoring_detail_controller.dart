@@ -7,11 +7,9 @@ import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_reports_usecase.dart';
-import 'supervisor_screen_controller.dart';
 
 enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
 

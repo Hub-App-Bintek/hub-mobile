@@ -15,6 +15,7 @@ import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
+import 'package:pkp_hub/core/network/services/notification_api_service.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
@@ -36,6 +37,7 @@ import 'package:pkp_hub/data/datasources/survey/survey_network_data_source.dart'
 import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/wallet/wallet_local_repository.dart';
 import 'package:pkp_hub/data/datasources/wallet/wallet_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/notification/notification_network_data_source.dart';
 
 class DataSourceInjection {
   DataSourceInjection._();
@@ -167,6 +169,13 @@ class DataSourceInjection {
       () => MonitoringRemoteDataSourceImpl(
         Get.find<MonitoringApiService>(),
         Get.find<ApiClient>(),
+      ),
+      fenix: true,
+    );
+    Get.lazyPut<NotificationNetworkDataSource>(
+      () => NotificationNetworkDataSourceImpl(
+        Get.find<ApiClient>(),
+        Get.find<NotificationApiService>(),
       ),
       fenix: true,
     );

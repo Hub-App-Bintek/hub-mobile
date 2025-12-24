@@ -1,79 +1,135 @@
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
-
-class InboxItem {
-  const InboxItem({
-    required this.title,
-    required this.message,
-    required this.timeAgo,
-    required this.icon,
-    required this.iconColor,
-    this.backgroundColor,
-    this.showDot = false,
-  });
-
-  final String title;
-  final String message;
-  final String timeAgo;
-  final IconData icon;
-  final Color iconColor;
-  final Color? backgroundColor;
-  final bool showDot;
-}
+import 'package:pkp_hub/core/error/failure.dart';
+import 'package:pkp_hub/core/utils/formatters.dart';
+import 'package:pkp_hub/data/models/request/mark_notifications_read_request.dart';
+import 'package:pkp_hub/data/models/response/notification_item_response.dart';
+import 'package:pkp_hub/domain/usecases/notification/get_notifications_use_case.dart';
+import 'package:pkp_hub/domain/usecases/notification/get_unread_count_use_case.dart';
+import 'package:pkp_hub/domain/usecases/notification/mark_notifications_read_use_case.dart';
 
 class InboxController extends BaseController {
-  final List<InboxItem> items = const [
-    InboxItem(
-      title: 'Konsultasi Diterima',
-      message:
-          'Konsultan Ir. Ahmad Wijaya telah menerima permintaan konsultasi Anda untuk proyek Rumah Minimalis Modern.',
-      timeAgo: '2 jam lalu',
-      icon: Icons.verified_outlined,
-      iconColor: Color(0xFF2ACDA0),
-      backgroundColor: Color(0xFFEFF7F2),
-      showDot: true,
-    ),
-    InboxItem(
-      title: 'Pembayaran Berhasil',
-      message:
-          'Pembayaran termin 1 sebesar Rp 5.000.000 telah berhasil diverifikasi.',
-      timeAgo: '5 jam lalu',
-      icon: Icons.receipt_long_outlined,
-      iconColor: Color(0xFF006FFD),
-      backgroundColor: Color(0xFFF1F6FF),
-      showDot: true,
-    ),
-    InboxItem(
-      title: 'Draft Desain Tersedia',
-      message:
-          'Draft desain untuk proyek Villa Tropis Bali telah diunggah oleh konsultan. Silakan review dan berikan feedback.',
-      timeAgo: '1 hari lalu',
-      icon: Icons.description_outlined,
-      iconColor: Color(0xFF006FFD),
-    ),
-    InboxItem(
-      title: 'Revisi Diperlukan',
-      message:
-          'Pemilik proyek meminta revisi pada draft desain. Harap unggah revisi dalam 3 hari.',
-      timeAgo: '1 hari lalu',
-      icon: Icons.info_outline,
-      iconColor: Color(0xFFE88330),
-    ),
-    InboxItem(
-      title: 'Survey Dijadwalkan',
-      message:
-          'Survey lokasi untuk proyek Renovasi Kantor dijadwalkan pada 20 Nov 2025, pukul 10:00 WIB.',
-      timeAgo: '2 hari lalu',
-      icon: Icons.event_available_outlined,
-      iconColor: Color(0xFF006FFD),
-    ),
-    InboxItem(
-      title: 'Invoice Baru',
-      message:
-          'Invoice termin 2 sebesar Rp 3.500.000 telah diterbitkan untuk proyek Villa Tropis Bali.',
-      timeAgo: '1 minggu lalu',
-      icon: Icons.receipt_long_outlined,
-      iconColor: Color(0xFF006FFD),
-    ),
-  ];
+  InboxController({
+    required GetNotificationsUseCase getNotificationsUseCase,
+    required GetUnreadCountUseCase getUnreadCountUseCase,
+    required MarkNotificationsReadUseCase markNotificationsReadUseCase,
+  }) : _getNotificationsUseCase = getNotificationsUseCase,
+       _getUnreadCountUseCase = getUnreadCountUseCase,
+       _markNotificationsReadUseCase = markNotificationsReadUseCase;
+
+  final GetNotificationsUseCase _getNotificationsUseCase;
+  final GetUnreadCountUseCase _getUnreadCountUseCase;
+  final MarkNotificationsReadUseCase _markNotificationsReadUseCase;
+
+  final notifications = <NotificationItemResponse>[].obs;
+  final isLoading = false.obs;
+  final isRefreshing = false.obs;
+  final hasNext = false.obs;
+  final unreadCount = 0.obs;
+  final isLoadingMore = false.obs;
+
+  int _currentPage = 0;
+  static const _pageSize = 20;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchNotifications();
+  }
+
+  Future<void> fetchNotifications({bool refresh = false}) async {
+    if (refresh) {
+      isRefreshing.value = true;
+      _currentPage = 0;
+    } else {
+      isLoading.value = true;
+    }
+
+    try {
+      await handleAsync(
+        () => _getNotificationsUseCase(
+          GetNotificationsQuery(page: _currentPage, size: _pageSize),
+        ),
+        onSuccess: (resp) {
+          if (refresh) {
+            notifications.assignAll(resp.notifications);
+          } else {
+            notifications.addAll(resp.notifications);
+          }
+          hasNext.value = resp.hasNext;
+          unreadCount.value = resp.unreadCount;
+          if (resp.hasNext) {
+            _currentPage += 1;
+          }
+        },
+        onFailure: showError,
+      );
+    } finally {
+      isLoading.value = false;
+      isRefreshing.value = false;
+      isLoadingMore.value = false;
+    }
+  }
+
+  String formattedDate(String? iso) {
+    return Formatters.formatIsoDateTime(
+          iso,
+          datePattern: 'dd MMM yyyy',
+          timePattern: 'HH.mm',
+        ) ??
+        '';
+  }
+
+  Future<void> markAsRead(String notificationId) async {
+    final idx = notifications.indexWhere((n) => n.id == notificationId);
+    if (idx == -1) return;
+    // Optimistic update
+    final updated = notifications[idx].copyWith(isRead: true);
+    notifications[idx] = updated;
+    unreadCount.value = (unreadCount.value - 1).clamp(0, unreadCount.value + 1);
+
+    await handleAsync(
+      () => _markNotificationsReadUseCase(
+        MarkNotificationsReadRequest(notificationIds: [notificationId]),
+      ),
+      onSuccess: (_) {},
+      onFailure: (Failure failure) {
+        showError(failure);
+        // revert on failure
+        notifications[idx] = notifications[idx].copyWith(
+          isRead: !updated.isRead,
+        );
+        unreadCount.value += 1;
+      },
+    );
+  }
+
+  Future<void> markAllAsRead() async {
+    final ids = notifications.map((e) => e.id).whereType<String>().toList();
+    notifications.assignAll(
+      notifications.map((n) => n.copyWith(isRead: true)).toList(),
+    );
+    unreadCount.value = 0;
+
+    await handleAsync(
+      () => _markNotificationsReadUseCase(
+        MarkNotificationsReadRequest(notificationIds: ids),
+      ),
+      onSuccess: (_) {},
+      onFailure: (failure) {
+        showError(failure);
+        // If it fails, re-fetch to sync state
+        fetchNotifications(refresh: true);
+      },
+    );
+  }
+
+  @override
+  Future<void> refresh() => fetchNotifications(refresh: true);
+
+  Future<void> loadMore() async {
+    if (isLoadingMore.value || !hasNext.value) return;
+    isLoadingMore.value = true;
+    await fetchNotifications();
+  }
 }

@@ -69,9 +69,9 @@ class _DebugChuckerButtonHostState extends State<DebugChuckerButtonHost> {
   }
 
   Widget _fab() {
-    return FloatingActionButton.small(
+    return const FloatingActionButton.small(
       onPressed: ChuckerFlutter.showChuckerScreen,
-      child: const Icon(Icons.bug_report_outlined),
+      child: Icon(Icons.bug_report_outlined),
     );
   }
 

@@ -3,8 +3,6 @@ import 'package:pkp_hub/domain/repositories/design_repository.dart';
 import 'package:pkp_hub/domain/usecases/design/download_prototype_design_use_case.dart';
 import 'package:pkp_hub/domain/usecases/design/get_prototype_design_detail_use_case.dart';
 import 'package:pkp_hub/features/project/controllers/prototype_design_details_controller.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
-import 'package:pkp_hub/data/models/prototype_design.dart';
 
 class PrototypeDesignDetailsBinding extends Bindings {
   @override

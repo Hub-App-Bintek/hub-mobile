@@ -16,89 +16,137 @@ class InboxScreen extends GetView<InboxController> {
         backgroundColor: AppColors.primaryDark,
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: controller.items.length,
-          itemBuilder: (context, index) {
-            final item = controller.items[index];
-            return _InboxCard(item: item);
-          },
-        ),
+        child: Obx(() {
+          if (controller.isLoading.value && controller.notifications.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return RefreshIndicator(
+            onRefresh: controller.refresh,
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification is ScrollEndNotification &&
+                    notification.metrics.pixels >=
+                        notification.metrics.maxScrollExtent - 100) {
+                  controller.loadMore();
+                }
+                return false;
+              },
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount:
+                    controller.notifications.length +
+                    (controller.isLoadingMore.value ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= controller.notifications.length) {
+                    return const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  final item = controller.notifications[index];
+                  return _InboxCard(
+                    title: item.title ?? '-',
+                    message: item.message ?? '-',
+                    time: controller.formattedDate(item.createdAt),
+                    isRead: item.isRead,
+                    onTap: () => controller.markAsRead(item.id ?? ''),
+                  );
+                },
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
 }
 
 class _InboxCard extends StatelessWidget {
-  const _InboxCard({required this.item});
+  const _InboxCard({
+    required this.title,
+    required this.message,
+    required this.time,
+    required this.isRead,
+    required this.onTap,
+  });
 
-  final InboxItem item;
+  final String title;
+  final String message;
+  final String time;
+  final bool isRead;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final cardColor = item.backgroundColor ?? AppColors.white;
+    final cardColor = isRead ? AppColors.white : const Color(0xFFF1F6FF);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        color: cardColor,
-        border: const Border(
-          bottom: BorderSide(color: AppColors.inputBorder, width: 0.6),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        decoration: BoxDecoration(
+          color: cardColor,
+          border: const Border(
+            bottom: BorderSide(color: AppColors.inputBorder, width: 0.6),
+          ),
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 4),
-            child: Icon(item.icon, color: item.iconColor, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.title,
-                        style: AppTextStyles.h4.copyWith(
-                          color: item.backgroundColor != null
-                              ? AppColors.neutralDarkest
-                              : AppColors.neutralDarkest.withOpacity(0.8),
-                        ),
-                      ),
-                    ),
-                    if (item.showDot)
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF006FFD),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item.message,
-                  style: AppTextStyles.bodyL.copyWith(
-                    color: AppColors.neutralMediumLight,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  item.timeAgo,
-                  style: AppTextStyles.bodyS.copyWith(
-                    color: AppColors.neutralMediumLight,
-                  ),
-                ),
-              ],
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Icon(
+                isRead ? Icons.mark_email_read_outlined : Icons.mail_outline,
+                color: isRead ? AppColors.neutralMedium : AppColors.primaryDark,
+                size: 20,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: AppTextStyles.h4.copyWith(
+                            color: AppColors.neutralDarkest,
+                          ),
+                        ),
+                      ),
+                      if (!isRead)
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFF006FFD),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    message,
+                    style: AppTextStyles.bodyL.copyWith(
+                      color: AppColors.neutralMediumLight,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    time,
+                    style: AppTextStyles.bodyS.copyWith(
+                      color: AppColors.neutralMediumLight,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

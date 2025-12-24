@@ -5,7 +5,6 @@ import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
-import 'package:pkp_hub/features/monitoring/controllers/supervisor_screen_controller.dart';
 // ... other domain imports
 
 abstract class MonitoringRepository {

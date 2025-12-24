@@ -13,7 +13,6 @@ import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
-import 'package:pkp_hub/features/monitoring/controllers/supervisor_screen_controller.dart';
 
 class ProjectsController extends BaseController {
   final UserStorage _userStorage;
