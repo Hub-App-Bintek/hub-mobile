@@ -30,7 +30,8 @@ class ResetPasswordController extends BaseController {
       newPasswordError.value == null &&
       confirmPasswordError.value == null &&
       newPasswordText.value.isNotEmpty &&
-      confirmPasswordText.value.isNotEmpty;
+      confirmPasswordText.value.isNotEmpty &&
+      newPasswordText.value == confirmPasswordText.value;
 
   @override
   void onInit() {
@@ -56,6 +57,12 @@ class ResetPasswordController extends BaseController {
     confirmPasswordText.value = confirmPasswordController.text;
     newPasswordError.value = null;
     confirmPasswordError.value = null;
+
+    if (newPasswordText.value.isNotEmpty &&
+        confirmPasswordText.value.isNotEmpty &&
+        newPasswordText.value != confirmPasswordText.value) {
+      confirmPasswordError.value = AppStrings.passwordsDoNotMatch;
+    }
   }
 
   Future<void> resetPassword() async {
@@ -71,6 +78,10 @@ class ResetPasswordController extends BaseController {
     );
 
     if (newPasswordError.value != null || confirmPasswordError.value != null) {
+      return;
+    }
+    if (newPassword != confirmPassword) {
+      confirmPasswordError.value = AppStrings.passwordsDoNotMatch;
       return;
     }
     if (resetToken.isEmpty) {
