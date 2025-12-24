@@ -1,13 +1,11 @@
 import 'package:get/get.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
-import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultant_portfolio_list_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/create_consultation_use_case.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
 
 import '../controllers/consultant_details_controller.dart';
 

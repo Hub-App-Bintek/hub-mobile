@@ -14,6 +14,10 @@ abstract class ApiEndpoints {
       '/api/auth/verify-forgot-password-otp';
   static const String resetPassword = '/api/auth/reset-password';
   static const String registerDeviceToken = '/api/users/device-token';
+  static const String notifications = '/api/notifications';
+  static const String notificationsUnreadCount =
+      '/api/notifications/unread-count';
+  static const String notificationsMarkRead = '/api/notifications/mark-read';
   static const projects = '/api/projects/v2';
   static const projectDetailV2 = '/api/projects/{projectId}/v2';
 

@@ -14,11 +14,13 @@ import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/wallet_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
+import 'package:pkp_hub/domain/usecases/notification/get_unread_count_use_case.dart';
 
 class HomeController extends BaseController {
   final UserStorage _userStorage;
   final GetWalletBalanceUseCase _getWalletBalanceUseCase;
   final GetConsultationsUseCase _getConsultationsUseCase;
+  final GetUnreadCountUseCase _getUnreadCountUseCase;
 
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
@@ -26,7 +28,7 @@ class HomeController extends BaseController {
       consultationFilterWaitingConfirmation.obs;
   final RxMap<String, int> projectCounts = <String, int>{}.obs;
   final RxInt chatBadgeCount = 3.obs;
-  final RxInt notificationBadgeCount = 5.obs;
+  final RxInt notificationBadgeCount = 0.obs;
 
   final PageController carouselController = PageController();
   final RxInt currentCarouselIndex = 0.obs;
@@ -51,6 +53,7 @@ class HomeController extends BaseController {
     this._userStorage,
     this._getWalletBalanceUseCase,
     this._getConsultationsUseCase,
+    this._getUnreadCountUseCase,
   );
 
   @override
@@ -88,6 +91,7 @@ class HomeController extends BaseController {
 
     if (_isLoggedIn) {
       _fetchBalance();
+      _fetchUnreadNotifications();
     }
 
     if (userRole.value == UserRole.consultant &&
@@ -120,6 +124,16 @@ class HomeController extends BaseController {
     userDisplayName.value = user?.fullName?.isNotEmpty == true
         ? user!.fullName!
         : 'User';
+  }
+
+  Future<void> _fetchUnreadNotifications() async {
+    await handleAsync(
+      _getUnreadCountUseCase.call,
+      onSuccess: (response) {
+        notificationBadgeCount.value = response.unreadCount;
+      },
+      onFailure: (_) {},
+    );
   }
 
   @override

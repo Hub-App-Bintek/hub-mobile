@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/domain/repositories/location_repository.dart';
 import 'package:pkp_hub/domain/repositories/project_repository.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';

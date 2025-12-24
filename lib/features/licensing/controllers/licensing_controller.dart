@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/project.dart';
-import 'package:pkp_hub/data/models/request/get_projects_request.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 
 class LicensingController extends BaseController {

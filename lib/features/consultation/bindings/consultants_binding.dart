@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
-import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/consultant_repository.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';

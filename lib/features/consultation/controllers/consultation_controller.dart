@@ -8,7 +8,6 @@ import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/core/utils/location_permission_helper.dart';
-import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/response/consultants_response.dart';
 import 'package:pkp_hub/domain/usecases/consultant/get_consultants_use_case.dart';

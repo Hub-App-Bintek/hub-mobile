@@ -38,6 +38,8 @@ import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart'
     as filesds;
 import 'package:pkp_hub/data/datasources/wallet/wallet_network_data_source.dart';
 import 'package:pkp_hub/domain/repositories/wallet_repository.dart';
+import 'package:pkp_hub/data/datasources/notification/notification_network_data_source.dart';
+import 'package:pkp_hub/domain/repositories/notification_repository.dart';
 
 class RepositoryInjection {
   RepositoryInjection._();
@@ -122,6 +124,11 @@ class RepositoryInjection {
     // Monitoring repository
     Get.lazyPut<MonitoringRepository>(
       () => MonitoringRepositoryImpl(Get.find<MonitoringRemoteDataSource>()),
+      fenix: true,
+    );
+    Get.lazyPut<NotificationRepository>(
+      () =>
+          NotificationRepositoryImpl(Get.find<NotificationNetworkDataSource>()),
       fenix: true,
     );
   }
