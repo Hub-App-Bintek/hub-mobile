@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/utils/form_validators.dart';
-import 'package:pkp_hub/data/models/request/register_request.dart';
 import 'package:pkp_hub/data/models/location/location_models.dart';
+import 'package:pkp_hub/data/models/request/register_request.dart';
 import 'package:pkp_hub/domain/usecases/auth/register_use_case.dart';
 import 'package:pkp_hub/domain/usecases/location/get_districts_use_case.dart';
 import 'package:pkp_hub/domain/usecases/location/get_provinces_use_case.dart';
@@ -184,6 +188,22 @@ class RegisterController extends BaseController {
       return;
     }
 
+    final compressedIdPath = await _ensureCompressedUnderLimit(idPhotoPath);
+    final compressedSelfiePath = await _ensureCompressedUnderLimit(
+      selfiePhotoPath,
+    );
+    if (compressedIdPath == null || compressedSelfiePath == null) {
+      showError(
+        const ServerFailure(
+          message:
+              'Gagal memproses foto. Silakan coba ambil ulang dengan resolusi lebih rendah.',
+        ),
+      );
+      return;
+    }
+    idDocumentPath.value = compressedIdPath;
+    selfieDocumentPath.value = compressedSelfiePath;
+
     isRequesting.value = true;
     try {
       final request = RegisterRequest(
@@ -349,5 +369,54 @@ class RegisterController extends BaseController {
     subdistrictController.dispose();
     addressController.dispose();
     super.onClose();
+  }
+
+  Future<int?> _fileSize(String path) async {
+    try {
+      return await File(path).length();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<String?> _ensureCompressedUnderLimit(String path) async {
+    const maxBytes = 5 * 1024 * 1024;
+    const minQuality = 30;
+    const minDimension = 640;
+    final original = File(path);
+    if (await original.length() <= maxBytes) return path;
+
+    final tempDir = await getTemporaryDirectory();
+    String? candidatePath;
+    var quality = 80;
+    var dimension = 1600;
+
+    while (dimension >= minDimension) {
+      final targetPath =
+          '${tempDir.path}/register_${DateTime.now().millisecondsSinceEpoch}_q${quality}_d$dimension.jpg';
+      final compressed = await FlutterImageCompress.compressAndGetFile(
+        path,
+        targetPath,
+        quality: quality,
+        minWidth: dimension,
+        minHeight: dimension,
+        format: CompressFormat.jpeg,
+        keepExif: true,
+      );
+      if (compressed == null) break;
+      final size = await compressed.length();
+      candidatePath = compressed.path;
+      if (size <= maxBytes) break;
+
+      if (quality > minQuality) {
+        quality -= 10;
+      } else {
+        // Reset quality and reduce dimensions further.
+        quality = 80;
+        dimension = (dimension * 0.85).floor();
+      }
+    }
+
+    return candidatePath;
   }
 }

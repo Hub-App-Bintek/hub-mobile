@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:pkp_hub/core/config/environment.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_error_response.dart';
@@ -34,6 +35,7 @@ class ApiClient {
     if (isLoggingEnabled) {
       // Log multipart/form-data fields & file metadata
       _dio.interceptors.add(FormDataLoggerInterceptor(talker));
+      _dio.interceptors.add(ChuckerDioInterceptor());
       _dio.interceptors.add(
         TalkerDioLogger(
           talker: talker,

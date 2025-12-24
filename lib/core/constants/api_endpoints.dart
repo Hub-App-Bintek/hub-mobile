@@ -9,6 +9,11 @@ abstract class ApiEndpoints {
   static const String verifyOtp = '/api/auth/verify-otp';
   // TODO: Update this later since it doesn't exist in the backend yet.
   static const String resendOtp = '/api/auth/resend-otp';
+  static const String forgotPassword = '/api/auth/forgot-password';
+  static const String verifyForgotPasswordOtp =
+      '/api/auth/verify-forgot-password-otp';
+  static const String resetPassword = '/api/auth/reset-password';
+  static const String registerDeviceToken = '/api/users/device-token';
   static const projects = '/api/projects/v2';
   static const projectDetailV2 = '/api/projects/{projectId}/v2';
 

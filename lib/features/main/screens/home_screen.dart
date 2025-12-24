@@ -54,7 +54,7 @@ class HomeScreen extends GetView<HomeController> {
       _buildCarouselBanner(),
       const SizedBox(height: 16),
       if (_shouldShowBalanceCard) ...[
-        _buildBalanceCard(),
+        // _buildBalanceCard(),
         const SizedBox(height: 16),
       ],
       _buildFeatureGrid(),
@@ -175,88 +175,88 @@ class HomeScreen extends GetView<HomeController> {
     });
   }
 
-  Widget _buildBalanceCard() {
-    return Obx(() {
-      final role = controller.userRole.value;
-      if (role == null || role == UserRole.unknown) {
-        return const SizedBox.shrink();
-      }
-
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        decoration: BoxDecoration(
-          color: AppColors.primaryDark,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: const BoxDecoration(
-                color: AppColors.primaryDarkest,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: SvgPicture.asset(
-                  AppIcons.wallet,
-                  width: 24,
-                  height: 24,
-                  colorFilter: const ColorFilter.mode(
-                    AppColors.white,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Saldo Dompet',
-                    style: AppTextStyles.bodyL.copyWith(color: AppColors.white),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    Formatters.currency(controller.balance.value),
-                    style: AppTextStyles.h3.copyWith(color: AppColors.white),
-                  ),
-                ],
-              ),
-            ),
-            Material(
-              color: AppColors.primaryDarkest,
-              shape: const CircleBorder(),
-              child: InkWell(
-                onTap: () {
-                  // TODO: Implement top-up functionality
-                },
-                customBorder: const CircleBorder(),
-                child: SizedBox(
-                  width: 40,
-                  height: 40,
-                  child: Center(
-                    child: SvgPicture.asset(
-                      AppIcons.add,
-                      width: 20,
-                      height: 20,
-                      colorFilter: const ColorFilter.mode(
-                        AppColors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    });
-  }
+  // Widget _buildBalanceCard() {
+  //   return Obx(() {
+  //     final role = controller.userRole.value;
+  //     if (role == null || role == UserRole.unknown) {
+  //       return const SizedBox.shrink();
+  //     }
+  //
+  //     return Container(
+  //       margin: const EdgeInsets.symmetric(horizontal: 16),
+  //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+  //       decoration: BoxDecoration(
+  //         color: AppColors.primaryDark,
+  //         borderRadius: BorderRadius.circular(16),
+  //       ),
+  //       child: Row(
+  //         children: [
+  //           Container(
+  //             width: 48,
+  //             height: 48,
+  //             decoration: const BoxDecoration(
+  //               color: AppColors.primaryDarkest,
+  //               shape: BoxShape.circle,
+  //             ),
+  //             child: Center(
+  //               child: SvgPicture.asset(
+  //                 AppIcons.wallet,
+  //                 width: 24,
+  //                 height: 24,
+  //                 colorFilter: const ColorFilter.mode(
+  //                   AppColors.white,
+  //                   BlendMode.srcIn,
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //           const SizedBox(width: 12),
+  //           Expanded(
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   'Saldo Dompet',
+  //                   style: AppTextStyles.bodyL.copyWith(color: AppColors.white),
+  //                 ),
+  //                 const SizedBox(height: 4),
+  //                 Text(
+  //                   Formatters.currency(controller.balance.value),
+  //                   style: AppTextStyles.h3.copyWith(color: AppColors.white),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           Material(
+  //             color: AppColors.primaryDarkest,
+  //             shape: const CircleBorder(),
+  //             child: InkWell(
+  //               onTap: () {
+  //                 // TODO: Implement top-up functionality
+  //               },
+  //               customBorder: const CircleBorder(),
+  //               child: SizedBox(
+  //                 width: 40,
+  //                 height: 40,
+  //                 child: Center(
+  //                   child: SvgPicture.asset(
+  //                     AppIcons.add,
+  //                     width: 20,
+  //                     height: 20,
+  //                     colorFilter: const ColorFilter.mode(
+  //                       AppColors.white,
+  //                       BlendMode.srcIn,
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   });
+  // }
 
   bool get _shouldShowBalanceCard {
     final role = controller.userRole.value;

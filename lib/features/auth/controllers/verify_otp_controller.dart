@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,17 +7,29 @@ import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/error/failure.dart';
-import 'package:pkp_hub/core/storage/user_storage.dart';
+import 'package:pkp_hub/data/models/request/forgot_password_request.dart';
+import 'package:pkp_hub/data/models/request/register_device_token_request.dart';
 import 'package:pkp_hub/data/models/request/verify_otp_request.dart';
+import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.dart';
+import 'package:pkp_hub/domain/usecases/auth/register_device_token_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/resend_otp_use_case.dart';
+import 'package:pkp_hub/domain/usecases/auth/forgot_password_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/verify_otp_use_case.dart';
+import 'package:pkp_hub/domain/usecases/auth/verify_forgot_password_otp_use_case.dart';
+import 'package:pkp_hub/core/services/notification_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class VerifyOtpController extends BaseController {
   final VerifyOtpUseCase _verifyOtpUseCase;
+  final VerifyForgotPasswordOtpUseCase _verifyForgotPasswordOtpUseCase;
   final ResendOtpUseCase _resendOtpUseCase;
-  final UserStorage _userStorage;
+  final ForgotPasswordUseCase _forgotPasswordUseCase;
+  final RegisterDeviceTokenUseCase _registerDeviceTokenUseCase;
+  final NotificationService _notificationService;
 
   late final String email;
+  late final VerifyOtpFlow flow;
+  late final int otpLength;
 
   // --- UI State ---
   final isRequesting = false.obs;
@@ -26,7 +39,6 @@ class VerifyOtpController extends BaseController {
   final isCodeComplete = false.obs; // Observable for form validity
 
   // --- OTP Field UI Management ---
-  final int otpLength = 4;
   final List<TextEditingController> otpControllers = [];
   final List<FocusNode> otpFocusNodes = [];
 
@@ -35,15 +47,25 @@ class VerifyOtpController extends BaseController {
 
   VerifyOtpController({
     required VerifyOtpUseCase verifyOtpUseCase,
+    required VerifyForgotPasswordOtpUseCase verifyForgotPasswordOtpUseCase,
     required ResendOtpUseCase resendOtpUseCase,
-    required UserStorage authSession,
+    required ForgotPasswordUseCase forgotPasswordUseCase,
+    required RegisterDeviceTokenUseCase registerDeviceTokenUseCase,
+    required NotificationService notificationService,
   }) : _verifyOtpUseCase = verifyOtpUseCase,
+       _verifyForgotPasswordOtpUseCase = verifyForgotPasswordOtpUseCase,
        _resendOtpUseCase = resendOtpUseCase,
-       _userStorage = authSession;
+       _forgotPasswordUseCase = forgotPasswordUseCase,
+       _registerDeviceTokenUseCase = registerDeviceTokenUseCase,
+       _notificationService = notificationService;
+
+  bool get isForgotFlow => flow == VerifyOtpFlow.forgotPassword;
 
   @override
   void onInit() {
     super.onInit();
+    flow = _resolveFlowFromArgs();
+    otpLength = _resolveOtpLengthFromArgs();
     email = _resolveEmailFromArgs();
     for (var i = 0; i < otpLength; i++) {
       otpControllers.add(TextEditingController());
@@ -61,6 +83,22 @@ class VerifyOtpController extends BaseController {
       return args;
     }
     return '';
+  }
+
+  VerifyOtpFlow _resolveFlowFromArgs() {
+    final args = Get.arguments;
+    if (args is VerifyOtpArgs) {
+      return args.flow;
+    }
+    return VerifyOtpFlow.accountVerification;
+  }
+
+  int _resolveOtpLengthFromArgs() {
+    final args = Get.arguments;
+    if (args is VerifyOtpArgs && args.otpLength != null) {
+      return args.otpLength!;
+    }
+    return 4;
   }
 
   /// Returns the completed OTP string.
@@ -107,11 +145,30 @@ class VerifyOtpController extends BaseController {
     if (!isCodeComplete.value) return;
     isRequesting.value = true;
     try {
+      if (isForgotFlow) {
+        await handleAsync(
+          () => _verifyForgotPasswordOtpUseCase(
+            VerifyForgotPasswordOtpRequest(email: email, otpCode: otpString),
+          ),
+          onSuccess: (response) {
+            navigateTo(
+              AppRoutes.resetPassword,
+              arguments: ResetPasswordArgs(
+                resetToken: response.resetToken ?? '',
+                email: email,
+              ),
+            );
+          },
+          onFailure: showError,
+        );
+        return;
+      }
       await handleAsync(
         () => _verifyOtpUseCase(
           VerifyOtpRequest(email: email, otpCode: otpString),
         ),
         onSuccess: (loginResponse) async {
+          await _registerDeviceToken();
           navigateOffAll(AppRoutes.main);
         },
         onFailure: (Failure failure) {
@@ -126,17 +183,31 @@ class VerifyOtpController extends BaseController {
   Future<void> resendOtp() async {
     isResending.value = true;
     try {
-      // TODO: Activate if already deployed
-      // await handleAsync(
-      //   () => _resendOtpUseCase(email),
-      //   onSuccess: (_) {
-      //     Get.snackbar('Code Resent', 'A new OTP has been sent to your email.');
-      //     _startTimer();
-      //   },
-      //   onFailure: (Failure failure) {
-      //     showError(failure);
-      //   },
-      // );
+      if (isForgotFlow) {
+        await handleAsync(
+          () => _forgotPasswordUseCase(ForgotPasswordRequest(email: email)),
+          onSuccess: (_) {
+            Get.snackbar(
+              'Kode terkirim',
+              'OTP baru telah dikirim ke email Anda.',
+            );
+            _startTimer();
+          },
+          onFailure: showError,
+        );
+        return;
+      }
+      await handleAsync(
+        () => _resendOtpUseCase(email),
+        onSuccess: (_) {
+          Get.snackbar(
+            'Kode terkirim',
+            'OTP baru telah dikirim ke email Anda.',
+          );
+          _startTimer();
+        },
+        onFailure: showError,
+      );
     } finally {
       isResending.value = false;
     }
@@ -152,5 +223,22 @@ class VerifyOtpController extends BaseController {
       f.dispose();
     }
     super.onClose();
+  }
+
+  Future<void> _registerDeviceToken() async {
+    final token = await _notificationService.getFcmToken();
+    if (token == null || token.isEmpty) return;
+    final packageInfo = await PackageInfo.fromPlatform();
+    final request = RegisterDeviceTokenRequest(
+      deviceToken: token,
+      deviceType: Platform.isIOS ? 'IOS' : 'ANDROID',
+      deviceModel: Platform.operatingSystemVersion,
+      appVersion: '${packageInfo.version}+${packageInfo.buildNumber}',
+    );
+    await handleAsync(
+      () => _registerDeviceTokenUseCase(request),
+      onSuccess: (_) {},
+      onFailure: (_) {},
+    );
   }
 }

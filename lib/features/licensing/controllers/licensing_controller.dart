@@ -16,8 +16,6 @@ class LicensingController extends BaseController {
   final Rx<Project?> selectedConsultationProject = Rx<Project?>(null);
   final RxInt selectedConsultationIndex = (-1).obs;
 
-
-
   // --- LOGIC ---
   // Fetches data and populates the state. Returns true on success.
   Future<bool> fetchConsultations() async {
@@ -38,10 +36,10 @@ class LicensingController extends BaseController {
       onSuccess: (response) {
         consultations.addAll(
           response.projects?.content!
-              .where(
-                (e) => e.consultationInfo!.consultationStatus == 'SELESAI',
-          )
-              .toList() ??
+                  .where(
+                    (e) => e.consultationInfo!.consultationStatus == 'SELESAI',
+                  )
+                  .toList() ??
               [],
         );
         success = true;

@@ -2,9 +2,14 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_local_data_source.dart';
 import 'package:pkp_hub/data/datasources/auth/auth_network_data_source.dart';
+import 'package:pkp_hub/data/models/request/forgot_password_request.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
+import 'package:pkp_hub/data/models/request/register_device_token_request.dart';
+import 'package:pkp_hub/data/models/request/reset_password_request.dart';
 import 'package:pkp_hub/data/models/request/register_request.dart';
 import 'package:pkp_hub/data/models/request/verify_otp_request.dart';
+import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.dart';
+import 'package:pkp_hub/data/models/response/forgot_password_verification_response.dart';
 import 'package:pkp_hub/data/models/response/login_response.dart';
 import 'package:pkp_hub/data/models/response/register_response.dart';
 
@@ -16,6 +21,17 @@ abstract class AuthRepository {
   Future<Result<LoginResponse, Failure>> verifyOtp(VerifyOtpRequest request);
 
   Future<Result<void, Failure>> resendOtp(String email);
+
+  Future<Result<void, Failure>> forgotPassword(ForgotPasswordRequest request);
+
+  Future<Result<ForgotPasswordVerificationResponse, Failure>>
+  verifyForgotPasswordOtp(VerifyForgotPasswordOtpRequest request);
+
+  Future<Result<void, Failure>> resetPassword(ResetPasswordRequest request);
+
+  Future<Result<void, Failure>> registerDeviceToken(
+    RegisterDeviceTokenRequest request,
+  );
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -52,5 +68,28 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Result<void, Failure>> resendOtp(String email) {
     return _remoteDataSource.resendOtp(email);
+  }
+
+  @override
+  Future<Result<void, Failure>> forgotPassword(ForgotPasswordRequest request) {
+    return _remoteDataSource.forgotPassword(request);
+  }
+
+  @override
+  Future<Result<ForgotPasswordVerificationResponse, Failure>>
+  verifyForgotPasswordOtp(VerifyForgotPasswordOtpRequest request) {
+    return _remoteDataSource.verifyForgotPasswordOtp(request);
+  }
+
+  @override
+  Future<Result<void, Failure>> resetPassword(ResetPasswordRequest request) {
+    return _remoteDataSource.resetPassword(request);
+  }
+
+  @override
+  Future<Result<void, Failure>> registerDeviceToken(
+    RegisterDeviceTokenRequest request,
+  ) {
+    return _remoteDataSource.registerDeviceToken(request);
   }
 }

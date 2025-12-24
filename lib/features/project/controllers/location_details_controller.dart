@@ -613,7 +613,7 @@ class LocationDetailsController extends BaseController {
           buildingAreaController.text.trim().replaceAll('.', ''),
         ) ??
         0.0;
-    if(_isPaidConsultation != null) {
+    if (_isPaidConsultation != null) {
       if (_isPaidConsultation == true && buildingArea < 37) {
         Get.snackbar(
           'Gagal',

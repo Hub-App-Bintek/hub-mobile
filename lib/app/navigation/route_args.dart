@@ -2,6 +2,8 @@ import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 
+enum VerifyOtpFlow { accountVerification, forgotPassword }
+
 class ConsultationDetailsArgs {
   const ConsultationDetailsArgs({this.project});
 
@@ -24,8 +26,21 @@ class PaymentArgs {
 }
 
 class VerifyOtpArgs {
-  const VerifyOtpArgs({required this.email});
+  const VerifyOtpArgs({
+    required this.email,
+    this.flow = VerifyOtpFlow.accountVerification,
+    this.otpLength,
+  });
 
+  final String email;
+  final VerifyOtpFlow flow;
+  final int? otpLength;
+}
+
+class ResetPasswordArgs {
+  const ResetPasswordArgs({required this.resetToken, required this.email});
+
+  final String resetToken;
   final String email;
 }
 

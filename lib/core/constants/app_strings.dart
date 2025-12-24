@@ -17,6 +17,17 @@ abstract class AppStrings {
   static const loginButton = 'Masuk';
   static const notAMemberPrompt = 'Belum punya akun?';
   static const registerNowButton = 'Daftar Sekarang';
+  static const forgotPasswordTitle = 'Lupa Kata Sandi';
+  static const forgotPasswordSubtitle =
+      'Masukkan email terdaftar untuk menerima kode reset kata sandi.';
+  static const sendOtpButton = 'Kirim Kode';
+  static const resetPasswordTitle = 'Atur Ulang Kata Sandi';
+  static const newPasswordLabel = 'Kata Sandi Baru';
+  static const newPasswordHint = 'Masukkan kata sandi baru';
+  static const confirmNewPasswordLabel = 'Konfirmasi Kata Sandi Baru';
+  static const resetPasswordButton = 'Simpan Kata Sandi';
+  static const resetPasswordSuccess =
+      'Kata sandi berhasil diperbarui. Silakan masuk kembali.';
 
   // Register Screen
   static const registerPageTitle = 'Daftar';
