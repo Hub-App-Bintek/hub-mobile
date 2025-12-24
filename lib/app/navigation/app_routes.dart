@@ -6,6 +6,8 @@ abstract class AppRoutes {
   static const login = _Paths.login;
   static const register = _Paths.register;
   static const verifyOtp = _Paths.verifyOtp;
+  static const forgotPassword = _Paths.forgotPassword;
+  static const resetPassword = _Paths.resetPassword;
   static const main = _Paths.main;
   static const consultation = _Paths.consultation;
   static const consultantDetails = _Paths.consultantDetails;
@@ -46,6 +48,8 @@ abstract class _Paths {
   static const login = '/login';
   static const register = '/register';
   static const verifyOtp = '/verify-otp';
+  static const forgotPassword = '/forgot-password';
+  static const resetPassword = '/reset-password';
   static const main = '/main';
   static const consultation = '/consultation';
   static const consultantDetails = '/consultation-details';

@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
@@ -69,11 +71,32 @@ class RegisterScreen extends GetView<RegisterController> {
 
   Future<String?> _capturePhoto() async {
     final picker = ImagePicker();
-    final photo = await picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 85,
-    );
-    return photo?.path;
+    final photo = await picker.pickImage(source: ImageSource.camera);
+    if (photo == null) return null;
+
+    final compressedPath = await _compressImage(photo.path);
+    return compressedPath ?? photo.path;
+  }
+
+  Future<String?> _compressImage(String sourcePath) async {
+    try {
+      final directory = await getTemporaryDirectory();
+      final targetPath =
+          '${directory.path}/register_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      final result = await FlutterImageCompress.compressAndGetFile(
+        sourcePath,
+        targetPath,
+        quality: 80,
+        minWidth: 1600,
+        minHeight: 1600,
+        format: CompressFormat.jpeg,
+        keepExif: true,
+      );
+      return result?.path;
+    } catch (_) {
+      return null;
+    }
   }
 
   @override
@@ -159,6 +182,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   hintText: 'Ambil foto KTP/KITAS',
                   type: PkpTextFormFieldType.filePicker,
                   filePickerType: PkpFilePickerType.image,
+                  allowedFileLabel: '',
                   customPickFile: _capturePhoto,
                   onFilePicked: (path) {
                     controller.idDocumentPath.value = path;
@@ -172,6 +196,7 @@ class RegisterScreen extends GetView<RegisterController> {
                   hintText: 'Ambil selfie dengan identitas',
                   type: PkpTextFormFieldType.filePicker,
                   filePickerType: PkpFilePickerType.image,
+                  allowedFileLabel: '',
                   customPickFile: _capturePhoto,
                   onFilePicked: (path) {
                     controller.selfieDocumentPath.value = path;

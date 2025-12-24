@@ -81,7 +81,7 @@ class LoginScreen extends GetView<LoginController> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    // TODO: Redirect to forgot password screen
+                    controller.navigateTo(AppRoutes.forgotPassword);
                   },
                   style: TextButton.styleFrom(
                     padding: EdgeInsets.zero,

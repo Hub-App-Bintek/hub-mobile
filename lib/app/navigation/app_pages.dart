@@ -1,8 +1,12 @@
 import 'package:get/get.dart';
+import 'package:pkp_hub/features/auth/bindings/forgot_password_binding.dart';
 import 'package:pkp_hub/features/auth/bindings/login_binding.dart';
+import 'package:pkp_hub/features/auth/bindings/reset_password_binding.dart';
 import 'package:pkp_hub/features/auth/bindings/register_binding.dart';
 import 'package:pkp_hub/features/auth/bindings/verify_otp_binding.dart';
+import 'package:pkp_hub/features/auth/screens/forgot_password_screen.dart';
 import 'package:pkp_hub/features/auth/screens/login_screen.dart';
+import 'package:pkp_hub/features/auth/screens/reset_password_screen.dart';
 import 'package:pkp_hub/features/auth/screens/register_screen.dart';
 import 'package:pkp_hub/features/auth/screens/verify_otp_screen.dart';
 import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
@@ -82,9 +86,19 @@ class AppPages {
       binding: RegisterBinding(),
     ),
     GetPage(
+      name: _Paths.forgotPassword,
+      page: () => const ForgotPasswordScreen(),
+      binding: ForgotPasswordBinding(),
+    ),
+    GetPage(
       name: _Paths.verifyOtp,
       page: () => const VerifyOtpScreen(),
       binding: VerifyOtpBinding(),
+    ),
+    GetPage(
+      name: _Paths.resetPassword,
+      page: () => const ResetPasswordScreen(),
+      binding: ResetPasswordBinding(),
     ),
     GetPage(
       name: _Paths.main,

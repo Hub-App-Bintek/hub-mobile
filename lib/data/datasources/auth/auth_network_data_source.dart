@@ -4,9 +4,14 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/auth_api_service.dart';
+import 'package:pkp_hub/data/models/request/forgot_password_request.dart';
 import 'package:pkp_hub/data/models/request/login_request.dart';
+import 'package:pkp_hub/data/models/request/register_device_token_request.dart';
+import 'package:pkp_hub/data/models/request/reset_password_request.dart';
 import 'package:pkp_hub/data/models/request/register_request.dart';
 import 'package:pkp_hub/data/models/request/verify_otp_request.dart';
+import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.dart';
+import 'package:pkp_hub/data/models/response/forgot_password_verification_response.dart';
 import 'package:pkp_hub/data/models/response/login_response.dart';
 import 'package:pkp_hub/data/models/response/register_response.dart';
 import 'package:dio/dio.dart';
@@ -19,6 +24,17 @@ abstract class AuthNetworkDataSource {
   Future<Result<LoginResponse, Failure>> verifyOtp(VerifyOtpRequest request);
 
   Future<Result<void, Failure>> resendOtp(String email);
+
+  Future<Result<void, Failure>> forgotPassword(ForgotPasswordRequest request);
+
+  Future<Result<ForgotPasswordVerificationResponse, Failure>>
+  verifyForgotPasswordOtp(VerifyForgotPasswordOtpRequest request);
+
+  Future<Result<void, Failure>> resetPassword(ResetPasswordRequest request);
+
+  Future<Result<void, Failure>> registerDeviceToken(
+    RegisterDeviceTokenRequest request,
+  );
 }
 
 class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
@@ -121,6 +137,66 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
     try {
       // Using flexible map payload to accommodate backend variations
       await _authApi.resendOtp({'email': email});
+      return const Success(null);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<void, Failure>> forgotPassword(
+    ForgotPasswordRequest request,
+  ) async {
+    try {
+      await _authApi.forgotPassword(request);
+      return const Success(null);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<ForgotPasswordVerificationResponse, Failure>>
+  verifyForgotPasswordOtp(VerifyForgotPasswordOtpRequest request) async {
+    try {
+      final response = await _authApi.verifyForgotPasswordOtp(request);
+      if (response.resetToken?.isEmpty ?? true) {
+        return const Error(
+          ServerFailure(message: 'Invalid response: reset token is empty'),
+        );
+      }
+      return Success(response);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<void, Failure>> resetPassword(
+    ResetPasswordRequest request,
+  ) async {
+    try {
+      await _authApi.resetPassword(request);
+      return const Success(null);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<void, Failure>> registerDeviceToken(
+    RegisterDeviceTokenRequest request,
+  ) async {
+    try {
+      await _authApi.registerDeviceToken(request);
       return const Success(null);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));

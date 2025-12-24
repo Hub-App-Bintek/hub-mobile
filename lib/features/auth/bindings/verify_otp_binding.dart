@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/route_args.dart';
-import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
+import 'package:pkp_hub/domain/usecases/auth/forgot_password_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/resend_otp_use_case.dart';
 import 'package:pkp_hub/domain/usecases/auth/verify_otp_use_case.dart';
+import 'package:pkp_hub/domain/usecases/auth/verify_forgot_password_otp_use_case.dart';
+import 'package:pkp_hub/domain/usecases/auth/register_device_token_use_case.dart';
+import 'package:pkp_hub/core/services/notification_service.dart';
 import 'package:pkp_hub/features/auth/controllers/verify_otp_controller.dart';
 
 class VerifyOtpBinding extends Bindings {
@@ -17,12 +19,28 @@ class VerifyOtpBinding extends Bindings {
       () => ResendOtpUseCase(Get.find<AuthRepository>()),
       fenix: true,
     );
+    Get.lazyPut(
+      () => VerifyForgotPasswordOtpUseCase(Get.find<AuthRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut(
+      () => ForgotPasswordUseCase(Get.find<AuthRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut(
+      () => RegisterDeviceTokenUseCase(Get.find<AuthRepository>()),
+      fenix: true,
+    );
 
     Get.lazyPut<VerifyOtpController>(
       () => VerifyOtpController(
         verifyOtpUseCase: Get.find<VerifyOtpUseCase>(),
+        verifyForgotPasswordOtpUseCase:
+            Get.find<VerifyForgotPasswordOtpUseCase>(),
         resendOtpUseCase: Get.find<ResendOtpUseCase>(),
-        authSession: Get.find<UserStorage>(),
+        forgotPasswordUseCase: Get.find<ForgotPasswordUseCase>(),
+        registerDeviceTokenUseCase: Get.find<RegisterDeviceTokenUseCase>(),
+        notificationService: Get.find<NotificationService>(),
       ),
       fenix: true,
     );
