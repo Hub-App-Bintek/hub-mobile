@@ -151,8 +151,9 @@ class VerifyOtpController extends BaseController {
             VerifyForgotPasswordOtpRequest(email: email, otpCode: otpString),
           ),
           onSuccess: (response) {
-            navigateTo(
+            navigateAndClearUntil(
               AppRoutes.resetPassword,
+              untilRoute: AppRoutes.login,
               arguments: ResetPasswordArgs(
                 resetToken: response.resetToken ?? '',
                 email: email,
