@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/app/navigation/route_args.dart';
+import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/error/failure.dart';
@@ -100,11 +100,14 @@ class ResetPasswordController extends BaseController {
           ),
         ),
         onSuccess: (_) {
+          goBack();
           Get.snackbar(
             AppStrings.resetPasswordTitle,
             AppStrings.resetPasswordSuccess,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: AppColors.successDark,
+            colorText: AppColors.white,
           );
-          navigateOffAll(AppRoutes.login);
         },
         onFailure: showError,
       );
