@@ -81,11 +81,11 @@ class HomeController extends BaseController {
   @override
   void onResumed() {
     super.onResumed();
-    init();
+    refreshUnreadBadges();
   }
 
-  void onPageVisible() {
-    init();
+  Future<void> onPageVisible() async {
+    await refreshUnreadBadges();
   }
 
   Future<void> init() async {
@@ -94,8 +94,7 @@ class HomeController extends BaseController {
 
     if (_isLoggedIn) {
       _fetchBalance();
-      _fetchUnreadNotifications();
-      _fetchUnreadChats();
+      refreshUnreadBadges();
     }
 
     if (userRole.value == UserRole.consultant &&
@@ -154,6 +153,12 @@ class HomeController extends BaseController {
   void onReady() {
     super.onReady();
     _startCarouselTimer();
+  }
+
+  Future<void> refreshUnreadBadges() async {
+    await _refreshAuthState();
+    if (!_isLoggedIn) return;
+    await Future.wait([_fetchUnreadNotifications(), _fetchUnreadChats()]);
   }
 
   Future<void> _fetchBalance() async {
@@ -230,12 +235,14 @@ class HomeController extends BaseController {
     isProjectLoading.value = false;
   }
 
-  void onNotificationTapped() {
-    navigateTo(AppRoutes.inbox);
+  Future<void> onNotificationTapped() async {
+    await Get.toNamed(AppRoutes.inbox);
+    await refreshUnreadBadges();
   }
 
-  void onChatTapped() {
-    navigateTo(AppRoutes.chats);
+  Future<void> onChatTapped() async {
+    await Get.toNamed(AppRoutes.chats);
+    await refreshUnreadBadges();
   }
 
   void onSelectConsultation(Project project) {

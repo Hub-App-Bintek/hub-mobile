@@ -175,13 +175,16 @@ class _ChatApiService implements ChatApiService {
   }
 
   @override
-  Future<UnreadCountResponse> markRoomRead(String roomId) async {
+  Future<UnreadCountResponse> markRoomRead(
+    String roomId,
+    MarkChatReadRequest body,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = body;
     final _options = _setStreamType<UnreadCountResponse>(
-      Options(method: 'POST', headers: _headers, extra: _extra)
+      Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
             '/api/chats/${roomId}/mark-read',

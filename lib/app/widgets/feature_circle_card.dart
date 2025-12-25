@@ -20,6 +20,10 @@ class FeatureCircleCard extends StatelessWidget {
     this.labelStyle,
     this.iconSize = 24,
     this.iconWidget,
+    this.isSelected = false,
+    this.selectedBackgroundColor,
+    this.selectedIconColor,
+    this.selectedLabelStyle,
   }) : assert(
          icon != null || iconWidget != null || iconAsset != null,
          'Provide either icon, iconWidget, or iconAsset',
@@ -38,12 +42,30 @@ class FeatureCircleCard extends StatelessWidget {
   final TextStyle? labelStyle;
   final double iconSize;
   final Widget? iconWidget;
+  final bool isSelected;
+  final Color? selectedBackgroundColor;
+  final Color? selectedIconColor;
+  final TextStyle? selectedLabelStyle;
 
   bool get _isBadgeVisible =>
       showBadge && (badgeValue?.trim().isNotEmpty ?? false);
 
   @override
   Widget build(BuildContext context) {
+    final effectiveBackgroundColor = isSelected
+        ? (selectedBackgroundColor ?? backgroundColor)
+        : backgroundColor;
+    final defaultLabelStyle =
+        labelStyle ??
+        (labelOutside
+            ? AppTextStyles.bodyL.copyWith(color: AppColors.neutralDarkest)
+            : AppTextStyles.caption.copyWith(color: AppColors.neutralDarkest));
+    final effectiveLabelStyle = isSelected
+        ? (selectedLabelStyle ?? defaultLabelStyle)
+        : defaultLabelStyle;
+    final effectiveIconColor = isSelected
+        ? (selectedIconColor ?? iconColor)
+        : iconColor;
     final iconView =
         iconWidget ??
         (iconAsset != null
@@ -51,16 +73,19 @@ class FeatureCircleCard extends StatelessWidget {
                 iconAsset!,
                 width: iconSize,
                 height: iconSize,
-                colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(
+                  effectiveIconColor,
+                  BlendMode.srcIn,
+                ),
               )
-            : Icon(icon, size: iconSize, color: iconColor));
+            : Icon(icon, size: iconSize, color: effectiveIconColor));
 
     if (labelOutside) {
       return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _CircleButton(
-            backgroundColor: backgroundColor,
+            backgroundColor: effectiveBackgroundColor,
             iconChild: iconView,
             onTap: onTap,
             badgeColor: badgeColor,
@@ -68,13 +93,7 @@ class FeatureCircleCard extends StatelessWidget {
             isBadgeVisible: _isBadgeVisible,
           ),
           const SizedBox(height: 12),
-          Text(
-            label,
-            style:
-                labelStyle ??
-                AppTextStyles.bodyL.copyWith(color: AppColors.neutralDarkest),
-            textAlign: TextAlign.center,
-          ),
+          Text(label, style: effectiveLabelStyle, textAlign: TextAlign.center),
         ],
       );
     }
@@ -86,7 +105,7 @@ class FeatureCircleCard extends StatelessWidget {
         FloatingActionButton.large(
           heroTag: null,
           onPressed: onTap,
-          backgroundColor: backgroundColor,
+          backgroundColor: effectiveBackgroundColor,
           elevation: 0,
           disabledElevation: 0,
           focusElevation: 0,
@@ -101,9 +120,7 @@ class FeatureCircleCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   label,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.neutralDarkest,
-                  ),
+                  style: effectiveLabelStyle,
                   textAlign: TextAlign.center,
                 ),
               ],

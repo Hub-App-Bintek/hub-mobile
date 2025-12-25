@@ -7,6 +7,7 @@ import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
 import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
+import 'package:pkp_hub/data/models/request/mark_chat_read_request.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
 import 'package:pkp_hub/data/models/response/unread_count_response.dart';
 
@@ -37,7 +38,10 @@ abstract class ChatNetworkDataSource {
 
   Future<Result<UnreadCountResponse, Failure>> getUnreadCount();
 
-  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId);
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(
+    String roomId,
+    MarkChatReadRequest request,
+  );
 }
 
 class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
@@ -132,9 +136,10 @@ class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
   @override
   Future<Result<UnreadCountResponse, Failure>> markRoomRead(
     String roomId,
+    MarkChatReadRequest request,
   ) async {
     try {
-      final res = await _chatApi.markRoomRead(roomId);
+      final res = await _chatApi.markRoomRead(roomId, request);
       return Success(res);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));
