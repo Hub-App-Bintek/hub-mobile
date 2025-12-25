@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/app_route_observer.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/empty_placeholder.dart';
 import 'package:pkp_hub/app/widgets/feature_circle_card.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/core/constants/app_icons.dart';
@@ -15,8 +17,43 @@ import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
 
-class HomeScreen extends GetView<HomeController> {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with RouteAware {
+  HomeController get controller => Get.find<HomeController>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route != null) {
+      appRouteObserver.subscribe(this, route);
+    }
+    // Ensure badges refreshed when the screen is first attached.
+    controller.refreshUnreadBadges();
+  }
+
+  @override
+  void dispose() {
+    appRouteObserver.unsubscribe(this);
+    super.dispose();
+  }
+
+  @override
+  void didPopNext() {
+    // Called when coming back to this screen; refresh unread counters.
+    controller.refreshUnreadBadges();
+  }
+
+  @override
+  void didPush() {
+    controller.refreshUnreadBadges();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +77,17 @@ class HomeScreen extends GetView<HomeController> {
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: _buildConsultationSliverList(),
+                  ),
+                if (_shouldShowConsultations &&
+                    controller.consultations.isEmpty)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: EmptyPlaceholder(
+                        iconPath: AppIcons.clock,
+                        message: 'Belum ada konsultasi',
+                      ),
+                    ),
                   ),
               ],
             );
@@ -269,6 +317,8 @@ class HomeScreen extends GetView<HomeController> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Obx(() {
         final role = controller.userRole.value;
+        final selectedConsultationStatus = controller.consultationStatus.value;
+        final projectCounts = controller.projectCounts;
         final List<Widget> featureItems = [];
 
         if (role == UserRole.homeowner ||
@@ -337,6 +387,12 @@ class HomeScreen extends GetView<HomeController> {
             _buildFilterStatus(
               label: AppStrings.homeProjectsPendingTitle,
               iconAsset: AppIcons.hourglass,
+              badgeCount:
+                  projectCounts[consultationFilterWaitingConfirmation.id],
+              isSelected:
+                  selectedConsultationStatus ==
+                  consultationFilterWaitingConfirmation,
+              applySelectionStyle: true,
               onTap: () {
                 controller.fetchConsultations(
                   consultationFilterWaitingConfirmation,
@@ -348,6 +404,10 @@ class HomeScreen extends GetView<HomeController> {
             _buildFilterStatus(
               label: AppStrings.homeProjectsActiveTitle,
               iconAsset: AppIcons.clock,
+              badgeCount: projectCounts[consultationFilterInProgress.id],
+              isSelected:
+                  selectedConsultationStatus == consultationFilterInProgress,
+              applySelectionStyle: true,
               onTap: () {
                 controller.fetchConsultations(consultationFilterInProgress);
               },
@@ -394,12 +454,6 @@ class HomeScreen extends GetView<HomeController> {
           );
         }
         final itemIndex = index - 1;
-        if (consultations.isEmpty) {
-          if (itemIndex == 0) {
-            return _buildEmptyState('Belum ada konsultasi');
-          }
-          return null;
-        }
         if (itemIndex >= consultations.length) return null;
         if (itemIndex == consultations.length - 1) {
           controller.loadMoreConsultations();
@@ -473,18 +527,41 @@ class HomeScreen extends GetView<HomeController> {
     IconData? icon,
     String? iconAsset,
     required VoidCallback onTap,
+    bool isSelected = false,
+    bool applySelectionStyle = false,
   }) {
+    final unselectedBackground = applySelectionStyle
+        ? AppColors.primaryLightest
+        : AppColors.primaryDark;
+    const selectedBackground = AppColors.primaryDark;
+    final unselectedIconColor = applySelectionStyle
+        ? AppColors.inputBorder
+        : AppColors.white;
+    const selectedIconColor = AppColors.white;
+    final labelColor = applySelectionStyle
+        ? AppColors.inputBorder
+        : AppColors.neutralDarkest;
+    const selectedLabelColor = AppColors.neutralDarkest;
+    final baseLabelStyle = AppTextStyles.bodyM.copyWith(color: labelColor);
+    final activeLabelStyle = AppTextStyles.bodyM.copyWith(
+      color: selectedLabelColor,
+    );
+
     return FeatureCircleCard(
       label: label,
       icon: icon,
       iconAsset: iconAsset,
       labelOutside: true,
-      labelStyle: AppTextStyles.bodyM.copyWith(color: AppColors.neutralDarkest),
-      backgroundColor: AppColors.primaryDark,
-      iconColor: AppColors.white,
-      badgeValue: badgeCount.toString(),
+      labelStyle: baseLabelStyle,
+      selectedLabelStyle: activeLabelStyle,
+      backgroundColor: unselectedBackground,
+      selectedBackgroundColor: selectedBackground,
+      iconColor: unselectedIconColor,
+      selectedIconColor: selectedIconColor,
+      badgeValue: badgeCount?.toString(),
       showBadge: badgeCount != null && badgeCount > 0,
       badgeColor: AppColors.errorDark,
+      isSelected: isSelected,
       onTap: onTap,
     );
   }

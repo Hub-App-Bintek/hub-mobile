@@ -194,7 +194,9 @@ class ChatController extends BaseController {
   Future<void> _markRead() async {
     if (roomId.isEmpty) return;
     await handleAsync(
-      () => _markChatReadUseCase(roomId),
+      () => _markChatReadUseCase(
+        MarkChatReadParams(roomId: roomId, isRead: true),
+      ),
       onSuccess: (_) {},
       onFailure: (_) {},
     );

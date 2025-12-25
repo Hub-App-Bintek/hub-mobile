@@ -7,17 +7,16 @@ import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/location_api_service.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
+import 'package:pkp_hub/core/network/services/notification_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
 import 'package:pkp_hub/core/network/services/permit_api_service.dart';
 import 'package:pkp_hub/core/network/services/project_api_service.dart';
 import 'package:pkp_hub/core/network/services/revision_api_service.dart';
 import 'package:pkp_hub/core/network/services/survey_api_service.dart';
-import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
-import 'package:pkp_hub/core/network/services/notification_api_service.dart';
-import 'package:pkp_hub/core/network/services/chat_api_service.dart';
 
 class NetworkServiceInjection {
   NetworkServiceInjection._();

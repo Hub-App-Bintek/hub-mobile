@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:chucker_flutter/chucker_flutter.dart';
 
 import 'app/navigation/app_pages.dart';
+import 'app/navigation/app_route_observer.dart';
 import 'app/theme/app_colors.dart';
 
 Future<void> startApp({required String flavor}) async {
@@ -42,7 +43,7 @@ Future<void> startApp({required String flavor}) async {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      navigatorObservers: [ChuckerFlutter.navigatorObserver],
+      navigatorObservers: [ChuckerFlutter.navigatorObserver, appRouteObserver],
       initialRoute: AppPages.initial,
       getPages: AppPages.routes,
       initialBinding: AppBinding(flavor: flavor),

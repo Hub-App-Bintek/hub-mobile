@@ -4,6 +4,7 @@ import 'package:pkp_hub/data/datasources/chat/chat_network_data_source.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
+import 'package:pkp_hub/data/models/request/mark_chat_read_request.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
 import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
 import 'package:pkp_hub/data/models/response/unread_count_response.dart';
@@ -35,7 +36,10 @@ abstract class ChatRepository {
 
   Future<Result<UnreadCountResponse, Failure>> getUnreadCount();
 
-  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId);
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(
+    String roomId,
+    MarkChatReadRequest request,
+  );
 }
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -82,6 +86,8 @@ class ChatRepositoryImpl implements ChatRepository {
       _ds.getUnreadCount();
 
   @override
-  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId) =>
-      _ds.markRoomRead(roomId);
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(
+    String roomId,
+    MarkChatReadRequest request,
+  ) => _ds.markRoomRead(roomId, request);
 }

@@ -6,6 +6,7 @@ import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
 import 'package:pkp_hub/data/models/response/unread_count_response.dart';
+import 'package:pkp_hub/data/models/request/mark_chat_read_request.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'chat_api_service.g.dart';
@@ -45,6 +46,9 @@ abstract class ChatApiService {
   @GET(ApiEndpoints.chatUnreadCount)
   Future<UnreadCountResponse> getUnreadCount();
 
-  @POST(ApiEndpoints.chatMarkRead)
-  Future<UnreadCountResponse> markRoomRead(@Path('roomId') String roomId);
+  @PATCH(ApiEndpoints.chatMarkRead)
+  Future<UnreadCountResponse> markRoomRead(
+    @Path('roomId') String roomId,
+    @Body() MarkChatReadRequest body,
+  );
 }
