@@ -173,25 +173,8 @@ class ConsultantsController extends BaseController {
         arguments: ConsultantDetailsArgs(
           consultantId: consultantId,
           projectId: targetProjectId,
-          isPaidConsultation:
-              isPaidConsultation || (consultant.packageCost ?? 0) > 0.0,
-          consultation: consultant,
-          requireLoginForAction: _requireLoginForAction,
+          consultant: consultant,
         ),
-      );
-    }();
-  }
-
-  void onCreatePressed() {
-    () async {
-      final loggedIn = await _ensureLoggedIn();
-      if (!loggedIn) return;
-      final hasPermission =
-          await LocationPermissionHelper.ensureLocationPermission();
-      if (!hasPermission) return;
-      navigateOff(
-        AppRoutes.locationDetails,
-        arguments: LocationDetailsArgs(type: consultation.name),
       );
     }();
   }

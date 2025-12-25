@@ -5,6 +5,7 @@ import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
 import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
+import 'package:pkp_hub/data/models/response/unread_count_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'chat_api_service.g.dart';
@@ -40,4 +41,10 @@ abstract class ChatApiService {
     @Query('sort_by') String? sortBy,
     @Query('sort_order') String? sortOrder,
   });
+
+  @GET(ApiEndpoints.chatUnreadCount)
+  Future<UnreadCountResponse> getUnreadCount();
+
+  @POST(ApiEndpoints.chatMarkRead)
+  Future<UnreadCountResponse> markRoomRead(@Path('roomId') String roomId);
 }

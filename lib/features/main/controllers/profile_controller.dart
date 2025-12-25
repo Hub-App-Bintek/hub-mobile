@@ -39,6 +39,10 @@ class ProfileController extends BaseController {
     navigateTo(AppRoutes.kyc);
   }
 
+  void onChangePasswordPressed() {
+    navigateTo(AppRoutes.changePassword);
+  }
+
   Future<void> onLogoutPressed() async {
     await _userStorage.clear();
     navigateOffAll(AppRoutes.main);

@@ -27,13 +27,13 @@ import 'package:pkp_hub/data/models/response/design_document_response.dart';
 import 'package:pkp_hub/data/models/response/design_document_revision_response.dart';
 import 'package:pkp_hub/data/models/response/upload_design_document_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
-import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/cancel_consultation_use_case.dart';
+import 'package:pkp_hub/domain/usecases/consultation/get_consultation_detail_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/approve_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/ask_contract_revision_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/create_contract_draft_use_case.dart';
-import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/download_contract_version_use_case.dart';
+import 'package:pkp_hub/domain/usecases/contract/generate_contract_draft_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/get_contract_versions_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/contract/upload_contract_param.dart';
@@ -1253,20 +1253,24 @@ class ConsultationDetailsController extends BaseController {
   }
 
   Future<void> startChatWithConsultant() async {
-    final consultantId = consultation.value?.consultantId;
-    if (consultantId == null) {
-      showError(const ServerFailure(message: 'Konsultan tidak ditemukan'));
+    final recipientId = userRole.value == UserRole.homeowner
+        ? consultation.value?.consultantId
+        : consultation.value?.homeOwnerId;
+    if (recipientId == null) {
+      showError(const ServerFailure(message: 'User tidak ditemukan'));
       return;
     }
-    final consultantName =
-        consultation.value?.consultantName?.trim() ?? 'Konsultan';
+
+    final recipientName = userRole.value == UserRole.homeowner
+        ? consultation.value?.consultantName?.trim() ?? 'Konsultan'
+        : consultation.value?.homeOwnerName?.trim() ?? 'Pemilik Lahan';
 
     await handleAsync<CreateChatRoomResponse>(
-      () => _createDirectChatRoomUseCase(consultantId),
+      () => _createDirectChatRoomUseCase(recipientId),
       onSuccess: (room) {
         navigateTo(
           AppRoutes.chat,
-          arguments: ChatArgs(name: consultantName, roomId: room.id),
+          arguments: ChatArgs(name: recipientName, roomId: room.id),
         );
       },
       onFailure: showError,

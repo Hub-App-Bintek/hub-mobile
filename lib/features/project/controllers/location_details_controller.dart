@@ -47,7 +47,7 @@ class LocationDetailsController extends BaseController {
   );
 
   String? _consultantId;
-  bool? _isPaidConsultation = false;
+  bool? _isPaidConsultation;
   String? _initialProjectTypeId;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -356,8 +356,6 @@ class LocationDetailsController extends BaseController {
         isIncomeValid.value &&
         selectedProjectType.value != null &&
         !isLoadingLocation.value;
-
-    debugPrint('Form validity updated: $_isFormValid');
   }
 
   @override

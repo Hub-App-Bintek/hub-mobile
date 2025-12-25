@@ -14,10 +14,13 @@ abstract class ApiEndpoints {
       '/api/auth/verify-forgot-password-otp';
   static const String resetPassword = '/api/auth/reset-password';
   static const String registerDeviceToken = '/api/users/device-token';
+  static const String changePassword = '/api/auth/change-password';
   static const String notifications = '/api/notifications';
   static const String notificationsUnreadCount =
       '/api/notifications/unread-count';
   static const String notificationsMarkRead = '/api/notifications/mark-read';
+  static const String chatUnreadCount = '/api/chats/unread-count';
+  static const String chatMarkRead = '/api/chats/{roomId}/mark-read';
   static const projects = '/api/projects/v2';
   static const projectDetailV2 = '/api/projects/{projectId}/v2';
 

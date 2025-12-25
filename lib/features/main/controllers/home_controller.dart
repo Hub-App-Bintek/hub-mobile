@@ -15,12 +15,14 @@ import 'package:pkp_hub/data/models/response/wallet_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 import 'package:pkp_hub/domain/usecases/notification/get_unread_count_use_case.dart';
+import 'package:pkp_hub/domain/usecases/chat/get_unread_chat_count_use_case.dart';
 
 class HomeController extends BaseController {
   final UserStorage _userStorage;
   final GetWalletBalanceUseCase _getWalletBalanceUseCase;
   final GetConsultationsUseCase _getConsultationsUseCase;
   final GetUnreadCountUseCase _getUnreadCountUseCase;
+  final GetUnreadChatCountUseCase _getUnreadChatCountUseCase;
 
   final RxDouble balance = 0.0.obs;
   final Rxn<UserRole> userRole = Rxn<UserRole>();
@@ -54,6 +56,7 @@ class HomeController extends BaseController {
     this._getWalletBalanceUseCase,
     this._getConsultationsUseCase,
     this._getUnreadCountUseCase,
+    this._getUnreadChatCountUseCase,
   );
 
   @override
@@ -92,6 +95,7 @@ class HomeController extends BaseController {
     if (_isLoggedIn) {
       _fetchBalance();
       _fetchUnreadNotifications();
+      _fetchUnreadChats();
     }
 
     if (userRole.value == UserRole.consultant &&
@@ -131,6 +135,16 @@ class HomeController extends BaseController {
       _getUnreadCountUseCase.call,
       onSuccess: (response) {
         notificationBadgeCount.value = response.unreadCount;
+      },
+      onFailure: (_) {},
+    );
+  }
+
+  Future<void> _fetchUnreadChats() async {
+    await handleAsync(
+      _getUnreadChatCountUseCase.call,
+      onSuccess: (response) {
+        chatBadgeCount.value = response.unreadCount;
       },
       onFailure: (_) {},
     );

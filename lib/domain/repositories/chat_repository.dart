@@ -6,6 +6,7 @@ import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
 import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
+import 'package:pkp_hub/data/models/response/unread_count_response.dart';
 
 abstract class ChatRepository {
   Future<Result<CreateChatRoomResponse, Failure>> createDirectRoom(
@@ -31,6 +32,10 @@ abstract class ChatRepository {
     String? sortBy,
     String? sortOrder,
   });
+
+  Future<Result<UnreadCountResponse, Failure>> getUnreadCount();
+
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId);
 }
 
 class ChatRepositoryImpl implements ChatRepository {
@@ -71,4 +76,12 @@ class ChatRepositoryImpl implements ChatRepository {
     sortBy: sortBy,
     sortOrder: sortOrder,
   );
+
+  @override
+  Future<Result<UnreadCountResponse, Failure>> getUnreadCount() =>
+      _ds.getUnreadCount();
+
+  @override
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId) =>
+      _ds.markRoomRead(roomId);
 }

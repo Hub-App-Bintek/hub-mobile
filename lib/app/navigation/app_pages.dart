@@ -9,6 +9,8 @@ import 'package:pkp_hub/features/auth/screens/login_screen.dart';
 import 'package:pkp_hub/features/auth/screens/reset_password_screen.dart';
 import 'package:pkp_hub/features/auth/screens/register_screen.dart';
 import 'package:pkp_hub/features/auth/screens/verify_otp_screen.dart';
+import 'package:pkp_hub/features/auth/screens/change_password_screen.dart';
+import 'package:pkp_hub/features/auth/bindings/change_password_binding.dart';
 import 'package:pkp_hub/features/chat/bindings/chat_binding.dart';
 import 'package:pkp_hub/features/chat/bindings/chats_binding.dart';
 import 'package:pkp_hub/features/chat/screens/chat_screen.dart';
@@ -99,6 +101,11 @@ class AppPages {
       name: _Paths.resetPassword,
       page: () => const ResetPasswordScreen(),
       binding: ResetPasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.changePassword,
+      page: () => const ChangePasswordScreen(),
+      binding: ChangePasswordBinding(),
     ),
     GetPage(
       name: _Paths.main,

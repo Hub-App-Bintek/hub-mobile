@@ -8,6 +8,7 @@ import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/data/models/response/incoming_chat_response.dart';
 import 'package:pkp_hub/data/models/request/chat_send_message_request.dart';
 import 'package:pkp_hub/data/models/response/chat_send_message_response.dart';
+import 'package:pkp_hub/data/models/response/unread_count_response.dart';
 
 abstract class ChatNetworkDataSource {
   Future<Result<CreateChatRoomResponse, Failure>> createDirectRoom(
@@ -33,6 +34,10 @@ abstract class ChatNetworkDataSource {
     String? sortBy,
     String? sortOrder,
   });
+
+  Future<Result<UnreadCountResponse, Failure>> getUnreadCount();
+
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(String roomId);
 }
 
 class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
@@ -109,6 +114,32 @@ class ChatNetworkDataSourceImpl implements ChatNetworkDataSource {
       return Error(_apiClient.toFailure(e));
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to fetch chats: $e'));
+    }
+  }
+
+  @override
+  Future<Result<UnreadCountResponse, Failure>> getUnreadCount() async {
+    try {
+      final res = await _chatApi.getUnreadCount();
+      return Success(res);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to fetch unread count: $e'));
+    }
+  }
+
+  @override
+  Future<Result<UnreadCountResponse, Failure>> markRoomRead(
+    String roomId,
+  ) async {
+    try {
+      final res = await _chatApi.markRoomRead(roomId);
+      return Success(res);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to mark read: $e'));
     }
   }
 }

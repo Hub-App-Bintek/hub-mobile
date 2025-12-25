@@ -178,12 +178,12 @@ class LocationDetailsScreen extends GetView<LocationDetailsController> {
               markers: const <Marker>{},
             );
           }),
-          Positioned(
-            top: 12,
-            left: 16,
-            right: 16,
-            child: _buildSearchField(context),
-          ),
+          // Positioned(
+          //   top: 12,
+          //   left: 16,
+          //   right: 16,
+          //   child: _buildSearchField(context),
+          // ),
           Transform.translate(
             offset: const Offset(0, -16),
             child: const Icon(

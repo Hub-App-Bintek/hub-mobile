@@ -12,6 +12,7 @@ import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.d
 import 'package:pkp_hub/data/models/response/forgot_password_verification_response.dart';
 import 'package:pkp_hub/data/models/response/login_response.dart';
 import 'package:pkp_hub/data/models/response/register_response.dart';
+import 'package:pkp_hub/data/models/request/change_password_request.dart';
 
 abstract class AuthRepository {
   Future<Result<LoginResponse, Failure>> login(LoginRequest request);
@@ -32,6 +33,8 @@ abstract class AuthRepository {
   Future<Result<void, Failure>> registerDeviceToken(
     RegisterDeviceTokenRequest request,
   );
+
+  Future<Result<void, Failure>> changePassword(ChangePasswordRequest request);
 }
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -91,5 +94,10 @@ class AuthRepositoryImpl implements AuthRepository {
     RegisterDeviceTokenRequest request,
   ) {
     return _remoteDataSource.registerDeviceToken(request);
+  }
+
+  @override
+  Future<Result<void, Failure>> changePassword(ChangePasswordRequest request) {
+    return _remoteDataSource.changePassword(request);
   }
 }

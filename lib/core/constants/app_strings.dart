@@ -26,8 +26,13 @@ abstract class AppStrings {
   static const newPasswordHint = 'Masukkan kata sandi baru';
   static const confirmNewPasswordLabel = 'Konfirmasi Kata Sandi Baru';
   static const resetPasswordButton = 'Simpan Kata Sandi';
-  static const resetPasswordSuccess =
-      'Kata sandi berhasil diperbarui. Silakan masuk kembali.';
+  static const resetPasswordSuccess = 'Kata sandi berhasil diperbarui.';
+  static const changePasswordTitle = 'Ubah Kata Sandi';
+  static const currentPasswordLabel = 'Kata Sandi Sekarang';
+  static const newPasswordLabelShort = 'Kata Sandi Baru';
+  static const confirmNewPasswordLabelShort = 'Konfirmasi Kata Sandi Baru';
+  static const changePasswordButton = 'Simpan Perubahan';
+  static const changePasswordSuccess = 'Kata sandi berhasil diubah';
 
   // Register Screen
   static const registerPageTitle = 'Daftar';

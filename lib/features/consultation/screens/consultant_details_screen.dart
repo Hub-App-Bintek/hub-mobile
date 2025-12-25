@@ -190,14 +190,6 @@ class _ConsultantHeader extends StatelessWidget {
                             color: AppColors.neutralMedium,
                           ),
                         ),
-                      if (speciality?.isNotEmpty != true) ...[
-                        Text(
-                          'CONSULTANT SPECIALITY',
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.neutralMedium,
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 8),
                       Row(
                         children: [
@@ -227,7 +219,9 @@ class _ConsultantHeader extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        price != null ? Formatters.currency(price) : 'Rp 0',
+                        (price != null || price?.isGreaterThan(0) == true)
+                            ? Formatters.currency(price ?? 0)
+                            : 'Gratis',
                         style: AppTextStyles.h3.copyWith(
                           color: AppColors.neutralDarkest,
                         ),

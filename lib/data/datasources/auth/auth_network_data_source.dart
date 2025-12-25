@@ -14,6 +14,7 @@ import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.d
 import 'package:pkp_hub/data/models/response/forgot_password_verification_response.dart';
 import 'package:pkp_hub/data/models/response/login_response.dart';
 import 'package:pkp_hub/data/models/response/register_response.dart';
+import 'package:pkp_hub/data/models/request/change_password_request.dart';
 import 'package:dio/dio.dart';
 
 abstract class AuthNetworkDataSource {
@@ -35,6 +36,8 @@ abstract class AuthNetworkDataSource {
   Future<Result<void, Failure>> registerDeviceToken(
     RegisterDeviceTokenRequest request,
   );
+
+  Future<Result<void, Failure>> changePassword(ChangePasswordRequest request);
 }
 
 class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
@@ -197,6 +200,20 @@ class AuthNetworkDataSourceImpl implements AuthNetworkDataSource {
   ) async {
     try {
       await _authApi.registerDeviceToken(request);
+      return const Success(null);
+    } on DioException catch (e) {
+      return Error(_apiClient.toFailure(e));
+    } catch (e) {
+      return Error(ServerFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<void, Failure>> changePassword(
+    ChangePasswordRequest request,
+  ) async {
+    try {
+      await _authApi.changePassword(request);
       return const Success(null);
     } on DioException catch (e) {
       return Error(_apiClient.toFailure(e));

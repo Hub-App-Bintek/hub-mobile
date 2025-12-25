@@ -17,6 +17,7 @@ import 'package:pkp_hub/core/network/services/survey_api_service.dart';
 import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/wallet_api_service.dart';
 import 'package:pkp_hub/core/network/services/notification_api_service.dart';
+import 'package:pkp_hub/core/network/services/chat_api_service.dart';
 
 class NetworkServiceInjection {
   NetworkServiceInjection._();
@@ -88,6 +89,11 @@ class NetworkServiceInjection {
     );
     Get.lazyPut<NotificationApiService>(
       () => NotificationApiService(Get.find<ApiClient>().dio),
+      fenix: true,
+    );
+    // Chat mark-read & unread count
+    Get.lazyPut<ChatApiService>(
+      () => ChatApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
   }

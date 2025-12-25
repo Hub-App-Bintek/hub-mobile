@@ -88,7 +88,7 @@ class ConsultantCard extends StatelessWidget {
               if (hasRating && hasPrice) const Spacer(),
               if (hasPrice)
                 Text(
-                  Formatters.currency(price),
+                  price > 0 ? Formatters.currency(price) : 'Gratis',
                   style: AppTextStyles.bodyL.copyWith(
                     color: AppColors.neutralDarkest,
                     fontWeight: FontWeight.w700,
