@@ -7,6 +7,7 @@ import 'package:pkp_hub/data/models/request/register_device_token_request.dart';
 import 'package:pkp_hub/data/models/request/reset_password_request.dart';
 import 'package:pkp_hub/data/models/request/verify_otp_request.dart';
 import 'package:pkp_hub/data/models/request/verify_forgot_password_otp_request.dart';
+import 'package:pkp_hub/data/models/request/change_password_request.dart';
 import 'package:pkp_hub/data/models/response/forgot_password_verification_response.dart';
 import 'package:pkp_hub/data/models/response/login_response.dart';
 import 'package:pkp_hub/data/models/response/register_response.dart';
@@ -45,4 +46,7 @@ abstract class AuthApiService {
 
   @POST(ApiEndpoints.registerDeviceToken)
   Future<void> registerDeviceToken(@Body() RegisterDeviceTokenRequest body);
+
+  @POST(ApiEndpoints.changePassword)
+  Future<void> changePassword(@Body() ChangePasswordRequest body);
 }

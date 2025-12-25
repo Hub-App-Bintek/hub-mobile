@@ -204,9 +204,7 @@ class ConsultationDetailsScreen extends GetView<ConsultationDetailsController> {
               ),
             ),
             InkWell(
-              onTap: () {
-                controller.startChatWithConsultant();
-              },
+              onTap: controller.startChatWithConsultant,
               child: Container(
                 width: 40,
                 height: 40,

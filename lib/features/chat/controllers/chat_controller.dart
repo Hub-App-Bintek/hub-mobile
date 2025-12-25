@@ -12,6 +12,7 @@ import 'package:pkp_hub/data/models/chat_message.dart';
 import 'package:pkp_hub/data/models/participant.dart';
 import 'package:pkp_hub/data/models/response/chat_room_details_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/get_chat_room_detail_use_case.dart';
+import 'package:pkp_hub/domain/usecases/chat/mark_chat_read_use_case.dart';
 import 'package:pkp_hub/features/chat/services/chat_websocket_service.dart';
 
 class ChatUiMessage {
@@ -33,11 +34,13 @@ class ChatController extends BaseController {
     this._wsService,
     this._userStorage,
     this._getChatRoomDetailUseCase,
+    this._markChatReadUseCase,
   );
 
   final ChatWebSocketService _wsService;
   final UserStorage _userStorage;
   final GetChatRoomDetailUseCase _getChatRoomDetailUseCase;
+  final MarkChatReadUseCase _markChatReadUseCase;
 
   final messages = <ChatUiMessage>[].obs;
   final RxBool isLoading = false.obs;
@@ -71,6 +74,7 @@ class ChatController extends BaseController {
     }
     await _loadUser();
     await _loadHistory();
+    await _markRead();
     await _connect();
   }
 
@@ -185,6 +189,15 @@ class ChatController extends BaseController {
     composerController.clear();
     scrollToBottom();
     isSending.value = false;
+  }
+
+  Future<void> _markRead() async {
+    if (roomId.isEmpty) return;
+    await handleAsync(
+      () => _markChatReadUseCase(roomId),
+      onSuccess: (_) {},
+      onFailure: (_) {},
+    );
   }
 
   void _handleIncoming(Map<String, dynamic> payload) {

@@ -31,26 +31,20 @@ class ConsultantDetailsController extends BaseController {
 
   final UserStorage _userStorage;
   final GetConsultantPortfoliosUseCase _getPortfolioListUseCase;
-
-  // Inject create consultation use case
   final CreateConsultationUseCase _createConsultationUseCase;
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
 
   String _consultantId = '';
   String _projectId = '';
-  bool _isPaidConsultation = false;
-  bool _requireLoginForAction = false;
+
   Consultant? _consultant;
 
-  // Reactive state
   final portfolios = <Portfolio>[].obs;
-  final isLoading = false.obs; // any fetch in progress
-  final hasMore = true.obs; // mirrors !_done
+  final isLoading = false.obs;
+  final hasMore = true.obs;
 
-  // Busy state for creating consultation
   final isCreatingConsultation = false.obs;
 
-  // Consultant detail state
   final RxnString consultantName = RxnString();
   final RxnString consultantSpeciality = RxnString();
   final RxnDouble consultantRating = RxnDouble();
@@ -61,14 +55,13 @@ class ConsultantDetailsController extends BaseController {
 
   // Scroll
   final scrollController = ScrollController();
-  static const double _prefetchExtentPx =
-      600; // start loading when < 600px remain
+  static const double _prefetchExtentPx = 600;
 
   // Paging
   final int _pageSize = 10;
-  int _page = 0; // change to 1 if your backend is 1-based
-  bool _done = false; // true when last page fetched
-  bool _scheduled = false; // micro-debounce flag
+  int _page = 0;
+  bool _done = false;
+  bool _scheduled = false;
 
   @override
   Future<void> onInit() async {
@@ -76,7 +69,7 @@ class ConsultantDetailsController extends BaseController {
     _hydrateArgs();
     scrollController.addListener(_onScroll);
     _hydrateConsultantFromArgument();
-    await refreshList(); // fetch first page
+    await refreshList();
   }
 
   void _hydrateArgs() {
@@ -88,19 +81,13 @@ class ConsultantDetailsController extends BaseController {
       args = ConsultantDetailsArgs(
         consultantId: rawArgs['consultantId'] ?? '',
         projectId: rawArgs['projectId'] ?? '',
-        isPaidConsultation: rawArgs['isPaidConsultation'] ?? false,
-        consultation: rawArgs['consultation'],
-        requireLoginForAction:
-            rawArgs['requireLoginForAction'] as bool? ?? false,
+        consultant: rawArgs['consultant'] ?? const Consultant(),
       );
     }
-    args ??= const ConsultantDetailsArgs(consultantId: '', projectId: '');
 
-    _consultantId = args.consultantId;
-    _projectId = args.projectId;
-    _isPaidConsultation = args.isPaidConsultation;
-    _consultant = args.consultation as Consultant?;
-    _requireLoginForAction = args.requireLoginForAction;
+    _consultantId = args?.consultantId ?? '';
+    _projectId = args?.projectId ?? '';
+    _consultant = args?.consultant;
   }
 
   void _onScroll() {
@@ -142,7 +129,6 @@ class ConsultantDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         final newItems = response.portfolios;
-
         if (newItems.isEmpty) {
           _done = true;
         } else {
@@ -157,7 +143,6 @@ class ConsultantDetailsController extends BaseController {
         hasMore.value = !_done;
       },
       onFailure: (failure) {
-        // Do not force stop pagination; allow retry via scroll/refresh
         showError(failure);
       },
     );
@@ -179,7 +164,7 @@ class ConsultantDetailsController extends BaseController {
         CreateConsultationRequest(
           consultantId: consultantId,
           projectId: _projectId,
-          consultationType: _isPaidConsultation
+          consultationType: _consultant?.packageCost?.isGreaterThan(0) == true
               ? consultationPaid.name
               : consultationFree.name,
           channel: channel,
@@ -200,7 +185,6 @@ class ConsultantDetailsController extends BaseController {
     isCreatingConsultation.value = false;
   }
 
-  // Public: create consultation for this consultation
   Future<void> onChatPressed() async {
     // For chat, always enforce login regardless of _requireLoginForAction flag.
     final loggedIn = await ensureLoggedIn();
@@ -219,10 +203,11 @@ class ConsultantDetailsController extends BaseController {
 
       navigateTo(
         AppRoutes.locationDetails,
-        arguments: {
-          'consultantId': _consultantId,
-          'isPaidConsultation': _isPaidConsultation,
-        },
+        arguments: LocationDetailsArgs(
+          consultantId: _consultantId,
+          isPaidConsultation:
+              _consultant?.packageCost?.isGreaterThan(0) == true,
+        ),
       );
       return;
     }
@@ -278,7 +263,7 @@ class ConsultantDetailsController extends BaseController {
     consultantName.value = _consultant?.fullName ?? '';
     consultantSpeciality.value = _consultant?.specialty;
     consultantRating.value = _consultant?.rating;
-    consultantPrice.value = _consultant?.hourlyRate;
+    consultantPrice.value = _consultant?.packageCost;
     consultantAvatarUrl.value = _consultant?.avatarUrl;
     consultantLocation.value =
         _consultant?.location ?? _consultant?.address ?? '-';

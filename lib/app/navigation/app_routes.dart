@@ -42,6 +42,7 @@ abstract class AppRoutes {
   static const paymentVa = _Paths.paymentVa;
   static const paymentReceipt = _Paths.paymentReceipt;
   static const consultationConfirmation = _Paths.consultationConfirmation;
+  static const changePassword = _Paths.changePassword;
 }
 
 abstract class _Paths {
@@ -84,4 +85,5 @@ abstract class _Paths {
   static const paymentVa = '/payment/va';
   static const paymentReceipt = '/payment/receipt';
   static const consultationConfirmation = '/consultation-confirmation';
+  static const changePassword = '/change-password';
 }

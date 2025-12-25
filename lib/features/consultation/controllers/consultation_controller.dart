@@ -149,8 +149,7 @@ class ConsultationController extends BaseController {
         arguments: ConsultantDetailsArgs(
           consultantId: consultantId,
           projectId: targetProjectId,
-          consultation: consultant,
-          requireLoginForAction: _requireLoginForAction,
+          consultant: consultant,
         ),
       );
     }();

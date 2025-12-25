@@ -1,4 +1,5 @@
 import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
+import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
 
@@ -54,16 +55,12 @@ class ConsultantDetailsArgs {
   const ConsultantDetailsArgs({
     required this.consultantId,
     required this.projectId,
-    this.isPaidConsultation = false,
-    this.consultation,
-    this.requireLoginForAction = false,
+    required this.consultant,
   });
 
   final String consultantId;
   final String projectId;
-  final bool isPaidConsultation;
-  final dynamic consultation; // Keep dynamic to avoid tight coupling to model
-  final bool requireLoginForAction;
+  final Consultant consultant;
 }
 
 class ConsultantsArgs {
@@ -114,12 +111,12 @@ class PrototypeDesignDetailsArgs {
 class LocationDetailsArgs {
   const LocationDetailsArgs({
     this.consultantId,
-    this.isPaidConsultation = false,
+    this.isPaidConsultation,
     this.type,
   });
 
   final String? consultantId;
-  final bool isPaidConsultation;
+  final bool? isPaidConsultation;
   final String? type;
 }
 

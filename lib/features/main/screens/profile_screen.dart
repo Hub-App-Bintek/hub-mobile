@@ -30,7 +30,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   Obx(
                     () => _ActionTile(
                       icon: Icons.verified_user_outlined,
-                      iconBackground: AppColors.inputSurface,
+                      iconBackground: AppColors.primaryLightest,
                       title: AppStrings.verifyProfile,
                       subtitle: controller.isVerified.value
                           ? AppStrings.verificationCompleted
@@ -50,6 +50,15 @@ class ProfileScreen extends GetView<ProfileController> {
                       subtitle: controller.userEmail.value,
                       subtitleColor: AppColors.neutralMediumLight,
                     ),
+                  ),
+                  _ActionTile(
+                    icon: Icons.lock_outline,
+                    iconBackground: AppColors.primaryLightest,
+                    title: AppStrings.changePasswordTitle,
+                    subtitle: '',
+                    subtitleColor: AppColors.neutralMediumLight,
+                    showSuffixIcon: true,
+                    onTap: controller.onChangePasswordPressed,
                   ),
                 ],
               ),
@@ -164,6 +173,7 @@ class _ActionTile extends StatelessWidget {
     required this.subtitleColor,
     this.backgroundColor,
     this.iconColor,
+    this.showSuffixIcon,
     this.onTap,
   });
 
@@ -174,6 +184,7 @@ class _ActionTile extends StatelessWidget {
   final Color subtitleColor;
   final Color? backgroundColor;
   final Color? iconColor;
+  final bool? showSuffixIcon;
   final VoidCallback? onTap;
 
   @override
@@ -225,7 +236,11 @@ class _ActionTile extends StatelessWidget {
               ],
             ),
           ),
-          const Icon(Icons.chevron_right, color: AppColors.neutralMediumLight),
+          if (showSuffixIcon == true)
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.neutralMediumLight,
+            ),
         ],
       ),
     );
