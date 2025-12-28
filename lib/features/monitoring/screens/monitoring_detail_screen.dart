@@ -44,9 +44,7 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
       bottomNavigationBar: Obx(() {
         switch (controller.selectedStage.value) {
           case MonitoringStage.kontrak:
-            return controller.hasApprovedContract.value
-                ? const SizedBox.shrink()
-                : _KontrakActions();
+            return _KontrakActions();
           case MonitoringStage.dokumen:
             return _UploadDokumenAction();
           default:
@@ -262,37 +260,101 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
       top: false,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-        child: Obx(
-          () => controller.hasApprovedContract.value
-              ? const SizedBox()
-              : Row(
+        child: Obx(() {
+          // 1. Contract Approval Phase
+          if (controller.showApproveContract) {
+            final revisionCount = controller.monitoringData.value?.contract?.revisionCount ?? 0;
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Revision Warning Badge
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: revisionCount >= 2 ? Colors.orange.shade50 : Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, size: 16, color: revisionCount >= 2 ? Colors.orange : Colors.blue),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "Revisi ke-${revisionCount + 1} dari 4. Sisa: ${3 - revisionCount}",
+                          style: theme.textTheme.labelSmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Row(
                   children: [
                     Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: controller.requestRevision,
-                        icon: const Icon(Icons.close),
-                        label: const Text('Minta Revisi'),
+                      child: OutlinedButton(
+                        onPressed: () => _showDeclineDialog(context),
+                        child: const Text('Minta Revisi'),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: controller.approveContract,
-                        icon: const Icon(Icons.check_circle_outline),
-                        label: const Text('Setujui'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: theme.colorScheme.primary,
-                          foregroundColor: theme.colorScheme.onPrimary,
-                        ),
+                      child: ElevatedButton(
+                        onPressed: () => controller.handleContractResponse(true, "Approved"),
+                        child: const Text('Setujui'),
                       ),
                     ),
                   ],
                 ),
+              ],
+            );
+          }
+
+          // 2. Signing Phase
+          if (controller.showSignContract) {
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: controller.handleSignContract,
+                icon: const Icon(Icons.edit_note),
+                label: const Text('Tanda Tangani Kontrak'),
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        }),
+      ),
+    );
+  }
+
+  void _showDeclineDialog(BuildContext context) {
+    final controller = Get.find<MonitoringDetailController>();
+    final reasonController = TextEditingController();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Tolak Kontrak"),
+        content: TextField(
+          controller: reasonController,
+          decoration: const InputDecoration(hintText: "Masukkan alasan penolakan..."),
+          maxLines: 3,
         ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text("Batal")),
+          ElevatedButton(
+            onPressed: () {
+              controller.handleContractResponse(false, reasonController.text);
+              Get.back();
+            },
+            child: const Text("Kirim"),
+          ),
+        ],
       ),
     );
   }
 }
+
 
 // ------------------- Dokumen -------------------
 

@@ -8,8 +8,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/domain/usecases/contract/sign_contract_use_case.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_reports_usecase.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/respond_to_contract_usecase.dart';
 
 enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
 
@@ -78,8 +80,10 @@ class InvoiceItem {
 class MonitoringDetailController extends BaseController {
   final GetReportsUseCase _getReportsUseCase;
   final GetFindingsUseCase _getFindingsUseCase;
+  final RespondToContractUseCase _respondUseCase;
+  final SignContractUseCase _signUseCase;
 
-  MonitoringDetailController(this._getReportsUseCase, this._getFindingsUseCase);
+  MonitoringDetailController(this._getReportsUseCase, this._getFindingsUseCase, this._respondUseCase, this._signUseCase);
 
   final selectedStage = MonitoringStage.kontrak.obs;
   final hasApprovedContract = false.obs;
@@ -87,6 +91,34 @@ class MonitoringDetailController extends BaseController {
   final reports = Rx<List<MonitoringItemModel>>([]);
   final findings = Rx<List<MonitoringItemModel>>([]);
   late final int monitoringId;
+  final monitoringData = Rxn<MonitoringDetail>(); // MonitoringDetail should include contract field
+
+  bool get showApproveContract => monitoringData.value?.status == 'PENDING_CONTRACT';
+  bool get showSignContract => monitoringData.value?.status == 'PENDING_SIGNATURES';
+
+  Future<void> handleContractResponse(bool approved, String reason) async {
+    final id = monitoringData.value?.contract?.id;
+    if (id == null) return;
+
+    await handleAsync(
+          () => _respondUseCase(id, approved, reason),
+      onSuccess: (result) {
+        Get.snackbar("Sukses", approved ? "Kontrak disetujui" : "Kontrak ditolak");
+        fetchDetail(); // Refresh data
+      },
+    );
+  }
+
+  Future<void> handleSignContract() async {
+    final id = monitoringData.value?.contract?.id;
+    if (id == null) return;
+
+    await handleAsync(
+          () => _signUseCase(id),
+      onSuccess: (_) => fetchDetail(),
+    );
+  }
+
 
   @override
   void onInit() {
