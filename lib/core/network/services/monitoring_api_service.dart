@@ -73,4 +73,10 @@ abstract class MonitoringApiService {
     @Query('status') String? status,
   });
 
+  @GET(ApiEndpoints.listContracts)
+  Future<List<MonitoringContractModel>> getContracts(
+      @Path('monitoringId') int monitoringId,
+      );
+
+
 }

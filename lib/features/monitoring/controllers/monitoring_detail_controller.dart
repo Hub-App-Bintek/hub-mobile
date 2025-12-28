@@ -9,11 +9,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pkp_hub/app/navigation/app_pages.dart';
 import 'package:pkp_hub/core/base/base_controller.dart';
 import 'package:pkp_hub/core/utils/logger.dart';
+import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/approve_completion_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_contracts_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_detail_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_documents_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_reports_usecase.dart';
@@ -22,7 +24,7 @@ import 'package:pkp_hub/domain/usecases/monitoring/upload_document_usecase.dart'
 
 import '../../../domain/usecases/monitoring/sign_contract_usecase.dart';
 
-enum MonitoringStage { kontrak, dokumen, laporan, temuan, invoice }
+enum MonitoringStage { kontrak, dokumen, laporan, temuan }
 
 enum ContractStatus { approved, pending, rejected }
 
@@ -95,6 +97,7 @@ class MonitoringDetailController extends BaseController {
   final ApproveCompletionUseCase _approveCompletionUseCase;
   final UploadDocumentUseCase _uploadDocumentUseCase;
   final GetMonitoringDocumentsUseCase _getDocumentsUseCase;
+  final GetMonitoringContractsUsecase _getMonitoringContractsUsecase;
 
   MonitoringDetailController(
     this._getReportsUseCase,
@@ -105,6 +108,7 @@ class MonitoringDetailController extends BaseController {
     this._approveCompletionUseCase,
     this._uploadDocumentUseCase,
     this._getDocumentsUseCase,
+    this._getMonitoringContractsUsecase,
   );
 
   final selectedStage = MonitoringStage.kontrak.obs;
@@ -115,18 +119,36 @@ class MonitoringDetailController extends BaseController {
   final reports = Rx<List<MonitoringItemModel>>([]);
   final findings = Rx<List<MonitoringItemModel>>([]);
   late final int monitoringId;
-  final monitoringData =
-      Rxn<
-        MonitoringDetailModel
-      >(); // MonitoringDetail should include contract field
+  final monitoringData = Rx<MonitoringDetailModel?>(null);
 
-  bool get showApproveContract =>
-      monitoringData.value?.status == 'PENDING_CONTRACT';
+  bool get showApproveContract {
+    final globalStatus = monitoringData.value?.status; // "PENDING_CONTRACT"
+    final contractStatus = monitoringData.value?.activeContract?.status; // "PENDING"
 
-  bool get showSignContract =>
-      monitoringData.value?.status == 'PENDING_SIGNATURES';
+    return globalStatus == 'PENDING_CONTRACT' || contractStatus == 'PENDING';
+  }
+
+  bool get showSignContract {
+    final globalStatus = monitoringData.value?.status;
+    final contractStatus = monitoringData.value?.activeContract?.status;
+
+    // Usually goes to SIGNING after approval
+    return globalStatus == 'PENDING_SIGNATURES' || contractStatus == 'ACCEPTED';
+  }
 
   final documents = <MonitoringDocumentModel>[].obs;
+
+  final contracts = <MonitoringContractModel>[].obs;
+
+  // In your fetch methods
+  Future<void> fetchContracts(int monitoringId) async {
+    await handleAsync(
+          () => _getMonitoringContractsUsecase(monitoringId),
+      onSuccess: (result) {
+        contracts.assignAll(result);
+      },
+    );
+  }
 
   Future<void> fetchDocuments(int monitoringId) async {
     await handleAsync(
@@ -138,15 +160,15 @@ class MonitoringDetailController extends BaseController {
   }
 
   Future<void> refreshData() async {
-    final id = monitoringData.value?.id;
-    if (id != null) {
-      await Future.wait([
-        fetchDetail(id),
-        fetchDocuments(id),
-        fetchData(),
+    // final id = monitoringData.value?.id;
+    // if (id != null) {
+        fetchDetail(monitoringId);
+        fetchDocuments(monitoringId);
+        fetchContracts(monitoringId);
+        _fetchFindings();
+        _fetchReports();
         // ... other fetch calls
-      ]);
-    }
+    // }
   }
 
   Future<void> handleContractResponse(bool approved, String reason) async {
@@ -174,6 +196,8 @@ class MonitoringDetailController extends BaseController {
       () => _getDetailUseCase(id),
       onSuccess: (result) {
         monitoringData.value = result;
+        monitoringData.refresh();
+        _logger.d("Monitoring Data: ${monitoringData.value?.status}");
       },
     );
   }
@@ -193,13 +217,7 @@ class MonitoringDetailController extends BaseController {
     super.onInit();
     // Assuming the monitoringId is passed as an argument to the screen
     monitoringId = Get.arguments['monitoringId'] as int;
-    fetchDetail(monitoringId);
-    fetchData();
-  }
-
-  Future<void> fetchData() async {
-    // Fetch reports and findings in parallel
-    await Future.wait([_fetchReports(), _fetchFindings()]);
+    refreshData();
   }
 
   Future<void> _fetchReports() async {
@@ -258,6 +276,10 @@ class MonitoringDetailController extends BaseController {
           Get.snackbar("Success", "Document uploaded successfully");
           fetchDetail(monitoringId); // Refresh to show new document count/list
         },
+        onFailure: (failure) {
+          Get.snackbar("Error", "Failed to upload document");
+          _logger.e("Error uploading document: $failure");
+        },
       );
     }
   }
@@ -272,20 +294,20 @@ class MonitoringDetailController extends BaseController {
     Get.snackbar('Navigasi', 'Buka detail untuk ID: $findingId');
   }
 
-  final contracts = <ContractItem>[
-    ContractItem(
-      title: 'Kontrak Pengawasan Konstruksi',
-      company: 'PT. Jasa Konstruksi',
-      date: DateTime(2025, 11, 10),
-      status: ContractStatus.approved,
-    ),
-    ContractItem(
-      title: 'Addendum Kontrak',
-      company: 'PT. Jasa Konstruksi',
-      date: DateTime(2025, 11, 15),
-      status: ContractStatus.pending,
-    ),
-  ].obs;
+  // final contracts = <ContractItem>[
+  //   ContractItem(
+  //     title: 'Kontrak Pengawasan Konstruksi',
+  //     company: 'PT. Jasa Konstruksi',
+  //     date: DateTime(2025, 11, 10),
+  //     status: ContractStatus.approved,
+  //   ),
+  //   ContractItem(
+  //     title: 'Addendum Kontrak',
+  //     company: 'PT. Jasa Konstruksi',
+  //     date: DateTime(2025, 11, 15),
+  //     status: ContractStatus.pending,
+  //   ),
+  // ].obs;
 
   /*final documents = <DocumentItem>[
     DocumentItem(title: 'Bill Of Quantities'),
@@ -358,82 +380,79 @@ class MonitoringDetailController extends BaseController {
 
   int get invoiceCount => invoiceItems.length;
 
-  void downloadContract(ContractItem item) async {
-    // var status = await Permission.storage.request();
-    // if (!status.isGranted) {
-    //   Get.snackbar('Izin Ditolak', 'Izin penyimpanan dibutuhkan untuk mengunduh file.');
-    //   return;
-    // }
-
-    // 2. Define URL and prepare file path
-    const url = 'https://hub-dev.editnest.online/api/download/contract-1.pdf';
-    final fileName = 'kontrak_${item.title.replaceAll(' ', '_')}.pdf';
+  void downloadContract(MonitoringContractModel item) async {
+    // 1. Prepare dynamic file name and extension
+    final extension = _getFileExtension(item.documentUrl);
+    final fileName = 'kontrak_rev${item.revisionCount}_${item.id}$extension';
 
     try {
       Directory? downloadsDir;
       if (Platform.isAndroid) {
-        // On Android, get the public downloads directory.
         downloadsDir = await getDownloadsDirectory();
       } else {
-        // On iOS, get the app's documents directory, which is accessible via the Files app.
         downloadsDir = await getApplicationDocumentsDirectory();
       }
 
-      final savePath = '${downloadsDir!.path}/$fileName';
+      if (downloadsDir == null) {
+        Get.snackbar('Error', 'Tidak dapat menemukan direktori penyimpanan.');
+        return;
+      }
 
-      // 3. Show "Starting Download" snackbar
+      final savePath = '${downloadsDir.path}/$fileName';
+
+      // 2. Show Progress Snackbar
       Get.snackbar(
         'Mengunduh',
-        'Memulai unduhan file: ${item.title}',
+        'Memulai unduhan kontrak: Versi ${item.revisionCount + 1}',
         snackPosition: SnackPosition.BOTTOM,
         showProgressIndicator: true,
-        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(
-          Colors.white,
-        ),
+        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+        duration: const Duration(seconds: 2),
       );
 
-      // 4. Perform download with Dio
+      // 3. Perform download with Dio
+      // Use item.documentUrl which comes from your API response
       await Dio().download(
-        url,
+        item.documentUrl,
         savePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            // You can optionally update a progress variable here
-            print("${(received / total * 100).toStringAsFixed(0)}%");
+            _logger.d("Contract Download Progress: ${(received / total * 100).toStringAsFixed(0)}%");
           }
         },
       );
 
-      // 5. Show "Completed" snackbar and offer to open the file
-      Get.back(); // Close the progress snackbar
+      // 4. Success Notification with Open File action
       Get.snackbar(
         'Unduhan Selesai',
-        'File "${item.title}" berhasil diunduh.',
+        'Kontrak versi ${item.revisionCount + 1} berhasil diunduh.',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green.withOpacity(0.1),
         mainButton: TextButton(
           onPressed: () => OpenFilex.open(savePath),
-          child: const Text('BUKA', style: TextStyle(color: Colors.white)),
+          child: const Text('BUKA', style: TextStyle(fontWeight: FontWeight.bold)),
         ),
         duration: const Duration(seconds: 5),
       );
     } on DioException catch (e) {
-      Get.back(); // Close any open snackbar
+      _logger.e("Contract Download DioError: ${e.message}");
       Get.snackbar(
         'Gagal Mengunduh',
-        'Terjadi kesalahan: ${e.message}',
+        'Terjadi kesalahan jaringan: ${e.message}',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red.withOpacity(0.1),
       );
     } catch (e) {
-      Get.back();
+      _logger.e("Contract Download Error: $e");
       Get.snackbar(
         'Gagal Mengunduh',
-        'Terjadi kesalahan yang tidak diketahui.',
+        'Terjadi kesalahan saat mengunduh kontrak.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red.withOpacity(0.1),
       );
     }
   }
+
 
   void downloadDocument(MonitoringDocumentModel item) async {
     final fileName = 'doc_${item.title.replaceAll(' ', '_')}_${item.id}${_getFileExtension(item.documentUrl)}';
@@ -510,27 +529,46 @@ class MonitoringDetailController extends BaseController {
   }
 
 
-  void requestRevision() {
-    final ContractItem last = contracts.last;
-    contracts[contracts.length - 1] = ContractItem(
-      title: last.title,
-      company: last.company,
-      date: last.date,
-      status: ContractStatus.rejected,
-    );
+  void requestRevision(String reason) async {
+    final contractId = monitoringData.value?.activeContract?.id;
+    if (contractId == null) {
+      Get.snackbar('Error', 'ID Kontrak tidak ditemukan');
+      return;
+    }
 
-    hasApprovedContract.value = true;
+    await handleAsync(
+          () => _respondUseCase(RespondToContractParams(
+        contractId: contractId,
+        approved: false,
+        reason: reason,
+      )),
+      onSuccess: (result) {
+        Get.snackbar('Sukses', 'Permintaan revisi telah dikirim');
+        fetchDetail(monitoringId);
+        fetchContracts(monitoringId);
+      },
+    );
   }
 
-  void approveContract() {
-    final ContractItem last = contracts.last;
-    contracts[contracts.length - 1] = ContractItem(
-      title: last.title,
-      company: last.company,
-      date: last.date,
-      status: ContractStatus.approved,
+  void approveContract() async {
+    final contractId = monitoringData.value?.activeContract?.id;
+    if (contractId == null) {
+      Get.snackbar('Error', 'ID Kontrak tidak ditemukan');
+      return;
+    }
+
+    await handleAsync(
+          () => _respondUseCase(RespondToContractParams(
+        contractId: contractId,
+        approved: true,
+        reason: "Approved by Homeowner",
+      )),
+      onSuccess: (result) {
+        Get.snackbar('Sukses', 'Kontrak berhasil disetujui');
+        fetchDetail(monitoringId);
+        fetchContracts(monitoringId);
+      },
     );
-    hasApprovedContract.value = true;
   }
 
   void uploadDocument() {

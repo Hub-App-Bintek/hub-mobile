@@ -58,6 +58,7 @@ class ProjectsController extends BaseController {
     super.onInit();
     _loadRole();
     refreshConsultations();
+    fetchMonitoringRequests();
   }
 
   void onPageVisible() {

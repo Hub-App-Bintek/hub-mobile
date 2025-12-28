@@ -6,6 +6,7 @@ import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
+import 'package:pkp_hub/core/utils/logger.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
@@ -61,6 +62,8 @@ abstract class MonitoringRemoteDataSource {
   Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
 
   Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status});
+
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId);
 }
 
 // --- IMPLEMENT THE CONTRACT ---
@@ -71,6 +74,8 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
 
 
   MonitoringRemoteDataSourceImpl(this._apiService, this._apiClient, this._fileApiService);
+
+  final _logger = Logger();
 
   @override
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
@@ -196,27 +201,41 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     String? description,
   }) async {
     try {
+      _logger.d("UPLOAD TRACE: Step 1 - Starting physical upload for file: ${file.path}");
+
       // Step 1: Physical File Upload
-      final fileUpload = await _fileApiService.uploadFile(
-        category: 'monitoring',
-        subCategory: 'documents',
-        entityId: monitoringId.toString(),
-        file: file,
+      // Ensure the category is 'monitoring' as per API docs
+      final fileUpload = await _fileApiService.upload(
+        'documents',
+        'documents',
+        monitoringId.toString(),
+        file,
       );
+
+      _logger.d("UPLOAD TRACE: Step 1 Success. URL: ${fileUpload.downloadUrl}");
+      _logger.d("UPLOAD TRACE: Step 2 - Registering document with Monitoring API");
 
       // Step 2: Register Document with Monitoring API
       final response = await _apiService.uploadDocument({
         "monitoringId": monitoringId,
         "documentUrl": fileUpload.downloadUrl,
         "title": title,
-        "description": description,
+        "description": description ?? "",
       });
 
+      _logger.d("UPLOAD TRACE: All steps completed successfully");
       return Success(response);
-    } catch (e) {
-      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    } on DioException catch (e) {
+      _logger.e("UPLOAD TRACE: DioException - ${e.type} - ${e.message}");
+      _logger.e("UPLOAD TRACE: Response Data - ${e.response?.data}");
+      return Error(_apiClient.toFailure(e));
+    } catch (e, stack) {
+      _logger.e("UPLOAD TRACE: Unexpected Error: $e");
+      _logger.e("UPLOAD TRACE: Stacktrace: $stack");
+      return Error(ServerFailure(message: 'Failed to upload document: $e'));
     }
   }
+
 
   @override
   Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
@@ -238,6 +257,15 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     }
   }
 
+  @override
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId) async {
+    try {
+      final response = await _apiService.getContracts(monitoringId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
 
 
 }
