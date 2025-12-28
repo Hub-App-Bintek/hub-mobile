@@ -4,6 +4,7 @@ import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
+import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
@@ -30,6 +31,13 @@ abstract class MonitoringRemoteDataSource {
   Future<Result<ReportDetailModel, Failure>> getReportDetail({
     required int reportId,
   });
+
+  Future<Result<MonitoringContractModel, Failure>> approveContract(
+      int contractId,
+      Map<String, dynamic> body,
+      );
+
+  Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
 }
 
 // --- IMPLEMENT THE CONTRACT ---
@@ -107,6 +115,29 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     try {
       final result = await _apiService.getReportDetail(reportId);
       return Success(result);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<MonitoringContractModel, Failure>> approveContract(
+      int contractId,
+      Map<String, dynamic> body,
+      ) async {
+    try {
+      final response = await _apiService.approveContract(contractId, body);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<MonitoringContractModel, Failure>> signContract(int contractId) async {
+    try {
+      final response = await _apiService.signContract(contractId);
+      return Success(response);
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }

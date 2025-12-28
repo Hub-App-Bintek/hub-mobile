@@ -38,4 +38,22 @@ abstract class MonitoringApiService {
 
   @GET(ApiEndpoints.getReportDetail)
   Future<ReportDetailModel> getReportDetail(@Path('reportId') int reportId);
+
+  @PUT(ApiEndpoints.approveContract)
+  Future<MonitoringContractModel> approveContract(
+      @Path('id') int contractId,
+      @Body() Map<String, dynamic> body, // {"approved": bool, "reason": String}
+      );
+
+  @PUT(ApiEndpoints.signContract)
+  Future<MonitoringContractModel> signContract(@Path('id') int contractId);
+
+  @PUT(ApiEndpoints.approveCompletion)
+  Future<MonitoringRequestModel> approveCompletion(@Path('id') int requestId);
+
+  @POST(ApiEndpoints.uploadDocumentsMonitoring)
+  Future<MonitoringDocumentModel> uploadDocument(@Body() Map<String, dynamic> body);
+
+  @GET(ApiEndpoints.listDocuments)
+  Future<List<MonitoringDocumentModel>> getDocuments(@Path('id') int monitoringId);
 }

@@ -2,6 +2,7 @@ import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/monitoring/monitoring_remote_data_source.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
+import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
@@ -31,6 +32,14 @@ abstract class MonitoringRepository {
   Future<Result<ReportDetailModel, Failure>> getReportDetail({
     required int reportId,
   });
+
+  Future<Result<MonitoringContractModel, Failure>> respondToContract({
+    required int contractId,
+    required bool approved,
+    required String reason,
+  });
+
+  Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -80,5 +89,24 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
     required int reportId,
   }) async {
     return _remoteDataSource.getReportDetail(reportId: reportId);
+  }
+
+  @override
+  Future<Result<MonitoringContractModel, Failure>> respondToContract({
+    required int contractId,
+    required bool approved,
+    required String reason,
+  }) async {
+    return _remoteDataSource.approveContract(
+      contractId,
+      {"approved": approved, "reason": reason},
+    );
+  }
+
+  @override
+  Future<Result<MonitoringContractModel, Failure>> signContract(
+    int contractId,
+  ) async {
+    return _remoteDataSource.signContract(contractId);
   }
 }

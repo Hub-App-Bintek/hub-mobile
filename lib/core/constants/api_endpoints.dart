@@ -148,4 +148,12 @@ abstract class ApiEndpoints {
   static const String getMonitoringFindings =
       '/api/monitoring/requests/{monitoringId}/findings';
   static const String getReportDetail = '/api/monitoring/reports/{reportId}';
+
+  static const String monitoringContracts = '/api/monitoring/contracts';
+
+  static const String approveContract =  '$monitoringContracts/{contractId}/approval';
+  static const String signContract =  '$monitoringContracts/{contractId}/sign';
+  static const String approveCompletion = '$monitoringRequests/{monitoringId}/approve-completion';
+  static const String listDocuments = '$monitoringRequests/{monitoringId}/documents';
+  static const String uploadDocumentsMonitoring = '$monitoringRequests/documents';
 }
