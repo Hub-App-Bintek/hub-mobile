@@ -11,6 +11,7 @@ import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
 import 'package:pkp_hub/data/models/response/monitoring_request_model.dart';
@@ -58,6 +59,8 @@ abstract class MonitoringRemoteDataSource {
   });
 
   Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
+
+  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status});
 }
 
 // --- IMPLEMENT THE CONTRACT ---
@@ -219,6 +222,16 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
     try {
       final response = await _apiService.getDocuments(monitoringId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status}) async {
+    try {
+      final response = await _apiService.getMonitoringRequests(filterBy: filterBy, status: status);
       return Success(response);
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));

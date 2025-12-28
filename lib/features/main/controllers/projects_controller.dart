@@ -8,16 +8,19 @@ import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
+import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/response/consultations_response.dart';
 import 'package:pkp_hub/data/models/response/create_chat_room_response.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_requests_usecase.dart';
 
 class ProjectsController extends BaseController {
   final UserStorage _userStorage;
   final GetConsultationsUseCase _getConsultationsUseCase;
   final CreateDirectChatRoomUseCase _createDirectChatRoomUseCase;
+  final GetMonitoringRequestsUseCase _getMonitoringUseCase;
 
   final Rxn<ConsultationFilterStatus> _consultationStatus =
       Rxn<ConsultationFilterStatus>();
@@ -39,10 +42,13 @@ class ProjectsController extends BaseController {
 
   ProjectType get selectedType => _selectedType.value;
 
+  final monitoringRequests = <MonitoringRequestItem>[].obs;
+
   ProjectsController(
     this._userStorage,
     this._getConsultationsUseCase,
     this._createDirectChatRoomUseCase,
+      this._getMonitoringUseCase,
   ) {
     _consultationStatus.value = consultationFilterInProgress;
   }
@@ -64,6 +70,15 @@ class ProjectsController extends BaseController {
     if (role != null) {
       userRole.value = role;
     }
+  }
+
+  Future<void> fetchMonitoringRequests() async {
+    await handleAsync(
+          () => _getMonitoringUseCase(filterBy: 'homeowner'),
+      onSuccess: (result) {
+        monitoringRequests.assignAll(result);
+      },
+    );
   }
 
   Future<void> _fetchConsultations({
@@ -196,16 +211,10 @@ class ProjectsController extends BaseController {
   }
 
   // TODO: Update to monitoring object
-  void openMonitoringDetails(Project consultation) {
+  void openMonitoringDetails(int id) {
     navigateTo(
       AppRoutes.monitoringDetail,
-      arguments: ConstructionSupervisor(
-        id: 5,
-        name: 'Danu Pranata',
-        specialization: 'Ahli Sipil Ahli Konstruksi',
-        price: 18,
-        distance: 7,
-      ),
+      arguments: {"monitoringId":id},
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
 import 'package:pkp_hub/core/enums/project_type.dart';
 import 'package:pkp_hub/core/enums/user_role.dart';
+import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/projects_controller.dart';
 import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
@@ -24,7 +25,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
           final isConsultant = controller.userRole.value == UserRole.consultant;
           final selectedType = controller.selectedType;
 
-          if (selectedType != consultation) {
+          if (selectedType != consultation && selectedType != monitoring) {
             return Column(
               mainAxisSize: MainAxisSize.max,
               children: [
@@ -43,6 +44,9 @@ class ProjectsScreen extends GetView<ProjectsController> {
             children: [
               if (!isConsultant) _buildTabs(projectTypes),
               const SizedBox(height: 16),
+              if (selectedType == monitoring)
+                _buildMonitoringContent(isConsultant)
+              else ...[
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: _buildStatusMenu(selectedType),
@@ -95,7 +99,7 @@ class ProjectsScreen extends GetView<ProjectsController> {
                     ],
                   ),
                 ),
-              ),
+              )],
             ],
           );
         }),
@@ -113,6 +117,43 @@ class ProjectsScreen extends GetView<ProjectsController> {
         child: content,
       );
     });
+  }
+
+  Widget _buildMonitoringContent(bool isConsultant) {
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: controller.fetchMonitoringRequests,
+        child: Obx(() => ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: controller.monitoringRequests.length,
+          itemBuilder: (context, index) {
+            final item = controller.monitoringRequests[index];
+            return _buildMonitoringCard(item, isConsultant);
+          },
+        )),
+      ),
+    );
+  }
+
+  Widget _buildMonitoringCard(MonitoringRequestItem item, bool isConsultant) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: ProjectInfoCard(
+        title: item.projectAddress ?? 'Alamat tidak tersedia',
+        primaryLine: ProjectInfoLine(
+          icon: Icons.info_outline,
+          text: 'Status: ${item.status}',
+          color: AppColors.primaryDark,
+        ),
+        secondaryLine: ProjectInfoLine(
+          icon: Icons.calendar_today_outlined,
+          text: 'Dibuat: ${item.createdAt.toString().split(' ')[0]}',
+          color: AppColors.neutralMediumLight,
+        ),
+        buttonText: 'Lihat Detail',
+        onButtonTap: () => controller.openMonitoringDetails(item.id),
+      ),
+    );
   }
 
   String _buildHeading(ConsultationFilterStatus? status) {
