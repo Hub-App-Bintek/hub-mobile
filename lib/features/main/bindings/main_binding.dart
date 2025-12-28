@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
+import 'package:pkp_hub/domain/repositories/monitoring_repository.dart';
 import 'package:pkp_hub/domain/repositories/notification_repository.dart';
 import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/repositories/wallet_repository.dart';
@@ -30,6 +31,10 @@ class MainBinding extends Bindings {
     );
     Get.lazyPut(
       () => GetUnreadCountUseCase(Get.find<NotificationRepository>()),
+      fenix: true,
+    );
+    Get.lazyPut<GetMonitoringRequestsUseCase>(
+          () => GetMonitoringRequestsUseCase(Get.find<MonitoringRepository>()),
       fenix: true,
     );
     Get.lazyPut(

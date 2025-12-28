@@ -66,6 +66,8 @@ abstract class MonitoringRepository {
     String? status,
   });
 
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId);
+
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -168,4 +170,9 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
     return _remoteDataSource.getMonitoringRequests(filterBy: filterBy, status: status);
   }
 
+
+  @override
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId) async {
+    return _remoteDataSource.getContracts(monitoringId);
+  }
 }

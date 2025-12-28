@@ -17,28 +17,29 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
         titleTextColor: AppColors.white,
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
-            _StageSelector(),
-            const SizedBox(height: 16),
-            Expanded(
-              child: Obx(() {
-                switch (controller.selectedStage.value) {
-                  case MonitoringStage.kontrak:
-                    return _KontrakList();
-                  case MonitoringStage.dokumen:
-                    return _DokumenList();
-                  case MonitoringStage.laporan:
-                    return _LaporanList();
-                  case MonitoringStage.temuan:
-                    return _TemuanList();
-                  case MonitoringStage.invoice:
-                    return _InvoiceList();
-                }
-              }),
-            ),
-          ],
+        child: RefreshIndicator(
+          onRefresh: () => controller.refreshData(),
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              _StageSelector(),
+              const SizedBox(height: 16),
+              Expanded(
+                child: Obx(() {
+                  switch (controller.selectedStage.value) {
+                    case MonitoringStage.kontrak:
+                      return _KontrakList();
+                    case MonitoringStage.dokumen:
+                      return _DokumenList();
+                    case MonitoringStage.laporan:
+                      return _LaporanList();
+                    case MonitoringStage.temuan:
+                      return _TemuanList();
+                  }
+                }),
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Obx(() {
@@ -149,13 +150,6 @@ class _StageSelector extends GetView<MonitoringDetailController> {
               'Temuan',
               controller.temuanCount,
             ),
-            const SizedBox(width: 16),
-            buildStage(
-              MonitoringStage.invoice,
-              Icons.request_quote_outlined,
-              'Invoice',
-              controller.invoiceCount,
-            ),
             const SizedBox(width: 4),
           ],
         ),
@@ -178,13 +172,22 @@ class _KontrakList extends GetView<MonitoringDetailController> {
         separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (_, index) {
           final item = controller.contracts[index];
-          final isApproved = item.status == ContractStatus.approved;
-          final chipColor = isApproved
+
+          // Define logic for chips based on MonitoringContractModel status
+          final bool isFinalized = item.status == 'FULLY_SIGNED';
+          final bool isPending = item.status == 'PENDING' || item.status == 'ACCEPTED' || item.status.contains('SIGNED_BY');
+
+          final chipColor = isFinalized
               ? Colors.green.shade100
-              : Colors.orange.shade100;
-          final chipTextColor = isApproved
+              : isPending
+              ? Colors.blue.shade100
+              : Colors.red.shade100;
+
+          final chipTextColor = isFinalized
               ? Colors.green.shade800
-              : Colors.orange.shade800;
+              : isPending
+              ? Colors.blue.shade800
+              : Colors.red.shade800;
 
           return Card(
             shape: RoundedRectangleBorder(
@@ -199,7 +202,7 @@ class _KontrakList extends GetView<MonitoringDetailController> {
                     children: [
                       Expanded(
                         child: Text(
-                          item.title,
+                          "Kontrak Versi ${item.revisionCount + 1}",
                           style: theme.textTheme.titleMedium,
                         ),
                       ),
@@ -210,13 +213,16 @@ class _KontrakList extends GetView<MonitoringDetailController> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(item.company, style: theme.textTheme.bodySmall),
+                  Text(
+                    "Supervisor: ${item.supervisorName}",
+                    style: theme.textTheme.bodySmall,
+                  ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: Text(
-                          _formatDate(item.date),
+                          _formatDate(item.createdAt),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.hintColor,
                           ),
@@ -232,7 +238,7 @@ class _KontrakList extends GetView<MonitoringDetailController> {
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
-                          item.getStatusLabel(),
+                          item.status.replaceAll('_', ' '), // e.g. FULLY SIGNED
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: chipTextColor,
                             fontWeight: FontWeight.w600,
@@ -262,6 +268,10 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         child: Obx(() {
           // 1. Contract Approval Phase
+
+          final data = controller.monitoringData.value;
+          if (data == null) return const SizedBox.shrink();
+
           if (controller.showApproveContract) {
             final revisionCount = controller.monitoringData.value?.activeContract?.revisionCount ?? 0;
 
@@ -398,7 +408,7 @@ class _UploadDokumenAction extends GetView<MonitoringDetailController> {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: controller.uploadDocument,
+            onPressed: controller.pickAndUploadDocument,
             child: const Text('Upload Dokumen'),
           ),
         ),

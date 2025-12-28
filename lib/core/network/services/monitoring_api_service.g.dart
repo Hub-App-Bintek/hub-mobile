@@ -216,7 +216,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/contracts/{contractId}/approval',
+          '/api/monitoring/contracts/$contractId/approval',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -249,7 +249,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/contracts/{contractId}/sign',
+          '/api/monitoring/contracts/$contractId/sign',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -282,7 +282,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/requests/{monitoringId}/approve-completion',
+          '/api/monitoring/requests/$requestId/approve-completion',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -350,7 +350,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/requests/{monitoringId}/documents',
+          '/api/monitoring/requests/$monitoringId/documents',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -441,6 +441,42 @@ class _MonitoringApiService implements MonitoringApiService {
       _value = _result.data!
           .map((dynamic i) =>
               MonitoringRequestItem.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<List<MonitoringContractModel>> getContracts(int monitoringId) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<MonitoringContractModel>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/monitoring/requests/${monitoringId}/contracts',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<MonitoringContractModel> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) =>
+              MonitoringContractModel.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
