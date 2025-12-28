@@ -216,7 +216,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/contracts/$contractId/approval',
+          '/api/monitoring/contracts/${contractId}/approval',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -249,7 +249,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/contracts/$contractId/sign',
+          '/api/monitoring/contracts/${contractId}/sign',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -282,7 +282,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/requests/$requestId/approve-completion',
+          '/api/monitoring/requests/${requestId}/approve-completion',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -317,7 +317,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/requests/documents',
+          '/api/monitoring/documents',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -350,7 +350,7 @@ class _MonitoringApiService implements MonitoringApiService {
     )
         .compose(
           _dio.options,
-          '/api/monitoring/requests/$monitoringId/documents',
+          '/api/monitoring/requests/${monitoringId}/documents',
           queryParameters: queryParameters,
           data: _data,
         )

@@ -11,7 +11,7 @@ _$MonitoringDetailModelImpl _$$MonitoringDetailModelImplFromJson(
     _$MonitoringDetailModelImpl(
       id: (json['id'] as num).toInt(),
       homeownerId: (json['homeownerId'] as num).toInt(),
-      homeownerName: json['homeownerName'] as String,
+      homeownerName: json['homeownerName'] == null ? '' : json['homeownerName'] as String,
       homeownerEmail: json['homeownerEmail'] as String,
       supervisorId: (json['supervisorId'] as num?)?.toInt(),
       supervisorName: json['supervisorName'] as String?,

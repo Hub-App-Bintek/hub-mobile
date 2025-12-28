@@ -201,7 +201,6 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     String? description,
   }) async {
     try {
-      _logger.d("UPLOAD TRACE: Step 1 - Starting physical upload for file: ${file.path}");
 
       // Step 1: Physical File Upload
       // Ensure the category is 'monitoring' as per API docs
@@ -212,26 +211,16 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
         file,
       );
 
-      _logger.d("UPLOAD TRACE: Step 1 Success. URL: ${fileUpload.downloadUrl}");
-      _logger.d("UPLOAD TRACE: Step 2 - Registering document with Monitoring API");
-
       // Step 2: Register Document with Monitoring API
       final response = await _apiService.uploadDocument({
         "monitoringId": monitoringId,
-        "documentUrl": fileUpload.downloadUrl,
+        "documentUrl": fileUpload['fileUrl'],
         "title": title,
         "description": description ?? "",
       });
 
-      _logger.d("UPLOAD TRACE: All steps completed successfully");
       return Success(response);
-    } on DioException catch (e) {
-      _logger.e("UPLOAD TRACE: DioException - ${e.type} - ${e.message}");
-      _logger.e("UPLOAD TRACE: Response Data - ${e.response?.data}");
-      return Error(_apiClient.toFailure(e));
     } catch (e, stack) {
-      _logger.e("UPLOAD TRACE: Unexpected Error: $e");
-      _logger.e("UPLOAD TRACE: Stacktrace: $stack");
       return Error(ServerFailure(message: 'Failed to upload document: $e'));
     }
   }

@@ -12,7 +12,7 @@ _$MonitoringDocumentModelImpl _$$MonitoringDocumentModelImplFromJson(
       id: (json['id'] as num).toInt(),
       monitoringId: (json['monitoringId'] as num).toInt(),
       uploadedBy: (json['uploadedBy'] as num).toInt(),
-      uploaderName: json['uploaderName'] as String,
+      uploaderName: json['uploaderName'] == null ? '' : json['uploaderName'] as String,
       documentUrl: json['documentUrl'] as String,
       title: json['title'] as String,
       description: json['description'] as String?,

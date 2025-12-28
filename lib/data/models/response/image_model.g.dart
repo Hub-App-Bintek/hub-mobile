@@ -9,7 +9,7 @@ part of 'image_model.dart';
 _$ImageModelImpl _$$ImageModelImplFromJson(Map<String, dynamic> json) =>
     _$ImageModelImpl(
       title: json['title'] as String?,
-      url: json['url'] as String,
+      url: json['imageUrl'] as String,
       description: json['description'] as String?,
     );
 

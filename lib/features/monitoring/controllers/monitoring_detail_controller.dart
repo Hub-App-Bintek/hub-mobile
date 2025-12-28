@@ -28,52 +28,6 @@ enum MonitoringStage { kontrak, dokumen, laporan, temuan }
 
 enum ContractStatus { approved, pending, rejected }
 
-class ContractItem {
-  ContractItem({
-    required this.title,
-    required this.company,
-    required this.date,
-    required this.status,
-  });
-
-  final String title;
-  final String company;
-  final DateTime date;
-  final ContractStatus status;
-
-  String getStatusLabel() {
-    switch (status) {
-      case ContractStatus.approved:
-        return 'DISETUJUI';
-      case ContractStatus.pending:
-        return 'MENUNGGU PERSETUJUAN';
-      default:
-        return 'TIDAK DISETUJUI';
-    }
-  }
-}
-
-class DocumentItem {
-  DocumentItem({required this.title});
-
-  final String title;
-}
-
-class ReportItem {
-  ReportItem({required this.title, required this.date, required this.category});
-
-  final String title;
-  final DateTime date;
-  final String category; // Pondasi, Sloof, etc.
-}
-
-class FindingItem {
-  FindingItem({required this.title, required this.date});
-
-  final String title;
-  final DateTime date;
-}
-
 class InvoiceItem {
   InvoiceItem({
     required this.title,
@@ -129,11 +83,8 @@ class MonitoringDetailController extends BaseController {
   }
 
   bool get showSignContract {
-    final globalStatus = monitoringData.value?.status;
-    final contractStatus = monitoringData.value?.activeContract?.status;
-
     // Usually goes to SIGNING after approval
-    return globalStatus == 'PENDING_SIGNATURES' || contractStatus == 'ACCEPTED';
+    return monitoringData.value?.activeContract?.homeownerSignedAt == null;
   }
 
   final documents = <MonitoringDocumentModel>[].obs;
@@ -186,6 +137,7 @@ class MonitoringDetailController extends BaseController {
           "Sukses",
           approved ? "Kontrak disetujui" : "Kontrak ditolak",
         );
+        fetchContracts(monitoringId);
         fetchDetail(monitoringId); // Refresh data
       },
     );
@@ -264,6 +216,10 @@ class MonitoringDetailController extends BaseController {
       File file = File(result.files.single.path!);
       final monitoringId = monitoringData.value?.id;
 
+      _logger.d("file path:");
+      _logger.d(file.path);
+      _logger.d("monitoring id : ${monitoringData.value?.status}");
+
       if (monitoringId == null) return;
 
       await handleAsync(
@@ -283,73 +239,6 @@ class MonitoringDetailController extends BaseController {
       );
     }
   }
-
-  void onReportTap(int reportId) {
-    // TODO: Navigate to the report detail screen
-    Get.snackbar('Navigasi', 'Buka detail untuk ID: $reportId');
-  }
-
-  void onFindingTap(int findingId) {
-    // TODO: Navigate to the finding detail screen
-    Get.snackbar('Navigasi', 'Buka detail untuk ID: $findingId');
-  }
-
-  // final contracts = <ContractItem>[
-  //   ContractItem(
-  //     title: 'Kontrak Pengawasan Konstruksi',
-  //     company: 'PT. Jasa Konstruksi',
-  //     date: DateTime(2025, 11, 10),
-  //     status: ContractStatus.approved,
-  //   ),
-  //   ContractItem(
-  //     title: 'Addendum Kontrak',
-  //     company: 'PT. Jasa Konstruksi',
-  //     date: DateTime(2025, 11, 15),
-  //     status: ContractStatus.pending,
-  //   ),
-  // ].obs;
-
-  /*final documents = <DocumentItem>[
-    DocumentItem(title: 'Bill Of Quantities'),
-    DocumentItem(title: 'Daftar Material Terpasang'),
-    DocumentItem(title: 'Dokumen Lainnya'),
-  ].obs;*/
-
-  final laporanItems = <ReportItem>[
-    // ReportItem(
-    //   title: 'Pondasi',
-    //   date: DateTime(2025, 11, 18),
-    //   category: 'Pondasi',
-    // ),
-    // ReportItem(title: 'Sloof', date: DateTime(2025, 11, 22), category: 'Sloof'),
-    // ReportItem(title: 'Kolom', date: DateTime(2025, 11, 25), category: 'Kolom'),
-    // ReportItem(
-    //   title: 'Ring Balok',
-    //   date: DateTime(2025, 11, 26),
-    //   category: 'Ring Balok',
-    // ),
-    // ReportItem(
-    //   title: 'Rangka Atap / Kuda-kuda',
-    //   date: DateTime(2025, 11, 28),
-    //   category: 'Rangka Atap',
-    // ),
-    // ReportItem(
-    //   title: 'Pencahayaan',
-    //   date: DateTime(2025, 11, 30),
-    //   category: 'Pencahayaan',
-    // ),
-    // ReportItem(
-    //   title: 'Penghawaan',
-    //   date: DateTime(2025, 12, 2),
-    //   category: 'Penghawaan',
-    // ),
-  ].obs;
-
-  final temuanItems = <FindingItem>[
-    // FindingItem(title: 'Tembok tidak rata', date: DateTime(2025, 11, 18)),
-    // FindingItem(title: 'Atap Bangunan ada bocor', date: DateTime(2025, 11, 22)),
-    // FindingItem(title: 'Beton kolom keropos', date: DateTime(2025, 11, 25)),
-  ].obs;
 
   final invoiceItems = <InvoiceItem>[
     InvoiceItem(
@@ -374,9 +263,9 @@ class MonitoringDetailController extends BaseController {
 
   int get dokumenCount => documents.length;
 
-  int get laporanCount => laporanItems.length;
+  int get laporanCount => reports.value.length;
 
-  int get temuanCount => temuanItems.length;
+  int get temuanCount => findings.value.length;
 
   int get invoiceCount => invoiceItems.length;
 
@@ -453,7 +342,6 @@ class MonitoringDetailController extends BaseController {
     }
   }
 
-
   void downloadDocument(MonitoringDocumentModel item) async {
     final fileName = 'doc_${item.title.replaceAll(' ', '_')}_${item.id}${_getFileExtension(item.documentUrl)}';
 
@@ -528,7 +416,6 @@ class MonitoringDetailController extends BaseController {
     return '.pdf'; // Default fallback
   }
 
-
   void requestRevision(String reason) async {
     final contractId = monitoringData.value?.activeContract?.id;
     if (contractId == null) {
@@ -569,10 +456,6 @@ class MonitoringDetailController extends BaseController {
         fetchContracts(monitoringId);
       },
     );
-  }
-
-  void uploadDocument() {
-    Get.snackbar('Dokumen', 'Membuka pilihan file untuk diupload...');
   }
 
   void openReportDetail(int id) {

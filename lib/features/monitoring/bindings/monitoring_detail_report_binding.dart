@@ -7,7 +7,7 @@ class MonitoringDetailReportBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(
-      () => GetReportDetailUseCase(Get.find<MonitoringRepositoryImpl>()),
+      () => GetReportDetailUseCase(Get.find<MonitoringRepository>()),
     );
     Get.lazyPut(
       () => ReportDetailController(Get.find<GetReportDetailUseCase>()),
