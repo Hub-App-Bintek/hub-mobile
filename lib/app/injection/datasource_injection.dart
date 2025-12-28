@@ -7,6 +7,7 @@ import 'package:pkp_hub/core/network/services/consultation_api_service.dart';
 import 'package:pkp_hub/core/network/services/contract_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_api_service.dart';
 import 'package:pkp_hub/core/network/services/design_document_api_service.dart';
+import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/location_api_service.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/core/network/services/payment_api_service.dart';
@@ -169,6 +170,7 @@ class DataSourceInjection {
       () => MonitoringRemoteDataSourceImpl(
         Get.find<MonitoringApiService>(),
         Get.find<ApiClient>(),
+        Get.find<FilesApiService>(),
       ),
       fenix: true,
     );

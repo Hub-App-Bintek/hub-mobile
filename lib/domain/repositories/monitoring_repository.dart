@@ -1,11 +1,16 @@
+import 'dart:io';
+
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/result.dart';
 import 'package:pkp_hub/data/datasources/monitoring/monitoring_remote_data_source.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
+import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
+import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
+import 'package:pkp_hub/data/models/response/monitoring_request_model.dart';
 // ... other domain imports
 
 abstract class MonitoringRepository {
@@ -40,6 +45,20 @@ abstract class MonitoringRepository {
   });
 
   Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
+
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId);
+
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion({
+    required int requestId,
+  });
+
+  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({
+    required int monitoringId,
+    required File file,
+    required String title,
+    String? description});
+
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -109,4 +128,32 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   ) async {
     return _remoteDataSource.signContract(contractId);
   }
+
+  @override
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId) async {
+    return _remoteDataSource.getMonitoringDetail(monitoringId);
+  }
+
+  @override
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion({
+    required int requestId,
+  }) async {
+    return _remoteDataSource.approveCompletion(requestId);
+  }
+
+  @override
+  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({required int monitoringId, required File file, required String title, String? description}) {
+    return _remoteDataSource.uploadConstructionDocument(
+      monitoringId: monitoringId,
+      file: file,
+      title: title,
+      description: description,
+    );
+  }
+
+  @override
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
+    return _remoteDataSource.getDocuments(monitoringId);
+  }
+
 }

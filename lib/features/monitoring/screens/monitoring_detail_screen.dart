@@ -263,7 +263,7 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
         child: Obx(() {
           // 1. Contract Approval Phase
           if (controller.showApproveContract) {
-            final revisionCount = controller.monitoringData.value?.contract?.revisionCount ?? 0;
+            final revisionCount = controller.monitoringData.value?.activeContract?.revisionCount ?? 0;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
