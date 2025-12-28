@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:pkp_hub/core/error/failure.dart';
 import 'package:pkp_hub/core/network/api_client.dart';
 import 'package:pkp_hub/core/network/result.dart';
+import 'package:pkp_hub/core/network/services/files_api_service.dart';
 import 'package:pkp_hub/core/network/services/monitoring_api_service.dart';
 import 'package:pkp_hub/data/models/construction_supervisor_model.dart';
 import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
+import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
+import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
+import 'package:pkp_hub/data/models/response/monitoring_request_model.dart';
 
 // --- DEFINE THE CONTRACT ---
 abstract class MonitoringRemoteDataSource {
@@ -38,14 +44,30 @@ abstract class MonitoringRemoteDataSource {
       );
 
   Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
+
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId);
+
+
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(int requestId);
+
+  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({
+    required int monitoringId,
+    required File file,
+    required String title,
+    String? description,
+  });
+
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
 }
 
 // --- IMPLEMENT THE CONTRACT ---
 class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   final MonitoringApiService _apiService;
   final ApiClient _apiClient;
+  final FilesApiService _fileApiService;
 
-  MonitoringRemoteDataSourceImpl(this._apiService, this._apiClient);
+
+  MonitoringRemoteDataSourceImpl(this._apiService, this._apiClient, this._fileApiService);
 
   @override
   Future<Result<MonitoringResponse, Failure>> createMonitoringRequest({
@@ -142,4 +164,67 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }
   }
+
+  @override
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId) async {
+    try {
+      final response = await _apiService.getMonitoringDetail(monitoringId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(int requestId) async {
+    try {
+      final response = await _apiService.approveCompletion(requestId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({
+    required int monitoringId,
+    required File file,
+    required String title,
+    String? description,
+  }) async {
+    try {
+      // Step 1: Physical File Upload
+      final fileUpload = await _fileApiService.uploadFile(
+        category: 'monitoring',
+        subCategory: 'documents',
+        entityId: monitoringId.toString(),
+        file: file,
+      );
+
+      // Step 2: Register Document with Monitoring API
+      final response = await _apiService.uploadDocument({
+        "monitoringId": monitoringId,
+        "documentUrl": fileUpload.downloadUrl,
+        "title": title,
+        "description": description,
+      });
+
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
+    try {
+      final response = await _apiService.getDocuments(monitoringId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
+
+
 }
