@@ -5,6 +5,7 @@ import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
 import 'package:pkp_hub/data/models/response/monitoring_request_model.dart';
@@ -65,4 +66,11 @@ abstract class MonitoringApiService {
   Future<MonitoringDetailModel> getMonitoringDetail(
       @Path('monitoringId') int monitoringId,
       );
+
+  @GET(ApiEndpoints.monitoringRequests)
+  Future<List<MonitoringRequestItem>> getMonitoringRequests({
+    @Query('filterBy') required String filterBy,
+    @Query('status') String? status,
+  });
+
 }

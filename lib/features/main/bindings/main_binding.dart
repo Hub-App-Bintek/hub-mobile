@@ -7,6 +7,7 @@ import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/repositories/wallet_repository.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_requests_usecase.dart';
 import 'package:pkp_hub/domain/usecases/notification/get_unread_count_use_case.dart';
 import 'package:pkp_hub/domain/usecases/chat/get_unread_chat_count_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
@@ -54,6 +55,7 @@ class MainBinding extends Bindings {
         Get.find<UserStorage>(),
         Get.find<GetConsultationsUseCase>(),
         Get.find<CreateDirectChatRoomUseCase>(),
+        Get.find<GetMonitoringRequestsUseCase>(),
       ),
       fenix: true,
     );
