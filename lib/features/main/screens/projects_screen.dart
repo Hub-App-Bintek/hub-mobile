@@ -47,59 +47,65 @@ class ProjectsScreen extends GetView<ProjectsController> {
               if (selectedType == monitoring)
                 _buildMonitoringContent(isConsultant)
               else ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: _buildStatusMenu(selectedType),
-              ),
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    _buildHeading(controller.consultationFilterStatus),
-                    style: AppTextStyles.h3,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: _buildStatusMenu(selectedType),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      _buildHeading(controller.consultationFilterStatus),
+                      style: AppTextStyles.h3,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: controller.refreshConsultations,
-                  child: CustomScrollView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    slivers: [
-                      if (controller.projects.isEmpty)
-                        SliverToBoxAdapter(
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              child: Text(
-                                'Belum ada konsultasi.',
-                                style: AppTextStyles.bodyM.copyWith(
-                                  color: AppColors.neutralMediumLight,
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: controller.refreshConsultations,
+                    child: CustomScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      slivers: [
+                        if (controller.projects.isEmpty)
+                          SliverToBoxAdapter(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: Text(
+                                  'Belum ada konsultasi.',
+                                  style: AppTextStyles.bodyM.copyWith(
+                                    color: AppColors.neutralMediumLight,
+                                  ),
                                 ),
                               ),
                             ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            sliver: _buildConsultationSliverList(isConsultant),
                           ),
-                        )
-                      else
-                        SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          sliver: _buildConsultationSliverList(isConsultant),
-                        ),
-                      if (controller.hasMore && controller.projects.isNotEmpty)
-                        const SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: Center(child: CircularProgressIndicator()),
+                        if (controller.hasMore &&
+                            controller.projects.isNotEmpty)
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Center(child: CircularProgressIndicator()),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              )],
+              ],
             ],
           );
         }),
@@ -123,14 +129,16 @@ class ProjectsScreen extends GetView<ProjectsController> {
     return Expanded(
       child: RefreshIndicator(
         onRefresh: controller.fetchMonitoringRequests,
-        child: Obx(() => ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: controller.monitoringRequests.length,
-          itemBuilder: (context, index) {
-            final item = controller.monitoringRequests[index];
-            return _buildMonitoringCard(item, isConsultant);
-          },
-        )),
+        child: Obx(
+          () => ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: controller.monitoringRequests.length,
+            itemBuilder: (context, index) {
+              final item = controller.monitoringRequests[index];
+              return _buildMonitoringCard(item, isConsultant);
+            },
+          ),
+        ),
       ),
     );
   }

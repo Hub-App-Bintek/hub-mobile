@@ -13,6 +13,8 @@ class GetMonitoringRequestsUseCase {
     String? status,
   }) {
     return _repository.getMonitoringRequests(
-        filterBy: filterBy, status: status);
+      filterBy: filterBy,
+      status: status,
+    );
   }
 }

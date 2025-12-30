@@ -47,7 +47,9 @@ abstract class MonitoringRepository {
 
   Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
 
-  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId);
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(
+    int monitoringId,
+  );
 
   Future<Result<MonitoringRequestModel, Failure>> approveCompletion({
     required int requestId,
@@ -57,17 +59,21 @@ abstract class MonitoringRepository {
     required int monitoringId,
     required File file,
     required String title,
-    String? description});
+    String? description,
+  });
 
-  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(
+    int monitoringId,
+  );
 
   Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({
     required String filterBy,
     String? status,
   });
 
-  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId);
-
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
+    int monitoringId,
+  );
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -125,10 +131,10 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
     required bool approved,
     required String reason,
   }) async {
-    return _remoteDataSource.approveContract(
-      contractId,
-      {"approved": approved, "reason": reason},
-    );
+    return _remoteDataSource.approveContract(contractId, {
+      "approved": approved,
+      "reason": reason,
+    });
   }
 
   @override
@@ -139,7 +145,9 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }
 
   @override
-  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId) async {
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(
+    int monitoringId,
+  ) async {
     return _remoteDataSource.getMonitoringDetail(monitoringId);
   }
 
@@ -151,7 +159,12 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }
 
   @override
-  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({required int monitoringId, required File file, required String title, String? description}) {
+  Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({
+    required int monitoringId,
+    required File file,
+    required String title,
+    String? description,
+  }) {
     return _remoteDataSource.uploadConstructionDocument(
       monitoringId: monitoringId,
       file: file,
@@ -161,18 +174,27 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }
 
   @override
-  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(
+    int monitoringId,
+  ) async {
     return _remoteDataSource.getDocuments(monitoringId);
   }
 
   @override
-  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status}) {
-    return _remoteDataSource.getMonitoringRequests(filterBy: filterBy, status: status);
+  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({
+    required String filterBy,
+    String? status,
+  }) {
+    return _remoteDataSource.getMonitoringRequests(
+      filterBy: filterBy,
+      status: status,
+    );
   }
 
-
   @override
-  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId) async {
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
+    int monitoringId,
+  ) async {
     return _remoteDataSource.getContracts(monitoringId);
   }
 }

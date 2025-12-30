@@ -175,7 +175,10 @@ class _KontrakList extends GetView<MonitoringDetailController> {
 
           // Define logic for chips based on MonitoringContractModel status
           final bool isFinalized = item.status == 'FULLY_SIGNED';
-          final bool isPending = item.status == 'PENDING' || item.status == 'ACCEPTED' || item.status.contains('SIGNED_BY');
+          final bool isPending =
+              item.status == 'PENDING' ||
+              item.status == 'ACCEPTED' ||
+              item.status.contains('SIGNED_BY');
 
           final chipColor = isFinalized
               ? Colors.green.shade100
@@ -273,7 +276,13 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
           if (data == null) return const SizedBox.shrink();
 
           if (controller.showApproveContract) {
-            final revisionCount = controller.monitoringData.value?.activeContract?.revisionCount ?? 0;
+            final revisionCount =
+                controller
+                    .monitoringData
+                    .value
+                    ?.activeContract
+                    ?.revisionCount ??
+                0;
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -283,12 +292,18 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
                   padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.only(bottom: 12),
                   decoration: BoxDecoration(
-                    color: revisionCount >= 2 ? Colors.orange.shade50 : Colors.blue.shade50,
+                    color: revisionCount >= 2
+                        ? Colors.orange.shade50
+                        : Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, size: 16, color: revisionCount >= 2 ? Colors.orange : Colors.blue),
+                      Icon(
+                        Icons.info_outline,
+                        size: 16,
+                        color: revisionCount >= 2 ? Colors.orange : Colors.blue,
+                      ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -310,7 +325,8 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () => controller.handleContractResponse(true, "Approved"),
+                        onPressed: () =>
+                            controller.handleContractResponse(true, "Approved"),
                         child: const Text('Setujui'),
                       ),
                     ),
@@ -347,7 +363,9 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
         title: const Text("Tolak Kontrak"),
         content: TextField(
           controller: reasonController,
-          decoration: const InputDecoration(hintText: "Masukkan alasan penolakan..."),
+          decoration: const InputDecoration(
+            hintText: "Masukkan alasan penolakan...",
+          ),
           maxLines: 3,
         ),
         actions: [
@@ -364,7 +382,6 @@ class _KontrakActions extends GetView<MonitoringDetailController> {
     );
   }
 }
-
 
 // ------------------- Dokumen -------------------
 

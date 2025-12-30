@@ -12,10 +12,12 @@ part of 'monitoring_contract_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringContractModel _$MonitoringContractModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MonitoringContractModel.fromJson(json);
 }
 
@@ -41,26 +43,30 @@ mixin _$MonitoringContractModel {
 
 /// @nodoc
 abstract class $MonitoringContractModelCopyWith<$Res> {
-  factory $MonitoringContractModelCopyWith(MonitoringContractModel value,
-          $Res Function(MonitoringContractModel) then) =
-      _$MonitoringContractModelCopyWithImpl<$Res, MonitoringContractModel>;
+  factory $MonitoringContractModelCopyWith(
+    MonitoringContractModel value,
+    $Res Function(MonitoringContractModel) then,
+  ) = _$MonitoringContractModelCopyWithImpl<$Res, MonitoringContractModel>;
   @useResult
-  $Res call(
-      {int id,
-      int monitoringId,
-      int supervisorId,
-      String supervisorName,
-      String documentUrl,
-      String status,
-      int revisionCount,
-      DateTime? homeownerSignedAt,
-      DateTime? supervisorSignedAt,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    int monitoringId,
+    int supervisorId,
+    String supervisorName,
+    String documentUrl,
+    String status,
+    int revisionCount,
+    DateTime? homeownerSignedAt,
+    DateTime? supervisorSignedAt,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
-class _$MonitoringContractModelCopyWithImpl<$Res,
-        $Val extends MonitoringContractModel>
+class _$MonitoringContractModelCopyWithImpl<
+  $Res,
+  $Val extends MonitoringContractModel
+>
     implements $MonitoringContractModelCopyWith<$Res> {
   _$MonitoringContractModelCopyWithImpl(this._value, this._then);
 
@@ -83,48 +89,51 @@ class _$MonitoringContractModelCopyWithImpl<$Res,
     Object? supervisorSignedAt = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      monitoringId: null == monitoringId
-          ? _value.monitoringId
-          : monitoringId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: null == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorName: null == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String,
-      documentUrl: null == documentUrl
-          ? _value.documentUrl
-          : documentUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      revisionCount: null == revisionCount
-          ? _value.revisionCount
-          : revisionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerSignedAt: freezed == homeownerSignedAt
-          ? _value.homeownerSignedAt
-          : homeownerSignedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      supervisorSignedAt: freezed == supervisorSignedAt
-          ? _value.supervisorSignedAt
-          : supervisorSignedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monitoringId: null == monitoringId
+                ? _value.monitoringId
+                : monitoringId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            supervisorId: null == supervisorId
+                ? _value.supervisorId
+                : supervisorId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            supervisorName: null == supervisorName
+                ? _value.supervisorName
+                : supervisorName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            documentUrl: null == documentUrl
+                ? _value.documentUrl
+                : documentUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            revisionCount: null == revisionCount
+                ? _value.revisionCount
+                : revisionCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            homeownerSignedAt: freezed == homeownerSignedAt
+                ? _value.homeownerSignedAt
+                : homeownerSignedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            supervisorSignedAt: freezed == supervisorSignedAt
+                ? _value.supervisorSignedAt
+                : supervisorSignedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -132,33 +141,37 @@ class _$MonitoringContractModelCopyWithImpl<$Res,
 abstract class _$$MonitoringContractModelImplCopyWith<$Res>
     implements $MonitoringContractModelCopyWith<$Res> {
   factory _$$MonitoringContractModelImplCopyWith(
-          _$MonitoringContractModelImpl value,
-          $Res Function(_$MonitoringContractModelImpl) then) =
-      __$$MonitoringContractModelImplCopyWithImpl<$Res>;
+    _$MonitoringContractModelImpl value,
+    $Res Function(_$MonitoringContractModelImpl) then,
+  ) = __$$MonitoringContractModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int monitoringId,
-      int supervisorId,
-      String supervisorName,
-      String documentUrl,
-      String status,
-      int revisionCount,
-      DateTime? homeownerSignedAt,
-      DateTime? supervisorSignedAt,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    int monitoringId,
+    int supervisorId,
+    String supervisorName,
+    String documentUrl,
+    String status,
+    int revisionCount,
+    DateTime? homeownerSignedAt,
+    DateTime? supervisorSignedAt,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
 class __$$MonitoringContractModelImplCopyWithImpl<$Res>
-    extends _$MonitoringContractModelCopyWithImpl<$Res,
-        _$MonitoringContractModelImpl>
+    extends
+        _$MonitoringContractModelCopyWithImpl<
+          $Res,
+          _$MonitoringContractModelImpl
+        >
     implements _$$MonitoringContractModelImplCopyWith<$Res> {
   __$$MonitoringContractModelImplCopyWithImpl(
-      _$MonitoringContractModelImpl _value,
-      $Res Function(_$MonitoringContractModelImpl) _then)
-      : super(_value, _then);
+    _$MonitoringContractModelImpl _value,
+    $Res Function(_$MonitoringContractModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -174,65 +187,68 @@ class __$$MonitoringContractModelImplCopyWithImpl<$Res>
     Object? supervisorSignedAt = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_$MonitoringContractModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      monitoringId: null == monitoringId
-          ? _value.monitoringId
-          : monitoringId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: null == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorName: null == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String,
-      documentUrl: null == documentUrl
-          ? _value.documentUrl
-          : documentUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      revisionCount: null == revisionCount
-          ? _value.revisionCount
-          : revisionCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerSignedAt: freezed == homeownerSignedAt
-          ? _value.homeownerSignedAt
-          : homeownerSignedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      supervisorSignedAt: freezed == supervisorSignedAt
-          ? _value.supervisorSignedAt
-          : supervisorSignedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MonitoringContractModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monitoringId: null == monitoringId
+            ? _value.monitoringId
+            : monitoringId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        supervisorId: null == supervisorId
+            ? _value.supervisorId
+            : supervisorId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        supervisorName: null == supervisorName
+            ? _value.supervisorName
+            : supervisorName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        documentUrl: null == documentUrl
+            ? _value.documentUrl
+            : documentUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        revisionCount: null == revisionCount
+            ? _value.revisionCount
+            : revisionCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        homeownerSignedAt: freezed == homeownerSignedAt
+            ? _value.homeownerSignedAt
+            : homeownerSignedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        supervisorSignedAt: freezed == supervisorSignedAt
+            ? _value.supervisorSignedAt
+            : supervisorSignedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringContractModelImpl implements _MonitoringContractModel {
-  const _$MonitoringContractModelImpl(
-      {required this.id,
-      required this.monitoringId,
-      required this.supervisorId,
-      required this.supervisorName,
-      required this.documentUrl,
-      required this.status,
-      required this.revisionCount,
-      this.homeownerSignedAt,
-      this.supervisorSignedAt,
-      required this.createdAt});
+  const _$MonitoringContractModelImpl({
+    required this.id,
+    required this.monitoringId,
+    required this.supervisorId,
+    required this.supervisorName,
+    required this.documentUrl,
+    required this.status,
+    required this.revisionCount,
+    this.homeownerSignedAt,
+    this.supervisorSignedAt,
+    required this.createdAt,
+  });
 
   factory _$MonitoringContractModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringContractModelImplFromJson(json);
@@ -249,7 +265,7 @@ class _$MonitoringContractModelImpl implements _MonitoringContractModel {
   final String documentUrl;
   @override
   final String status;
-// PENDING, DECLINED, ACCEPTED, FULLY_SIGNED, etc.
+  // PENDING, DECLINED, ACCEPTED, FULLY_SIGNED, etc.
   @override
   final int revisionCount;
   @override
@@ -292,45 +308,47 @@ class _$MonitoringContractModelImpl implements _MonitoringContractModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      monitoringId,
-      supervisorId,
-      supervisorName,
-      documentUrl,
-      status,
-      revisionCount,
-      homeownerSignedAt,
-      supervisorSignedAt,
-      createdAt);
+    runtimeType,
+    id,
+    monitoringId,
+    supervisorId,
+    supervisorName,
+    documentUrl,
+    status,
+    revisionCount,
+    homeownerSignedAt,
+    supervisorSignedAt,
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringContractModelImplCopyWith<_$MonitoringContractModelImpl>
-      get copyWith => __$$MonitoringContractModelImplCopyWithImpl<
-          _$MonitoringContractModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$MonitoringContractModelImplCopyWithImpl<
+        _$MonitoringContractModelImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringContractModelImplToJson(
-      this,
-    );
+    return _$$MonitoringContractModelImplToJson(this);
   }
 }
 
 abstract class _MonitoringContractModel implements MonitoringContractModel {
-  const factory _MonitoringContractModel(
-      {required final int id,
-      required final int monitoringId,
-      required final int supervisorId,
-      required final String supervisorName,
-      required final String documentUrl,
-      required final String status,
-      required final int revisionCount,
-      final DateTime? homeownerSignedAt,
-      final DateTime? supervisorSignedAt,
-      required final DateTime createdAt}) = _$MonitoringContractModelImpl;
+  const factory _MonitoringContractModel({
+    required final int id,
+    required final int monitoringId,
+    required final int supervisorId,
+    required final String supervisorName,
+    required final String documentUrl,
+    required final String status,
+    required final int revisionCount,
+    final DateTime? homeownerSignedAt,
+    final DateTime? supervisorSignedAt,
+    required final DateTime createdAt,
+  }) = _$MonitoringContractModelImpl;
 
   factory _MonitoringContractModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringContractModelImpl.fromJson;
@@ -358,5 +376,5 @@ abstract class _MonitoringContractModel implements MonitoringContractModel {
   @override
   @JsonKey(ignore: true)
   _$$MonitoringContractModelImplCopyWith<_$MonitoringContractModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

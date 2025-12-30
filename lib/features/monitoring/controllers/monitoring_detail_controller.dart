@@ -123,7 +123,8 @@ class MonitoringDetailController extends BaseController {
 
   bool get showApproveContract {
     final globalStatus = monitoringData.value?.status; // "PENDING_CONTRACT"
-    final contractStatus = monitoringData.value?.activeContract?.status; // "PENDING"
+    final contractStatus =
+        monitoringData.value?.activeContract?.status; // "PENDING"
 
     return globalStatus == 'PENDING_CONTRACT' || contractStatus == 'PENDING';
   }
@@ -143,7 +144,7 @@ class MonitoringDetailController extends BaseController {
   // In your fetch methods
   Future<void> fetchContracts(int monitoringId) async {
     await handleAsync(
-          () => _getMonitoringContractsUsecase(monitoringId),
+      () => _getMonitoringContractsUsecase(monitoringId),
       onSuccess: (result) {
         contracts.assignAll(result);
       },
@@ -162,12 +163,12 @@ class MonitoringDetailController extends BaseController {
   Future<void> refreshData() async {
     // final id = monitoringData.value?.id;
     // if (id != null) {
-        fetchDetail(monitoringId);
-        fetchDocuments(monitoringId);
-        fetchContracts(monitoringId);
-        _fetchFindings();
-        _fetchReports();
-        // ... other fetch calls
+    fetchDetail(monitoringId);
+    fetchDocuments(monitoringId);
+    fetchContracts(monitoringId);
+    _fetchFindings();
+    _fetchReports();
+    // ... other fetch calls
     // }
   }
 
@@ -176,11 +177,13 @@ class MonitoringDetailController extends BaseController {
     if (id == null) return;
 
     await handleAsync(
-      () => _respondUseCase(RespondToContractParams(
-        contractId: id,
-        approved: approved,
-        reason: reason,
-      )),
+      () => _respondUseCase(
+        RespondToContractParams(
+          contractId: id,
+          approved: approved,
+          reason: reason,
+        ),
+      ),
       onSuccess: (result) {
         Get.snackbar(
           "Sukses",
@@ -406,7 +409,9 @@ class MonitoringDetailController extends BaseController {
         'Memulai unduhan kontrak: Versi ${item.revisionCount + 1}',
         snackPosition: SnackPosition.BOTTOM,
         showProgressIndicator: true,
-        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+        progressIndicatorValueColor: const AlwaysStoppedAnimation<Color>(
+          Colors.white,
+        ),
         duration: const Duration(seconds: 2),
       );
 
@@ -417,7 +422,9 @@ class MonitoringDetailController extends BaseController {
         savePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            _logger.d("Contract Download Progress: ${(received / total * 100).toStringAsFixed(0)}%");
+            _logger.d(
+              "Contract Download Progress: ${(received / total * 100).toStringAsFixed(0)}%",
+            );
           }
         },
       );
@@ -430,7 +437,10 @@ class MonitoringDetailController extends BaseController {
         backgroundColor: Colors.green.withOpacity(0.1),
         mainButton: TextButton(
           onPressed: () => OpenFilex.open(savePath),
-          child: const Text('BUKA', style: TextStyle(fontWeight: FontWeight.bold)),
+          child: const Text(
+            'BUKA',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
         duration: const Duration(seconds: 5),
       );
@@ -453,9 +463,9 @@ class MonitoringDetailController extends BaseController {
     }
   }
 
-
   void downloadDocument(MonitoringDocumentModel item) async {
-    final fileName = 'doc_${item.title.replaceAll(' ', '_')}_${item.id}${_getFileExtension(item.documentUrl)}';
+    final fileName =
+        'doc_${item.title.replaceAll(' ', '_')}_${item.id}${_getFileExtension(item.documentUrl)}';
 
     try {
       Directory? downloadsDir;
@@ -487,7 +497,9 @@ class MonitoringDetailController extends BaseController {
         savePath,
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            _logger.d("Download Progress: ${(received / total * 100).toStringAsFixed(0)}%");
+            _logger.d(
+              "Download Progress: ${(received / total * 100).toStringAsFixed(0)}%",
+            );
           }
         },
       );
@@ -500,7 +512,10 @@ class MonitoringDetailController extends BaseController {
         backgroundColor: Colors.green.withOpacity(0.1),
         mainButton: TextButton(
           onPressed: () => OpenFilex.open(savePath),
-          child: const Text('BUKA', style: TextStyle(fontWeight: FontWeight.bold)),
+          child: const Text(
+            'BUKA',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
         ),
         duration: const Duration(seconds: 5),
       );
@@ -528,7 +543,6 @@ class MonitoringDetailController extends BaseController {
     return '.pdf'; // Default fallback
   }
 
-
   void requestRevision(String reason) async {
     final contractId = monitoringData.value?.activeContract?.id;
     if (contractId == null) {
@@ -537,11 +551,13 @@ class MonitoringDetailController extends BaseController {
     }
 
     await handleAsync(
-          () => _respondUseCase(RespondToContractParams(
-        contractId: contractId,
-        approved: false,
-        reason: reason,
-      )),
+      () => _respondUseCase(
+        RespondToContractParams(
+          contractId: contractId,
+          approved: false,
+          reason: reason,
+        ),
+      ),
       onSuccess: (result) {
         Get.snackbar('Sukses', 'Permintaan revisi telah dikirim');
         fetchDetail(monitoringId);
@@ -558,11 +574,13 @@ class MonitoringDetailController extends BaseController {
     }
 
     await handleAsync(
-          () => _respondUseCase(RespondToContractParams(
-        contractId: contractId,
-        approved: true,
-        reason: "Approved by Homeowner",
-      )),
+      () => _respondUseCase(
+        RespondToContractParams(
+          contractId: contractId,
+          approved: true,
+          reason: "Approved by Homeowner",
+        ),
+      ),
       onSuccess: (result) {
         Get.snackbar('Sukses', 'Kontrak berhasil disetujui');
         fetchDetail(monitoringId);

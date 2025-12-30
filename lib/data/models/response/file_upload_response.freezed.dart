@@ -12,7 +12,8 @@ part of 'file_upload_response.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FileUploadResponse _$FileUploadResponseFromJson(Map<String, dynamic> json) {
   return _FileUploadResponse.fromJson(json);
@@ -40,20 +41,22 @@ mixin _$FileUploadResponse {
 /// @nodoc
 abstract class $FileUploadResponseCopyWith<$Res> {
   factory $FileUploadResponseCopyWith(
-          FileUploadResponse value, $Res Function(FileUploadResponse) then) =
-      _$FileUploadResponseCopyWithImpl<$Res, FileUploadResponse>;
+    FileUploadResponse value,
+    $Res Function(FileUploadResponse) then,
+  ) = _$FileUploadResponseCopyWithImpl<$Res, FileUploadResponse>;
   @useResult
-  $Res call(
-      {String id,
-      String originalName,
-      String fileName,
-      int fileSize,
-      String mimeType,
-      String category,
-      String? subCategory,
-      String entityId,
-      DateTime uploadedAt,
-      String downloadUrl});
+  $Res call({
+    String id,
+    String originalName,
+    String fileName,
+    int fileSize,
+    String mimeType,
+    String category,
+    String? subCategory,
+    String entityId,
+    DateTime uploadedAt,
+    String downloadUrl,
+  });
 }
 
 /// @nodoc
@@ -80,79 +83,85 @@ class _$FileUploadResponseCopyWithImpl<$Res, $Val extends FileUploadResponse>
     Object? uploadedAt = null,
     Object? downloadUrl = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      originalName: null == originalName
-          ? _value.originalName
-          : originalName // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileName: null == fileName
-          ? _value.fileName
-          : fileName // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileSize: null == fileSize
-          ? _value.fileSize
-          : fileSize // ignore: cast_nullable_to_non_nullable
-              as int,
-      mimeType: null == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      subCategory: freezed == subCategory
-          ? _value.subCategory
-          : subCategory // ignore: cast_nullable_to_non_nullable
-              as String?,
-      entityId: null == entityId
-          ? _value.entityId
-          : entityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      uploadedAt: null == uploadedAt
-          ? _value.uploadedAt
-          : uploadedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      downloadUrl: null == downloadUrl
-          ? _value.downloadUrl
-          : downloadUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as String,
+            originalName: null == originalName
+                ? _value.originalName
+                : originalName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            fileName: null == fileName
+                ? _value.fileName
+                : fileName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            fileSize: null == fileSize
+                ? _value.fileSize
+                : fileSize // ignore: cast_nullable_to_non_nullable
+                      as int,
+            mimeType: null == mimeType
+                ? _value.mimeType
+                : mimeType // ignore: cast_nullable_to_non_nullable
+                      as String,
+            category: null == category
+                ? _value.category
+                : category // ignore: cast_nullable_to_non_nullable
+                      as String,
+            subCategory: freezed == subCategory
+                ? _value.subCategory
+                : subCategory // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            entityId: null == entityId
+                ? _value.entityId
+                : entityId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            uploadedAt: null == uploadedAt
+                ? _value.uploadedAt
+                : uploadedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            downloadUrl: null == downloadUrl
+                ? _value.downloadUrl
+                : downloadUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$FileUploadResponseImplCopyWith<$Res>
     implements $FileUploadResponseCopyWith<$Res> {
-  factory _$$FileUploadResponseImplCopyWith(_$FileUploadResponseImpl value,
-          $Res Function(_$FileUploadResponseImpl) then) =
-      __$$FileUploadResponseImplCopyWithImpl<$Res>;
+  factory _$$FileUploadResponseImplCopyWith(
+    _$FileUploadResponseImpl value,
+    $Res Function(_$FileUploadResponseImpl) then,
+  ) = __$$FileUploadResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String id,
-      String originalName,
-      String fileName,
-      int fileSize,
-      String mimeType,
-      String category,
-      String? subCategory,
-      String entityId,
-      DateTime uploadedAt,
-      String downloadUrl});
+  $Res call({
+    String id,
+    String originalName,
+    String fileName,
+    int fileSize,
+    String mimeType,
+    String category,
+    String? subCategory,
+    String entityId,
+    DateTime uploadedAt,
+    String downloadUrl,
+  });
 }
 
 /// @nodoc
 class __$$FileUploadResponseImplCopyWithImpl<$Res>
     extends _$FileUploadResponseCopyWithImpl<$Res, _$FileUploadResponseImpl>
     implements _$$FileUploadResponseImplCopyWith<$Res> {
-  __$$FileUploadResponseImplCopyWithImpl(_$FileUploadResponseImpl _value,
-      $Res Function(_$FileUploadResponseImpl) _then)
-      : super(_value, _then);
+  __$$FileUploadResponseImplCopyWithImpl(
+    _$FileUploadResponseImpl _value,
+    $Res Function(_$FileUploadResponseImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -168,65 +177,68 @@ class __$$FileUploadResponseImplCopyWithImpl<$Res>
     Object? uploadedAt = null,
     Object? downloadUrl = null,
   }) {
-    return _then(_$FileUploadResponseImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      originalName: null == originalName
-          ? _value.originalName
-          : originalName // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileName: null == fileName
-          ? _value.fileName
-          : fileName // ignore: cast_nullable_to_non_nullable
-              as String,
-      fileSize: null == fileSize
-          ? _value.fileSize
-          : fileSize // ignore: cast_nullable_to_non_nullable
-              as int,
-      mimeType: null == mimeType
-          ? _value.mimeType
-          : mimeType // ignore: cast_nullable_to_non_nullable
-              as String,
-      category: null == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String,
-      subCategory: freezed == subCategory
-          ? _value.subCategory
-          : subCategory // ignore: cast_nullable_to_non_nullable
-              as String?,
-      entityId: null == entityId
-          ? _value.entityId
-          : entityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      uploadedAt: null == uploadedAt
-          ? _value.uploadedAt
-          : uploadedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      downloadUrl: null == downloadUrl
-          ? _value.downloadUrl
-          : downloadUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$FileUploadResponseImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as String,
+        originalName: null == originalName
+            ? _value.originalName
+            : originalName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        fileName: null == fileName
+            ? _value.fileName
+            : fileName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        fileSize: null == fileSize
+            ? _value.fileSize
+            : fileSize // ignore: cast_nullable_to_non_nullable
+                  as int,
+        mimeType: null == mimeType
+            ? _value.mimeType
+            : mimeType // ignore: cast_nullable_to_non_nullable
+                  as String,
+        category: null == category
+            ? _value.category
+            : category // ignore: cast_nullable_to_non_nullable
+                  as String,
+        subCategory: freezed == subCategory
+            ? _value.subCategory
+            : subCategory // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        entityId: null == entityId
+            ? _value.entityId
+            : entityId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        uploadedAt: null == uploadedAt
+            ? _value.uploadedAt
+            : uploadedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        downloadUrl: null == downloadUrl
+            ? _value.downloadUrl
+            : downloadUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FileUploadResponseImpl implements _FileUploadResponse {
-  const _$FileUploadResponseImpl(
-      {required this.id,
-      required this.originalName,
-      required this.fileName,
-      required this.fileSize,
-      required this.mimeType,
-      required this.category,
-      this.subCategory,
-      required this.entityId,
-      required this.uploadedAt,
-      required this.downloadUrl});
+  const _$FileUploadResponseImpl({
+    required this.id,
+    required this.originalName,
+    required this.fileName,
+    required this.fileSize,
+    required this.mimeType,
+    required this.category,
+    this.subCategory,
+    required this.entityId,
+    required this.uploadedAt,
+    required this.downloadUrl,
+  });
 
   factory _$FileUploadResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$FileUploadResponseImplFromJson(json);
@@ -286,45 +298,47 @@ class _$FileUploadResponseImpl implements _FileUploadResponse {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      originalName,
-      fileName,
-      fileSize,
-      mimeType,
-      category,
-      subCategory,
-      entityId,
-      uploadedAt,
-      downloadUrl);
+    runtimeType,
+    id,
+    originalName,
+    fileName,
+    fileSize,
+    mimeType,
+    category,
+    subCategory,
+    entityId,
+    uploadedAt,
+    downloadUrl,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$FileUploadResponseImplCopyWith<_$FileUploadResponseImpl> get copyWith =>
       __$$FileUploadResponseImplCopyWithImpl<_$FileUploadResponseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FileUploadResponseImplToJson(
-      this,
-    );
+    return _$$FileUploadResponseImplToJson(this);
   }
 }
 
 abstract class _FileUploadResponse implements FileUploadResponse {
-  const factory _FileUploadResponse(
-      {required final String id,
-      required final String originalName,
-      required final String fileName,
-      required final int fileSize,
-      required final String mimeType,
-      required final String category,
-      final String? subCategory,
-      required final String entityId,
-      required final DateTime uploadedAt,
-      required final String downloadUrl}) = _$FileUploadResponseImpl;
+  const factory _FileUploadResponse({
+    required final String id,
+    required final String originalName,
+    required final String fileName,
+    required final int fileSize,
+    required final String mimeType,
+    required final String category,
+    final String? subCategory,
+    required final String entityId,
+    required final DateTime uploadedAt,
+    required final String downloadUrl,
+  }) = _$FileUploadResponseImpl;
 
   factory _FileUploadResponse.fromJson(Map<String, dynamic> json) =
       _$FileUploadResponseImpl.fromJson;
