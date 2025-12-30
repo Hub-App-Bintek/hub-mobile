@@ -43,6 +43,7 @@ abstract class AppRoutes {
   static const paymentReceipt = _Paths.paymentReceipt;
   static const consultationConfirmation = _Paths.consultationConfirmation;
   static const changePassword = _Paths.changePassword;
+  static const legalDocument = _Paths.legalDocument;
 }
 
 abstract class _Paths {
@@ -86,4 +87,5 @@ abstract class _Paths {
   static const paymentReceipt = '/payment/receipt';
   static const consultationConfirmation = '/consultation-confirmation';
   static const changePassword = '/change-password';
+  static const legalDocument = '/legal-document';
 }

@@ -64,6 +64,7 @@ dependencies:
   file_saver: ^0.2.13
   image_picker: ^1.2.1
   stomp_dart_client: ^2.0.0
+  webview_flutter: ^4.9.0
   firebase_core: ^4.2.1
   firebase_messaging: ^16.0.4
   flutter_local_notifications: ^19.5.0

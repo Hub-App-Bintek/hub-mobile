@@ -1,4 +1,5 @@
 import 'package:pkp_hub/core/enums/consultation_filter_status.dart';
+import 'package:pkp_hub/core/enums/legal_document_type.dart';
 import 'package:pkp_hub/data/models/consultant.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/prototype_design.dart';
@@ -132,4 +133,10 @@ class MainNavigationArgs {
 
   final int? selectedIndex;
   final ConsultationFilterStatus? consultationStatus;
+}
+
+class LegalDocumentArgs {
+  const LegalDocumentArgs({required this.type});
+
+  final LegalDocumentType type;
 }
