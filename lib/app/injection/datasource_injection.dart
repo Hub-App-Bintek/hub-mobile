@@ -39,6 +39,7 @@ import 'package:pkp_hub/data/datasources/files/files_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/wallet/wallet_local_repository.dart';
 import 'package:pkp_hub/data/datasources/wallet/wallet_network_data_source.dart';
 import 'package:pkp_hub/data/datasources/notification/notification_network_data_source.dart';
+import 'package:pkp_hub/data/datasources/legal/legal_network_data_source.dart';
 
 class DataSourceInjection {
   DataSourceInjection._();
@@ -179,6 +180,10 @@ class DataSourceInjection {
         Get.find<ApiClient>(),
         Get.find<NotificationApiService>(),
       ),
+      fenix: true,
+    );
+    Get.lazyPut<LegalNetworkDataSource>(
+      () => LegalNetworkDataSourceImpl(Get.find<ApiClient>()),
       fenix: true,
     );
   }

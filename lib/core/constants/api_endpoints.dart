@@ -159,4 +159,7 @@ abstract class ApiEndpoints {
   static const String getMonitoringDetail = '$monitoringRequests/{monitoringId}';
 
   static const String listContracts = '$monitoringRequests/{monitoringId}/contracts';
+
+  // --- Legal / Terms ---
+  static const String terms = '/api/terms/{type}';
 }

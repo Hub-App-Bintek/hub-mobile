@@ -57,6 +57,7 @@ import 'package:pkp_hub/features/payment/screens/payment_receipt_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_screen.dart';
 import 'package:pkp_hub/features/payment/screens/payment_va_screen.dart';
 import 'package:pkp_hub/features/project/bindings/design_type_binding.dart';
+import 'package:pkp_hub/features/legal/bindings/legal_document_binding.dart';
 import 'package:pkp_hub/features/project/bindings/location_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_design_details_binding.dart';
 import 'package:pkp_hub/features/project/bindings/prototype_designs_binding.dart';
@@ -68,6 +69,7 @@ import 'package:pkp_hub/features/project/screens/invoice_screen.dart';
 import 'package:pkp_hub/features/project/screens/location_details_screen.dart';
 import 'package:pkp_hub/features/project/screens/prototype_design_details_screen.dart';
 import 'package:pkp_hub/features/project/screens/prototype_designs_screen.dart';
+import 'package:pkp_hub/features/legal/screens/legal_document_screen.dart';
 
 part 'app_routes.dart';
 
@@ -106,6 +108,11 @@ class AppPages {
       name: _Paths.changePassword,
       page: () => const ChangePasswordScreen(),
       binding: ChangePasswordBinding(),
+    ),
+    GetPage(
+      name: _Paths.legalDocument,
+      page: () => const LegalDocumentScreen(),
+      binding: LegalDocumentBinding(),
     ),
     GetPage(
       name: _Paths.main,

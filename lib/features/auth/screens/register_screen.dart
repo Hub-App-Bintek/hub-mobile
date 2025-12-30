@@ -6,12 +6,15 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pkp_hub/app/navigation/app_pages.dart';
+import 'package:pkp_hub/app/navigation/route_args.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_text_form_field.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
+import 'package:pkp_hub/core/enums/legal_document_type.dart';
 import 'package:pkp_hub/features/auth/controllers/register_controller.dart';
 
 class RegisterScreen extends GetView<RegisterController> {
@@ -286,7 +289,12 @@ class RegisterScreen extends GetView<RegisterController> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    // TODO: Navigate to Terms and Conditions page
+                                    Get.toNamed(
+                                      AppRoutes.legalDocument,
+                                      arguments: const LegalDocumentArgs(
+                                        type: legalDocumentTerms,
+                                      ),
+                                    );
                                   },
                               ),
                               const TextSpan(text: AppStrings.termsAnd),
@@ -298,7 +306,12 @@ class RegisterScreen extends GetView<RegisterController> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    // TODO: Navigate to Privacy Policy page
+                                    Get.toNamed(
+                                      AppRoutes.legalDocument,
+                                      arguments: const LegalDocumentArgs(
+                                        type: legalDocumentPrivacy,
+                                      ),
+                                    );
                                   },
                               ),
                               const TextSpan(text: '.'),
