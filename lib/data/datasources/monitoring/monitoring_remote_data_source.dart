@@ -41,16 +41,19 @@ abstract class MonitoringRemoteDataSource {
   });
 
   Future<Result<MonitoringContractModel, Failure>> approveContract(
-      int contractId,
-      Map<String, dynamic> body,
-      );
+    int contractId,
+    Map<String, dynamic> body,
+  );
 
   Future<Result<MonitoringContractModel, Failure>> signContract(int contractId);
 
-  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId);
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(
+    int monitoringId,
+  );
 
-
-  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(int requestId);
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(
+    int requestId,
+  );
 
   Future<Result<MonitoringDocumentModel, Failure>> uploadConstructionDocument({
     required int monitoringId,
@@ -59,11 +62,18 @@ abstract class MonitoringRemoteDataSource {
     String? description,
   });
 
-  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId);
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(
+    int monitoringId,
+  );
 
-  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status});
+  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({
+    required String filterBy,
+    String? status,
+  });
 
-  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId);
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
+    int monitoringId,
+  );
 }
 
 // --- IMPLEMENT THE CONTRACT ---
@@ -72,8 +82,11 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   final ApiClient _apiClient;
   final FilesApiService _fileApiService;
 
-
-  MonitoringRemoteDataSourceImpl(this._apiService, this._apiClient, this._fileApiService);
+  MonitoringRemoteDataSourceImpl(
+    this._apiService,
+    this._apiClient,
+    this._fileApiService,
+  );
 
   final _logger = Logger();
 
@@ -152,9 +165,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
 
   @override
   Future<Result<MonitoringContractModel, Failure>> approveContract(
-      int contractId,
-      Map<String, dynamic> body,
-      ) async {
+    int contractId,
+    Map<String, dynamic> body,
+  ) async {
     try {
       final response = await _apiService.approveContract(contractId, body);
       return Success(response);
@@ -164,7 +177,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<MonitoringContractModel, Failure>> signContract(int contractId) async {
+  Future<Result<MonitoringContractModel, Failure>> signContract(
+    int contractId,
+  ) async {
     try {
       final response = await _apiService.signContract(contractId);
       return Success(response);
@@ -174,7 +189,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(int monitoringId) async {
+  Future<Result<MonitoringDetailModel, Failure>> getMonitoringDetail(
+    int monitoringId,
+  ) async {
     try {
       final response = await _apiService.getMonitoringDetail(monitoringId);
       return Success(response);
@@ -184,7 +201,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(int requestId) async {
+  Future<Result<MonitoringRequestModel, Failure>> approveCompletion(
+    int requestId,
+  ) async {
     try {
       final response = await _apiService.approveCompletion(requestId);
       return Success(response);
@@ -201,7 +220,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     String? description,
   }) async {
     try {
-      _logger.d("UPLOAD TRACE: Step 1 - Starting physical upload for file: ${file.path}");
+      _logger.d(
+        "UPLOAD TRACE: Step 1 - Starting physical upload for file: ${file.path}",
+      );
 
       // Step 1: Physical File Upload
       // Ensure the category is 'monitoring' as per API docs
@@ -213,7 +234,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       );
 
       _logger.d("UPLOAD TRACE: Step 1 Success. URL: ${fileUpload.downloadUrl}");
-      _logger.d("UPLOAD TRACE: Step 2 - Registering document with Monitoring API");
+      _logger.d(
+        "UPLOAD TRACE: Step 2 - Registering document with Monitoring API",
+      );
 
       // Step 2: Register Document with Monitoring API
       final response = await _apiService.uploadDocument({
@@ -236,9 +259,10 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
     }
   }
 
-
   @override
-  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(int monitoringId) async {
+  Future<Result<List<MonitoringDocumentModel>, Failure>> getDocuments(
+    int monitoringId,
+  ) async {
     try {
       final response = await _apiService.getDocuments(monitoringId);
       return Success(response);
@@ -248,9 +272,15 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({required String filterBy, String? status}) async {
+  Future<Result<List<MonitoringRequestItem>, Failure>> getMonitoringRequests({
+    required String filterBy,
+    String? status,
+  }) async {
     try {
-      final response = await _apiService.getMonitoringRequests(filterBy: filterBy, status: status);
+      final response = await _apiService.getMonitoringRequests(
+        filterBy: filterBy,
+        status: status,
+      );
       return Success(response);
     } catch (e) {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
@@ -258,7 +288,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(int monitoringId) async {
+  Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
+    int monitoringId,
+  ) async {
     try {
       final response = await _apiService.getContracts(monitoringId);
       return Success(response);
@@ -266,6 +298,4 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }
   }
-
-
 }

@@ -12,10 +12,12 @@ part of 'monitoring_request_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringRequestModel _$MonitoringRequestModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MonitoringRequestModel.fromJson(json);
 }
 
@@ -37,23 +39,27 @@ mixin _$MonitoringRequestModel {
 
 /// @nodoc
 abstract class $MonitoringRequestModelCopyWith<$Res> {
-  factory $MonitoringRequestModelCopyWith(MonitoringRequestModel value,
-          $Res Function(MonitoringRequestModel) then) =
-      _$MonitoringRequestModelCopyWithImpl<$Res, MonitoringRequestModel>;
+  factory $MonitoringRequestModelCopyWith(
+    MonitoringRequestModel value,
+    $Res Function(MonitoringRequestModel) then,
+  ) = _$MonitoringRequestModelCopyWithImpl<$Res, MonitoringRequestModel>;
   @useResult
-  $Res call(
-      {int id,
-      String type,
-      String status,
-      int homeownerId,
-      int supervisorId,
-      String projectAddress,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String type,
+    String status,
+    int homeownerId,
+    int supervisorId,
+    String projectAddress,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
-class _$MonitoringRequestModelCopyWithImpl<$Res,
-        $Val extends MonitoringRequestModel>
+class _$MonitoringRequestModelCopyWithImpl<
+  $Res,
+  $Val extends MonitoringRequestModel
+>
     implements $MonitoringRequestModelCopyWith<$Res> {
   _$MonitoringRequestModelCopyWithImpl(this._value, this._then);
 
@@ -73,36 +79,39 @@ class _$MonitoringRequestModelCopyWithImpl<$Res,
     Object? projectAddress = null,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: null == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int,
-      projectAddress: null == projectAddress
-          ? _value.projectAddress
-          : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            homeownerId: null == homeownerId
+                ? _value.homeownerId
+                : homeownerId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            supervisorId: null == supervisorId
+                ? _value.supervisorId
+                : supervisorId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            projectAddress: null == projectAddress
+                ? _value.projectAddress
+                : projectAddress // ignore: cast_nullable_to_non_nullable
+                      as String,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -110,30 +119,31 @@ class _$MonitoringRequestModelCopyWithImpl<$Res,
 abstract class _$$MonitoringRequestModelImplCopyWith<$Res>
     implements $MonitoringRequestModelCopyWith<$Res> {
   factory _$$MonitoringRequestModelImplCopyWith(
-          _$MonitoringRequestModelImpl value,
-          $Res Function(_$MonitoringRequestModelImpl) then) =
-      __$$MonitoringRequestModelImplCopyWithImpl<$Res>;
+    _$MonitoringRequestModelImpl value,
+    $Res Function(_$MonitoringRequestModelImpl) then,
+  ) = __$$MonitoringRequestModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String type,
-      String status,
-      int homeownerId,
-      int supervisorId,
-      String projectAddress,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String type,
+    String status,
+    int homeownerId,
+    int supervisorId,
+    String projectAddress,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
 class __$$MonitoringRequestModelImplCopyWithImpl<$Res>
-    extends _$MonitoringRequestModelCopyWithImpl<$Res,
-        _$MonitoringRequestModelImpl>
+    extends
+        _$MonitoringRequestModelCopyWithImpl<$Res, _$MonitoringRequestModelImpl>
     implements _$$MonitoringRequestModelImplCopyWith<$Res> {
   __$$MonitoringRequestModelImplCopyWithImpl(
-      _$MonitoringRequestModelImpl _value,
-      $Res Function(_$MonitoringRequestModelImpl) _then)
-      : super(_value, _then);
+    _$MonitoringRequestModelImpl _value,
+    $Res Function(_$MonitoringRequestModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -146,50 +156,53 @@ class __$$MonitoringRequestModelImplCopyWithImpl<$Res>
     Object? projectAddress = null,
     Object? createdAt = null,
   }) {
-    return _then(_$MonitoringRequestModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      supervisorId: null == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int,
-      projectAddress: null == projectAddress
-          ? _value.projectAddress
-          : projectAddress // ignore: cast_nullable_to_non_nullable
-              as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MonitoringRequestModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        homeownerId: null == homeownerId
+            ? _value.homeownerId
+            : homeownerId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        supervisorId: null == supervisorId
+            ? _value.supervisorId
+            : supervisorId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        projectAddress: null == projectAddress
+            ? _value.projectAddress
+            : projectAddress // ignore: cast_nullable_to_non_nullable
+                  as String,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringRequestModelImpl implements _MonitoringRequestModel {
-  const _$MonitoringRequestModelImpl(
-      {required this.id,
-      required this.type,
-      required this.status,
-      required this.homeownerId,
-      required this.supervisorId,
-      required this.projectAddress,
-      required this.createdAt});
+  const _$MonitoringRequestModelImpl({
+    required this.id,
+    required this.type,
+    required this.status,
+    required this.homeownerId,
+    required this.supervisorId,
+    required this.projectAddress,
+    required this.createdAt,
+  });
 
   factory _$MonitoringRequestModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringRequestModelImplFromJson(json);
@@ -234,33 +247,43 @@ class _$MonitoringRequestModelImpl implements _MonitoringRequestModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, type, status, homeownerId,
-      supervisorId, projectAddress, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    type,
+    status,
+    homeownerId,
+    supervisorId,
+    projectAddress,
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringRequestModelImplCopyWith<_$MonitoringRequestModelImpl>
-      get copyWith => __$$MonitoringRequestModelImplCopyWithImpl<
-          _$MonitoringRequestModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$MonitoringRequestModelImplCopyWithImpl<_$MonitoringRequestModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringRequestModelImplToJson(
-      this,
-    );
+    return _$$MonitoringRequestModelImplToJson(this);
   }
 }
 
 abstract class _MonitoringRequestModel implements MonitoringRequestModel {
-  const factory _MonitoringRequestModel(
-      {required final int id,
-      required final String type,
-      required final String status,
-      required final int homeownerId,
-      required final int supervisorId,
-      required final String projectAddress,
-      required final DateTime createdAt}) = _$MonitoringRequestModelImpl;
+  const factory _MonitoringRequestModel({
+    required final int id,
+    required final String type,
+    required final String status,
+    required final int homeownerId,
+    required final int supervisorId,
+    required final String projectAddress,
+    required final DateTime createdAt,
+  }) = _$MonitoringRequestModelImpl;
 
   factory _MonitoringRequestModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringRequestModelImpl.fromJson;
@@ -282,5 +305,5 @@ abstract class _MonitoringRequestModel implements MonitoringRequestModel {
   @override
   @JsonKey(ignore: true)
   _$$MonitoringRequestModelImplCopyWith<_$MonitoringRequestModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

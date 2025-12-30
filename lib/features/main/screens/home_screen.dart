@@ -16,6 +16,7 @@ import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/features/main/controllers/home_controller.dart';
 import 'package:pkp_hub/features/main/widgets/project_info_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -338,9 +339,7 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
               label: AppStrings.homeFeatureLicensingFacilities,
               iconAsset: AppIcons.licensing,
               onTap: () async {
-                if (await controller.ensureLoggedIn()) {
-                  controller.navigateTo(AppRoutes.licensing);
-                }
+                await _launchExternalUrl('https://simbg.pu.go.id/');
               },
             ),
           );
@@ -349,7 +348,9 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
               label: AppStrings.homeFeatureConstructionLabor,
               iconAsset: AppIcons.construction,
               onTap: () {
-                // TODO: Show dialog
+                _launchExternalUrl(
+                  'https://subtle-vacherin-4c664f.netlify.app/',
+                );
               },
             ),
           );
@@ -358,7 +359,9 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
               label: AppStrings.homeFeatureStoreMaterial,
               iconAsset: AppIcons.material,
               onTap: () {
-                // TODO: Show dialog
+                _launchExternalUrl(
+                  'https://subtle-vacherin-4c664f.netlify.app/',
+                );
               },
             ),
           );
@@ -367,7 +370,9 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
               label: AppStrings.homeFeatureFinancingFacilities,
               iconAsset: AppIcons.financing,
               onTap: () {
-                // TODO: Show dialog
+                _launchExternalUrl(
+                  'https://subtle-vacherin-4c664f.netlify.app/',
+                );
               },
             ),
           );
@@ -564,5 +569,19 @@ class _HomeScreenState extends State<HomeScreen> with RouteAware {
       isSelected: isSelected,
       onTap: onTap,
     );
+  }
+
+  Future<void> _launchExternalUrl(String url) async {
+    final uri = Uri.parse(url);
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched) {
+      Get.snackbar(
+        'Gagal membuka tautan',
+        'Tautan tidak dapat dibuka saat ini.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: AppColors.errorDark,
+        colorText: AppColors.white,
+      );
+    }
   }
 }

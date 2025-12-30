@@ -95,6 +95,5 @@ class NetworkServiceInjection {
       () => ChatApiService(Get.find<ApiClient>().dio),
       fenix: true,
     );
-
   }
 }

@@ -46,9 +46,9 @@ abstract class MonitoringApiService {
 
   @PUT(ApiEndpoints.approveContract)
   Future<MonitoringContractModel> approveContract(
-      @Path('id') int contractId,
-      @Body() Map<String, dynamic> body, // {"approved": bool, "reason": String}
-      );
+    @Path('id') int contractId,
+    @Body() Map<String, dynamic> body, // {"approved": bool, "reason": String}
+  );
 
   @PUT(ApiEndpoints.signContract)
   Future<MonitoringContractModel> signContract(@Path('id') int contractId);
@@ -57,15 +57,19 @@ abstract class MonitoringApiService {
   Future<MonitoringRequestModel> approveCompletion(@Path('id') int requestId);
 
   @POST(ApiEndpoints.uploadDocumentsMonitoring)
-  Future<MonitoringDocumentModel> uploadDocument(@Body() Map<String, dynamic> body);
+  Future<MonitoringDocumentModel> uploadDocument(
+    @Body() Map<String, dynamic> body,
+  );
 
   @GET(ApiEndpoints.listDocuments)
-  Future<List<MonitoringDocumentModel>> getDocuments(@Path('id') int monitoringId);
+  Future<List<MonitoringDocumentModel>> getDocuments(
+    @Path('id') int monitoringId,
+  );
 
   @GET(ApiEndpoints.getMonitoringDetail)
   Future<MonitoringDetailModel> getMonitoringDetail(
-      @Path('monitoringId') int monitoringId,
-      );
+    @Path('monitoringId') int monitoringId,
+  );
 
   @GET(ApiEndpoints.monitoringRequests)
   Future<List<MonitoringRequestItem>> getMonitoringRequests({
@@ -75,8 +79,6 @@ abstract class MonitoringApiService {
 
   @GET(ApiEndpoints.listContracts)
   Future<List<MonitoringContractModel>> getContracts(
-      @Path('monitoringId') int monitoringId,
-      );
-
-
+    @Path('monitoringId') int monitoringId,
+  );
 }

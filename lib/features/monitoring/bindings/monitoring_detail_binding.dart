@@ -28,9 +28,13 @@ class MonitoringDetailBinding extends Bindings {
     Get.lazyPut(
       () => ApproveCompletionUseCase(Get.find<MonitoringRepository>()),
     );
-    Get.lazyPut(() => GetMonitoringDocumentsUseCase(Get.find<MonitoringRepository>()));
+    Get.lazyPut(
+      () => GetMonitoringDocumentsUseCase(Get.find<MonitoringRepository>()),
+    );
     Get.lazyPut(() => UploadDocumentUseCase(Get.find<MonitoringRepository>()));
-    Get.lazyPut(() => GetMonitoringContractsUsecase(Get.find<MonitoringRepository>()));
+    Get.lazyPut(
+      () => GetMonitoringContractsUsecase(Get.find<MonitoringRepository>()),
+    );
     Get.lazyPut(
       () => MonitoringDetailController(
         Get.find<GetReportsUseCase>(),

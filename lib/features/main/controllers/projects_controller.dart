@@ -48,7 +48,7 @@ class ProjectsController extends BaseController {
     this._userStorage,
     this._getConsultationsUseCase,
     this._createDirectChatRoomUseCase,
-      this._getMonitoringUseCase,
+    this._getMonitoringUseCase,
   ) {
     _consultationStatus.value = consultationFilterInProgress;
   }
@@ -75,7 +75,7 @@ class ProjectsController extends BaseController {
 
   Future<void> fetchMonitoringRequests() async {
     await handleAsync(
-          () => _getMonitoringUseCase(filterBy: 'homeowner'),
+      () => _getMonitoringUseCase(filterBy: 'homeowner'),
       onSuccess: (result) {
         monitoringRequests.assignAll(result);
       },
@@ -213,9 +213,6 @@ class ProjectsController extends BaseController {
 
   // TODO: Update to monitoring object
   void openMonitoringDetails(int id) {
-    navigateTo(
-      AppRoutes.monitoringDetail,
-      arguments: {"monitoringId":id},
-    );
+    navigateTo(AppRoutes.monitoringDetail, arguments: {"monitoringId": id});
   }
 }

@@ -12,10 +12,12 @@ part of 'monitoring_document_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringDocumentModel _$MonitoringDocumentModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MonitoringDocumentModel.fromJson(json);
 }
 
@@ -38,24 +40,28 @@ mixin _$MonitoringDocumentModel {
 
 /// @nodoc
 abstract class $MonitoringDocumentModelCopyWith<$Res> {
-  factory $MonitoringDocumentModelCopyWith(MonitoringDocumentModel value,
-          $Res Function(MonitoringDocumentModel) then) =
-      _$MonitoringDocumentModelCopyWithImpl<$Res, MonitoringDocumentModel>;
+  factory $MonitoringDocumentModelCopyWith(
+    MonitoringDocumentModel value,
+    $Res Function(MonitoringDocumentModel) then,
+  ) = _$MonitoringDocumentModelCopyWithImpl<$Res, MonitoringDocumentModel>;
   @useResult
-  $Res call(
-      {int id,
-      int monitoringId,
-      int uploadedBy,
-      String uploaderName,
-      String documentUrl,
-      String title,
-      String? description,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    int monitoringId,
+    int uploadedBy,
+    String uploaderName,
+    String documentUrl,
+    String title,
+    String? description,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
-class _$MonitoringDocumentModelCopyWithImpl<$Res,
-        $Val extends MonitoringDocumentModel>
+class _$MonitoringDocumentModelCopyWithImpl<
+  $Res,
+  $Val extends MonitoringDocumentModel
+>
     implements $MonitoringDocumentModelCopyWith<$Res> {
   _$MonitoringDocumentModelCopyWithImpl(this._value, this._then);
 
@@ -76,40 +82,43 @@ class _$MonitoringDocumentModelCopyWithImpl<$Res,
     Object? description = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      monitoringId: null == monitoringId
-          ? _value.monitoringId
-          : monitoringId // ignore: cast_nullable_to_non_nullable
-              as int,
-      uploadedBy: null == uploadedBy
-          ? _value.uploadedBy
-          : uploadedBy // ignore: cast_nullable_to_non_nullable
-              as int,
-      uploaderName: null == uploaderName
-          ? _value.uploaderName
-          : uploaderName // ignore: cast_nullable_to_non_nullable
-              as String,
-      documentUrl: null == documentUrl
-          ? _value.documentUrl
-          : documentUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monitoringId: null == monitoringId
+                ? _value.monitoringId
+                : monitoringId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            uploadedBy: null == uploadedBy
+                ? _value.uploadedBy
+                : uploadedBy // ignore: cast_nullable_to_non_nullable
+                      as int,
+            uploaderName: null == uploaderName
+                ? _value.uploaderName
+                : uploaderName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            documentUrl: null == documentUrl
+                ? _value.documentUrl
+                : documentUrl // ignore: cast_nullable_to_non_nullable
+                      as String,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            description: freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -117,31 +126,35 @@ class _$MonitoringDocumentModelCopyWithImpl<$Res,
 abstract class _$$MonitoringDocumentModelImplCopyWith<$Res>
     implements $MonitoringDocumentModelCopyWith<$Res> {
   factory _$$MonitoringDocumentModelImplCopyWith(
-          _$MonitoringDocumentModelImpl value,
-          $Res Function(_$MonitoringDocumentModelImpl) then) =
-      __$$MonitoringDocumentModelImplCopyWithImpl<$Res>;
+    _$MonitoringDocumentModelImpl value,
+    $Res Function(_$MonitoringDocumentModelImpl) then,
+  ) = __$$MonitoringDocumentModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int monitoringId,
-      int uploadedBy,
-      String uploaderName,
-      String documentUrl,
-      String title,
-      String? description,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    int monitoringId,
+    int uploadedBy,
+    String uploaderName,
+    String documentUrl,
+    String title,
+    String? description,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
 class __$$MonitoringDocumentModelImplCopyWithImpl<$Res>
-    extends _$MonitoringDocumentModelCopyWithImpl<$Res,
-        _$MonitoringDocumentModelImpl>
+    extends
+        _$MonitoringDocumentModelCopyWithImpl<
+          $Res,
+          _$MonitoringDocumentModelImpl
+        >
     implements _$$MonitoringDocumentModelImplCopyWith<$Res> {
   __$$MonitoringDocumentModelImplCopyWithImpl(
-      _$MonitoringDocumentModelImpl _value,
-      $Res Function(_$MonitoringDocumentModelImpl) _then)
-      : super(_value, _then);
+    _$MonitoringDocumentModelImpl _value,
+    $Res Function(_$MonitoringDocumentModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -155,55 +168,58 @@ class __$$MonitoringDocumentModelImplCopyWithImpl<$Res>
     Object? description = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_$MonitoringDocumentModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      monitoringId: null == monitoringId
-          ? _value.monitoringId
-          : monitoringId // ignore: cast_nullable_to_non_nullable
-              as int,
-      uploadedBy: null == uploadedBy
-          ? _value.uploadedBy
-          : uploadedBy // ignore: cast_nullable_to_non_nullable
-              as int,
-      uploaderName: null == uploaderName
-          ? _value.uploaderName
-          : uploaderName // ignore: cast_nullable_to_non_nullable
-              as String,
-      documentUrl: null == documentUrl
-          ? _value.documentUrl
-          : documentUrl // ignore: cast_nullable_to_non_nullable
-              as String,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      description: freezed == description
-          ? _value.description
-          : description // ignore: cast_nullable_to_non_nullable
-              as String?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MonitoringDocumentModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monitoringId: null == monitoringId
+            ? _value.monitoringId
+            : monitoringId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        uploadedBy: null == uploadedBy
+            ? _value.uploadedBy
+            : uploadedBy // ignore: cast_nullable_to_non_nullable
+                  as int,
+        uploaderName: null == uploaderName
+            ? _value.uploaderName
+            : uploaderName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        documentUrl: null == documentUrl
+            ? _value.documentUrl
+            : documentUrl // ignore: cast_nullable_to_non_nullable
+                  as String,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        description: freezed == description
+            ? _value.description
+            : description // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringDocumentModelImpl implements _MonitoringDocumentModel {
-  const _$MonitoringDocumentModelImpl(
-      {required this.id,
-      required this.monitoringId,
-      required this.uploadedBy,
-      required this.uploaderName,
-      required this.documentUrl,
-      required this.title,
-      this.description,
-      required this.createdAt});
+  const _$MonitoringDocumentModelImpl({
+    required this.id,
+    required this.monitoringId,
+    required this.uploadedBy,
+    required this.uploaderName,
+    required this.documentUrl,
+    required this.title,
+    this.description,
+    required this.createdAt,
+  });
 
   factory _$MonitoringDocumentModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringDocumentModelImplFromJson(json);
@@ -253,34 +269,44 @@ class _$MonitoringDocumentModelImpl implements _MonitoringDocumentModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, monitoringId, uploadedBy,
-      uploaderName, documentUrl, title, description, createdAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    monitoringId,
+    uploadedBy,
+    uploaderName,
+    documentUrl,
+    title,
+    description,
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringDocumentModelImplCopyWith<_$MonitoringDocumentModelImpl>
-      get copyWith => __$$MonitoringDocumentModelImplCopyWithImpl<
-          _$MonitoringDocumentModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$MonitoringDocumentModelImplCopyWithImpl<
+        _$MonitoringDocumentModelImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringDocumentModelImplToJson(
-      this,
-    );
+    return _$$MonitoringDocumentModelImplToJson(this);
   }
 }
 
 abstract class _MonitoringDocumentModel implements MonitoringDocumentModel {
-  const factory _MonitoringDocumentModel(
-      {required final int id,
-      required final int monitoringId,
-      required final int uploadedBy,
-      required final String uploaderName,
-      required final String documentUrl,
-      required final String title,
-      final String? description,
-      required final DateTime createdAt}) = _$MonitoringDocumentModelImpl;
+  const factory _MonitoringDocumentModel({
+    required final int id,
+    required final int monitoringId,
+    required final int uploadedBy,
+    required final String uploaderName,
+    required final String documentUrl,
+    required final String title,
+    final String? description,
+    required final DateTime createdAt,
+  }) = _$MonitoringDocumentModelImpl;
 
   factory _MonitoringDocumentModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringDocumentModelImpl.fromJson;
@@ -304,5 +330,5 @@ abstract class _MonitoringDocumentModel implements MonitoringDocumentModel {
   @override
   @JsonKey(ignore: true)
   _$$MonitoringDocumentModelImplCopyWith<_$MonitoringDocumentModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

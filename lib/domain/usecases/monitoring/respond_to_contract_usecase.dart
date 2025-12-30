@@ -24,6 +24,9 @@ class RespondToContractParams {
   final bool approved;
   final String reason;
 
-  RespondToContractParams(
-      {required this.contractId, required this.approved, required this.reason});
+  RespondToContractParams({
+    required this.contractId,
+    required this.approved,
+    required this.reason,
+  });
 }

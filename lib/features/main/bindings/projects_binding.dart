@@ -17,7 +17,7 @@ class ProjectsBinding extends Bindings {
       fenix: true,
     );
     Get.lazyPut<GetMonitoringRequestsUseCase>(
-          () => GetMonitoringRequestsUseCase(Get.find<MonitoringRepository>()),
+      () => GetMonitoringRequestsUseCase(Get.find<MonitoringRepository>()),
       fenix: true,
     );
     Get.lazyPut<ProjectsController>(
