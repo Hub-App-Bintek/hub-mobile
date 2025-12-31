@@ -466,7 +466,7 @@ class ConsultationDetailsController extends BaseController {
 
     final contractValue =
         _parseAmount(contractValueController.text) ?? _sumTermAmounts();
-    if (contractValue <= 0) {
+    if (contractValue <= 0 && isPaidConsultation) {
       showError(const ServerFailure(message: 'Nilai kontrak harus diisi'));
       return;
     }
@@ -505,7 +505,7 @@ class ConsultationDetailsController extends BaseController {
 
         if (saved != null && saved.isNotEmpty) {
           _clearContractInputs();
-          Get.back();
+          if (isPaidConsultation) Get.back();
           final where = Platform.isAndroid
               ? 'Dokumen > PKP > $projectName > Kontrak'
               : 'Files app (lokasi yang Anda pilih)';

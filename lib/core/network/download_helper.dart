@@ -23,10 +23,13 @@ Future<Result<DownloadedFile, Failure>> downloadToTempFile({
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final tempPath = '${tempDir.path}/$prefix-$timestamp';
 
+    final existingExtra = options?.extra ?? const <String, dynamic>{};
+    final effectiveExtra = {...existingExtra, 'skipChucker': true};
     final mergedHeaders = await _buildHeaders(apiClient, options);
     final effectiveOptions = (options ?? Options()).copyWith(
       responseType: options?.responseType ?? ResponseType.stream,
       headers: mergedHeaders,
+      extra: effectiveExtra,
     );
 
     final response = await apiClient.dio.download(

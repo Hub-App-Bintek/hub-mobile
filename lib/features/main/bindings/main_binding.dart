@@ -4,7 +4,6 @@ import 'package:pkp_hub/domain/repositories/chat_repository.dart';
 import 'package:pkp_hub/domain/repositories/consultation_repository.dart';
 import 'package:pkp_hub/domain/repositories/monitoring_repository.dart';
 import 'package:pkp_hub/domain/repositories/notification_repository.dart';
-import 'package:pkp_hub/domain/repositories/auth_repository.dart';
 import 'package:pkp_hub/domain/repositories/wallet_repository.dart';
 import 'package:pkp_hub/domain/usecases/chat/create_direct_chat_room_use_case.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';

@@ -11,7 +11,6 @@ import 'package:pkp_hub/core/enums/user_role.dart';
 import 'package:pkp_hub/core/storage/user_storage.dart';
 import 'package:pkp_hub/data/models/project.dart';
 import 'package:pkp_hub/data/models/response/consultations_response.dart';
-import 'package:pkp_hub/data/models/response/wallet_response.dart';
 import 'package:pkp_hub/domain/usecases/consultation/get_consultations_use_case.dart';
 import 'package:pkp_hub/domain/usecases/wallet/get_wallet_balance_use_case.dart';
 import 'package:pkp_hub/domain/usecases/notification/get_unread_count_use_case.dart';
@@ -93,7 +92,7 @@ class HomeController extends BaseController {
     await _loadUserName();
 
     if (_isLoggedIn) {
-      _fetchBalance();
+      // _fetchBalance();
       refreshUnreadBadges();
     }
 
@@ -161,17 +160,17 @@ class HomeController extends BaseController {
     await Future.wait([_fetchUnreadNotifications(), _fetchUnreadChats()]);
   }
 
-  Future<void> _fetchBalance() async {
-    await handleAsync<WalletResponse>(
-      () => _getWalletBalanceUseCase(),
-      onSuccess: (response) async {
-        balance.value = response.balance ?? 0.0;
-      },
-      onFailure: (failure) async {
-        showError(failure);
-      },
-    );
-  }
+  // Future<void> _fetchBalance() async {
+  //   await handleAsync<WalletResponse>(
+  //     () => _getWalletBalanceUseCase(),
+  //     onSuccess: (response) async {
+  //       balance.value = response.balance ?? 0.0;
+  //     },
+  //     onFailure: (failure) async {
+  //       showError(failure);
+  //     },
+  //   );
+  // }
 
   Future<void> fetchConsultations(ConsultationFilterStatus status) async {
     if (isProjectLoading.value) return;
