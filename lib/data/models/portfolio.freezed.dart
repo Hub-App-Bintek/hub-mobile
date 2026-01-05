@@ -21,12 +21,12 @@ Portfolio _$PortfolioFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Portfolio {
-  int get id => throw _privateConstructorUsedError;
-  String get projectName => throw _privateConstructorUsedError;
-  int get price => throw _privateConstructorUsedError;
-  String get detailDescription => throw _privateConstructorUsedError;
-  List<String> get imageUrls => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
+  String? get projectName => throw _privateConstructorUsedError;
+  int? get price => throw _privateConstructorUsedError;
+  String? get detailDescription => throw _privateConstructorUsedError;
+  List<String>? get imageUrls => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,12 +40,12 @@ abstract class $PortfolioCopyWith<$Res> {
       _$PortfolioCopyWithImpl<$Res, Portfolio>;
   @useResult
   $Res call({
-    int id,
-    String projectName,
-    int price,
-    String detailDescription,
-    List<String> imageUrls,
-    DateTime createdAt,
+    int? id,
+    String? projectName,
+    int? price,
+    String? detailDescription,
+    List<String>? imageUrls,
+    DateTime? createdAt,
   });
 }
 
@@ -62,39 +62,39 @@ class _$PortfolioCopyWithImpl<$Res, $Val extends Portfolio>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? projectName = null,
-    Object? price = null,
-    Object? detailDescription = null,
-    Object? imageUrls = null,
-    Object? createdAt = null,
+    Object? id = freezed,
+    Object? projectName = freezed,
+    Object? price = freezed,
+    Object? detailDescription = freezed,
+    Object? imageUrls = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(
       _value.copyWith(
-            id: null == id
+            id: freezed == id
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            projectName: null == projectName
+                      as int?,
+            projectName: freezed == projectName
                 ? _value.projectName
                 : projectName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            price: null == price
+                      as String?,
+            price: freezed == price
                 ? _value.price
                 : price // ignore: cast_nullable_to_non_nullable
-                      as int,
-            detailDescription: null == detailDescription
+                      as int?,
+            detailDescription: freezed == detailDescription
                 ? _value.detailDescription
                 : detailDescription // ignore: cast_nullable_to_non_nullable
-                      as String,
-            imageUrls: null == imageUrls
+                      as String?,
+            imageUrls: freezed == imageUrls
                 ? _value.imageUrls
                 : imageUrls // ignore: cast_nullable_to_non_nullable
-                      as List<String>,
-            createdAt: null == createdAt
+                      as List<String>?,
+            createdAt: freezed == createdAt
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
+                      as DateTime?,
           )
           as $Val,
     );
@@ -111,12 +111,12 @@ abstract class _$$PortfolioImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    int id,
-    String projectName,
-    int price,
-    String detailDescription,
-    List<String> imageUrls,
-    DateTime createdAt,
+    int? id,
+    String? projectName,
+    int? price,
+    String? detailDescription,
+    List<String>? imageUrls,
+    DateTime? createdAt,
   });
 }
 
@@ -132,39 +132,39 @@ class __$$PortfolioImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? projectName = null,
-    Object? price = null,
-    Object? detailDescription = null,
-    Object? imageUrls = null,
-    Object? createdAt = null,
+    Object? id = freezed,
+    Object? projectName = freezed,
+    Object? price = freezed,
+    Object? detailDescription = freezed,
+    Object? imageUrls = freezed,
+    Object? createdAt = freezed,
   }) {
     return _then(
       _$PortfolioImpl(
-        id: null == id
+        id: freezed == id
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        projectName: null == projectName
+                  as int?,
+        projectName: freezed == projectName
             ? _value.projectName
             : projectName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        price: null == price
+                  as String?,
+        price: freezed == price
             ? _value.price
             : price // ignore: cast_nullable_to_non_nullable
-                  as int,
-        detailDescription: null == detailDescription
+                  as int?,
+        detailDescription: freezed == detailDescription
             ? _value.detailDescription
             : detailDescription // ignore: cast_nullable_to_non_nullable
-                  as String,
-        imageUrls: null == imageUrls
+                  as String?,
+        imageUrls: freezed == imageUrls
             ? _value._imageUrls
             : imageUrls // ignore: cast_nullable_to_non_nullable
-                  as List<String>,
-        createdAt: null == createdAt
+                  as List<String>?,
+        createdAt: freezed == createdAt
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
+                  as DateTime?,
       ),
     );
   }
@@ -178,7 +178,7 @@ class _$PortfolioImpl implements _Portfolio {
     required this.projectName,
     required this.price,
     required this.detailDescription,
-    required final List<String> imageUrls,
+    required final List<String>? imageUrls,
     required this.createdAt,
   }) : _imageUrls = imageUrls;
 
@@ -186,23 +186,25 @@ class _$PortfolioImpl implements _Portfolio {
       _$$PortfolioImplFromJson(json);
 
   @override
-  final int id;
+  final int? id;
   @override
-  final String projectName;
+  final String? projectName;
   @override
-  final int price;
+  final int? price;
   @override
-  final String detailDescription;
-  final List<String> _imageUrls;
+  final String? detailDescription;
+  final List<String>? _imageUrls;
   @override
-  List<String> get imageUrls {
+  List<String>? get imageUrls {
+    final value = _imageUrls;
+    if (value == null) return null;
     if (_imageUrls is EqualUnmodifiableListView) return _imageUrls;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imageUrls);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   @override
   String toString() {
@@ -254,29 +256,29 @@ class _$PortfolioImpl implements _Portfolio {
 
 abstract class _Portfolio implements Portfolio {
   const factory _Portfolio({
-    required final int id,
-    required final String projectName,
-    required final int price,
-    required final String detailDescription,
-    required final List<String> imageUrls,
-    required final DateTime createdAt,
+    required final int? id,
+    required final String? projectName,
+    required final int? price,
+    required final String? detailDescription,
+    required final List<String>? imageUrls,
+    required final DateTime? createdAt,
   }) = _$PortfolioImpl;
 
   factory _Portfolio.fromJson(Map<String, dynamic> json) =
       _$PortfolioImpl.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
-  String get projectName;
+  String? get projectName;
   @override
-  int get price;
+  int? get price;
   @override
-  String get detailDescription;
+  String? get detailDescription;
   @override
-  List<String> get imageUrls;
+  List<String>? get imageUrls;
   @override
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
   @JsonKey(ignore: true)
   _$$PortfolioImplCopyWith<_$PortfolioImpl> get copyWith =>
