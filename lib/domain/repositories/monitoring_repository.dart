@@ -8,6 +8,7 @@ import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/job_completion_model.dart';
 import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
@@ -74,6 +75,9 @@ abstract class MonitoringRepository {
   Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
     int monitoringId,
   );
+
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId);
+
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -197,4 +201,10 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   ) async {
     return _remoteDataSource.getContracts(monitoringId);
   }
+
+  @override
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId) async {
+    return _remoteDataSource.getJobCompletion(requestId);
+  }
+
 }

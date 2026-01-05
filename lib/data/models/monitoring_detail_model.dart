@@ -11,8 +11,8 @@ class MonitoringDetailModel with _$MonitoringDetailModel {
   const factory MonitoringDetailModel({
     required int id,
     required int homeownerId,
-    required String homeownerName,
-    required String homeownerEmail,
+    String? homeownerName,
+    String? homeownerEmail,
     int? supervisorId,
     String? supervisorName,
     String? supervisorEmail,

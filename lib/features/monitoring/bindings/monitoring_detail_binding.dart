@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pkp_hub/domain/repositories/monitoring_repository.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/approve_completion_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_job_completion_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_contracts_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_detail_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_documents_usecase.dart';
@@ -35,6 +36,10 @@ class MonitoringDetailBinding extends Bindings {
     Get.lazyPut(
       () => GetMonitoringContractsUsecase(Get.find<MonitoringRepository>()),
     );
+
+    Get.lazyPut(
+          () => GetJobCompletionUseCase(Get.find<MonitoringRepository>()),
+    );
     Get.lazyPut(
       () => MonitoringDetailController(
         Get.find<GetReportsUseCase>(),
@@ -46,6 +51,7 @@ class MonitoringDetailBinding extends Bindings {
         Get.find<UploadDocumentUseCase>(),
         Get.find<GetMonitoringDocumentsUseCase>(),
         Get.find<GetMonitoringContractsUsecase>(),
+        Get.find<GetJobCompletionUseCase>(),
       ),
     );
   }

@@ -13,8 +13,10 @@ import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/job_completion_model.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/approve_completion_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_findings_usecase.dart';
+import 'package:pkp_hub/domain/usecases/monitoring/get_job_completion_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_contracts_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_detail_usecase.dart';
 import 'package:pkp_hub/domain/usecases/monitoring/get_monitoring_documents_usecase.dart';
@@ -24,7 +26,7 @@ import 'package:pkp_hub/domain/usecases/monitoring/upload_document_usecase.dart'
 
 import '../../../domain/usecases/monitoring/sign_contract_usecase.dart';
 
-enum MonitoringStage { kontrak, dokumen, laporan, temuan }
+enum MonitoringStage { kontrak, dokumen, laporan, temuan, penyelesaian }
 
 enum ContractStatus { approved, pending, rejected }
 
@@ -98,6 +100,7 @@ class MonitoringDetailController extends BaseController {
   final UploadDocumentUseCase _uploadDocumentUseCase;
   final GetMonitoringDocumentsUseCase _getDocumentsUseCase;
   final GetMonitoringContractsUsecase _getMonitoringContractsUsecase;
+  final GetJobCompletionUseCase _getJobCompletionUseCase;
 
   MonitoringDetailController(
     this._getReportsUseCase,
@@ -108,7 +111,7 @@ class MonitoringDetailController extends BaseController {
     this._approveCompletionUseCase,
     this._uploadDocumentUseCase,
     this._getDocumentsUseCase,
-    this._getMonitoringContractsUsecase,
+    this._getMonitoringContractsUsecase, this._getJobCompletionUseCase
   );
 
   final selectedStage = MonitoringStage.kontrak.obs;
@@ -120,6 +123,16 @@ class MonitoringDetailController extends BaseController {
   final findings = Rx<List<MonitoringItemModel>>([]);
   late final int monitoringId;
   final monitoringData = Rx<MonitoringDetailModel?>(null);
+
+  final completionData = Rxn<JobCompletionModel>();
+
+  Future<void> fetchCompletionDetail(int requestId) async {
+    await handleAsync(
+          () => _getJobCompletionUseCase(requestId),
+      onSuccess: (result) => completionData.value = result,
+      onFailure: (failure) => completionData.value = null, // Trigger error UI
+    );
+  }
 
   bool get showApproveContract {
     final globalStatus = monitoringData.value?.status; // "PENDING_CONTRACT"
@@ -168,6 +181,7 @@ class MonitoringDetailController extends BaseController {
     fetchContracts(monitoringId);
     _fetchFindings();
     _fetchReports();
+    fetchCompletionDetail(monitoringId);
     // ... other fetch calls
     // }
   }
@@ -377,11 +391,13 @@ class MonitoringDetailController extends BaseController {
 
   int get dokumenCount => documents.length;
 
-  int get laporanCount => laporanItems.length;
+  int get laporanCount => reports.value.length;
 
-  int get temuanCount => temuanItems.length;
+  int get temuanCount => findings.value.length;
 
   int get invoiceCount => invoiceItems.length;
+
+  int get penyelesaianCount => completionData.value != null ? 1 : 0;
 
   void downloadContract(MonitoringContractModel item) async {
     // 1. Prepare dynamic file name and extension
@@ -614,4 +630,42 @@ class MonitoringDetailController extends BaseController {
       );
     }
   }
+
+  // lib/features/monitoring/controllers/monitoring_detail_controller.dart
+
+  void downloadFile(String url) async {
+    final fileName = 'penyelesaian_proyek_${monitoringData.value?.id}.pdf';
+
+    try {
+      Directory? downloadsDir = Platform.isAndroid
+          ? await getDownloadsDirectory()
+          : await getApplicationDocumentsDirectory();
+
+      if (downloadsDir == null) return;
+      final savePath = '${downloadsDir.path}/$fileName';
+
+      Get.snackbar(
+        'Mengunduh',
+        'Memulai unduhan laporan penyelesaian...',
+        showProgressIndicator: true,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+
+      await Dio().download(url, savePath);
+
+      Get.back(); // Close progress snackbar
+      Get.snackbar(
+        'Selesai',
+        'Laporan berhasil diunduh',
+        mainButton: TextButton(
+          onPressed: () => OpenFilex.open(savePath),
+          child: const Text('BUKA'),
+        ),
+      );
+    } catch (e) {
+      _logger.e("Download error: $e");
+      Get.snackbar('Gagal', 'Gagal mengunduh file');
+    }
+  }
+
 }

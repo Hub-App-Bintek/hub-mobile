@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
+import 'package:pkp_hub/data/models/job_completion_model.dart';
 import 'package:pkp_hub/features/monitoring/controllers/monitoring_detail_controller.dart';
 
 class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
@@ -35,6 +36,8 @@ class MonitoringDetailScreen extends GetView<MonitoringDetailController> {
                       return _LaporanList();
                     case MonitoringStage.temuan:
                       return _TemuanList();
+                    case MonitoringStage.penyelesaian:
+                      return _PenyelesaianBody();
                   }
                 }),
               ),
@@ -149,6 +152,13 @@ class _StageSelector extends GetView<MonitoringDetailController> {
               Icons.attach_money_outlined,
               'Temuan',
               controller.temuanCount,
+            ),
+            const SizedBox(width: 16),
+            buildStage(
+              MonitoringStage.penyelesaian,
+              Icons.check_circle_outline,
+              'Hasil',
+              controller.penyelesaianCount,
             ),
             const SizedBox(width: 4),
           ],
@@ -617,6 +627,157 @@ class _InvoiceList extends GetView<MonitoringDetailController> {
       ),
     );
   }
+}
+
+class _PenyelesaianBody extends GetView<MonitoringDetailController> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Obx(() {
+      final data = controller.completionData.value;
+
+      if (data == null) {
+        return const Center(child: Text("Belum ada penyelesaian"));
+      }
+
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Catatan Penyelesaian", style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(data.completionNotes ?? "Tidak ada catatan", style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 24),
+
+            if (data.completionDocumentUrl != null)
+              _buildDownloadWidget(data.completionDocumentUrl!, theme),
+
+            const SizedBox(height: 16),
+            _buildStatusInfo(data, theme),
+            const SizedBox(height: 16,),
+            _PenyelesaianActions(),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildDownloadWidget(String url, ThemeData theme) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.picture_as_pdf, color: Colors.red),
+        title: const Text("Dokumen Penyelesaian"),
+        subtitle: const Text("Ketuk untuk mengunduh laporan akhir"),
+        trailing: IconButton(
+          icon: const Icon(Icons.download),
+          onPressed: () => controller.downloadFile(url),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusInfo(JobCompletionModel data, ThemeData theme) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Status Approval"),
+            Chip(
+              label: Text(data.status == 'COMPLETED' ? "DISETUJUI" : "MENUNGGU"),
+              backgroundColor: data.status == 'COMPLETED' ? Colors.green[100] : Colors.orange[100],
+            ),
+          ],
+        ),
+        if (data.approvedAt != null)
+          Text("Disetujui pada: ${data.approvedAt.toString()}"),
+      ],
+    );
+  }
+}
+
+// ------------------- Bottom Action -------------------
+
+class _PenyelesaianActions extends GetView<MonitoringDetailController> {
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final data = controller.completionData.value;
+      if (data == null || data.isApprovedByHomeowner) return const SizedBox.shrink();
+
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => _showRejectionDialog(),
+                child: const Text("Tolak"),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () => controller.approveCompletion(),
+                child: const Text("Setujui Pekerjaan"),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  // lib/features/monitoring/screens/monitoring_detail_screen.dart
+
+  void _showRejectionDialog() {
+    final reasonController = TextEditingController();
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text("Tolak Penyelesaian"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Berikan alasan mengapa Anda menolak penyelesaian pekerjaan ini:"),
+            const SizedBox(height: 12),
+            TextField(
+              controller: reasonController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: "Contoh: Masih ada bagian yang belum dicat...",
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text("Batal"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              if (reasonController.text.trim().isEmpty) {
+                Get.snackbar("Error", "Alasan harus diisi");
+                return;
+              }
+              // Note: Update your controller to accept a reason if the API supports it,
+              // otherwise call the approve method with false/reason parameters.
+              controller.handleContractResponse(false, reasonController.text);
+              Get.back();
+            },
+            child: const Text("Kirim Penolakan", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
 // ------------------- Helpers -------------------
