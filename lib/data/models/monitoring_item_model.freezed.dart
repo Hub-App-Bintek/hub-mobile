@@ -12,8 +12,7 @@ part of 'monitoring_item_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 MonitoringItemModel _$MonitoringItemModelFromJson(Map<String, dynamic> json) {
   return _MonitoringItemModel.fromJson(json);
@@ -22,8 +21,9 @@ MonitoringItemModel _$MonitoringItemModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$MonitoringItemModel {
   int get id => throw _privateConstructorUsedError;
-  int get requestId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
+  String? get supervisorName => throw _privateConstructorUsedError;
+  int? get supervisorId => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,11 +35,15 @@ mixin _$MonitoringItemModel {
 /// @nodoc
 abstract class $MonitoringItemModelCopyWith<$Res> {
   factory $MonitoringItemModelCopyWith(
-    MonitoringItemModel value,
-    $Res Function(MonitoringItemModel) then,
-  ) = _$MonitoringItemModelCopyWithImpl<$Res, MonitoringItemModel>;
+          MonitoringItemModel value, $Res Function(MonitoringItemModel) then) =
+      _$MonitoringItemModelCopyWithImpl<$Res, MonitoringItemModel>;
   @useResult
-  $Res call({int id, int requestId, String title, DateTime createdAt});
+  $Res call(
+      {int id,
+      String title,
+      String? supervisorName,
+      int? supervisorId,
+      DateTime createdAt});
 }
 
 /// @nodoc
@@ -56,95 +60,103 @@ class _$MonitoringItemModelCopyWithImpl<$Res, $Val extends MonitoringItemModel>
   @override
   $Res call({
     Object? id = null,
-    Object? requestId = null,
     Object? title = null,
+    Object? supervisorName = freezed,
+    Object? supervisorId = freezed,
     Object? createdAt = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            requestId: null == requestId
-                ? _value.requestId
-                : requestId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      supervisorName: freezed == supervisorName
+          ? _value.supervisorName
+          : supervisorName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      supervisorId: freezed == supervisorId
+          ? _value.supervisorId
+          : supervisorId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$MonitoringItemModelImplCopyWith<$Res>
     implements $MonitoringItemModelCopyWith<$Res> {
-  factory _$$MonitoringItemModelImplCopyWith(
-    _$MonitoringItemModelImpl value,
-    $Res Function(_$MonitoringItemModelImpl) then,
-  ) = __$$MonitoringItemModelImplCopyWithImpl<$Res>;
+  factory _$$MonitoringItemModelImplCopyWith(_$MonitoringItemModelImpl value,
+          $Res Function(_$MonitoringItemModelImpl) then) =
+      __$$MonitoringItemModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, int requestId, String title, DateTime createdAt});
+  $Res call(
+      {int id,
+      String title,
+      String? supervisorName,
+      int? supervisorId,
+      DateTime createdAt});
 }
 
 /// @nodoc
 class __$$MonitoringItemModelImplCopyWithImpl<$Res>
     extends _$MonitoringItemModelCopyWithImpl<$Res, _$MonitoringItemModelImpl>
     implements _$$MonitoringItemModelImplCopyWith<$Res> {
-  __$$MonitoringItemModelImplCopyWithImpl(
-    _$MonitoringItemModelImpl _value,
-    $Res Function(_$MonitoringItemModelImpl) _then,
-  ) : super(_value, _then);
+  __$$MonitoringItemModelImplCopyWithImpl(_$MonitoringItemModelImpl _value,
+      $Res Function(_$MonitoringItemModelImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = null,
-    Object? requestId = null,
     Object? title = null,
+    Object? supervisorName = freezed,
+    Object? supervisorId = freezed,
     Object? createdAt = null,
   }) {
-    return _then(
-      _$MonitoringItemModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        requestId: null == requestId
-            ? _value.requestId
-            : requestId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-      ),
-    );
+    return _then(_$MonitoringItemModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      supervisorName: freezed == supervisorName
+          ? _value.supervisorName
+          : supervisorName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      supervisorId: freezed == supervisorId
+          ? _value.supervisorId
+          : supervisorId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringItemModelImpl implements _MonitoringItemModel {
-  const _$MonitoringItemModelImpl({
-    required this.id,
-    required this.requestId,
-    required this.title,
-    required this.createdAt,
-  });
+  const _$MonitoringItemModelImpl(
+      {required this.id,
+      required this.title,
+      this.supervisorName,
+      this.supervisorId,
+      required this.createdAt});
 
   factory _$MonitoringItemModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringItemModelImplFromJson(json);
@@ -152,15 +164,17 @@ class _$MonitoringItemModelImpl implements _MonitoringItemModel {
   @override
   final int id;
   @override
-  final int requestId;
-  @override
   final String title;
+  @override
+  final String? supervisorName;
+  @override
+  final int? supervisorId;
   @override
   final DateTime createdAt;
 
   @override
   String toString() {
-    return 'MonitoringItemModel(id: $id, requestId: $requestId, title: $title, createdAt: $createdAt)';
+    return 'MonitoringItemModel(id: $id, title: $title, supervisorName: $supervisorName, supervisorId: $supervisorId, createdAt: $createdAt)';
   }
 
   @override
@@ -169,39 +183,42 @@ class _$MonitoringItemModelImpl implements _MonitoringItemModel {
         (other.runtimeType == runtimeType &&
             other is _$MonitoringItemModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.requestId, requestId) ||
-                other.requestId == requestId) &&
             (identical(other.title, title) || other.title == title) &&
+            (identical(other.supervisorName, supervisorName) ||
+                other.supervisorName == supervisorName) &&
+            (identical(other.supervisorId, supervisorId) ||
+                other.supervisorId == supervisorId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, requestId, title, createdAt);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, supervisorName, supervisorId, createdAt);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringItemModelImplCopyWith<_$MonitoringItemModelImpl> get copyWith =>
       __$$MonitoringItemModelImplCopyWithImpl<_$MonitoringItemModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringItemModelImplToJson(this);
+    return _$$MonitoringItemModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _MonitoringItemModel implements MonitoringItemModel {
-  const factory _MonitoringItemModel({
-    required final int id,
-    required final int requestId,
-    required final String title,
-    required final DateTime createdAt,
-  }) = _$MonitoringItemModelImpl;
+  const factory _MonitoringItemModel(
+      {required final int id,
+      required final String title,
+      final String? supervisorName,
+      final int? supervisorId,
+      required final DateTime createdAt}) = _$MonitoringItemModelImpl;
 
   factory _MonitoringItemModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringItemModelImpl.fromJson;
@@ -209,9 +226,11 @@ abstract class _MonitoringItemModel implements MonitoringItemModel {
   @override
   int get id;
   @override
-  int get requestId;
-  @override
   String get title;
+  @override
+  String? get supervisorName;
+  @override
+  int? get supervisorId;
   @override
   DateTime get createdAt;
   @override

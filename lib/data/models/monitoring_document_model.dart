@@ -10,7 +10,7 @@ class MonitoringDocumentModel with _$MonitoringDocumentModel {
     required int id,
     required int monitoringId,
     required int uploadedBy,
-    required String uploaderName,
+    String? uploaderName,
     required String documentUrl,
     required String title,
     String? description,

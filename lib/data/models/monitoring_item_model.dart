@@ -8,8 +8,9 @@ part 'monitoring_item_model.g.dart';
 class MonitoringItemModel with _$MonitoringItemModel {
   const factory MonitoringItemModel({
     required int id,
-    required int requestId,
     required String title,
+    String? supervisorName,
+    int? supervisorId,
     required DateTime createdAt,
   }) = _MonitoringItemModel;
 

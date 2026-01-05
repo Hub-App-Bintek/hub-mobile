@@ -12,6 +12,7 @@ import 'package:pkp_hub/data/models/monitoring_contract_model.dart';
 import 'package:pkp_hub/data/models/monitoring_detail_model.dart';
 import 'package:pkp_hub/data/models/monitoring_document_model.dart';
 import 'package:pkp_hub/data/models/monitoring_item_model.dart';
+import 'package:pkp_hub/data/models/job_completion_model.dart';
 import 'package:pkp_hub/data/models/monitoring_request_item.dart';
 import 'package:pkp_hub/data/models/report_detail_model.dart';
 import 'package:pkp_hub/data/models/response/create_monitoring_response.dart';
@@ -74,6 +75,8 @@ abstract class MonitoringRemoteDataSource {
   Future<Result<List<MonitoringContractModel>, Failure>> getContracts(
     int monitoringId,
   );
+
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId);
 }
 
 // --- IMPLEMENT THE CONTRACT ---
@@ -298,4 +301,16 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }
   }
+
+  @override
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId) async {
+    try {
+      // Calling the Retrofit API Service
+      final response = await _apiService.getJobCompletion(requestId);
+      return Success(response);
+    } catch (e) {
+      return Error(ServerFailure(message: 'Failed to parse request: $e'));
+    }
+  }
+
 }
