@@ -187,7 +187,7 @@ class _MonitoringApiService implements MonitoringApiService {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/monitoring/contracts/$contractId/approval',
+            '/api/monitoring/contracts/${contractId}/approval',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -214,7 +214,7 @@ class _MonitoringApiService implements MonitoringApiService {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/monitoring/contracts/$contractId/sign',
+            '/api/monitoring/contracts/${contractId}/sign',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -241,7 +241,7 @@ class _MonitoringApiService implements MonitoringApiService {
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/monitoring/requests/$requestId/approve-completion',
+            '/api/monitoring/requests/${requestId}/approve-completion',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -298,7 +298,7 @@ class _MonitoringApiService implements MonitoringApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/monitoring/requests/$monitoringId/documents',
+            '/api/monitoring/requests/${monitoringId}/documents',
             queryParameters: queryParameters,
             data: _data,
           )

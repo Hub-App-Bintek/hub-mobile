@@ -92,14 +92,16 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
                                   : 16,
                             ),
                             child: _PortfolioCard(
-                              title: item.projectName,
-                              location: item.detailDescription,
-                              year: item.createdAt.year.toString(),
-                              imageUrl: item.imageUrls.isNotEmpty
-                                  ? item.imageUrls[0]
+                              title: item.projectName ?? '',
+                              location: item.detailDescription ?? '',
+                              year: item.createdAt?.year.toString() ?? '',
+                              imageUrl: item.imageUrls?.isNotEmpty == true
+                                  ? item.imageUrls?.firstOrNull ?? ''
                                   : '',
-                              priceLabel: item.price > 0
-                                  ? Formatters.currency(item.price.toDouble())
+                              priceLabel: item.price?.isGreaterThan(0) == true
+                                  ? Formatters.currency(
+                                      item.price?.toDouble() ?? 0.0,
+                                    )
                                   : "Gratis",
                             ),
                           );
