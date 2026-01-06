@@ -111,7 +111,8 @@ class MonitoringDetailController extends BaseController {
     this._approveCompletionUseCase,
     this._uploadDocumentUseCase,
     this._getDocumentsUseCase,
-    this._getMonitoringContractsUsecase, this._getJobCompletionUseCase
+    this._getMonitoringContractsUsecase,
+    this._getJobCompletionUseCase,
   );
 
   final selectedStage = MonitoringStage.kontrak.obs;
@@ -128,7 +129,7 @@ class MonitoringDetailController extends BaseController {
 
   Future<void> fetchCompletionDetail(int requestId) async {
     await handleAsync(
-          () => _getJobCompletionUseCase(requestId),
+      () => _getJobCompletionUseCase(requestId),
       onSuccess: (result) => completionData.value = result,
       onFailure: (failure) => completionData.value = null, // Trigger error UI
     );
@@ -667,5 +668,4 @@ class MonitoringDetailController extends BaseController {
       Get.snackbar('Gagal', 'Gagal mengunduh file');
     }
   }
-
 }

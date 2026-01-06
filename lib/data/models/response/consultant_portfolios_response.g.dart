@@ -9,11 +9,13 @@ part of 'consultant_portfolios_response.dart';
 _$ConsultantPortfoliosResponseImpl _$$ConsultantPortfoliosResponseImplFromJson(
   Map<String, dynamic> json,
 ) => _$ConsultantPortfoliosResponseImpl(
-  consultant: ConsultantOnPortfolios.fromJson(
-    json['consultant'] as Map<String, dynamic>,
-  ),
-  portfolios: (json['portfolios'] as List<dynamic>)
-      .map((e) => Portfolio.fromJson(e as Map<String, dynamic>))
+  consultant: json['consultant'] == null
+      ? null
+      : ConsultantOnPortfolios.fromJson(
+          json['consultant'] as Map<String, dynamic>,
+        ),
+  portfolios: (json['portfolios'] as List<dynamic>?)
+      ?.map((e) => Portfolio.fromJson(e as Map<String, dynamic>))
       .toList(),
 );
 

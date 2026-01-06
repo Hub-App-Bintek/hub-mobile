@@ -12,10 +12,12 @@ part of 'monitoring_detail_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringDetailModel _$MonitoringDetailModelFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _MonitoringDetailModel.fromJson(json);
 }
 
@@ -52,40 +54,44 @@ mixin _$MonitoringDetailModel {
 
 /// @nodoc
 abstract class $MonitoringDetailModelCopyWith<$Res> {
-  factory $MonitoringDetailModelCopyWith(MonitoringDetailModel value,
-          $Res Function(MonitoringDetailModel) then) =
-      _$MonitoringDetailModelCopyWithImpl<$Res, MonitoringDetailModel>;
+  factory $MonitoringDetailModelCopyWith(
+    MonitoringDetailModel value,
+    $Res Function(MonitoringDetailModel) then,
+  ) = _$MonitoringDetailModelCopyWithImpl<$Res, MonitoringDetailModel>;
   @useResult
-  $Res call(
-      {int id,
-      int homeownerId,
-      String? homeownerName,
-      String? homeownerEmail,
-      int? supervisorId,
-      String? supervisorName,
-      String? supervisorEmail,
-      String projectId,
-      String type,
-      String status,
-      String? completionDocumentUrl,
-      String? completionNotes,
-      DateTime? completionRequestedAt,
-      DateTime createdAt,
-      DateTime updatedAt,
-      int totalReports,
-      int totalFindings,
-      int totalDocuments,
-      int totalContracts,
-      MonitoringContractModel? activeContract,
-      ReportDetailModel? latestReport});
+  $Res call({
+    int id,
+    int homeownerId,
+    String? homeownerName,
+    String? homeownerEmail,
+    int? supervisorId,
+    String? supervisorName,
+    String? supervisorEmail,
+    String projectId,
+    String type,
+    String status,
+    String? completionDocumentUrl,
+    String? completionNotes,
+    DateTime? completionRequestedAt,
+    DateTime createdAt,
+    DateTime updatedAt,
+    int totalReports,
+    int totalFindings,
+    int totalDocuments,
+    int totalContracts,
+    MonitoringContractModel? activeContract,
+    ReportDetailModel? latestReport,
+  });
 
   $MonitoringContractModelCopyWith<$Res>? get activeContract;
   $ReportDetailModelCopyWith<$Res>? get latestReport;
 }
 
 /// @nodoc
-class _$MonitoringDetailModelCopyWithImpl<$Res,
-        $Val extends MonitoringDetailModel>
+class _$MonitoringDetailModelCopyWithImpl<
+  $Res,
+  $Val extends MonitoringDetailModel
+>
     implements $MonitoringDetailModelCopyWith<$Res> {
   _$MonitoringDetailModelCopyWithImpl(this._value, this._then);
 
@@ -119,92 +125,95 @@ class _$MonitoringDetailModelCopyWithImpl<$Res,
     Object? activeContract = freezed,
     Object? latestReport = freezed,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerName: freezed == homeownerName
-          ? _value.homeownerName
-          : homeownerName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      homeownerEmail: freezed == homeownerEmail
-          ? _value.homeownerEmail
-          : homeownerEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      supervisorName: freezed == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorEmail: freezed == supervisorEmail
-          ? _value.supervisorEmail
-          : supervisorEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      completionDocumentUrl: freezed == completionDocumentUrl
-          ? _value.completionDocumentUrl
-          : completionDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      completionNotes: freezed == completionNotes
-          ? _value.completionNotes
-          : completionNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      completionRequestedAt: freezed == completionRequestedAt
-          ? _value.completionRequestedAt
-          : completionRequestedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalReports: null == totalReports
-          ? _value.totalReports
-          : totalReports // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalFindings: null == totalFindings
-          ? _value.totalFindings
-          : totalFindings // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalDocuments: null == totalDocuments
-          ? _value.totalDocuments
-          : totalDocuments // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalContracts: null == totalContracts
-          ? _value.totalContracts
-          : totalContracts // ignore: cast_nullable_to_non_nullable
-              as int,
-      activeContract: freezed == activeContract
-          ? _value.activeContract
-          : activeContract // ignore: cast_nullable_to_non_nullable
-              as MonitoringContractModel?,
-      latestReport: freezed == latestReport
-          ? _value.latestReport
-          : latestReport // ignore: cast_nullable_to_non_nullable
-              as ReportDetailModel?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            homeownerId: null == homeownerId
+                ? _value.homeownerId
+                : homeownerId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            homeownerName: freezed == homeownerName
+                ? _value.homeownerName
+                : homeownerName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            homeownerEmail: freezed == homeownerEmail
+                ? _value.homeownerEmail
+                : homeownerEmail // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            supervisorId: freezed == supervisorId
+                ? _value.supervisorId
+                : supervisorId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            supervisorName: freezed == supervisorName
+                ? _value.supervisorName
+                : supervisorName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            supervisorEmail: freezed == supervisorEmail
+                ? _value.supervisorEmail
+                : supervisorEmail // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            projectId: null == projectId
+                ? _value.projectId
+                : projectId // ignore: cast_nullable_to_non_nullable
+                      as String,
+            type: null == type
+                ? _value.type
+                : type // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            completionDocumentUrl: freezed == completionDocumentUrl
+                ? _value.completionDocumentUrl
+                : completionDocumentUrl // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            completionNotes: freezed == completionNotes
+                ? _value.completionNotes
+                : completionNotes // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            completionRequestedAt: freezed == completionRequestedAt
+                ? _value.completionRequestedAt
+                : completionRequestedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            updatedAt: null == updatedAt
+                ? _value.updatedAt
+                : updatedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            totalReports: null == totalReports
+                ? _value.totalReports
+                : totalReports // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalFindings: null == totalFindings
+                ? _value.totalFindings
+                : totalFindings // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalDocuments: null == totalDocuments
+                ? _value.totalDocuments
+                : totalDocuments // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalContracts: null == totalContracts
+                ? _value.totalContracts
+                : totalContracts // ignore: cast_nullable_to_non_nullable
+                      as int,
+            activeContract: freezed == activeContract
+                ? _value.activeContract
+                : activeContract // ignore: cast_nullable_to_non_nullable
+                      as MonitoringContractModel?,
+            latestReport: freezed == latestReport
+                ? _value.latestReport
+                : latestReport // ignore: cast_nullable_to_non_nullable
+                      as ReportDetailModel?,
+          )
+          as $Val,
+    );
   }
 
   @override
@@ -214,8 +223,9 @@ class _$MonitoringDetailModelCopyWithImpl<$Res,
       return null;
     }
 
-    return $MonitoringContractModelCopyWith<$Res>(_value.activeContract!,
-        (value) {
+    return $MonitoringContractModelCopyWith<$Res>(_value.activeContract!, (
+      value,
+    ) {
       return _then(_value.copyWith(activeContract: value) as $Val);
     });
   }
@@ -237,33 +247,34 @@ class _$MonitoringDetailModelCopyWithImpl<$Res,
 abstract class _$$MonitoringDetailModelImplCopyWith<$Res>
     implements $MonitoringDetailModelCopyWith<$Res> {
   factory _$$MonitoringDetailModelImplCopyWith(
-          _$MonitoringDetailModelImpl value,
-          $Res Function(_$MonitoringDetailModelImpl) then) =
-      __$$MonitoringDetailModelImplCopyWithImpl<$Res>;
+    _$MonitoringDetailModelImpl value,
+    $Res Function(_$MonitoringDetailModelImpl) then,
+  ) = __$$MonitoringDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int homeownerId,
-      String? homeownerName,
-      String? homeownerEmail,
-      int? supervisorId,
-      String? supervisorName,
-      String? supervisorEmail,
-      String projectId,
-      String type,
-      String status,
-      String? completionDocumentUrl,
-      String? completionNotes,
-      DateTime? completionRequestedAt,
-      DateTime createdAt,
-      DateTime updatedAt,
-      int totalReports,
-      int totalFindings,
-      int totalDocuments,
-      int totalContracts,
-      MonitoringContractModel? activeContract,
-      ReportDetailModel? latestReport});
+  $Res call({
+    int id,
+    int homeownerId,
+    String? homeownerName,
+    String? homeownerEmail,
+    int? supervisorId,
+    String? supervisorName,
+    String? supervisorEmail,
+    String projectId,
+    String type,
+    String status,
+    String? completionDocumentUrl,
+    String? completionNotes,
+    DateTime? completionRequestedAt,
+    DateTime createdAt,
+    DateTime updatedAt,
+    int totalReports,
+    int totalFindings,
+    int totalDocuments,
+    int totalContracts,
+    MonitoringContractModel? activeContract,
+    ReportDetailModel? latestReport,
+  });
 
   @override
   $MonitoringContractModelCopyWith<$Res>? get activeContract;
@@ -273,12 +284,13 @@ abstract class _$$MonitoringDetailModelImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MonitoringDetailModelImplCopyWithImpl<$Res>
-    extends _$MonitoringDetailModelCopyWithImpl<$Res,
-        _$MonitoringDetailModelImpl>
+    extends
+        _$MonitoringDetailModelCopyWithImpl<$Res, _$MonitoringDetailModelImpl>
     implements _$$MonitoringDetailModelImplCopyWith<$Res> {
-  __$$MonitoringDetailModelImplCopyWithImpl(_$MonitoringDetailModelImpl _value,
-      $Res Function(_$MonitoringDetailModelImpl) _then)
-      : super(_value, _then);
+  __$$MonitoringDetailModelImplCopyWithImpl(
+    _$MonitoringDetailModelImpl _value,
+    $Res Function(_$MonitoringDetailModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -305,120 +317,123 @@ class __$$MonitoringDetailModelImplCopyWithImpl<$Res>
     Object? activeContract = freezed,
     Object? latestReport = freezed,
   }) {
-    return _then(_$MonitoringDetailModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as int,
-      homeownerName: freezed == homeownerName
-          ? _value.homeownerName
-          : homeownerName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      homeownerEmail: freezed == homeownerEmail
-          ? _value.homeownerEmail
-          : homeownerEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      supervisorName: freezed == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorEmail: freezed == supervisorEmail
-          ? _value.supervisorEmail
-          : supervisorEmail // ignore: cast_nullable_to_non_nullable
-              as String?,
-      projectId: null == projectId
-          ? _value.projectId
-          : projectId // ignore: cast_nullable_to_non_nullable
-              as String,
-      type: null == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as String,
-      completionDocumentUrl: freezed == completionDocumentUrl
-          ? _value.completionDocumentUrl
-          : completionDocumentUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
-      completionNotes: freezed == completionNotes
-          ? _value.completionNotes
-          : completionNotes // ignore: cast_nullable_to_non_nullable
-              as String?,
-      completionRequestedAt: freezed == completionRequestedAt
-          ? _value.completionRequestedAt
-          : completionRequestedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalReports: null == totalReports
-          ? _value.totalReports
-          : totalReports // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalFindings: null == totalFindings
-          ? _value.totalFindings
-          : totalFindings // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalDocuments: null == totalDocuments
-          ? _value.totalDocuments
-          : totalDocuments // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalContracts: null == totalContracts
-          ? _value.totalContracts
-          : totalContracts // ignore: cast_nullable_to_non_nullable
-              as int,
-      activeContract: freezed == activeContract
-          ? _value.activeContract
-          : activeContract // ignore: cast_nullable_to_non_nullable
-              as MonitoringContractModel?,
-      latestReport: freezed == latestReport
-          ? _value.latestReport
-          : latestReport // ignore: cast_nullable_to_non_nullable
-              as ReportDetailModel?,
-    ));
+    return _then(
+      _$MonitoringDetailModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        homeownerId: null == homeownerId
+            ? _value.homeownerId
+            : homeownerId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        homeownerName: freezed == homeownerName
+            ? _value.homeownerName
+            : homeownerName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        homeownerEmail: freezed == homeownerEmail
+            ? _value.homeownerEmail
+            : homeownerEmail // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        supervisorId: freezed == supervisorId
+            ? _value.supervisorId
+            : supervisorId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        supervisorName: freezed == supervisorName
+            ? _value.supervisorName
+            : supervisorName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        supervisorEmail: freezed == supervisorEmail
+            ? _value.supervisorEmail
+            : supervisorEmail // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        projectId: null == projectId
+            ? _value.projectId
+            : projectId // ignore: cast_nullable_to_non_nullable
+                  as String,
+        type: null == type
+            ? _value.type
+            : type // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        completionDocumentUrl: freezed == completionDocumentUrl
+            ? _value.completionDocumentUrl
+            : completionDocumentUrl // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        completionNotes: freezed == completionNotes
+            ? _value.completionNotes
+            : completionNotes // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        completionRequestedAt: freezed == completionRequestedAt
+            ? _value.completionRequestedAt
+            : completionRequestedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        updatedAt: null == updatedAt
+            ? _value.updatedAt
+            : updatedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        totalReports: null == totalReports
+            ? _value.totalReports
+            : totalReports // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalFindings: null == totalFindings
+            ? _value.totalFindings
+            : totalFindings // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalDocuments: null == totalDocuments
+            ? _value.totalDocuments
+            : totalDocuments // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalContracts: null == totalContracts
+            ? _value.totalContracts
+            : totalContracts // ignore: cast_nullable_to_non_nullable
+                  as int,
+        activeContract: freezed == activeContract
+            ? _value.activeContract
+            : activeContract // ignore: cast_nullable_to_non_nullable
+                  as MonitoringContractModel?,
+        latestReport: freezed == latestReport
+            ? _value.latestReport
+            : latestReport // ignore: cast_nullable_to_non_nullable
+                  as ReportDetailModel?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringDetailModelImpl implements _MonitoringDetailModel {
-  const _$MonitoringDetailModelImpl(
-      {required this.id,
-      required this.homeownerId,
-      this.homeownerName,
-      this.homeownerEmail,
-      this.supervisorId,
-      this.supervisorName,
-      this.supervisorEmail,
-      required this.projectId,
-      required this.type,
-      required this.status,
-      this.completionDocumentUrl,
-      this.completionNotes,
-      this.completionRequestedAt,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.totalReports,
-      required this.totalFindings,
-      required this.totalDocuments,
-      required this.totalContracts,
-      this.activeContract,
-      this.latestReport});
+  const _$MonitoringDetailModelImpl({
+    required this.id,
+    required this.homeownerId,
+    this.homeownerName,
+    this.homeownerEmail,
+    this.supervisorId,
+    this.supervisorName,
+    this.supervisorEmail,
+    required this.projectId,
+    required this.type,
+    required this.status,
+    this.completionDocumentUrl,
+    this.completionNotes,
+    this.completionRequestedAt,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.totalReports,
+    required this.totalFindings,
+    required this.totalDocuments,
+    required this.totalContracts,
+    this.activeContract,
+    this.latestReport,
+  });
 
   factory _$MonitoringDetailModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringDetailModelImplFromJson(json);
@@ -520,68 +535,70 @@ class _$MonitoringDetailModelImpl implements _MonitoringDetailModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        id,
-        homeownerId,
-        homeownerName,
-        homeownerEmail,
-        supervisorId,
-        supervisorName,
-        supervisorEmail,
-        projectId,
-        type,
-        status,
-        completionDocumentUrl,
-        completionNotes,
-        completionRequestedAt,
-        createdAt,
-        updatedAt,
-        totalReports,
-        totalFindings,
-        totalDocuments,
-        totalContracts,
-        activeContract,
-        latestReport
-      ]);
+    runtimeType,
+    id,
+    homeownerId,
+    homeownerName,
+    homeownerEmail,
+    supervisorId,
+    supervisorName,
+    supervisorEmail,
+    projectId,
+    type,
+    status,
+    completionDocumentUrl,
+    completionNotes,
+    completionRequestedAt,
+    createdAt,
+    updatedAt,
+    totalReports,
+    totalFindings,
+    totalDocuments,
+    totalContracts,
+    activeContract,
+    latestReport,
+  ]);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringDetailModelImplCopyWith<_$MonitoringDetailModelImpl>
-      get copyWith => __$$MonitoringDetailModelImplCopyWithImpl<
-          _$MonitoringDetailModelImpl>(this, _$identity);
+  get copyWith =>
+      __$$MonitoringDetailModelImplCopyWithImpl<_$MonitoringDetailModelImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringDetailModelImplToJson(
-      this,
-    );
+    return _$$MonitoringDetailModelImplToJson(this);
   }
 }
 
 abstract class _MonitoringDetailModel implements MonitoringDetailModel {
-  const factory _MonitoringDetailModel(
-      {required final int id,
-      required final int homeownerId,
-      final String? homeownerName,
-      final String? homeownerEmail,
-      final int? supervisorId,
-      final String? supervisorName,
-      final String? supervisorEmail,
-      required final String projectId,
-      required final String type,
-      required final String status,
-      final String? completionDocumentUrl,
-      final String? completionNotes,
-      final DateTime? completionRequestedAt,
-      required final DateTime createdAt,
-      required final DateTime updatedAt,
-      required final int totalReports,
-      required final int totalFindings,
-      required final int totalDocuments,
-      required final int totalContracts,
-      final MonitoringContractModel? activeContract,
-      final ReportDetailModel? latestReport}) = _$MonitoringDetailModelImpl;
+  const factory _MonitoringDetailModel({
+    required final int id,
+    required final int homeownerId,
+    final String? homeownerName,
+    final String? homeownerEmail,
+    final int? supervisorId,
+    final String? supervisorName,
+    final String? supervisorEmail,
+    required final String projectId,
+    required final String type,
+    required final String status,
+    final String? completionDocumentUrl,
+    final String? completionNotes,
+    final DateTime? completionRequestedAt,
+    required final DateTime createdAt,
+    required final DateTime updatedAt,
+    required final int totalReports,
+    required final int totalFindings,
+    required final int totalDocuments,
+    required final int totalContracts,
+    final MonitoringContractModel? activeContract,
+    final ReportDetailModel? latestReport,
+  }) = _$MonitoringDetailModelImpl;
 
   factory _MonitoringDetailModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringDetailModelImpl.fromJson;
@@ -631,5 +648,5 @@ abstract class _MonitoringDetailModel implements MonitoringDetailModel {
   @override
   @JsonKey(ignore: true)
   _$$MonitoringDetailModelImplCopyWith<_$MonitoringDetailModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -38,7 +38,7 @@ class MonitoringDetailBinding extends Bindings {
     );
 
     Get.lazyPut(
-          () => GetJobCompletionUseCase(Get.find<MonitoringRepository>()),
+      () => GetJobCompletionUseCase(Get.find<MonitoringRepository>()),
     );
     Get.lazyPut(
       () => MonitoringDetailController(

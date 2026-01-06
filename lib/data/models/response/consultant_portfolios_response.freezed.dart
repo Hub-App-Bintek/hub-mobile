@@ -23,8 +23,8 @@ ConsultantPortfoliosResponse _$ConsultantPortfoliosResponseFromJson(
 
 /// @nodoc
 mixin _$ConsultantPortfoliosResponse {
-  ConsultantOnPortfolios get consultant => throw _privateConstructorUsedError;
-  List<Portfolio> get portfolios => throw _privateConstructorUsedError;
+  ConsultantOnPortfolios? get consultant => throw _privateConstructorUsedError;
+  List<Portfolio>? get portfolios => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -43,9 +43,9 @@ abstract class $ConsultantPortfoliosResponseCopyWith<$Res> {
         ConsultantPortfoliosResponse
       >;
   @useResult
-  $Res call({ConsultantOnPortfolios consultant, List<Portfolio> portfolios});
+  $Res call({ConsultantOnPortfolios? consultant, List<Portfolio>? portfolios});
 
-  $ConsultantOnPortfoliosCopyWith<$Res> get consultant;
+  $ConsultantOnPortfoliosCopyWith<$Res>? get consultant;
 }
 
 /// @nodoc
@@ -63,17 +63,17 @@ class _$ConsultantPortfoliosResponseCopyWithImpl<
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? consultant = null, Object? portfolios = null}) {
+  $Res call({Object? consultant = freezed, Object? portfolios = freezed}) {
     return _then(
       _value.copyWith(
-            consultant: null == consultant
+            consultant: freezed == consultant
                 ? _value.consultant
                 : consultant // ignore: cast_nullable_to_non_nullable
-                      as ConsultantOnPortfolios,
-            portfolios: null == portfolios
+                      as ConsultantOnPortfolios?,
+            portfolios: freezed == portfolios
                 ? _value.portfolios
                 : portfolios // ignore: cast_nullable_to_non_nullable
-                      as List<Portfolio>,
+                      as List<Portfolio>?,
           )
           as $Val,
     );
@@ -81,8 +81,12 @@ class _$ConsultantPortfoliosResponseCopyWithImpl<
 
   @override
   @pragma('vm:prefer-inline')
-  $ConsultantOnPortfoliosCopyWith<$Res> get consultant {
-    return $ConsultantOnPortfoliosCopyWith<$Res>(_value.consultant, (value) {
+  $ConsultantOnPortfoliosCopyWith<$Res>? get consultant {
+    if (_value.consultant == null) {
+      return null;
+    }
+
+    return $ConsultantOnPortfoliosCopyWith<$Res>(_value.consultant!, (value) {
       return _then(_value.copyWith(consultant: value) as $Val);
     });
   }
@@ -97,10 +101,10 @@ abstract class _$$ConsultantPortfoliosResponseImplCopyWith<$Res>
   ) = __$$ConsultantPortfoliosResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({ConsultantOnPortfolios consultant, List<Portfolio> portfolios});
+  $Res call({ConsultantOnPortfolios? consultant, List<Portfolio>? portfolios});
 
   @override
-  $ConsultantOnPortfoliosCopyWith<$Res> get consultant;
+  $ConsultantOnPortfoliosCopyWith<$Res>? get consultant;
 }
 
 /// @nodoc
@@ -118,17 +122,17 @@ class __$$ConsultantPortfoliosResponseImplCopyWithImpl<$Res>
 
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? consultant = null, Object? portfolios = null}) {
+  $Res call({Object? consultant = freezed, Object? portfolios = freezed}) {
     return _then(
       _$ConsultantPortfoliosResponseImpl(
-        consultant: null == consultant
+        consultant: freezed == consultant
             ? _value.consultant
             : consultant // ignore: cast_nullable_to_non_nullable
-                  as ConsultantOnPortfolios,
-        portfolios: null == portfolios
+                  as ConsultantOnPortfolios?,
+        portfolios: freezed == portfolios
             ? _value._portfolios
             : portfolios // ignore: cast_nullable_to_non_nullable
-                  as List<Portfolio>,
+                  as List<Portfolio>?,
       ),
     );
   }
@@ -140,7 +144,7 @@ class _$ConsultantPortfoliosResponseImpl
     implements _ConsultantPortfoliosResponse {
   const _$ConsultantPortfoliosResponseImpl({
     required this.consultant,
-    required final List<Portfolio> portfolios,
+    required final List<Portfolio>? portfolios,
   }) : _portfolios = portfolios;
 
   factory _$ConsultantPortfoliosResponseImpl.fromJson(
@@ -148,13 +152,15 @@ class _$ConsultantPortfoliosResponseImpl
   ) => _$$ConsultantPortfoliosResponseImplFromJson(json);
 
   @override
-  final ConsultantOnPortfolios consultant;
-  final List<Portfolio> _portfolios;
+  final ConsultantOnPortfolios? consultant;
+  final List<Portfolio>? _portfolios;
   @override
-  List<Portfolio> get portfolios {
+  List<Portfolio>? get portfolios {
+    final value = _portfolios;
+    if (value == null) return null;
     if (_portfolios is EqualUnmodifiableListView) return _portfolios;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_portfolios);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -203,17 +209,17 @@ class _$ConsultantPortfoliosResponseImpl
 abstract class _ConsultantPortfoliosResponse
     implements ConsultantPortfoliosResponse {
   const factory _ConsultantPortfoliosResponse({
-    required final ConsultantOnPortfolios consultant,
-    required final List<Portfolio> portfolios,
+    required final ConsultantOnPortfolios? consultant,
+    required final List<Portfolio>? portfolios,
   }) = _$ConsultantPortfoliosResponseImpl;
 
   factory _ConsultantPortfoliosResponse.fromJson(Map<String, dynamic> json) =
       _$ConsultantPortfoliosResponseImpl.fromJson;
 
   @override
-  ConsultantOnPortfolios get consultant;
+  ConsultantOnPortfolios? get consultant;
   @override
-  List<Portfolio> get portfolios;
+  List<Portfolio>? get portfolios;
   @override
   @JsonKey(ignore: true)
   _$$ConsultantPortfoliosResponseImplCopyWith<

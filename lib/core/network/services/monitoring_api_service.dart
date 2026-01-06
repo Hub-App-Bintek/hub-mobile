@@ -84,7 +84,5 @@ abstract class MonitoringApiService {
   );
 
   @GET('/api/monitoring/requests/{requestId}/completion')
-  Future<JobCompletionModel> getJobCompletion(
-      @Path('requestId') int requestId,
-      );
+  Future<JobCompletionModel> getJobCompletion(@Path('requestId') int requestId);
 }

@@ -12,7 +12,8 @@ part of 'monitoring_item_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 MonitoringItemModel _$MonitoringItemModelFromJson(Map<String, dynamic> json) {
   return _MonitoringItemModel.fromJson(json);
@@ -35,15 +36,17 @@ mixin _$MonitoringItemModel {
 /// @nodoc
 abstract class $MonitoringItemModelCopyWith<$Res> {
   factory $MonitoringItemModelCopyWith(
-          MonitoringItemModel value, $Res Function(MonitoringItemModel) then) =
-      _$MonitoringItemModelCopyWithImpl<$Res, MonitoringItemModel>;
+    MonitoringItemModel value,
+    $Res Function(MonitoringItemModel) then,
+  ) = _$MonitoringItemModelCopyWithImpl<$Res, MonitoringItemModel>;
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String? supervisorName,
-      int? supervisorId,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String title,
+    String? supervisorName,
+    int? supervisorId,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
@@ -65,54 +68,60 @@ class _$MonitoringItemModelCopyWithImpl<$Res, $Val extends MonitoringItemModel>
     Object? supervisorId = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      supervisorName: freezed == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            title: null == title
+                ? _value.title
+                : title // ignore: cast_nullable_to_non_nullable
+                      as String,
+            supervisorName: freezed == supervisorName
+                ? _value.supervisorName
+                : supervisorName // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            supervisorId: freezed == supervisorId
+                ? _value.supervisorId
+                : supervisorId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            createdAt: null == createdAt
+                ? _value.createdAt
+                : createdAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MonitoringItemModelImplCopyWith<$Res>
     implements $MonitoringItemModelCopyWith<$Res> {
-  factory _$$MonitoringItemModelImplCopyWith(_$MonitoringItemModelImpl value,
-          $Res Function(_$MonitoringItemModelImpl) then) =
-      __$$MonitoringItemModelImplCopyWithImpl<$Res>;
+  factory _$$MonitoringItemModelImplCopyWith(
+    _$MonitoringItemModelImpl value,
+    $Res Function(_$MonitoringItemModelImpl) then,
+  ) = __$$MonitoringItemModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String title,
-      String? supervisorName,
-      int? supervisorId,
-      DateTime createdAt});
+  $Res call({
+    int id,
+    String title,
+    String? supervisorName,
+    int? supervisorId,
+    DateTime createdAt,
+  });
 }
 
 /// @nodoc
 class __$$MonitoringItemModelImplCopyWithImpl<$Res>
     extends _$MonitoringItemModelCopyWithImpl<$Res, _$MonitoringItemModelImpl>
     implements _$$MonitoringItemModelImplCopyWith<$Res> {
-  __$$MonitoringItemModelImplCopyWithImpl(_$MonitoringItemModelImpl _value,
-      $Res Function(_$MonitoringItemModelImpl) _then)
-      : super(_value, _then);
+  __$$MonitoringItemModelImplCopyWithImpl(
+    _$MonitoringItemModelImpl _value,
+    $Res Function(_$MonitoringItemModelImpl) _then,
+  ) : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -123,40 +132,43 @@ class __$$MonitoringItemModelImplCopyWithImpl<$Res>
     Object? supervisorId = freezed,
     Object? createdAt = null,
   }) {
-    return _then(_$MonitoringItemModelImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      title: null == title
-          ? _value.title
-          : title // ignore: cast_nullable_to_non_nullable
-              as String,
-      supervisorName: freezed == supervisorName
-          ? _value.supervisorName
-          : supervisorName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      supervisorId: freezed == supervisorId
-          ? _value.supervisorId
-          : supervisorId // ignore: cast_nullable_to_non_nullable
-              as int?,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+    return _then(
+      _$MonitoringItemModelImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        title: null == title
+            ? _value.title
+            : title // ignore: cast_nullable_to_non_nullable
+                  as String,
+        supervisorName: freezed == supervisorName
+            ? _value.supervisorName
+            : supervisorName // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        supervisorId: freezed == supervisorId
+            ? _value.supervisorId
+            : supervisorId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        createdAt: null == createdAt
+            ? _value.createdAt
+            : createdAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$MonitoringItemModelImpl implements _MonitoringItemModel {
-  const _$MonitoringItemModelImpl(
-      {required this.id,
-      required this.title,
-      this.supervisorName,
-      this.supervisorId,
-      required this.createdAt});
+  const _$MonitoringItemModelImpl({
+    required this.id,
+    required this.title,
+    this.supervisorName,
+    this.supervisorId,
+    required this.createdAt,
+  });
 
   factory _$MonitoringItemModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MonitoringItemModelImplFromJson(json);
@@ -195,30 +207,37 @@ class _$MonitoringItemModelImpl implements _MonitoringItemModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, title, supervisorName, supervisorId, createdAt);
+    runtimeType,
+    id,
+    title,
+    supervisorName,
+    supervisorId,
+    createdAt,
+  );
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$MonitoringItemModelImplCopyWith<_$MonitoringItemModelImpl> get copyWith =>
       __$$MonitoringItemModelImplCopyWithImpl<_$MonitoringItemModelImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$MonitoringItemModelImplToJson(
-      this,
-    );
+    return _$$MonitoringItemModelImplToJson(this);
   }
 }
 
 abstract class _MonitoringItemModel implements MonitoringItemModel {
-  const factory _MonitoringItemModel(
-      {required final int id,
-      required final String title,
-      final String? supervisorName,
-      final int? supervisorId,
-      required final DateTime createdAt}) = _$MonitoringItemModelImpl;
+  const factory _MonitoringItemModel({
+    required final int id,
+    required final String title,
+    final String? supervisorName,
+    final int? supervisorId,
+    required final DateTime createdAt,
+  }) = _$MonitoringItemModelImpl;
 
   factory _MonitoringItemModel.fromJson(Map<String, dynamic> json) =
       _$MonitoringItemModelImpl.fromJson;

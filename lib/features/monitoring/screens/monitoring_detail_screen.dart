@@ -648,7 +648,10 @@ class _PenyelesaianBody extends GetView<MonitoringDetailController> {
           children: [
             Text("Catatan Penyelesaian", style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
-            Text(data.completionNotes ?? "Tidak ada catatan", style: theme.textTheme.bodyMedium),
+            Text(
+              data.completionNotes ?? "Tidak ada catatan",
+              style: theme.textTheme.bodyMedium,
+            ),
             const SizedBox(height: 24),
 
             if (data.completionDocumentUrl != null)
@@ -656,7 +659,7 @@ class _PenyelesaianBody extends GetView<MonitoringDetailController> {
 
             const SizedBox(height: 16),
             _buildStatusInfo(data, theme),
-            const SizedBox(height: 16,),
+            const SizedBox(height: 16),
             _PenyelesaianActions(),
           ],
         ),
@@ -686,8 +689,12 @@ class _PenyelesaianBody extends GetView<MonitoringDetailController> {
           children: [
             const Text("Status Approval"),
             Chip(
-              label: Text(data.status == 'COMPLETED' ? "DISETUJUI" : "MENUNGGU"),
-              backgroundColor: data.status == 'COMPLETED' ? Colors.green[100] : Colors.orange[100],
+              label: Text(
+                data.status == 'COMPLETED' ? "DISETUJUI" : "MENUNGGU",
+              ),
+              backgroundColor: data.status == 'COMPLETED'
+                  ? Colors.green[100]
+                  : Colors.orange[100],
             ),
           ],
         ),
@@ -705,7 +712,8 @@ class _PenyelesaianActions extends GetView<MonitoringDetailController> {
   Widget build(BuildContext context) {
     return Obx(() {
       final data = controller.completionData.value;
-      if (data == null || data.isApprovedByHomeowner) return const SizedBox.shrink();
+      if (data == null || data.isApprovedByHomeowner)
+        return const SizedBox.shrink();
 
       return Padding(
         padding: const EdgeInsets.all(16),
@@ -742,7 +750,9 @@ class _PenyelesaianActions extends GetView<MonitoringDetailController> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Berikan alasan mengapa Anda menolak penyelesaian pekerjaan ini:"),
+            const Text(
+              "Berikan alasan mengapa Anda menolak penyelesaian pekerjaan ini:",
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: reasonController,
@@ -755,10 +765,7 @@ class _PenyelesaianActions extends GetView<MonitoringDetailController> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text("Batal"),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text("Batal")),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             onPressed: () {
@@ -771,13 +778,15 @@ class _PenyelesaianActions extends GetView<MonitoringDetailController> {
               controller.handleContractResponse(false, reasonController.text);
               Get.back();
             },
-            child: const Text("Kirim Penolakan", style: TextStyle(color: Colors.white)),
+            child: const Text(
+              "Kirim Penolakan",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
     );
   }
-
 }
 
 // ------------------- Helpers -------------------
