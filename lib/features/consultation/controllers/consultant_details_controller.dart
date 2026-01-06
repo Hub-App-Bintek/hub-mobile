@@ -129,12 +129,12 @@ class ConsultantDetailsController extends BaseController {
       ),
       onSuccess: (response) {
         final newItems = response.portfolios;
-        if (newItems.isEmpty) {
+        if (newItems?.isEmpty == true) {
           _done = true;
         } else {
-          portfolios.addAll(newItems);
+          portfolios.addAll(newItems ?? []);
           _page += 1;
-          if (newItems.length < _pageSize) {
+          if ((newItems?.length ?? 0) < _pageSize == true) {
             _done = true;
           }
         }
@@ -272,9 +272,9 @@ class ConsultantDetailsController extends BaseController {
     }
   }
 
-  void _updateConsultantFromResponse(ConsultantOnPortfolios consultantData) {
-    consultantName.value = consultantData.name;
-    consultantSpeciality.value = consultantData.specialization;
+  void _updateConsultantFromResponse(ConsultantOnPortfolios? consultantData) {
+    consultantName.value = consultantData?.name ?? '-';
+    consultantSpeciality.value = consultantData?.specialization ?? '-';
   }
 
   int get completedProjectsCount => portfolios.length;

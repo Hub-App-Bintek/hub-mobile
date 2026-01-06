@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pkp_hub/app/theme/app_colors.dart';
 import 'package:pkp_hub/app/theme/app_text_styles.dart';
+import 'package:pkp_hub/app/widgets/empty_placeholder.dart';
 import 'package:pkp_hub/app/widgets/pkp_app_bar.dart';
 import 'package:pkp_hub/app/widgets/pkp_bottom_actions.dart';
 import 'package:pkp_hub/app/widgets/pkp_confirmation_dialog.dart';
+import 'package:pkp_hub/core/constants/app_icons.dart';
 import 'package:pkp_hub/core/constants/app_strings.dart';
 import 'package:pkp_hub/core/utils/formatters.dart';
 import 'package:pkp_hub/features/consultation/controllers/consultant_details_controller.dart';
@@ -66,10 +68,14 @@ class ConsultantDetailsScreen extends GetView<ConsultantDetailsController> {
                   ),
                 ),
                 if (portfolios.isEmpty && !controller.isLoading.value)
-                  SliverToBoxAdapter(
+                  const SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: _EmptyPortfolio(onRetry: controller.refreshList),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      // child: _EmptyPortfolio(onRetry: controller.refreshList),
+                      child: EmptyPlaceholder(
+                        iconPath: AppIcons.designPrototype,
+                        message: 'Belum ada portfolio.',
+                      ),
                     ),
                   ),
                 if (portfolios.isNotEmpty)
@@ -262,9 +268,7 @@ class _ConsultantHeader extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              aboutText.isNotEmpty
-                  ? aboutText
-                  : 'Spesialis desain rumah modern minimalis dengan pengalaman lebih dari 10 tahun. Fokus pada efisiensi ruang dan estetika kontemporer.',
+              aboutText.isNotEmpty ? aboutText : '-',
               style: AppTextStyles.bodyM.copyWith(
                 color: AppColors.neutralMedium,
                 height: 1.4,

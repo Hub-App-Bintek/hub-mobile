@@ -8,8 +8,8 @@ part 'consultant_portfolios_response.g.dart';
 @freezed
 class ConsultantPortfoliosResponse with _$ConsultantPortfoliosResponse {
   const factory ConsultantPortfoliosResponse({
-    required ConsultantOnPortfolios consultant,
-    required List<Portfolio> portfolios,
+    required ConsultantOnPortfolios? consultant,
+    required List<Portfolio>? portfolios,
   }) = _ConsultantPortfoliosResponse;
 
   factory ConsultantPortfoliosResponse.fromJson(Map<String, dynamic> json) =>

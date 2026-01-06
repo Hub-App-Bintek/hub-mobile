@@ -303,7 +303,9 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
   }
 
   @override
-  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId) async {
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(
+    int requestId,
+  ) async {
     try {
       // Calling the Retrofit API Service
       final response = await _apiService.getJobCompletion(requestId);
@@ -312,5 +314,4 @@ class MonitoringRemoteDataSourceImpl implements MonitoringRemoteDataSource {
       return Error(ServerFailure(message: 'Failed to parse request: $e'));
     }
   }
-
 }

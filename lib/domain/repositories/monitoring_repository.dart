@@ -77,7 +77,6 @@ abstract class MonitoringRepository {
   );
 
   Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId);
-
 }
 
 class MonitoringRepositoryImpl implements MonitoringRepository {
@@ -203,8 +202,9 @@ class MonitoringRepositoryImpl implements MonitoringRepository {
   }
 
   @override
-  Future<Result<JobCompletionModel, Failure>> getJobCompletion(int requestId) async {
+  Future<Result<JobCompletionModel, Failure>> getJobCompletion(
+    int requestId,
+  ) async {
     return _remoteDataSource.getJobCompletion(requestId);
   }
-
 }

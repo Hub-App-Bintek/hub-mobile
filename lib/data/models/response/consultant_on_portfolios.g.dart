@@ -9,10 +9,10 @@ part of 'consultant_on_portfolios.dart';
 _$ConsultantOnPortfoliosImpl _$$ConsultantOnPortfoliosImplFromJson(
   Map<String, dynamic> json,
 ) => _$ConsultantOnPortfoliosImpl(
-  id: (json['id'] as num).toInt(),
-  name: json['name'] as String,
-  email: json['email'] as String,
-  specialization: json['specialization'] as String,
+  id: (json['id'] as num?)?.toInt(),
+  name: json['name'] as String?,
+  email: json['email'] as String?,
+  specialization: json['specialization'] as String?,
 );
 
 Map<String, dynamic> _$$ConsultantOnPortfoliosImplToJson(
