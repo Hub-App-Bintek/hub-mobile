@@ -87,7 +87,7 @@ class MonitoringReportDetailScreen extends GetView<ReportDetailController> {
                   (index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      report!.images[index].url,
+                      report!.images[index].imageUrl,
                       width: 110,
                       height: 80,
                       fit: BoxFit.cover,
