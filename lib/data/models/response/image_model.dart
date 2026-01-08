@@ -8,7 +8,7 @@ part 'image_model.g.dart';
 class ImageModel with _$ImageModel {
   const factory ImageModel({
     String? title,
-    required String url,
+    required String imageUrl,
     String? description, // Making description optional as it might be null
   }) = _ImageModel;
 

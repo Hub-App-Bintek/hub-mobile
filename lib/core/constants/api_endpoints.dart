@@ -157,7 +157,7 @@ abstract class ApiEndpoints {
       '$monitoringRequests/{id}/approve-completion';
   static const String listDocuments = '$monitoringRequests/{id}/documents';
   static const String uploadDocumentsMonitoring =
-      '$monitoringRequests/documents';
+      '/api/monitoring/documents';
   static const String getMonitoringDetail =
       '$monitoringRequests/{monitoringId}';
 

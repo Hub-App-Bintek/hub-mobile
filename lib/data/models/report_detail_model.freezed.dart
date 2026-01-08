@@ -12,8 +12,7 @@ part of 'report_detail_model.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 ReportDetailModel _$ReportDetailModelFromJson(Map<String, dynamic> json) {
   return _ReportDetailModel.fromJson(json);
@@ -40,20 +39,18 @@ mixin _$ReportDetailModel {
 /// @nodoc
 abstract class $ReportDetailModelCopyWith<$Res> {
   factory $ReportDetailModelCopyWith(
-    ReportDetailModel value,
-    $Res Function(ReportDetailModel) then,
-  ) = _$ReportDetailModelCopyWithImpl<$Res, ReportDetailModel>;
+          ReportDetailModel value, $Res Function(ReportDetailModel) then) =
+      _$ReportDetailModelCopyWithImpl<$Res, ReportDetailModel>;
   @useResult
-  $Res call({
-    int id,
-    int requestId,
-    String title,
-    String summary,
-    @JsonKey(defaultValue: []) List<ImageModel> images,
-    DateTime createdAt,
-    int supervisorId,
-    String supervisorName,
-  });
+  $Res call(
+      {int id,
+      int requestId,
+      String title,
+      String summary,
+      @JsonKey(defaultValue: []) List<ImageModel> images,
+      DateTime createdAt,
+      int supervisorId,
+      String supervisorName});
 }
 
 /// @nodoc
@@ -78,75 +75,69 @@ class _$ReportDetailModelCopyWithImpl<$Res, $Val extends ReportDetailModel>
     Object? supervisorId = null,
     Object? supervisorName = null,
   }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as int,
-            requestId: null == requestId
-                ? _value.requestId
-                : requestId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            title: null == title
-                ? _value.title
-                : title // ignore: cast_nullable_to_non_nullable
-                      as String,
-            summary: null == summary
-                ? _value.summary
-                : summary // ignore: cast_nullable_to_non_nullable
-                      as String,
-            images: null == images
-                ? _value.images
-                : images // ignore: cast_nullable_to_non_nullable
-                      as List<ImageModel>,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            supervisorId: null == supervisorId
-                ? _value.supervisorId
-                : supervisorId // ignore: cast_nullable_to_non_nullable
-                      as int,
-            supervisorName: null == supervisorName
-                ? _value.supervisorName
-                : supervisorName // ignore: cast_nullable_to_non_nullable
-                      as String,
-          )
-          as $Val,
-    );
+    return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      requestId: null == requestId
+          ? _value.requestId
+          : requestId // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value.images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<ImageModel>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      supervisorId: null == supervisorId
+          ? _value.supervisorId
+          : supervisorId // ignore: cast_nullable_to_non_nullable
+              as int,
+      supervisorName: null == supervisorName
+          ? _value.supervisorName
+          : supervisorName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
   }
 }
 
 /// @nodoc
 abstract class _$$ReportDetailModelImplCopyWith<$Res>
     implements $ReportDetailModelCopyWith<$Res> {
-  factory _$$ReportDetailModelImplCopyWith(
-    _$ReportDetailModelImpl value,
-    $Res Function(_$ReportDetailModelImpl) then,
-  ) = __$$ReportDetailModelImplCopyWithImpl<$Res>;
+  factory _$$ReportDetailModelImplCopyWith(_$ReportDetailModelImpl value,
+          $Res Function(_$ReportDetailModelImpl) then) =
+      __$$ReportDetailModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({
-    int id,
-    int requestId,
-    String title,
-    String summary,
-    @JsonKey(defaultValue: []) List<ImageModel> images,
-    DateTime createdAt,
-    int supervisorId,
-    String supervisorName,
-  });
+  $Res call(
+      {int id,
+      int requestId,
+      String title,
+      String summary,
+      @JsonKey(defaultValue: []) List<ImageModel> images,
+      DateTime createdAt,
+      int supervisorId,
+      String supervisorName});
 }
 
 /// @nodoc
 class __$$ReportDetailModelImplCopyWithImpl<$Res>
     extends _$ReportDetailModelCopyWithImpl<$Res, _$ReportDetailModelImpl>
     implements _$$ReportDetailModelImplCopyWith<$Res> {
-  __$$ReportDetailModelImplCopyWithImpl(
-    _$ReportDetailModelImpl _value,
-    $Res Function(_$ReportDetailModelImpl) _then,
-  ) : super(_value, _then);
+  __$$ReportDetailModelImplCopyWithImpl(_$ReportDetailModelImpl _value,
+      $Res Function(_$ReportDetailModelImpl) _then)
+      : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
@@ -160,58 +151,56 @@ class __$$ReportDetailModelImplCopyWithImpl<$Res>
     Object? supervisorId = null,
     Object? supervisorName = null,
   }) {
-    return _then(
-      _$ReportDetailModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as int,
-        requestId: null == requestId
-            ? _value.requestId
-            : requestId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        title: null == title
-            ? _value.title
-            : title // ignore: cast_nullable_to_non_nullable
-                  as String,
-        summary: null == summary
-            ? _value.summary
-            : summary // ignore: cast_nullable_to_non_nullable
-                  as String,
-        images: null == images
-            ? _value._images
-            : images // ignore: cast_nullable_to_non_nullable
-                  as List<ImageModel>,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        supervisorId: null == supervisorId
-            ? _value.supervisorId
-            : supervisorId // ignore: cast_nullable_to_non_nullable
-                  as int,
-        supervisorName: null == supervisorName
-            ? _value.supervisorName
-            : supervisorName // ignore: cast_nullable_to_non_nullable
-                  as String,
-      ),
-    );
+    return _then(_$ReportDetailModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      requestId: null == requestId
+          ? _value.requestId
+          : requestId // ignore: cast_nullable_to_non_nullable
+              as int,
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
+              as String,
+      summary: null == summary
+          ? _value.summary
+          : summary // ignore: cast_nullable_to_non_nullable
+              as String,
+      images: null == images
+          ? _value._images
+          : images // ignore: cast_nullable_to_non_nullable
+              as List<ImageModel>,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      supervisorId: null == supervisorId
+          ? _value.supervisorId
+          : supervisorId // ignore: cast_nullable_to_non_nullable
+              as int,
+      supervisorName: null == supervisorName
+          ? _value.supervisorName
+          : supervisorName // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ReportDetailModelImpl implements _ReportDetailModel {
-  const _$ReportDetailModelImpl({
-    required this.id,
-    required this.requestId,
-    required this.title,
-    required this.summary,
-    @JsonKey(defaultValue: []) required final List<ImageModel> images,
-    required this.createdAt,
-    required this.supervisorId,
-    required this.supervisorName,
-  }) : _images = images;
+  const _$ReportDetailModelImpl(
+      {required this.id,
+      required this.requestId,
+      required this.title,
+      required this.summary,
+      @JsonKey(defaultValue: []) required final List<ImageModel> images,
+      required this.createdAt,
+      required this.supervisorId,
+      required this.supervisorName})
+      : _images = images;
 
   factory _$ReportDetailModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ReportDetailModelImplFromJson(json);
@@ -267,43 +256,41 @@ class _$ReportDetailModelImpl implements _ReportDetailModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    requestId,
-    title,
-    summary,
-    const DeepCollectionEquality().hash(_images),
-    createdAt,
-    supervisorId,
-    supervisorName,
-  );
+      runtimeType,
+      id,
+      requestId,
+      title,
+      summary,
+      const DeepCollectionEquality().hash(_images),
+      createdAt,
+      supervisorId,
+      supervisorName);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ReportDetailModelImplCopyWith<_$ReportDetailModelImpl> get copyWith =>
       __$$ReportDetailModelImplCopyWithImpl<_$ReportDetailModelImpl>(
-        this,
-        _$identity,
-      );
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ReportDetailModelImplToJson(this);
+    return _$$ReportDetailModelImplToJson(
+      this,
+    );
   }
 }
 
 abstract class _ReportDetailModel implements ReportDetailModel {
-  const factory _ReportDetailModel({
-    required final int id,
-    required final int requestId,
-    required final String title,
-    required final String summary,
-    @JsonKey(defaultValue: []) required final List<ImageModel> images,
-    required final DateTime createdAt,
-    required final int supervisorId,
-    required final String supervisorName,
-  }) = _$ReportDetailModelImpl;
+  const factory _ReportDetailModel(
+      {required final int id,
+      required final int requestId,
+      required final String title,
+      required final String summary,
+      @JsonKey(defaultValue: []) required final List<ImageModel> images,
+      required final DateTime createdAt,
+      required final int supervisorId,
+      required final String supervisorName}) = _$ReportDetailModelImpl;
 
   factory _ReportDetailModel.fromJson(Map<String, dynamic> json) =
       _$ReportDetailModelImpl.fromJson;
